@@ -20,7 +20,7 @@
 | 1 | Foundation | **Built**; committed and pushed to `origin/allure` 17 Sep 2026 |
 | 2 | Header & footer | **Built** and pushed to `origin/allure`. One decision to confirm at review: the mobile quick-contact bar |
 | 3 | Hero & credentials ribbon | **Built** and pushed to `origin/allure` |
-| 4 | Concern finder | Not started |
+| 4 | Concern finder | **Built** and pushed to `origin/allure` |
 | 5 | Signature treatments | Not started |
 | 6 | Why Allure | Not started |
 | 7 | Reviews & Instagram | Not started |
@@ -139,6 +139,29 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 2. The LCP element measures as the H1 rather than the poster: the poster is preloaded and the hero paints at 0.24 s, so the goal behind that line is met. §10's wording is left as written.
 3. The ribbon stacks in one column below 480 px instead of 2×2, because the award title needs the width to stay readable.
 4. The pathway links and the ribbon's two linked cells point at Blocks 3–6, which arrive in Modules 4–7. Until then they do nothing in a production build; the scroll helper simply no-ops when the target isn't on the page.
+
+---
+
+### Module 4 build log: Concern finder
+
+**Built**
+
+- **Concerns content** (`src/content/concerns.js`): all 18 concerns in their 6 groups, each with a plain-English description and 1–3 matched treatments carrying a line on why that treatment suits the concern. Written to §8.11 — British English, "may help" rather than promises, melasma and rosacea described as managed rather than cured, and prescription skincare named only as *Prescription skincare consultation* (P5). **These are drafts for the clinic's clinical sign-off** (§11.11).
+- **Treatment options** (`src/content/treatments.js`): the six signature technologies alongside the rest of the menu a concern can be matched to — Cosmelan, BioRePeel, microneedling with exosomes, HydraFacial, LED and clinical skin analysis.
+- **Block 3**: group tabs, concern chips and a result panel with the concern, its description, the matched treatments as linked rows (name · reason · arrow), a WhatsApp button pre-filled with the concern, and a link through to that concern on the treatments page. Chips on the left over five columns, panel on the right over seven, stacked below 1024 px; the tabs scroll sideways on a phone.
+- **Keyboard and semantics**: the groups are a tablist with arrow, Home and End keys and automatic activation; the chips are a radio group with roving focus; the result panel is a polite live region, so a change is announced rather than silently swapped.
+- **Shareable selection**: `#concern-melasma` in the URL opens that concern with its group, and choosing a concern rewrites the hash with `replaceState`, so the page never jumps.
+
+**Verified**
+
+- All 18 concerns render with a description, at least one matched treatment and working links; every link target resolves.
+- Tabs, chips, Home/End, deep links and hash rewriting all behave; no console errors.
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px.
+
+**Changes to the plan made during this module**
+
+1. Treatments that do not have a detail page (Cosmelan, BioRePeel, exosomes, HydraFacial, LED, skin analysis) link to the price list for now. Module 11 gives each price category its own anchor, and these links will point at it.
+2. Matched-treatment names are set slightly smaller than the Title style, because names like "Cosmelan depigmentation protocol" wrapped over three lines in a list row.
 
 ---
 

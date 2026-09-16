@@ -1,0 +1,195 @@
+.ap-finder {
+  display: grid;
+  gap: var(--space-32);
+}
+
+/* Group tabs --------------------------------------------------------------- */
+
+.ap-finder__tabs {
+  display: flex;
+  gap: var(--space-24);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  scrollbar-width: none;
+}
+
+.ap-finder__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.ap-finder__tab {
+  position: relative;
+  flex-shrink: 0;
+  padding: var(--space-12) 0;
+  color: var(--fg-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-button);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color var(--dur-quick) var(--ease-out);
+}
+
+.ap-finder__tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--space-4) * -1 - 1px);
+  height: 2px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.ap-finder__tab:hover {
+  color: var(--fg);
+}
+
+.ap-finder__tab[aria-selected='true'] {
+  color: var(--fg);
+}
+
+.ap-finder__tab[aria-selected='true']::after {
+  opacity: 1;
+}
+
+/* Chips -------------------------------------------------------------------- */
+
+.ap-finder__chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  gap: var(--space-8);
+}
+
+/* Result panel ------------------------------------------------------------- */
+
+.ap-finder__panel {
+  padding-top: var(--space-32);
+  border-top: 1px solid var(--rule);
+}
+
+.ap-finder__result {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-16);
+  animation: apFinderIn var(--dur-base) var(--ease-out);
+}
+
+@keyframes apFinderIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.ap-finder__result .ap-text {
+  max-width: 44rem;
+}
+
+.ap-finder__label {
+  margin-top: var(--space-16);
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  line-height: var(--leading-label);
+  text-transform: uppercase;
+}
+
+.ap-finder__matches {
+  width: 100%;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.ap-finder__match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4) var(--space-16);
+  padding: var(--space-16) var(--space-12) var(--space-16) 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg-2);
+  text-decoration: none;
+  transition: background-color var(--dur-quick) var(--ease-out);
+}
+
+.ap-finder__match:hover {
+  background: var(--fill-hover);
+}
+
+.ap-finder__match-name {
+  grid-column: 1;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: var(--weight-title);
+  letter-spacing: var(--tracking-title);
+  line-height: 1.3;
+}
+
+.ap-finder__match-reason {
+  grid-column: 1;
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.ap-finder__match-icon {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--accent);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.ap-finder__match:hover .ap-finder__match-icon {
+  transform: translateX(3px);
+}
+
+.ap-finder__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16) var(--space-32);
+  margin-top: var(--space-16);
+}
+
+@media (min-width: 1024px) {
+  .ap-finder__body {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+  }
+
+  .ap-finder__chips {
+    grid-column: 1 / span 5;
+  }
+
+  .ap-finder__panel {
+    grid-column: 6 / span 7;
+    padding-top: 0;
+    padding-left: var(--space-48);
+    border-top: 0;
+    border-left: 1px solid var(--rule);
+  }
+
+  .ap-finder__match {
+    grid-template-columns: 16.5rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--space-24);
+  }
+
+  .ap-finder__match-reason {
+    grid-column: 2;
+  }
+
+  .ap-finder__match-icon {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+  }
+}
