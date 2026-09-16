@@ -1,0 +1,121 @@
+.ap-index {
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.ap-index__row {
+  display: grid;
+  gap: var(--space-12);
+  min-height: 6rem;
+  padding: var(--space-24) 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg-2);
+  text-decoration: none;
+  transition: background-color var(--dur-quick) var(--ease-out);
+}
+
+.ap-index__row:hover {
+  background: var(--fill-hover);
+}
+
+.ap-index__number {
+  color: var(--fg-3);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.ap-index__identity {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.ap-index__name {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: var(--weight-title);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--leading-title);
+}
+
+.ap-index__type {
+  color: var(--fg-3);
+  font-size: var(--text-label);
+  letter-spacing: 0.02em;
+}
+
+.ap-index__about {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.ap-index__summary {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.ap-index__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.ap-index__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-16);
+  color: var(--fg-3);
+  font-size: var(--text-label);
+  line-height: 1.5;
+}
+
+.ap-index__arrow {
+  justify-self: start;
+  color: var(--accent);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.ap-index__row:hover .ap-index__arrow {
+  transform: translateX(4px);
+}
+
+.ap-index__footer {
+  margin-top: var(--space-32);
+}
+
+@media (min-width: 1024px) {
+  .ap-index__row {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--grid-gap);
+    padding-inline: var(--space-16);
+    margin-inline: calc(var(--space-16) * -1);
+    min-height: 7.5rem;
+  }
+
+  .ap-index__number {
+    grid-column: span 1;
+  }
+
+  .ap-index__identity {
+    grid-column: span 3;
+  }
+
+  .ap-index__about {
+    grid-column: span 4;
+  }
+
+  .ap-index__facts {
+    grid-column: span 3;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .ap-index__arrow {
+    grid-column: span 1;
+    justify-self: end;
+    align-self: center;
+  }
+}

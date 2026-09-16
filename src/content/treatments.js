@@ -1,15 +1,73 @@
 /**
  * The six signature technologies (plan §5.1, §6 Block 4). Slugs are the
- * `/treatments/:slug` routes. Modules 5 and 10 add summaries, concern tags and
- * the clinically checked facts each detail page needs.
+ * `/treatments/:slug` routes.
+ *
+ * Sessions, downtime and from-prices are drawn from the clinic's own price list
+ * and await clinical confirmation (§11.7). Downtime is described rather than
+ * promised: no "zero downtime" (§8.11). Module 10 adds what each detail page
+ * needs beyond this.
  */
 export const signatureTreatments = [
-  { slug: 'picoway', name: 'PicoWay', type: 'Picosecond laser' },
-  { slug: 'advatx', name: 'ADVATx', type: 'Dual-wavelength laser' },
-  { slug: 'morpheus8', name: 'Morpheus8', type: 'Radiofrequency microneedling' },
-  { slug: 'sofwave', name: 'Sofwave', type: 'Ultrasound lifting' },
-  { slug: 'emsculpt-neo', name: 'Emsculpt Neo', type: 'Muscle and fat contouring' },
-  { slug: 'emerald-laser', name: 'Emerald Laser', type: 'Green laser body contouring' },
+  {
+    slug: 'picoway',
+    name: 'PicoWay',
+    type: 'Picosecond laser',
+    summary: 'Advanced picosecond laser for pigmentation, skin revitalisation and tattoo removal.',
+    concerns: ['hyperpigmentation', 'acne-scarring', 'tattoo-removal', 'lentigines'],
+    sessions: 'Course of 6',
+    downtime: 'Minimal',
+    fromPrice: '£329',
+  },
+  {
+    slug: 'advatx',
+    name: 'ADVATx',
+    type: 'Dual-wavelength laser',
+    summary: 'Laser treatment for acne, redness, pigmentation and overall skin rejuvenation.',
+    concerns: ['rosacea', 'acne', 'vascular-lesions', 'lip-enhancement'],
+    sessions: 'Course of 6',
+    downtime: 'Minimal',
+    fromPrice: '£150',
+  },
+  {
+    slug: 'morpheus8',
+    name: 'Morpheus8',
+    type: 'Radiofrequency microneedling',
+    summary: 'Fractional radiofrequency microneedling for deep skin remodelling and tightening.',
+    concerns: ['acne-scarring', 'skin-laxity', 'fine-lines', 'striae'],
+    sessions: 'Course of 3',
+    downtime: '24–48 hours of redness',
+    fromPrice: '£349',
+  },
+  {
+    slug: 'sofwave',
+    name: 'Sofwave',
+    type: 'Ultrasound lifting',
+    summary: 'Non-invasive ultrasound that stimulates collagen to lift and tighten the skin.',
+    concerns: ['skin-laxity', 'signs-of-ageing', 'fine-lines'],
+    sessions: 'Single session',
+    downtime: 'Minimal',
+    fromPrice: '£795',
+  },
+  {
+    slug: 'emsculpt-neo',
+    name: 'Emsculpt Neo',
+    type: 'Muscle and fat contouring',
+    summary: 'Body contouring that combines muscle stimulation with radiofrequency in one session.',
+    concerns: ['stubborn-fat', 'muscle-tone', 'body-contouring'],
+    sessions: 'Course of 6',
+    downtime: 'Minimal, some muscle soreness',
+    fromPrice: '£449',
+  },
+  {
+    slug: 'emerald-laser',
+    name: 'Emerald Laser',
+    type: 'Green laser body contouring',
+    summary: 'Low-level green laser supporting body contouring and circumference reduction.',
+    concerns: ['stubborn-fat', 'body-contouring'],
+    sessions: 'Course of 10',
+    downtime: 'Minimal',
+    fromPrice: '£250',
+  },
 ];
 
 export const treatmentPath = (slug) => `/treatments/${slug}`;

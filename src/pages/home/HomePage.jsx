@@ -2,13 +2,13 @@ import usePageMeta from '../../lib/usePageMeta';
 import ConcernFinder from './blocks/ConcernFinder';
 import CredentialsRibbon from './blocks/CredentialsRibbon';
 import Hero from './blocks/Hero';
+import SignatureTreatments from './blocks/SignatureTreatments';
 import BlockPlaceholder from './BlockPlaceholder';
 
-// The homepage flow from docs/REDESIGN_PLAN.md §6. Blocks 1–3 are built;
+// The homepage flow from docs/REDESIGN_PLAN.md §6. Blocks 1–4 are built;
 // each remaining placeholder is swapped for its real block as that module
 // ships. Ids double as in-page anchors.
 const BLOCKS = [
-  { id: 'treatments', number: 4, act: 'Discover', module: 5, tone: 'stone', name: 'Signature treatments', purpose: 'The six flagship technologies as a numbered index, each linking to its page.' },
   { id: 'why-allure', number: 5, act: 'Trust', module: 6, name: 'Why Allure', purpose: 'Welcome to the clinic, expert credentials, awards and press, in one place.' },
   { id: 'reviews', number: 6, act: 'Trust', module: 7, tone: 'stone', name: 'Patient reviews', purpose: 'Genuine Google reviews with the live rating.' },
   { id: 'instagram', number: 7, act: 'Trust', module: 7, name: 'Instagram', purpose: 'A contained strip of recent posts from @allurepassionsuk.' },
@@ -26,6 +26,7 @@ export default function HomePage() {
       <Hero />
       <CredentialsRibbon />
       <ConcernFinder />
+      <SignatureTreatments />
       {BLOCKS.map((block) => (
         <BlockPlaceholder key={block.id} {...block} />
       ))}

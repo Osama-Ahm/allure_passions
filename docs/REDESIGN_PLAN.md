@@ -21,7 +21,7 @@
 | 2 | Header & footer | **Built** and pushed to `origin/allure`. One decision to confirm at review: the mobile quick-contact bar |
 | 3 | Hero & credentials ribbon | **Built** and pushed to `origin/allure` |
 | 4 | Concern finder | **Built** and pushed to `origin/allure` |
-| 5 | Signature treatments | Not started |
+| 5 | Signature treatments | **Built** and pushed to `origin/allure` |
 | 6 | Why Allure | Not started |
 | 7 | Reviews & Instagram | Not started |
 | 8 | Programmes & skincare teaser | Not started |
@@ -162,6 +162,26 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. Treatments that do not have a detail page (Cosmelan, BioRePeel, exosomes, HydraFacial, LED, skin analysis) link to the price list for now. Module 11 gives each price category its own anchor, and these links will point at it.
 2. Matched-treatment names are set slightly smaller than the Title style, because names like "Cosmelan depigmentation protocol" wrapped over three lines in a list row.
+
+---
+
+### Module 5 build log: Signature treatments
+
+**Built**
+
+- **Block 4**: the six technologies as a numbered index on a stone band — number, name and technology type, summary and concern tags, then sessions, downtime and a from-price, with the whole row as the link. Rows tint stone on hover and the arrow slides. On a phone the row stacks and the facts wrap beneath the summary.
+- **Treatment facts** (`src/content/treatments.js`): each technology now carries its summary, 2–4 concern tags drawn from the concern taxonomy (so the two blocks can never drift apart), typical sessions, downtime and the lowest price on the clinic's own list.
+- A closing *View all treatments & pricing* link.
+
+**Verified**
+
+- Six rows, six working detail links, tags resolving against the concern list.
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. **"Zero downtime" is gone from the facts.** The old site's wording ("Zero Downtime", "Minimal to Zero") is a guarantee of the kind §8.11 rules out, so downtime is now described — *Minimal*, *24–48 hours of redness*, *Minimal, some muscle soreness*. **All six fact sets still need the clinic's clinical confirmation** (§11.7).
+2. Treatment names are set without ® and ™, matching how they read in the navigation.
 
 ---
 
