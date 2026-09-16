@@ -1,0 +1,31 @@
+.ap-reveal:not(.ap-reveal--stagger),
+.ap-reveal--stagger > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+}
+
+.ap-reveal.is-shown:not(.ap-reveal--stagger),
+.ap-reveal--stagger.is-shown > * {
+  opacity: 1;
+  transform: none;
+}
+
+.ap-reveal--stagger > :nth-child(2) { transition-delay: calc(var(--reveal-stagger) * 1); }
+.ap-reveal--stagger > :nth-child(3) { transition-delay: calc(var(--reveal-stagger) * 2); }
+.ap-reveal--stagger > :nth-child(4) { transition-delay: calc(var(--reveal-stagger) * 3); }
+.ap-reveal--stagger > :nth-child(5) { transition-delay: calc(var(--reveal-stagger) * 4); }
+.ap-reveal--stagger > :nth-child(6) { transition-delay: calc(var(--reveal-stagger) * 5); }
+.ap-reveal--stagger > :nth-child(7) { transition-delay: calc(var(--reveal-stagger) * 6); }
+.ap-reveal--stagger > :nth-child(n + 8) { transition-delay: calc(var(--reveal-stagger) * 7); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-reveal:not(.ap-reveal--stagger),
+  .ap-reveal--stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

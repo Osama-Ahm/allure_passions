@@ -1,0 +1,35 @@
+.ap-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--fg);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.ap-arrow-link__label {
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-quick) var(--ease-out);
+}
+
+.ap-arrow-link:hover .ap-arrow-link__label {
+  text-decoration-color: currentColor;
+}
+
+.ap-arrow-link__icon {
+  flex-shrink: 0;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.ap-arrow-link:hover .ap-arrow-link__icon {
+  transform: translateX(3px);
+}
+
+.ap-arrow-link--external:hover .ap-arrow-link__icon {
+  transform: translate(2px, -2px);
+}

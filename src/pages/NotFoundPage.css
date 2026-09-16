@@ -1,0 +1,17 @@
+.ap-not-found {
+  padding-top: calc(var(--section-space) + var(--header-height));
+}
+
+.ap-not-found__inner {
+  display: grid;
+  gap: var(--space-24);
+  justify-items: start;
+}
+
+.ap-not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16) var(--space-32);
+  margin-top: var(--space-16);
+}

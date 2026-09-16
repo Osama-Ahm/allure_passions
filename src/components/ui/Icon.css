@@ -1,0 +1,4 @@
+.ap-icon {
+  flex-shrink: 0;
+  color: var(--accent);
+}

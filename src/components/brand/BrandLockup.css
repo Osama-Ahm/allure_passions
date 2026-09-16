@@ -1,0 +1,53 @@
+.ap-brand {
+  --brand-mark-height: 2.5rem;
+  --brand-name-size: 0.9375rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--brand-mark-height) * 0.32);
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.ap-brand--sm {
+  --brand-mark-height: 2rem;
+  --brand-name-size: 0.8125rem;
+}
+
+.ap-brand--lg {
+  --brand-mark-height: 3.5rem;
+  --brand-name-size: 1.25rem;
+}
+
+.ap-brand__mark {
+  display: block;
+  flex-shrink: 0;
+  width: auto;
+  height: var(--brand-mark-height);
+}
+
+.ap-brand__text {
+  display: grid;
+  gap: 0.2em;
+}
+
+.ap-brand__name {
+  font-family: var(--font-display);
+  font-size: var(--brand-name-size);
+  font-weight: var(--weight-title);
+  letter-spacing: var(--tracking-wordmark);
+  line-height: 1;
+  text-transform: uppercase;
+  /* Trailing tracking would push the text off-centre */
+  margin-right: calc(var(--tracking-wordmark) * -1);
+}
+
+.ap-brand__place {
+  color: var(--accent-text);
+  font-family: var(--font-sans);
+  font-size: calc(var(--brand-name-size) * 0.62);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.24em;
+  line-height: 1;
+  text-transform: uppercase;
+}

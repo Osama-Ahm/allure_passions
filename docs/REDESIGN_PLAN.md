@@ -4,11 +4,79 @@
 
 | | |
 |---|---|
-| **Status** | Draft for approval (Module 0). No site code changed yet |
-| **Branch** | `redesign` (local only, never pushed without approval) |
-| **Date** | 17 September 2026 |
+| **Status** | Plan approved. Implementation in progress, one module at a time (see Progress) |
+| **Branch** | `redesign`, pushed to `origin` only when requested; not merged into `main` |
+| **Date** | 17 September 2026 (last updated 17 September 2026) |
 | **Supersedes** | `DESIGN_SPEC_AND_GUIDELINES.md` (rules that still apply are carried over in §13) |
 | **Reference sites** | [yukiclinic.co.uk](https://www.yukiclinic.co.uk), [skinstation.co.uk](https://www.skinstation.co.uk) |
+
+---
+
+## Progress
+
+| # | Module | Status |
+|---|---|---|
+| 0 | Plan (this document) | **Approved** 17 Sep 2026 |
+| 1 | Foundation | **Built**; committed and pushed to `origin/redesign` 17 Sep 2026 |
+| 2 | Header & footer | Not started (on hold until requested; open question: mobile quick-contact bar) |
+| 3 | Hero & credentials ribbon | Not started |
+| 4 | Concern finder | Not started |
+| 5 | Signature treatments | Not started |
+| 6 | Why Allure | Not started |
+| 7 | Reviews & Instagram | Not started |
+| 8 | Programmes & skincare teaser | Not started |
+| 9 | FAQ & Begin | Not started |
+| 10 | Treatments & treatment detail | Not started |
+| 11 | Pricing | Not started |
+| 12 | About | Not started |
+| 13 | Clinical skincare | Not started |
+| 14 | Contact, 404 & legal | Not started |
+| 15 | QA & launch prep | Not started |
+
+**How to review:** run `npm run dev`, then open `http://localhost:5173/styleguide` for the design system and `http://localhost:5173/` for the homepage as it takes shape. Blocks that aren't built yet show as dashed placeholders in development only.
+
+### Module 1 build log: Foundation
+
+**Built**
+
+- **Design tokens** (`src/styles/tokens.css`): the palette, semantic tokens that switch per tone (canvas, stone, surface, night), fluid type scale, spacing, layout, shape, motion and layers, all as specified in §8. Reduced motion zeroes every motion token.
+- **Base styles** (`src/styles/base.css`): reset, document defaults, focus ring, selection colour, skip link and the 200 ms page cross-fade.
+- **Fonts:** Newsreader (with optical sizes) and Instrument Sans, self-hosted via `@fontsource-variable`. There are no Google Fonts requests. Italic files download only when italic is used.
+- **Primitives** (`src/components/ui`): Container, Section, SectionHeader, Divider, Eyebrow, Heading, Text, Button, IconButton, ArrowLink, Chip, Tag and Icon. Also BrandLockup (`src/components/brand`) and Reveal (`src/components/motion`).
+- **Routing:** React Router 8 (data router) with a shared layout, focus moved to the new page's content on navigation, scroll restoration, view-transition page fades, a 404 page and an error screen. `/prescription-skincare` and old underscore treatment URLs redirect.
+- **Intro (D3):** CSS-only, first visit per session, about 0.9 s (cream screen, monogram fades in and out). Skipped on repeat visits and for reduced motion, and it never waits on the app.
+- **Brand assets:** optimised AP monogram (6 KB, was 138 KB) and a proper favicon set replacing the Vite placeholder.
+- **Style guide** at `/styleguide` (development only, excluded from production builds): brand, colour, typography, layout, shape, buttons and links, chips and tags, section header, tones, icons and motion.
+- **Homepage skeleton:** `/` now renders the new 11-block flow from §6 (the footer is Block 12), with dashed development placeholders that are replaced block by block.
+
+**Removed**
+
+- The old `App.jsx` router and the global `index.css`.
+- The motion system: 2.4 s loader, page curtain, parallax, split-word reveals, count-ups.
+- The 23 old homepage section components.
+- Vite template leftovers.
+
+All of these remain in `main`'s history.
+
+**Kept temporarily**
+
+The old header, footer and inner pages (About, Treatments, Treatment detail, Pricing, Prescription skincare) now live in `src/legacy/` with scoped styles and the new fonts, so they keep working until Modules 2 and 10–14 replace them. They still contain old copy (including "doctor-led"), which is rewritten when each page is rebuilt.
+
+**Verified**
+
+- Lint clean; production build clean.
+- No horizontal overflow at 1440 px or 375 px.
+- All 13 test routes and redirects resolve.
+- Menu navigation resets scroll and moves focus; Back restores scroll.
+- The skip link appears on focus.
+- Reduced motion hides the intro and removes transitions.
+- No console errors.
+
+**Changes to the plan made during this module**
+
+1. The wordmark reads "Allure Passions UK", matching how the brand name appeared on the previous site (§8.3 updated).
+2. The old homepage sections were retired in Module 1 rather than Module 9, because the homepage now renders the new structure (§9 and §10 updated).
+3. Until Module 13 builds the skincare hub, `/skincare` temporarily redirects to the legacy prescription page.
 
 ---
 
@@ -640,7 +708,7 @@ Contrast ratios below were calculated for these exact values.
 | Numerals (prices, steps) | Instrument Sans | Contextual | — | Tabular figures | 500 |
 
 - **Line length:** body copy at 60–75 characters; ledes no wider than 36 rem.
-- **Wordmark:** live text, "ALLURE PASSIONS", in uppercase Newsreader tracked +0.18 em beside the AP monogram. If the client has an official wordmark file, use that instead.
+- **Wordmark:** live text, "ALLURE PASSIONS UK", in uppercase Newsreader tracked +0.18 em beside the AP monogram, with an optional "Fitzrovia · London" line beneath (component: `BrandLockup`). If the client has an official wordmark file, use that instead.
 
 ### 8.4 Layout and spacing
 
@@ -760,7 +828,7 @@ Contrast ratios below were calculated for these exact values.
   - hero video ≤ 3 MB
   - images lazy-loaded with explicit dimensions
   - unused legacy assets removed from `public/`
-- **Legacy strategy:** new sections and pages replace old ones module by module. Old components are deleted once nothing uses them; they remain in `main`'s history.
+- **Legacy strategy:** the old homepage sections were retired in Module 1, when the homepage switched to the new structure. The old header, footer and inner pages live in `src/legacy/` with scoped styles until their modules replace them; each is deleted once nothing uses it, and all of it remains in `main`'s history.
 
 ---
 
@@ -789,7 +857,7 @@ Contrast ratios below were calculated for these exact values.
 | 6 | **Why Allure** | Block 5: welcome, credential grid, press row | Logos crisp; press links wired or flagged |
 | 7 | **Reviews & Instagram** | Blocks 6–7 + data adapters | Sections degrade gracefully when unconfigured; no sample content in production builds |
 | 8 | **Programmes & skincare teaser** | Blocks 8–9 | Pre-filled WhatsApp enquiries work |
-| 9 | **FAQ & Begin** | Blocks 10–11; homepage complete; old homepage components removed | Homepage matches §6; FAQ structured data present |
+| 9 | **FAQ & Begin** | Blocks 10–11; homepage complete; development placeholders removed | Homepage matches §6; FAQ structured data present |
 | 10 | **Treatments & treatment detail** | `/treatments`, `/treatments/:slug` ×6 | Spec card stays sticky; pricing tables and related rows render |
 | 11 | **Pricing** | `/pricing` | All 8 categories; category index; tables readable on mobile |
 | 12 | **About** | `/about` | Credentials, awards, press and standards in place |
