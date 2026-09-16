@@ -1,0 +1,53 @@
+.ap-quick-contact {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--page-padding) calc(var(--space-12) + env(safe-area-inset-bottom));
+  background: var(--color-canvas);
+  border-top: 1px solid var(--color-line);
+  box-shadow: var(--shadow-float);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base);
+}
+
+.ap-quick-contact.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.ap-quick-contact__action {
+  flex: 1;
+  min-height: 2.75rem;
+  padding-inline: var(--space-12);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.ap-quick-contact__whatsapp {
+  flex: 0 1 auto;
+  gap: var(--space-8);
+}
+
+/* On phones WhatsApp keeps its icon and drops the visible label, so the
+   consultation button has room; the button is still named for screen readers. */
+@media (max-width: 29.99rem) {
+  .ap-quick-contact__whatsapp {
+    flex: 0 0 2.75rem;
+    padding-inline: 0;
+  }
+
+  .ap-quick-contact__whatsapp .ap-button__label {
+    display: none;
+  }
+}

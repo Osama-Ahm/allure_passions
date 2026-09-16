@@ -19,12 +19,6 @@ export function legacyPath(route, treatmentId) {
   return ROUTE_PATHS[route] ?? '/';
 }
 
-export function legacyRouteName(pathname) {
-  if (pathname.startsWith('/treatments/')) return 'treatment-detail';
-  const match = Object.entries(ROUTE_PATHS).find(([, path]) => path === pathname);
-  return match ? match[0] : '';
-}
-
 export function useLegacyNavigate() {
   const navigate = useNavigate();
   return useCallback(

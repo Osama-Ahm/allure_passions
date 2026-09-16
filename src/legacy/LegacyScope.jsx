@@ -1,37 +1,14 @@
-import { useLocation, useParams, Navigate } from 'react-router';
+import { useParams, Navigate } from 'react-router';
 import { POPULAR_TREATMENTS } from '../data/treatmentData';
 import usePageMeta from '../lib/usePageMeta';
 import NotFoundPage from '../pages/NotFoundPage';
-import Footer from './Footer';
-import { legacyRouteName, toSlug, toTreatmentId, useLegacyNavigate } from './legacyNavigation';
-import Navbar from './Navbar';
+import { toSlug, toTreatmentId, useLegacyNavigate } from './legacyNavigation';
 import TreatmentDetailPage from './pages/TreatmentDetailPage';
 import './legacy.css';
 
 /** Wraps pre-redesign markup so its scoped styles apply. */
 export function LegacyScope({ className, children }) {
   return <div className={className ? `legacy ${className}` : 'legacy'}>{children}</div>;
-}
-
-export function LegacyHeader() {
-  const { pathname } = useLocation();
-  const onNavigate = useLegacyNavigate();
-
-  return (
-    <LegacyScope>
-      <Navbar currentRoute={legacyRouteName(pathname)} onNavigate={onNavigate} />
-    </LegacyScope>
-  );
-}
-
-export function LegacyFooter() {
-  const onNavigate = useLegacyNavigate();
-
-  return (
-    <LegacyScope>
-      <Footer onNavigate={onNavigate} />
-    </LegacyScope>
-  );
 }
 
 /** Renders a pre-redesign inner page until its module replaces it. */

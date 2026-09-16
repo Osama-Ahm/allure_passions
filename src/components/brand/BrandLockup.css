@@ -14,9 +14,11 @@
   --brand-name-size: 0.8125rem;
 }
 
+/* The wordmark never wraps, so the large lockup scales with the viewport
+   instead of pushing the page sideways on a small phone. */
 .ap-brand--lg {
-  --brand-mark-height: 3.5rem;
-  --brand-name-size: 1.25rem;
+  --brand-mark-height: clamp(2.75rem, 9vw, 3.5rem);
+  --brand-name-size: clamp(0.9375rem, 3.4vw, 1.25rem);
 }
 
 .ap-brand__mark {

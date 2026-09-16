@@ -1,6 +1,9 @@
 import { createBrowserRouter } from 'react-router';
 import { legacyRoutes } from '../legacy/legacyRoutes';
+import ContactPage from '../pages/contact/ContactPage';
 import HomePage from '../pages/home/HomePage';
+import LegalNoticePage from '../pages/legal/LegalNoticePage';
+import { legalPages } from '../pages/legal/legalPages';
 import NotFoundPage from '../pages/NotFoundPage';
 import RootLayout from './RootLayout';
 import RouteError from './RouteError';
@@ -11,6 +14,9 @@ const routes = [
     errorElement: <RouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'contact', element: <ContactPage /> },
+      { path: 'privacy', element: <LegalNoticePage {...legalPages.privacy} /> },
+      { path: 'terms', element: <LegalNoticePage {...legalPages.terms} /> },
       ...legacyRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],

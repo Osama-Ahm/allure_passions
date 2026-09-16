@@ -1,15 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, ScrollRestoration, useLocation } from 'react-router';
-import { LegacyFooter, LegacyHeader } from '../legacy/LegacyScope';
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
+import QuickContactBar from '../components/layout/QuickContactBar';
+import cx from '../lib/cx';
+import './RootLayout.css';
 
-/**
- * Shared page frame. The legacy header and footer are placeholders until
- * Module 2 replaces them with the new navigation.
- */
+/** Pages whose first block runs underneath a transparent header. */
+const HERO_ROUTES = new Set(['/']);
+
 export default function RootLayout() {
   const mainRef = useRef(null);
   const { pathname } = useLocation();
   const previousPathname = useRef(pathname);
+  const hasHero = HERO_ROUTES.has(pathname);
 
   // Move focus to the new page's content so keyboard and screen-reader users start there.
   useEffect(() => {
@@ -23,11 +27,12 @@ export default function RootLayout() {
       <a className="ap-skip-link" href="#main">
         Skip to content
       </a>
-      <LegacyHeader />
-      <main id="main" ref={mainRef} tabIndex={-1} className="ap-main">
+      <Header overHero={hasHero} />
+      <main id="main" ref={mainRef} tabIndex={-1} className={cx('ap-main', !hasHero && 'ap-main--offset')}>
         <Outlet />
       </main>
-      <LegacyFooter />
+      <Footer />
+      <QuickContactBar />
       <ScrollRestoration />
     </>
   );

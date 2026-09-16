@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Status** | Plan approved. Implementation in progress, one module at a time (see Progress) |
-| **Branch** | `redesign`, pushed to `origin` only when requested; not merged into `main` |
+| **Branch** | `allure`, pushed to `origin`; not merged into `main` |
 | **Date** | 17 September 2026 (last updated 17 September 2026) |
 | **Supersedes** | `DESIGN_SPEC_AND_GUIDELINES.md` (rules that still apply are carried over in §13) |
 | **Reference sites** | [yukiclinic.co.uk](https://www.yukiclinic.co.uk), [skinstation.co.uk](https://www.skinstation.co.uk) |
@@ -17,8 +17,8 @@
 | # | Module | Status |
 |---|---|---|
 | 0 | Plan (this document) | **Approved** 17 Sep 2026 |
-| 1 | Foundation | **Built**; committed and pushed to `origin/redesign` 17 Sep 2026 |
-| 2 | Header & footer | Not started (on hold until requested; open question: mobile quick-contact bar) |
+| 1 | Foundation | **Built**; committed and pushed to `origin/allure` 17 Sep 2026 |
+| 2 | Header & footer | **Built** and pushed to `origin/allure`. One decision to confirm at review: the mobile quick-contact bar |
 | 3 | Hero & credentials ribbon | Not started |
 | 4 | Concern finder | Not started |
 | 5 | Signature treatments | Not started |
@@ -77,6 +77,40 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 1. The wordmark reads "Allure Passions UK", matching how the brand name appeared on the previous site (§8.3 updated).
 2. The old homepage sections were retired in Module 1 rather than Module 9, because the homepage now renders the new structure (§9 and §10 updated).
 3. Until Module 13 builds the skincare hub, `/skincare` temporarily redirects to the legacy prescription page.
+
+### Module 2 build log: Header & footer
+
+**Built**
+
+- **Header** (`src/components/layout/Header.jsx`): monogram and wordmark, Treatments menu, Skincare, Pricing, About and the consultation button. Transparent with light text over the homepage hero, solid cream with a hairline after 40 px, tucked away while scrolling down and back on the way up. It never hides while it holds keyboard focus or while a menu is open. Below 1200 px the links collapse into the menu button, and below 480 px the monogram carries the brand on its own.
+- **Treatments mega menu**: a full-width panel with the 18 concerns in their 6 groups, the six signature technologies with their technology type, and links to all treatments and pricing. A disclosure, not a menubar: it opens on hover (after 80 ms) or on click, Tab moves straight into the panel, Escape closes it and returns focus to the button, and an outside click, a scroll or a new page closes it. Closed, it is out of the tab order and the accessibility tree.
+- **Mobile menu**: a full-screen cream dialog with its own brand row and close button. Treatments opens to *By concern* and *Signature treatments*, which expand separately so neither list has to be scrolled past. Then Skincare, Pricing, About and Contact, and a contact block with WhatsApp, the phone, the address, the hours and directions. Focus is trapped inside, the page behind it is inert and cannot scroll, Escape closes it, and focus returns to the menu button.
+- **Footer**: night background with the champagne lockup and the credentials line, four columns (Treatments · Clinic · Skincare · Visit), then the copyright, social links and legal links.
+- **Mobile quick-contact bar** (the option flagged in §5.2): *Request a consultation* plus WhatsApp, appearing once the hero has scrolled away and stepping aside as the footer arrives. **Your call at this review** — it is one component and one line in the layout, so it comes out cleanly if you would rather not have it.
+- **Content layer started** (§9): `src/content/` now holds `clinic`, `concerns` (the 18-concern taxonomy Module 4 will fill out), `treatments` (the six slugs) and `navigation`, and `src/utils/contact.js` builds every WhatsApp, phone and email link from one phone number.
+- **Interim pages** so no link in the new chrome leads nowhere: `/contact` (the real contact channels, address, hours and directions; Module 14 adds the enquiry form) and `/privacy` and `/terms` (a short notice that the documents are being prepared, replaced by the client's copy in Module 14).
+
+**Removed**
+
+- The pre-redesign header and footer, and the header, drawer and animation styles that only they used. `src/legacy/` now holds nothing but the inner pages awaiting Modules 10–14.
+
+**Verified**
+
+- Lint clean; production build clean; initial JavaScript 133 kB gzipped, within the 180 kB budget.
+- No horizontal overflow on any route at 1440, 768, 375 or 320 px.
+- All 33 links in the header and footer resolve; the six treatment routes, both redirects and the 404 all behave.
+- Keyboard: skip link → brand → Treatments → links → consultation button; Tab from the trigger enters the panel; Escape restores focus in both menus; focus cannot leave the open mobile menu.
+- Reduced motion: no intro, no transitions.
+- No console errors on any route.
+
+**Changes to the plan made during this module**
+
+1. The mobile quick-contact bar is built and switched on, for you to confirm or drop at this review (§5.2 updated).
+2. `/contact`, `/privacy` and `/terms` exist from now on in the interim form described above, because the header and footer both need them; Module 14 replaces all three.
+3. Kojivit Ultra joins the footer's Skincare column when Module 13 builds its page.
+4. The large brand lockup now scales with the viewport: the wordmark does not wrap, and at fixed size it pushed a 320 px screen sideways.
+
+---
 
 ---
 
@@ -281,7 +315,7 @@ Sources in §14.
 
 **Mobile (< 1200 px):** logo · [Enquire] · menu button. A full-screen cream menu holds Treatments (accordion: *By concern* / *Signature treatments*), Skincare, Pricing, About and Contact, then a contact block (WhatsApp, call) with the address and hours.
 
-*Option to decide at the Module 2 review:* a slim mobile quick-contact bar (Request a consultation + WhatsApp) that appears once the hero has scrolled away and hides near the footer.
+*Built in Module 2, for you to confirm or drop at review:* a slim mobile quick-contact bar (Request a consultation + WhatsApp) that appears once the hero has scrolled away and hides near the footer.
 
 ### 5.3 Calls to action (no booking engine)
 
@@ -644,10 +678,14 @@ Two columns: a packshot on a stone panel, beside the name, type, price, descript
 3. Enquiry form: name, phone, email, interest (concern or treatment), preferred contact method, message, consent. Submitting composes a WhatsApp message or an email.
 4. Visit panel: address, hours, nearest stations (client to confirm), *Get directions ↗*.
 
+*Built in Module 2 without point 3*, so the header's call to action has somewhere to go; Module 14 adds the enquiry form.
+
 ### 7.9 404 and legal pages
 
 - **404:** a short message with links to Treatments, Pricing and Contact.
 - **Legal pages:** a simple prose template.
+
+*Both legal routes exist from Module 2* with a short notice that the documents are being prepared, so the footer's legal links work. Module 14 replaces the notice with the client's copy.
 
 ---
 
@@ -828,7 +866,7 @@ Contrast ratios below were calculated for these exact values.
   - hero video ≤ 3 MB
   - images lazy-loaded with explicit dimensions
   - unused legacy assets removed from `public/`
-- **Legacy strategy:** the old homepage sections were retired in Module 1, when the homepage switched to the new structure. The old header, footer and inner pages live in `src/legacy/` with scoped styles until their modules replace them; each is deleted once nothing uses it, and all of it remains in `main`'s history.
+- **Legacy strategy:** the old homepage sections were retired in Module 1, when the homepage switched to the new structure, and the old header and footer in Module 2. Only the old inner pages are left in `src/legacy/`, with scoped styles, until Modules 10–14 replace them; each is deleted once nothing uses it, and all of it remains in `main`'s history.
 
 ---
 

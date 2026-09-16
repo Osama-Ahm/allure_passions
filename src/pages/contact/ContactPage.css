@@ -1,0 +1,52 @@
+.ap-contact__intro {
+  display: grid;
+  gap: var(--space-16);
+  max-width: 44rem;
+  margin-bottom: clamp(var(--space-48), 5vw, var(--space-64));
+}
+
+.ap-contact__grid {
+  display: grid;
+  gap: var(--space-48);
+  padding-top: var(--space-48);
+  border-top: 1px solid var(--rule);
+}
+
+.ap-contact__actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+}
+
+.ap-contact__actions .ap-text {
+  margin-top: var(--space-12);
+  max-width: 32rem;
+}
+
+.ap-contact__visit {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-24);
+  font-style: normal;
+}
+
+.ap-contact__row {
+  display: flex;
+  align-items: start;
+  gap: var(--space-12);
+}
+
+.ap-contact__row .ap-icon {
+  margin-top: 0.2rem;
+}
+
+.ap-contact__line {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .ap-contact__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-64);
+  }
+}

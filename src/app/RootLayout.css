@@ -1,0 +1,4 @@
+/* Pages without a hero start below the fixed header. */
+.ap-main--offset {
+  padding-top: var(--header-height);
+}
