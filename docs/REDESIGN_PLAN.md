@@ -25,7 +25,7 @@
 | 6 | Why Allure | **Built** and pushed to `origin/allure`. Press row withheld; no usable GHP artwork |
 | 7 | Reviews & Instagram | **Built** and pushed to `origin/allure`. Both hidden until a provider is connected |
 | 8 | Programmes & skincare teaser | **Built** and pushed to `origin/allure` |
-| 9 | FAQ & Begin | Not started |
+| 9 | FAQ & Begin | **Built** and pushed to `origin/allure`. Homepage complete |
 | 10 | Treatments & treatment detail | Not started |
 | 11 | Pricing | Not started |
 | 12 | About | Not started |
@@ -249,6 +249,31 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 1. Kojivit's call to action is *Reserve for collection* (WhatsApp) rather than *View product*, because `/skincare/kojivit-ultra` does not exist until Module 13 and the plan's own rule is that nothing links to a page that isn't there. Module 13 restores the product link.
 2. **Contour Luxe (£4,489) and Contour Advanced (£4,499) are ten pounds apart** in the clinic's price list, which looks like a typo. Both are shown as listed and flagged in §11.8; the note is repeated in `src/content/programmes.js` so it cannot be missed.
 3. Programme subtitles reserve two lines, so prices and *Includes* lists line up across the four columns.
+
+---
+
+### Module 9 build log: FAQ & Begin — the homepage is complete
+
+**Built**
+
+- **Block 10 · FAQ**: the heading, the invitation to ask and a WhatsApp button stay stuck to the left while the accordion scrolls on the right, one answer open at a time, hairlines between. Eight questions with drafted answers (§11.11), each avoiding figures we cannot source — the consultation fee is answered by telling people we will confirm it, rather than by inventing one.
+- **FAQPage structured data**: eight question and answer pairs emitted as JSON-LD from the block itself, so the copy and the markup can never drift apart.
+- **Block 11 · Begin with a consultation**: the four-step timeline with numbered nodes on a hairline, then WhatsApp, phone, email and the contact page, with the address, hours and *Get directions ↗*.
+- **The homepage now renders all eleven blocks in the order §6 sets out**, with the footer as Block 12.
+
+**Removed**
+
+- `BlockPlaceholder`, the development stand-in from Module 1. Nothing is left to stand in for.
+
+**Verified**
+
+- Eleven sections in the right order; the accordion keeps one answer open; the structured data parses as a FAQPage with eight entries.
+- In a production build: nine sections (reviews and Instagram correctly absent until a provider is connected), no sample content anywhere.
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors on any route.
+
+**Changes to the plan made during this module**
+
+1. Business (LocalBusiness) structured data stays with the rest of the SEO work in Module 15; only the FAQ markup ships here, as §10 asks.
 
 ---
 
