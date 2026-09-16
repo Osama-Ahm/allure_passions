@@ -1,277 +1,233 @@
-import React from 'react';
-import { ArrowRight, MessageSquare } from 'lucide-react';
+import React, { useId, useRef, useState } from 'react';
+import { ArrowRight, Check, MessageCircle } from 'lucide-react';
+import { CLINIC_INFO, FULL_PRICELIST } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
+import { routeLinkHandler } from '../utils/navigation';
+import { withTrademarks } from '../utils/trademarks';
+import './PricingMenuSection.css';
 
-const PRICING_CATEGORIES = [
-  {
-    title: 'Skin Tightening & Remodeling',
-    subtitle: 'Morpheus8™ & Sofwave™',
-    items: [
-      { name: 'Morpheus8™ Face & Neck', single: '£550', course: '3 for £1,450' },
-      { name: 'Morpheus8™ Prime (Eyes / Perioral)', single: '£350', course: '3 for £950' },
-      { name: 'Sofwave™ Full Face Lift', single: '£1,400', course: 'Course £2,400' },
-      { name: 'Sofwave™ Brow & Periorbital Lift', single: '£850', course: 'Course £1,500' },
-      { name: 'Exosome Dermal Renaissance Add-on', single: '£250', course: 'Course £650' },
-    ],
-  },
-  {
-    title: 'Laser Renewal & Pigmentation',
-    subtitle: 'PicoWay® & ADVATx®',
-    items: [
-      { name: 'PicoWay® Melasma & Pigment', single: '£329', course: '6 for £899' },
-      { name: 'PicoWay® Resolve Facial Rejuvenation', single: '£250', course: '4 for £850' },
-      { name: 'ADVATx® Vascular / Rosacea / Acne', single: '£295', course: '4 for £950' },
-      { name: 'ADVATx® Non-Injectable Lip Plumping', single: '£150', course: '3 for £390' },
-      { name: 'Cosmelan® Depigmentation Protocol', single: '£850', course: 'Includes Homecare' },
-    ],
-  },
-  {
-    title: 'Body Sculpting & Synergy Packages',
-    subtitle: 'Emsculpt Neo® & Emerald™',
-    items: [
-      { name: 'Emsculpt Neo® (Abdomen / Glutes)', single: '£500', course: '4 for £1,800' },
-      { name: 'Emerald™ Green Laser Lipo (10 Diodes)', single: '£350', course: '6 for £1,750' },
-      { name: 'Allure Contour Synergy (6 Neo Sessions)', single: '—', course: 'Course £2,400' },
-      { name: 'Allure Contour Luxe (6 Neo + 6 Emerald)', single: '—', course: 'Course £3,600' },
-      { name: 'Doctor Consultation & Assessment', single: 'Complimentary with Treatment', course: '' },
-    ],
-  },
+const COURSE_FIELDS = [
+  ['sessions3', '3 sessions'],
+  ['course6', '6 sessions'],
+  ['course8', '8 sessions'],
+  ['course10', '10 sessions'],
 ];
 
+// Homepage highlights only. Fees are looked up in FULL_PRICELIST so they always
+// match the official schedule on /pricing.
+const MENU_TABS = [
+  {
+    id: 'tightening',
+    label: 'Skin Tightening',
+    shortLabel: 'Tightening',
+    platforms: 'Morpheus8™ & Sofwave™',
+    rows: [
+      { category: 'Ultra Tightening Treatments', item: 'Morpheus8 - Full Face', device: 'Morpheus8™', name: 'Full Face' },
+      { category: 'Ultra Tightening Treatments', item: 'Morpheus8 - Face & Neck', device: 'Morpheus8™', name: 'Face & Neck' },
+      { category: 'Ultra Tightening Treatments', item: 'Morpheus8 - Eyes', device: 'Morpheus8™', name: 'Eyes' },
+      { category: 'Ultra Tightening Treatments', item: 'Sofwave - Brow Lift', device: 'Sofwave™', name: 'Brow Lift' },
+      { category: 'Ultra Tightening Treatments', item: 'Sofwave - Full Face, Neck & Brow Lift', device: 'Sofwave™', name: 'Full Face, Neck & Brow Lift' },
+    ],
+  },
+  {
+    id: 'laser',
+    label: 'Laser & Pigmentation',
+    shortLabel: 'Laser',
+    platforms: 'PicoWay® & ADVATx®',
+    rows: [
+      { category: 'Skin Renewal & Resurfacing (PicoWay Laser)', item: 'Hyperpigmentation - Full Face', device: 'PicoWay®', name: 'Hyperpigmentation, Full Face' },
+      { category: 'Skin Renewal & Resurfacing (PicoWay Laser)', item: 'Acne Scarring - Full Face', device: 'PicoWay®', name: 'Acne Scarring, Full Face' },
+      { category: 'Vascular & Complexion Clarity (ADVATx Laser)', item: 'Telangiectasias (Facial Veins)', device: 'ADVATx®', name: 'Facial Veins' },
+      { category: 'Vascular & Complexion Clarity (ADVATx Laser)', item: 'Skin Rejuvenation - Full Face', device: 'ADVATx®', name: 'Skin Rejuvenation, Full Face' },
+      { category: 'Vascular & Complexion Clarity (ADVATx Laser)', item: 'ADVATx Laser Lip Plumping & Rejuvenation', device: 'ADVATx®', name: 'Laser Lip Plumping' },
+    ],
+  },
+  {
+    id: 'body',
+    label: 'Body Sculpting',
+    shortLabel: 'Body',
+    platforms: 'Emsculpt Neo® & Emerald™',
+    rows: [
+      { category: 'Body Sculpting Packages', item: 'Allure Contour Synergy (Emsculpt Neo - 6 Sessions)', device: 'Emsculpt Neo®', name: 'Allure Contour Synergy' },
+      { category: 'Body Sculpting Packages', item: 'Allure Contour Luxe (Emsculpt Neo + Emerald - 6 Sessions)', device: 'Emsculpt Neo® + Emerald™', name: 'Allure Contour Luxe' },
+      { category: 'Body Sculpting Packages', item: 'Allure Contour Advanced (Neo + Emerald + Meso - 6 Sessions)', device: 'Neo® + Emerald™ + Mesotherapy', name: 'Allure Contour Advanced' },
+      { category: 'Body Sculpting Packages', item: 'Emerald Laser Body Slim (10 Sessions)', device: 'Emerald™ Green Laser', name: 'Body Slim Programme' },
+    ],
+  },
+].map((tab) => {
+  const categories = [...new Set(tab.rows.map((row) => row.category))];
+  const rows = tab.rows
+    .map((row) => {
+      const fee = FULL_PRICELIST.find((entry) => entry.category === row.category)?.items.find((item) => item.name === row.item);
+      if (!fee) return null;
+      const course = COURSE_FIELDS.find(([field]) => fee[field]);
+      return {
+        ...row,
+        session: fee.single || fee.oneOff,
+        course: course ? { label: course[1], price: fee[course[0]] } : null,
+      };
+    })
+    .filter(Boolean);
+  const total = categories.reduce(
+    (sum, name) => sum + (FULL_PRICELIST.find((entry) => entry.category === name)?.items.length || 0),
+    0
+  );
+  return { ...tab, rows, total };
+});
+
+const whatsappLink = (message) =>
+  `https://wa.me/${CLINIC_INFO.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+
 export default function PricingMenuSection({ onNavigate }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const tabRefs = useRef([]);
+  const idBase = useId();
+  const activeTab = MENU_TABS[activeIndex];
+
+  const handleTabKeyDown = (event, index) => {
+    const last = MENU_TABS.length - 1;
+    const nextIndex = {
+      ArrowRight: index === last ? 0 : index + 1,
+      ArrowLeft: index === 0 ? last : index - 1,
+      Home: 0,
+      End: last,
+    }[event.key];
+    if (nextIndex === undefined) return;
+    event.preventDefault();
+    setActiveIndex(nextIndex);
+    tabRefs.current[nextIndex]?.focus();
+  };
+
   return (
-    <section
-      style={{
-        backgroundColor: '#121110',
-        color: '#FFFFFF',
-        padding: '7rem 0',
-        borderBottom: '1px solid rgba(168, 127, 61, 0.22)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#D4AF37',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Transparent Clinical Investment
+    <section id="treatment-pricing" className="menu" aria-labelledby="menu-title">
+      <div className="ap-container menu__layout">
+        <div className="menu__intro">
+          <div className="ap-head__title">
+            <span className="ap-eyebrow" data-reveal>Transparent Clinical Investment</span>
+            <h2 id="menu-title" className="ap-display" data-reveal="words">
+              <SplitWords>
+                Treatment Menu <em>&amp; Pricing</em>
+              </SplitWords>
+            </h2>
           </div>
-          <h2
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-              color: '#FFFFFF',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            Treatment Menu & Pricing
-          </h2>
-          <p
-            style={{
-              color: '#ECE8E1',
-              fontSize: '1.05rem',
-              maxWidth: '650px',
-              margin: '0 auto',
-              fontWeight: '300',
-            }}
-          >
-            Clear, transparent fee schedules for individual sessions and comprehensive multi-modality courses.
-          </p>
+
+          <div className="menu__intro-body" data-reveal>
+            <p className="ap-lede">
+              Clear fees for single sessions and complete courses, so you can plan your treatment journey with
+              confidence before you visit.
+            </p>
+
+            <ul className="menu__points">
+              <li>
+                <Check size={15} strokeWidth={2} aria-hidden="true" />
+                Session and course fees, side by side
+              </li>
+              <li>
+                <Check size={15} strokeWidth={2} aria-hidden="true" />
+                Your personalised plan is confirmed at consultation
+              </li>
+              <li>
+                <Check size={15} strokeWidth={2} aria-hidden="true" />
+                Full schedule across eight treatment categories
+              </li>
+            </ul>
+
+            <a href="/pricing" className="ap-btn ap-btn--solid" onClick={routeLinkHandler(onNavigate, 'pricing')}>
+              <span>View Full Price List</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
 
-        {/* 3-Column Translucent Pricing Panels (Figma Exact) */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2rem',
-            marginBottom: '4rem',
-          }}
-        >
-          {PRICING_CATEGORIES.map((cat, idx) => (
-            <div
-              key={idx}
-              className="card-dark-glass"
-              style={{
-                borderRadius: 'var(--radius-sm)',
-                padding: '2.2rem 1.8rem',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: '0.72rem',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: '#D4AF37',
-                    fontWeight: '600',
-                    marginBottom: '0.35rem',
+        <div className="menu__card" data-reveal="frame">
+          <div
+            className="menu__tabs"
+            role="tablist"
+            aria-label="Treatment categories"
+            style={{ '--tab-count': MENU_TABS.length, '--tab-index': activeIndex }}
+          >
+            <span className="menu__tab-indicator" aria-hidden="true" />
+            {MENU_TABS.map((tab, index) => {
+              const isActive = index === activeIndex;
+              return (
+                <button
+                  key={tab.id}
+                  ref={(node) => {
+                    tabRefs.current[index] = node;
                   }}
+                  type="button"
+                  role="tab"
+                  id={`${idBase}-tab-${tab.id}`}
+                  aria-selected={isActive}
+                  aria-controls={`${idBase}-panel`}
+                  tabIndex={isActive ? 0 : -1}
+                  aria-label={tab.label}
+                  className={`menu__tab${isActive ? ' is-active' : ''}`}
+                  onClick={() => setActiveIndex(index)}
+                  onKeyDown={(event) => handleTabKeyDown(event, index)}
                 >
-                  {cat.subtitle}
-                </div>
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.5rem',
-                    color: '#FFFFFF',
-                    fontWeight: '600',
-                    marginBottom: '1.75rem',
-                    paddingBottom: '1rem',
-                    borderBottom: '1px solid rgba(168, 127, 61, 0.25)',
-                  }}
-                >
-                  {cat.title}
-                </h3>
+                  <span className="menu__tab-label">{tab.label}</span>
+                  <span className="menu__tab-label menu__tab-label--short">{tab.shortLabel}</span>
+                </button>
+              );
+            })}
+          </div>
 
-                {/* Items List */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {cat.items.map((item, itemIdx) => (
-                    <div
-                      key={itemIdx}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        justifyContent: 'space-between',
-                        gap: '1rem',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                        paddingBottom: '0.85rem',
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '0.925rem', color: '#FFFFFF', fontWeight: '500' }}>
-                          {item.name}
-                        </div>
-                        {item.course && (
-                          <div style={{ fontSize: '0.75rem', color: '#D4AF37', marginTop: '2px' }}>
-                            Course: {item.course}
-                          </div>
-                        )}
-                      </div>
-                      <div style={{ fontSize: '0.925rem', fontWeight: '600', color: '#FFFFFF', whiteSpace: 'nowrap' }}>
-                        {item.single}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card Action */}
-              <div style={{ marginTop: '2rem' }}>
-                <a
-                  href={`https://wa.me/447342052249?text=${encodeURIComponent(`Hello Allure Passions UK, I would like to enquire regarding pricing for ${cat.title}.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: '100%',
-                    background: 'none',
-                    border: '1px solid rgba(168, 127, 61, 0.4)',
-                    borderRadius: 'var(--radius-sm)',
-                    padding: '0.75rem',
-                    color: '#D4AF37',
-                    fontSize: '0.8rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(168, 127, 61, 0.15)';
-                    e.currentTarget.style.borderColor = '#D4AF37';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'none';
-                    e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.4)';
-                  }}
-                >
-                  <MessageSquare size={14} />
-                  <span>Enquire Regarding {cat.title.split('&')[0].trim()}</span>
-                </a>
-              </div>
+          <div
+            id={`${idBase}-panel`}
+            role="tabpanel"
+            aria-labelledby={`${idBase}-tab-${activeTab.id}`}
+            className="menu__panel"
+          >
+            <div className="menu__panel-head">
+              <p className="menu__platforms">{withTrademarks(activeTab.platforms)}</p>
+              <span className="menu__column-label" aria-hidden="true">Per session</span>
+              <span className="menu__column-label" aria-hidden="true">Course</span>
             </div>
-          ))}
+
+            <ul key={activeTab.id} className="menu__rows">
+              {activeTab.rows.map((row, index) => (
+                <li key={row.item} className="menu__row" style={{ '--i': index }}>
+                  <div className="menu__treatment">
+                    <span className="menu__device">{row.device}</span>
+                    <span className="menu__name">{row.name}</span>
+                  </div>
+                  <div className="menu__fee">
+                    <span className="menu__fee-label">Per session</span>
+                    <span className="menu__amount">{row.session}</span>
+                  </div>
+                  <div className="menu__fee">
+                    {row.course ? (
+                      <>
+                        <span className="menu__fee-label menu__fee-label--course">{row.course.label}</span>
+                        <span className="menu__amount">{row.course.price}</span>
+                      </>
+                    ) : (
+                      <span className="menu__one-off">One-off treatment</span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="menu__panel-foot">
+              <span className="menu__count">
+                Showing {activeTab.rows.length} of {activeTab.total} treatments
+              </span>
+              <a
+                className="ap-link menu__enquire"
+                href={whatsappLink(
+                  `Hello ${CLINIC_INFO.name}, I would like to enquire about ${activeTab.label.toLowerCase()} treatments and pricing.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle size={15} aria-hidden="true" />
+                <span>Enquire about {activeTab.label}</span>
+              </a>
+            </div>
+          </div>
         </div>
-
-        {/* Bottom CTA Row */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1.5rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <button
-            onClick={() => onNavigate && onNavigate('pricing')}
-            className="btn-bronze"
-            style={{
-              padding: '0.95rem 2.6rem',
-              fontSize: '0.85rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <span>View Complete 8-Category Price List</span>
-            <ArrowRight size={16} />
-          </button>
-
-          <a
-            href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20request%20a%20Bespoke%20Course%20Assessment."
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              padding: '0.9rem 2.2rem',
-              fontSize: '0.85rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: '#FFFFFF',
-              background: 'transparent',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: 'var(--radius-sm)',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#D4AF37';
-              e.currentTarget.style.color = '#D4AF37';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-              e.currentTarget.style.color = '#FFFFFF';
-            }}
-          >
-            Direct Consultation
-          </a>
-        </div>
-
       </div>
     </section>
   );

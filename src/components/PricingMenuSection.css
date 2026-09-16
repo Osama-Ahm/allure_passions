@@ -1,0 +1,343 @@
+.menu {
+  background: var(--ap-stone);
+  color: var(--ap-ink);
+  padding-block: clamp(5rem, 9vw, 8.5rem);
+  border-bottom: 1px solid rgba(28, 27, 24, 0.06);
+}
+
+.menu__layout {
+  display: grid;
+  gap: clamp(2.75rem, 5vw, 4rem);
+}
+
+/* Top-aligned so switching to a shorter tab never shifts the intro column */
+@media (min-width: 1024px) {
+  .menu__layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    column-gap: clamp(3rem, 6vw, 6.5rem);
+  }
+
+  .menu__intro {
+    padding-top: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+/* Intro column */
+.menu__intro {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.menu__intro-body {
+  display: grid;
+  justify-items: start;
+  gap: 1.75rem;
+}
+
+.menu__points {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+}
+
+.menu__points li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: #3F3C36;
+}
+
+.menu__points svg {
+  flex-shrink: 0;
+  box-sizing: content-box;
+  padding: 0.3rem;
+  border: 1px solid rgba(127, 96, 41, 0.3);
+  border-radius: 50%;
+  color: var(--ap-bronze-text);
+}
+
+/* Menu card */
+.menu__card {
+  padding: clamp(0.75rem, 2vw, 1.1rem);
+  border: 1px solid rgba(28, 27, 24, 0.07);
+  border-radius: calc(var(--ap-radius-card) + 4px);
+  background: #FFFFFF;
+  box-shadow: 0 40px 80px -48px rgba(28, 27, 24, 0.28);
+}
+
+.menu__tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--tab-count), minmax(0, 1fr));
+  padding: 0.3rem;
+  border-radius: 12px;
+  background: var(--ap-linen);
+}
+
+.menu__tab-indicator {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0.3rem;
+  width: calc((100% - 0.6rem) / var(--tab-count));
+  border-radius: 9px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(28, 27, 24, 0.08), 0 8px 18px -10px rgba(28, 27, 24, 0.25);
+  transform: translateX(calc(var(--tab-index) * 100%));
+  transition: transform 0.55s var(--ease-editorial);
+}
+
+.menu__tab {
+  position: relative;
+  z-index: 1;
+  min-height: 2.9rem;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ap-muted);
+  cursor: pointer;
+  transition: color 0.35s var(--ease-editorial);
+}
+
+.menu__tab:hover,
+.menu__tab.is-active {
+  color: var(--ap-ink);
+}
+
+.menu__tab:focus-visible {
+  outline: 2px solid var(--ap-bronze-accent);
+  outline-offset: 2px;
+}
+
+.menu__tab-label--short {
+  display: none;
+}
+
+.menu__panel {
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1.25rem) clamp(0.5rem, 1.5vw, 0.9rem);
+}
+
+.menu__panel-head,
+.menu__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem 7.5rem;
+  align-items: center;
+  column-gap: 1.25rem;
+}
+
+.menu__panel-head {
+  padding: 0 0.85rem 1rem;
+  border-bottom: 1px solid rgba(28, 27, 24, 0.1);
+}
+
+.menu__platforms {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-style: italic;
+  line-height: 1.2;
+  color: var(--ap-ink);
+}
+
+.menu__column-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.menu__rows {
+  list-style: none;
+}
+
+.menu__row {
+  position: relative;
+  padding: 1.05rem 0.85rem;
+  border-radius: 10px;
+  animation: apMenuRowIn 0.65s var(--ease-editorial) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+  transition: background-color 0.3s var(--ease-editorial);
+}
+
+.menu__row::after {
+  content: '';
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0;
+  left: 0.85rem;
+  height: 1px;
+  background: rgba(28, 27, 24, 0.07);
+}
+
+.menu__row:last-child::after {
+  display: none;
+}
+
+.menu__row:hover {
+  background: #FAF6EF;
+}
+
+@keyframes apMenuRowIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.menu__treatment {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.menu__device {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-bronze-text);
+}
+
+.menu__name {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ap-ink);
+}
+
+.menu__fee {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.menu__amount {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.15;
+  font-variant-numeric: lining-nums;
+  white-space: nowrap;
+  color: var(--ap-ink);
+}
+
+.menu__fee-label {
+  font-size: 0.72rem;
+  color: var(--ap-muted);
+}
+
+/* Desktop: session label lives in the column header; course length sits below its fee */
+.menu__fee-label:not(.menu__fee-label--course) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Hangs below the fee so session and course amounts share one centre line */
+.menu__fee-label--course {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  white-space: nowrap;
+}
+
+.menu__one-off {
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--ap-muted);
+}
+
+.menu__panel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1.35rem 0.85rem 0.35rem;
+}
+
+.menu__count {
+  font-size: 0.82rem;
+  color: var(--ap-muted);
+}
+
+.menu__enquire {
+  font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu__row {
+    animation: none;
+  }
+
+  .menu__tab-indicator {
+    transition: none;
+  }
+}
+
+/* Phones & small tablets: fees drop beneath each treatment name */
+@media (max-width: 639px) {
+  .menu__panel-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .menu__column-label {
+    display: none;
+  }
+
+  .menu__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0.85rem;
+  }
+
+  .menu__treatment {
+    grid-column: 1 / -1;
+  }
+
+  .menu__fee {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .menu__fee-label:not(.menu__fee-label--course) {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  .menu__fee-label--course {
+    position: static;
+  }
+
+  .menu__amount {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .menu__tab-label {
+    display: none;
+  }
+
+  .menu__tab-label--short {
+    display: inline;
+  }
+}

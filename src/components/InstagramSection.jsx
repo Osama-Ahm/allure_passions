@@ -1,5 +1,6 @@
 import React from 'react';
 import { CLINIC_INFO } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
 
 const InstagramIcon = ({ size = 18, color = "#1C1B18" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -18,7 +19,7 @@ const INSTAGRAM_POSTS = [
   {
     image: '/assets/images/practitioner_portrait.jpg',
     caption: 'Meet Abigail, Clinic Founder & Level 6 Medical Aesthetician at Allure Passions UK.',
-    tag: '#AllurePassions #ClinicalLead',
+    tag: '#AllurePassionsUK #ClinicalLead',
   },
   {
     image: '/assets/images/emsculpt_applicator.jpg',
@@ -46,6 +47,7 @@ export default function InstagramSection() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -58,6 +60,7 @@ export default function InstagramSection() {
             Behind The Scenes
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
@@ -67,17 +70,20 @@ export default function InstagramSection() {
               marginBottom: '0.75rem',
             }}
           >
-            Follow Our Journey{' '}
-            <a
-              href="https://www.instagram.com/allurepassionsuk"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: '#A87F3D', textDecoration: 'none' }}
-            >
-              {CLINIC_INFO.instagram}
-            </a>
+            <SplitWords>
+              Follow Our Journey{' '}
+              <a
+                href="https://www.instagram.com/allurepassionsuk"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#A87F3D', textDecoration: 'none' }}
+              >
+                {CLINIC_INFO.instagram}
+              </a>
+            </SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1rem',
@@ -91,6 +97,7 @@ export default function InstagramSection() {
 
         {/* 4 Square Photo Grid (Figma Exact) */}
         <div
+          data-reveal-children
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -103,7 +110,7 @@ export default function InstagramSection() {
               href="https://www.instagram.com/allurepassionsuk"
               target="_blank"
               rel="noopener noreferrer"
-              className="card-white-elevation"
+              className="card-white-elevation ap-hover-zoom"
               style={{
                 display: 'block',
                 textDecoration: 'none',

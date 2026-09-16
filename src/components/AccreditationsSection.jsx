@@ -1,5 +1,6 @@
 import React from 'react';
-import { Award, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Award, ArrowRight } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
 
 export default function AccreditationsSection({ onNavigate }) {
   return (
@@ -15,6 +16,7 @@ export default function AccreditationsSection({ onNavigate }) {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.78rem',
               letterSpacing: '0.22em',
@@ -27,6 +29,7 @@ export default function AccreditationsSection({ onNavigate }) {
             Clinical Governance & Industry Recognition
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.2rem, 4vw, 3.4rem)',
@@ -36,9 +39,10 @@ export default function AccreditationsSection({ onNavigate }) {
               marginBottom: '1rem',
             }}
           >
-            Recognised Excellence
+            <SplitWords>Recognised Excellence</SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1.05rem',
@@ -335,7 +339,7 @@ export default function AccreditationsSection({ onNavigate }) {
         </div>
 
         {/* Bottom CTA to /about */}
-        <div style={{ textAlign: 'center' }}>
+        <div data-reveal style={{ textAlign: 'center' }}>
           <button
             onClick={() => onNavigate && onNavigate('about')}
             className="btn-outline-bronze"

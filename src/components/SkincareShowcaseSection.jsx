@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, ShieldAlert, MessageSquare } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
 
 export default function SkincareShowcaseSection({ onNavigate }) {
   return (
@@ -15,6 +16,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -27,6 +29,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
             Prescription & Clinical Formulations
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -36,9 +39,10 @@ export default function SkincareShowcaseSection({ onNavigate }) {
               marginBottom: '1rem',
             }}
           >
-            Medical-Grade Skincare
+            <SplitWords>Medical-Grade Skincare</SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1.05rem',
@@ -89,6 +93,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
                   src="/assets/images/kojivit_ultra_cream.png"
                   alt="Kojivit Ultra Brightening Cream"
                   loading="lazy"
+                  className="ap-float"
                   style={{
                     maxHeight: '100%',
                     maxWidth: '100%',
@@ -205,6 +210,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
                   src="/assets/images/tretinoin_prescription.png"
                   alt="Tretinoin Prescription Skincare"
                   loading="lazy"
+                  className="ap-float ap-float--offset"
                   style={{
                     maxHeight: '100%',
                     maxWidth: '100%',

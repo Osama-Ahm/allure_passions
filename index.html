@@ -4,14 +4,81 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#121110" />
     <title>Allure Passions UK | Award-Winning Advanced Aesthetic Clinic Knightsbridge</title>
     <meta name="description" content="Allure Passions UK Aesthetic Clinic - Winner of Best Advanced Skin & Body Aesthetics Clinic 2026 London. JCCP Registered Practice. 189 Brompton Road, Knightsbridge." />
     <!-- Google Fonts: Cormorant Garamond & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Intro loader: inlined so it paints before the app bundle arrives (lifted by src/motion/intro.js) -->
+    <style>
+      #ap-loader { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: #121110; color: #F7F3EC; }
+      #ap-loader::after { content: ""; position: absolute; top: 100%; left: -10%; right: -10%; height: 14vh; background: #121110; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
+      .ap-loader__inner { display: grid; justify-items: center; padding: 0 1.5rem; }
+      .ap-loader__mark { display: flex; overflow: hidden; padding: 0.12em 0 0.14em 0.26em; font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(1.05rem, 4.4vw, 2.9rem); font-weight: 500; line-height: 1.1; letter-spacing: 0.26em; white-space: nowrap; }
+      .ap-loader__mark span { display: inline-block; white-space: pre; transform: translate3d(0, 115%, 0); }
+      .ap-fonts .ap-loader__mark span { animation: apLoaderLetter 1.1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 55ms) forwards; }
+      .ap-loader__rule { position: relative; width: min(16rem, 58vw); height: 1px; margin: 1.5rem 0 1.15rem; overflow: hidden; background: rgba(247, 243, 236, 0.14); }
+      .ap-loader__rule span { position: absolute; inset: 0; background: #D6BD8A; transform: scaleX(0); transform-origin: left center; animation: apLoaderProgress 2.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s forwards; }
+      .ap-loader__sub { padding-left: 0.34em; font-family: Inter, system-ui, sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase; color: #D6BD8A; opacity: 0; animation: apLoaderFade 1s ease 0.9s forwards; }
+      #ap-loader.is-leaving { transform: translate3d(0, calc(-100% - 15vh), 0); transition: transform 1.25s cubic-bezier(0.76, 0, 0.24, 1) 0.4s; }
+      #ap-loader.is-leaving .ap-loader__inner { opacity: 0; transform: translate3d(0, -2.5rem, 0); transition: opacity 0.55s ease, transform 0.9s cubic-bezier(0.76, 0, 0.24, 1); }
+      #ap-loader.is-leaving .ap-loader__rule span { animation: apLoaderDone 0.4s ease-out forwards; }
+      .ap-intro-quick .ap-loader__mark span, .ap-intro-quick .ap-loader__sub { opacity: 1; transform: none; animation: none; }
+      .ap-intro-quick .ap-loader__rule span { animation-duration: 0.35s; animation-delay: 0s; }
+      .ap-intro-quick #ap-loader.is-leaving { opacity: 0; transform: none; transition: opacity 0.5s ease; }
+      @keyframes apLoaderLetter { to { transform: translate3d(0, 0, 0); } }
+      @keyframes apLoaderProgress { to { transform: scaleX(0.86); } }
+      @keyframes apLoaderDone { from { transform: scaleX(0.86); } to { transform: scaleX(1); } }
+      @keyframes apLoaderFade { to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .ap-loader__mark span, .ap-loader__sub { opacity: 1; transform: none; animation: none !important; }
+        .ap-loader__rule span { transform: scaleX(1); animation: none !important; }
+        #ap-loader.is-leaving { opacity: 0; transform: none; transition: opacity 0.4s ease; }
+      }
+    </style>
+    <noscript><style>#ap-loader { display: none; }</style></noscript>
+    <script>
+      (function () {
+        var html = document.documentElement;
+        window.__apIntroStart = performance.now();
+        html.setAttribute('data-curtain', 'closed');
+        try {
+          if (sessionStorage.getItem('ap-intro-seen')) html.classList.add('ap-intro-quick');
+        } catch (e) {}
+
+        // Reveal the wordmark only once Cormorant is ready, so the letters never swap fonts mid-animation.
+        var showWordmark = function () { html.classList.add('ap-fonts'); };
+        if (document.fonts && document.fonts.load) {
+          Promise.race([
+            document.fonts.load('500 1em "Cormorant Garamond"'),
+            new Promise(function (resolve) { setTimeout(resolve, 1200); })
+          ]).then(showWordmark, showWordmark);
+        } else {
+          showWordmark();
+        }
+
+        // Failsafe: never leave the site covered if the app fails to start.
+        setTimeout(function () {
+          var loader = document.getElementById('ap-loader');
+          if (loader && !loader.classList.contains('is-leaving')) {
+            loader.remove();
+            html.removeAttribute('data-curtain');
+          }
+        }, 9000);
+      })();
+    </script>
   </head>
   <body>
+    <div id="ap-loader" aria-hidden="true">
+      <div class="ap-loader__inner">
+        <div class="ap-loader__mark"><span style="--i:0">A</span><span style="--i:1">L</span><span style="--i:2">L</span><span style="--i:3">U</span><span style="--i:4">R</span><span style="--i:5">E</span><span style="--i:6"> </span><span style="--i:7">P</span><span style="--i:8">A</span><span style="--i:9">S</span><span style="--i:10">S</span><span style="--i:11">I</span><span style="--i:12">O</span><span style="--i:13">N</span><span style="--i:14">S</span><span style="--i:15"> </span><span style="--i:16">U</span><span style="--i:17">K</span></div>
+        <div class="ap-loader__rule"><span></span></div>
+        <div class="ap-loader__sub">Knightsbridge &middot; London</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

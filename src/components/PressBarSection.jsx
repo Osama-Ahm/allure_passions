@@ -21,6 +21,7 @@ export default function PressBarSection() {
     >
       <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
         <div
+          data-reveal="fade"
           style={{
             fontSize: '0.7rem',
             letterSpacing: '0.25em',
@@ -34,38 +35,34 @@ export default function PressBarSection() {
           As Featured & Recognised In British & International Press
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            gap: '2.5rem',
-            flexWrap: 'wrap',
-            opacity: 0.85,
-          }}
-        >
-          {PRESS_LOGOS.map((press, idx) => (
-            <div
-              key={idx}
-              style={{
-                color: press.style.color || '#ECE8E1',
-                ...press.style,
-                userSelect: 'none',
-                transition: 'opacity 0.2s, transform 0.2s',
-                cursor: 'default',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.opacity = '1';
-                e.currentTarget.style.transform = 'scale(1.04)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.opacity = '0.85';
-                e.currentTarget.style.transform = 'scale(1.0)';
-              }}
-            >
-              {press.name}
-            </div>
-          ))}
+        {/* Slow editorial marquee; the second copy only exists to loop seamlessly */}
+        <div className="ap-marquee" data-reveal="fade">
+          <div className="ap-marquee__track" style={{ opacity: 0.85 }}>
+            {[...PRESS_LOGOS, ...PRESS_LOGOS].map((press, idx) => (
+              <div
+                key={idx}
+                aria-hidden={idx >= PRESS_LOGOS.length ? 'true' : undefined}
+                style={{
+                  color: press.style.color || '#ECE8E1',
+                  ...press.style,
+                  whiteSpace: 'nowrap',
+                  userSelect: 'none',
+                  transition: 'opacity 0.2s, transform 0.2s',
+                  cursor: 'default',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = '1';
+                  e.currentTarget.style.transform = 'scale(1.04)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = '0.85';
+                  e.currentTarget.style.transform = 'scale(1.0)';
+                }}
+              >
+                {press.name}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

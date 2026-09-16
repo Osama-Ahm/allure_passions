@@ -99,6 +99,7 @@ export default function PricingPage({ onNavigate }) {
         {/* Page Header with Character */}
         <div style={{ maxWidth: '960px', marginBottom: '3rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -112,6 +113,7 @@ export default function PricingPage({ onNavigate }) {
           </div>
 
           <h1
+            data-reveal
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)',
@@ -124,12 +126,13 @@ export default function PricingPage({ onNavigate }) {
             Treatment Menu & Clinical Investment
           </h1>
 
-          <p style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75', marginBottom: '2rem' }}>
+          <p data-reveal style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75', marginBottom: '2rem' }}>
             Transparent pricing for all doctor-led medical aesthetic protocols. All treatment courses include a complimentary multi-spectral skin analysis and dedicated post-procedure clinical support.
           </p>
 
           {/* Value Highlights */}
           <div
+            data-reveal-children
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, MessageSquare } from 'lucide-react';
 import { REVIEWS } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
 
 export default function TestimonialsSection() {
   // Take first 6 reviews for a perfect 2x3 grid (Figma exact)
@@ -19,6 +20,7 @@ export default function TestimonialsSection() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div
+            data-reveal
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -33,6 +35,7 @@ export default function TestimonialsSection() {
           </div>
 
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -45,6 +48,7 @@ export default function TestimonialsSection() {
             5.0 Verified Patient Ratings
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -54,9 +58,10 @@ export default function TestimonialsSection() {
               marginBottom: '1rem',
             }}
           >
-            Client Experiences
+            <SplitWords>Client Experiences</SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1.05rem',
@@ -108,7 +113,7 @@ export default function TestimonialsSection() {
                     marginBottom: '1.5rem',
                   }}
                 >
-                  "{review.quote}"
+                  "{review.quote || review.text}"
                 </p>
               </div>
 
@@ -122,7 +127,7 @@ export default function TestimonialsSection() {
                   {review.author}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#A87F3D', marginTop: '2px', fontWeight: '500' }}>
-                  {review.treatment} • {review.location}
+                  {review.treatment} • {review.location || review.role}
                 </div>
               </div>
             </div>
@@ -130,7 +135,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Bottom Centered Direct Consultation Action */}
-        <div style={{ textAlign: 'center' }}>
+        <div data-reveal style={{ textAlign: 'center' }}>
           <a
             href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20with%20your%20clinical%20team."
             target="_blank"

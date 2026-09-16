@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, ShieldCheck, Award, GraduationCap, Phone } from 'lucide-react';
 import { CLINIC_INFO } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
 
 export default function FounderSection({ onNavigate }) {
   return (
@@ -23,6 +24,7 @@ export default function FounderSection({ onNavigate }) {
           {/* Left Column: Editorial Bio (Figma Exact) */}
           <div>
             <div
+              data-reveal
               style={{
                 fontSize: '0.8rem',
                 letterSpacing: '0.22em',
@@ -36,6 +38,7 @@ export default function FounderSection({ onNavigate }) {
             </div>
 
             <h2
+              data-reveal="words"
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -45,10 +48,11 @@ export default function FounderSection({ onNavigate }) {
                 marginBottom: '1.75rem',
               }}
             >
-              Welcome to Allure Passions UK
+              <SplitWords>Welcome to Allure Passions UK</SplitWords>
             </h2>
 
             <p
+              data-reveal
               style={{
                 fontSize: '1.05rem',
                 color: '#4A4740',
@@ -60,6 +64,7 @@ export default function FounderSection({ onNavigate }) {
             </p>
 
             <p
+              data-reveal
               style={{
                 fontSize: '0.95rem',
                 color: '#4A4740',
@@ -72,6 +77,7 @@ export default function FounderSection({ onNavigate }) {
 
             {/* Credential Tags */}
             <div
+              data-reveal
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -119,7 +125,7 @@ export default function FounderSection({ onNavigate }) {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+            <div data-reveal style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
               <button
                 onClick={() => onNavigate && onNavigate('about')}
                 className="btn-bronze"
@@ -166,6 +172,7 @@ export default function FounderSection({ onNavigate }) {
             >
               {/* Decorative Hairline Border Behind */}
               <div
+                data-reveal="frame"
                 style={{
                   position: 'absolute',
                   inset: '-12px',
@@ -177,6 +184,7 @@ export default function FounderSection({ onNavigate }) {
 
               {/* Main Portrait Frame */}
               <div
+                data-reveal="image"
                 style={{
                   position: 'relative',
                   zIndex: 1,
@@ -190,6 +198,7 @@ export default function FounderSection({ onNavigate }) {
                   src="/assets/images/practitioner_portrait.jpg"
                   alt="Abigail - Lead Aesthetician & Clinic Founder"
                   loading="lazy"
+                  data-parallax="0.06"
                   style={{
                     width: '100%',
                     height: 'auto',

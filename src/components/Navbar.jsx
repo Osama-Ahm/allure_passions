@@ -1,18 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CLINIC_INFO } from '../data/treatmentData';
 import { Phone, MapPin, X, ArrowRight, ShieldCheck, MessageSquare, Clock } from 'lucide-react';
 
+const DRAWER_CLOSE_MS = 450;
+
+const NAV_ITEMS = [
+  { label: 'Home', route: 'home' },
+  { label: 'Treatments Portfolio', route: 'treatments' },
+  { label: 'About Practice & Founder', route: 'about' },
+  { label: 'Treatment Menu & Pricing', route: 'pricing' },
+  { label: 'Prescription Skincare Hub', route: 'prescription-skincare' },
+];
+
 export default function Navbar({ currentRoute = 'home', onNavigate }) {
   const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [menuState, setMenuState] = useState('closed'); // 'open' | 'closing' | 'closed'
+  const isMenuOpen = menuState !== 'closed';
+  const closeTimer = useRef(0);
 
+  // Solid header once scrolled; tuck it away while scrolling down, return on scroll up.
   useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      if (y < 160) setIsHidden(false);
+      else if (y - lastY > 6) setIsHidden(true);
+      else if (lastY - y > 6) setIsHidden(false);
+      lastY = y;
+    };
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      if (!frame) frame = requestAnimationFrame(update);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
+    };
   }, []);
+
+  useEffect(() => () => window.clearTimeout(closeTimer.current), []);
+
+  const openMenu = () => {
+    window.clearTimeout(closeTimer.current);
+    setMenuState('open');
+  };
+
+  const closeMenu = () => {
+    setMenuState((state) => (state === 'open' ? 'closing' : state));
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setMenuState('closed'), DRAWER_CLOSE_MS);
+  };
 
   // Prevent body scroll when menu drawer is open
   useEffect(() => {
@@ -29,16 +70,16 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
   // Handle ESC key to close drawer
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
+      if (e.key === 'Escape' && menuState === 'open') {
+        closeMenu();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen]);
+  }, [menuState]);
 
   const handleNavClick = (targetRoute) => {
-    setIsMenuOpen(false);
+    closeMenu();
     if (onNavigate) {
       onNavigate(targetRoute);
     }
@@ -51,36 +92,31 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
     <>
       {/* Figma Header: Fixed Overlay (Left MENU, Center AP Crest, Right ENQUIRE) */}
       <header
+        className={`site-header${scrolled ? ' is-scrolled' : ''}`}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           zIndex: 900,
-          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: isHidden && !isMenuOpen ? 'translateY(-110%)' : 'translateY(0)',
+          transition:
+            'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s ease, padding 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease',
           background: isTransparent
             ? 'linear-gradient(180deg, rgba(14, 13, 12, 0.82) 0%, rgba(14, 13, 12, 0.35) 60%, transparent 100%)'
             : 'rgba(18, 17, 16, 0.95)',
           backdropFilter: isTransparent ? 'none' : 'blur(16px)',
           WebkitBackdropFilter: isTransparent ? 'none' : 'blur(16px)',
           borderBottom: isTransparent ? 'none' : '1px solid rgba(168, 127, 61, 0.22)',
-          padding: scrolled ? '0.75rem 1.5rem' : '1.25rem 2rem',
         }}
       >
-        <div
-          style={{
-            maxWidth: '1440px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-          }}
-        >
+        <div className="site-header__bar">
           {/* Left: Minimal MENU Trigger (Figma exact) */}
           <button
-            onClick={() => setIsMenuOpen(true)}
+            onClick={openMenu}
             aria-label="Open Navigation Menu"
+            aria-expanded={menuState === 'open'}
+            className="menu-trigger"
             style={{
               background: 'transparent',
               border: 'none',
@@ -101,26 +137,16 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
           >
             {/* Minimalist 2-line hamburger */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '22px' }}>
-              <span style={{ display: 'block', height: '1.5px', background: 'currentColor', width: '100%', transition: 'background 0.2s' }} />
-              <span style={{ display: 'block', height: '1.5px', background: 'currentColor', width: '70%', transition: 'background 0.2s' }} />
+              <span className="menu-trigger__line" style={{ width: '100%' }} />
+              <span className="menu-trigger__line menu-trigger__line--short" />
             </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '0.825rem',
-                fontWeight: '500',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Menu
-            </span>
+            <span className="site-header__menu-label">Menu</span>
           </button>
 
-          {/* Center: Monogram AP Luxury Crest & Brand Identity (Figma exact) */}
+          {/* Center: Brand wordmark */}
           <button
             onClick={() => handleNavClick('home')}
-            aria-label="Allure Passions UK Home"
+            aria-label={`${CLINIC_INFO.name} Home`}
             style={{
               background: 'transparent',
               border: 'none',
@@ -130,34 +156,11 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
               alignItems: 'center',
               padding: 0,
               textDecoration: 'none',
+              minWidth: 0,
             }}
           >
-            <div
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: scrolled ? '1.4rem' : '1.75rem',
-                fontWeight: '600',
-                letterSpacing: '0.08em',
-                color: '#FFFFFF',
-                lineHeight: 1,
-                transition: 'font-size 0.3s ease',
-              }}
-            >
-              ALLURE PASSIONS
-            </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '0.58rem',
-                letterSpacing: '0.24em',
-                color: '#D4AF37',
-                textTransform: 'uppercase',
-                marginTop: '3px',
-                fontWeight: '500',
-              }}
-            >
-              Knightsbridge • London
-            </span>
+            <span className="site-header__logo">{CLINIC_INFO.name}</span>
+            <span className="site-header__tagline">Knightsbridge • London</span>
           </button>
 
           {/* Right: Gold ENQUIRE Button (Figma exact - Direct WhatsApp / Telephone) */}
@@ -166,16 +169,14 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
               href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20enquire%20about%20a%20clinical%20consultation."
               target="_blank"
               rel="noopener noreferrer"
+              className="site-header__enquire"
               style={{
                 background: 'var(--bronze-gradient)',
                 color: '#FFFFFF',
                 border: '1px solid rgba(212, 175, 55, 0.4)',
                 borderRadius: 'var(--radius-sm)',
-                padding: scrolled ? '0.5rem 1.25rem' : '0.6rem 1.4rem',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '0.8rem',
                 fontWeight: '600',
-                letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -201,7 +202,7 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
 
       {/* Slide-Over Full Luxury Menu Drawer */}
       {isMenuOpen && (
-        <div className="drawer-backdrop" onClick={() => setIsMenuOpen(false)}>
+        <div className={`drawer-backdrop${menuState === 'closing' ? ' is-closing' : ''}`} onClick={closeMenu}>
           <div
             className="drawer-panel"
             onClick={(e) => e.stopPropagation()}
@@ -226,9 +227,11 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
                       fontSize: '1.4rem',
                       letterSpacing: '0.08em',
                       color: '#FFFFFF',
+                      textTransform: 'uppercase',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    ALLURE PASSIONS
+                    {CLINIC_INFO.name}
                   </div>
                   <div
                     style={{
@@ -243,7 +246,7 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
                 </div>
 
                 <button
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                   aria-label="Close Menu"
                   style={{
                     background: 'none',
@@ -271,17 +274,13 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
 
               {/* Navigation Links (Editorial Serifs) */}
               <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2.5rem' }}>
-                {[
-                  { label: 'Home', route: 'home' },
-                  { label: 'Treatments Portfolio', route: 'treatments' },
-                  { label: 'About Practice & Founder', route: 'about' },
-                  { label: 'Treatment Menu & Pricing', route: 'pricing' },
-                  { label: 'Prescription Skincare Hub', route: 'prescription-skincare' },
-                ].map((item, idx) => (
+                {NAV_ITEMS.map((item, idx) => (
                   <button
-                    key={idx}
+                    key={item.route}
                     onClick={() => handleNavClick(item.route)}
+                    className="drawer-link"
                     style={{
+                      '--i': idx,
                       background: 'none',
                       border: 'none',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
@@ -316,9 +315,10 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
                 href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20enquire%20about%20a%20clinical%20consultation."
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="btn-bronze"
+                onClick={closeMenu}
+                className="btn-bronze drawer-reveal"
                 style={{
+                  '--i': 0,
                   width: '100%',
                   padding: '0.9rem',
                   fontSize: '0.85rem',
@@ -339,7 +339,9 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
 
             {/* Clinic Details Footer */}
             <div
+              className="drawer-reveal"
               style={{
+                '--i': 1,
                 borderTop: '1px solid rgba(168, 127, 61, 0.2)',
                 paddingTop: '1.5rem',
                 fontSize: '0.825rem',

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Sparkles, MessageCircle } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
 
 const TREATMENT_AREAS = [
   {
@@ -179,6 +180,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
         {/* Section Header with Dual Toggle */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -192,6 +194,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
           </div>
 
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
@@ -201,10 +204,11 @@ export default function TreatmentAreasSection({ onNavigate }) {
               marginBottom: '1rem',
             }}
           >
-            {browseMode === 'area' ? 'Explore By Treatment Area' : 'Explore By Aesthetic Concern'}
+            <SplitWords>{browseMode === 'area' ? 'Explore By Treatment Area' : 'Explore By Aesthetic Concern'}</SplitWords>
           </h2>
 
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1.05rem',
@@ -220,6 +224,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
 
           {/* Master Browsing Segment Toggle (Figma Exact) */}
           <div
+            data-reveal
             style={{
               display: 'inline-flex',
               background: '#FFFFFF',
@@ -266,6 +271,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
 
           {/* Sub-Category Filter Pills */}
           <div
+            data-reveal
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -322,6 +328,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
         {browseMode === 'area' && (
           <div>
             <div
+              data-reveal-children
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
@@ -332,6 +339,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
               {filteredAreas.map((area) => (
                 <div
                   key={area.id}
+                  className="ap-hover-zoom"
                   onClick={() => onNavigate('treatment-detail', area.treatmentId || 'morpheus8')}
                   style={{
                     background: '#FFFFFF',
@@ -462,7 +470,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
             </div>
 
             {/* Bottom Button */}
-            <div style={{ textAlign: 'center' }}>
+            <div data-reveal style={{ textAlign: 'center' }}>
               <button
                 onClick={() => onNavigate('treatments')}
                 className="btn-outline-bronze"
@@ -478,6 +486,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
         {browseMode === 'concern' && (
           <div>
             <div
+              data-reveal-children
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
@@ -643,7 +652,7 @@ export default function TreatmentAreasSection({ onNavigate }) {
             </div>
 
             {/* Bottom Button */}
-            <div style={{ textAlign: 'center' }}>
+            <div data-reveal style={{ textAlign: 'center' }}>
               <button
                 onClick={() => onNavigate('treatments')}
                 className="btn-outline-bronze"

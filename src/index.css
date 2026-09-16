@@ -374,7 +374,7 @@ select option {
   z-index: 999;
   display: flex;
   justify-content: flex-start;
-  animation: fadeIn 0.25s ease-out;
+  animation: fadeIn 0.45s ease-out;
 }
 
 .drawer-panel {
@@ -384,7 +384,7 @@ select option {
   height: 100%;
   overflow-y: auto;
   box-shadow: 12px 0 45px rgba(0,0,0,0.5);
-  animation: drawerSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: drawerSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   display: flex;
   flex-direction: column;
 }
@@ -608,4 +608,316 @@ img, video, iframe {
   }
 }
 
+/* ==========================================================================
+   EDITORIAL SECTION PRIMITIVES
+   Shared by the Allure Standard, Signature Treatments and Pricing Menu sections.
+   Wrap a dark section in `.ap-on-dark` to flip the palette.
+   ========================================================================== */
 
+:root {
+  --ap-ink: #1C1B18;
+  --ap-ivory: #F7F3EC;
+  --ap-linen: #F5F0E8;
+  --ap-stone: #F1EBE1;
+  --ap-night: #191714;
+  --ap-champagne: #D6BD8A;
+  --ap-champagne-soft: #E4D2AC;
+  --ap-bronze-text: #7F6029;   /* AA for small text on linen & stone */
+  --ap-bronze-accent: #9A7536; /* AA large for display accents on light grounds */
+  --ap-muted: #6F6A62;
+  --ap-radius-btn: 6px;
+  --ap-radius-media: 14px;
+  --ap-radius-card: 22px;
+}
+
+.ap-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 2rem);
+}
+
+.ap-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--ap-bronze-text);
+}
+
+.ap-eyebrow::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.ap-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 1.5rem + 3.4vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ap-ink);
+  text-wrap: balance;
+}
+
+.ap-display em {
+  font-style: italic;
+  color: var(--ap-bronze-accent);
+}
+
+/* Cormorant runs small: keep display headings generous on phones despite the global h2 cap */
+@media screen and (max-width: 480px) {
+  h2.ap-display {
+    font-size: clamp(2.05rem, 8.6vw, 2.5rem) !important;
+    line-height: 1.08 !important;
+  }
+}
+
+.ap-lede {
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: #4A4740;
+}
+
+.ap-head {
+  display: grid;
+  gap: 1.75rem;
+  margin-bottom: clamp(2.75rem, 5vw, 4.5rem);
+}
+
+.ap-head__title {
+  display: grid;
+  justify-items: start;
+  gap: 1.35rem;
+}
+
+.ap-head__aside {
+  display: grid;
+  justify-items: start;
+  gap: 1.75rem;
+}
+
+@media (min-width: 960px) {
+  .ap-head {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
+    column-gap: 4rem;
+  }
+}
+
+.ap-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 3.1rem;
+  padding: 0 1.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--ap-radius-btn);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.35s var(--ease-editorial), border-color 0.35s var(--ease-editorial), color 0.35s var(--ease-editorial);
+}
+
+.ap-btn svg,
+.ap-link svg {
+  flex-shrink: 0;
+  transition: transform 0.4s var(--ease-editorial);
+}
+
+.ap-btn:hover svg,
+.ap-link:hover svg {
+  transform: translateX(3px);
+}
+
+.ap-btn--solid {
+  background: var(--ap-ink);
+  color: var(--ap-ivory);
+}
+
+.ap-btn--solid:hover {
+  background: #34312B;
+}
+
+.ap-btn--ghost {
+  background: transparent;
+  border-color: rgba(28, 27, 24, 0.22);
+  color: var(--ap-ink);
+}
+
+.ap-btn--ghost:hover {
+  border-color: var(--ap-ink);
+}
+
+.ap-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-block: 0.3rem;
+  border-bottom: 1px solid rgba(28, 27, 24, 0.25);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ap-ink);
+  text-decoration: none;
+  transition: border-color 0.35s var(--ease-editorial), color 0.35s var(--ease-editorial);
+}
+
+.ap-link:hover {
+  border-color: currentColor;
+}
+
+.ap-btn:focus-visible,
+.ap-link:focus-visible {
+  outline: 2px solid var(--ap-bronze-accent);
+  outline-offset: 3px;
+}
+
+/* Dark ground */
+.ap-on-dark .ap-eyebrow { color: var(--ap-champagne); }
+.ap-on-dark .ap-display { color: var(--ap-ivory); }
+.ap-on-dark .ap-display em { color: var(--ap-champagne); }
+.ap-on-dark .ap-lede { color: #ADA9A2; }
+.ap-on-dark .ap-btn--solid { background: var(--ap-champagne); color: var(--ap-ink); }
+.ap-on-dark .ap-btn--solid:hover { background: var(--ap-champagne-soft); }
+.ap-on-dark .ap-btn--ghost { border-color: rgba(247, 243, 236, 0.28); color: var(--ap-ivory); }
+.ap-on-dark .ap-btn--ghost:hover { border-color: var(--ap-champagne); color: var(--ap-champagne); }
+.ap-on-dark .ap-link { border-color: rgba(247, 243, 236, 0.3); color: var(--ap-ivory); }
+.ap-on-dark .ap-btn:focus-visible,
+.ap-on-dark .ap-link:focus-visible { outline-color: var(--ap-champagne); }
+
+/* Scroll reveals for these sections live in src/motion/motion.css */
+
+.ap-mark {
+  margin-left: 0.04em;
+  font-family: var(--font-sans);
+  font-size: 0.42em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0;
+  vertical-align: 1.05em;
+}
+
+
+/* ==========================================================================
+   SITE HEADER (Navbar.jsx) — responsive sizing that must never wrap
+   ========================================================================== */
+
+.site-header {
+  padding: 1.25rem 2rem;
+}
+
+.site-header.is-scrolled {
+  padding: 0.75rem 1.5rem;
+}
+
+.site-header__bar {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-header__menu-label {
+  font-family: var(--font-sans);
+  font-size: 0.825rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.site-header__logo {
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #FFFFFF;
+  transition: font-size 0.5s var(--ease-editorial);
+}
+
+.site-header.is-scrolled .site-header__logo {
+  font-size: 1.4rem;
+}
+
+.site-header__tagline {
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #D4AF37;
+}
+
+.site-header__enquire {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+.site-header.is-scrolled .site-header__enquire {
+  padding: 0.5rem 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .site-header,
+  .site-header.is-scrolled {
+    padding: 0.85rem 1rem;
+  }
+
+  .site-header__bar {
+    gap: 0.5rem;
+  }
+
+  .site-header__menu-label {
+    display: none;
+  }
+
+  .site-header__logo,
+  .site-header.is-scrolled .site-header__logo {
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+  }
+
+  .site-header__tagline {
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .site-header__enquire,
+  .site-header.is-scrolled .site-header__enquire {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (max-width: 350px) {
+  .site-header__logo,
+  .site-header.is-scrolled .site-header__logo {
+    font-size: 0.92rem;
+  }
+
+  .site-header__tagline {
+    display: none;
+  }
+}

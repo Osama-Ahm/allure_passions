@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowRight, MessageSquare } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
+import CountUp from '../motion/CountUp';
 
 export default function BodyContouringSection({ onNavigate }) {
   return (
@@ -16,6 +18,7 @@ export default function BodyContouringSection({ onNavigate }) {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -28,6 +31,7 @@ export default function BodyContouringSection({ onNavigate }) {
             Revolutionary Body Contouring
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -37,9 +41,10 @@ export default function BodyContouringSection({ onNavigate }) {
               marginBottom: '1rem',
             }}
           >
-            Emsculpt Neo® at Allure Passions
+            <SplitWords>Emsculpt Neo® at Allure Passions UK</SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#ECE8E1',
               fontSize: '1.05rem',
@@ -68,10 +73,12 @@ export default function BodyContouringSection({ onNavigate }) {
         >
           {/* Left: Applicator & Treatment Room Photography */}
           <div
+            data-reveal="image"
             style={{
               height: '100%',
               minHeight: '380px',
               position: 'relative',
+              overflow: 'hidden',
               backgroundColor: '#1C1B18',
             }}
           >
@@ -79,6 +86,7 @@ export default function BodyContouringSection({ onNavigate }) {
               src="/assets/images/emsculpt_applicator.jpg"
               alt="Patient undergoing Emsculpt Neo body contouring treatment"
               loading="lazy"
+              data-parallax="0.07"
               style={{
                 width: '100%',
                 height: '100%',
@@ -111,6 +119,7 @@ export default function BodyContouringSection({ onNavigate }) {
           {/* Right: Metrics & Clinical Protocol */}
           <div style={{ padding: '3.5rem 3rem' }}>
             <div
+              data-reveal
               style={{
                 fontSize: '0.75rem',
                 letterSpacing: '0.15em',
@@ -124,6 +133,7 @@ export default function BodyContouringSection({ onNavigate }) {
             </div>
 
             <h3
+              data-reveal
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: '2rem',
@@ -138,6 +148,7 @@ export default function BodyContouringSection({ onNavigate }) {
 
             {/* Metric Pills */}
             <div
+              data-reveal-children
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
@@ -154,7 +165,7 @@ export default function BodyContouringSection({ onNavigate }) {
                 }}
               >
                 <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#D4AF37', fontFamily: 'var(--font-serif)' }}>
-                  -30%
+                  <CountUp to={30} prefix="-" suffix="%" />
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
                   Subcutaneous Fat Layer
@@ -170,7 +181,7 @@ export default function BodyContouringSection({ onNavigate }) {
                 }}
               >
                 <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#D4AF37', fontFamily: 'var(--font-serif)' }}>
-                  +25%
+                  <CountUp to={25} prefix="+" suffix="%" />
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
                   Muscle Tone & Definition
@@ -186,7 +197,7 @@ export default function BodyContouringSection({ onNavigate }) {
                 }}
               >
                 <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#FFFFFF', fontFamily: 'var(--font-serif)' }}>
-                  30 Min
+                  <CountUp to={30} suffix=" Min" />
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
                   Comfortable Session
@@ -211,7 +222,7 @@ export default function BodyContouringSection({ onNavigate }) {
             </div>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div data-reveal style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
               <a
                 href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20regarding%20Emsculpt%20Neo%20Body%20Contouring."
                 target="_blank"

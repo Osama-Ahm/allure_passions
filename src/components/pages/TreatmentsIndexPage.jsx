@@ -105,6 +105,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
         {/* Page Header */}
         <div style={{ maxWidth: '900px', marginBottom: '3.5rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -118,6 +119,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
           </div>
 
           <h1
+            data-reveal
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)',
@@ -130,7 +132,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
             Comprehensive Treatment Directory
           </h1>
 
-          <p style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75' }}>
+          <p data-reveal style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75' }}>
             Explore every clinical service delivered at Allure Passions UK. Filter by anatomical treatment area, explore our flagship medical platforms, or discover curated multi-modality synergy programs.
           </p>
         </div>

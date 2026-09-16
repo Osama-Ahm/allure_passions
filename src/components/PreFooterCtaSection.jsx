@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, MessageSquare, MapPin } from 'lucide-react';
 import { CLINIC_INFO } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
 
 export default function PreFooterCtaSection() {
   return (
@@ -28,6 +29,7 @@ export default function PreFooterCtaSection() {
             }}
           >
             <div
+              data-reveal
               style={{
                 fontSize: '0.8rem',
                 letterSpacing: '0.22em',
@@ -41,6 +43,7 @@ export default function PreFooterCtaSection() {
             </div>
 
             <h2
+              data-reveal="words"
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -50,10 +53,11 @@ export default function PreFooterCtaSection() {
                 marginBottom: '1.5rem',
               }}
             >
-              Begin Your Aesthetic Journey With Us
+              <SplitWords>Begin Your Aesthetic Journey With Us</SplitWords>
             </h2>
 
             <p
+              data-reveal
               style={{
                 fontSize: '1.05rem',
                 color: '#ECE8E1',
@@ -66,7 +70,7 @@ export default function PreFooterCtaSection() {
               Meet with our clinical practitioners in Knightsbridge to discuss your aesthetic goals, evaluate skin tissue health, and tailor an individualized treatment protocol.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem', fontSize: '0.9rem', color: '#C7C2B8' }}>
+            <div data-reveal style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem', fontSize: '0.9rem', color: '#C7C2B8' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <MapPin size={16} color="#D4AF37" />
                 <span>189 Brompton Road, Knightsbridge, London, SW3 1NE</span>
@@ -79,7 +83,7 @@ export default function PreFooterCtaSection() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+            <div data-reveal style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
               <a
                 href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20request%20an%20Initial%20Clinical%20Consultation."
                 target="_blank"
@@ -133,10 +137,12 @@ export default function PreFooterCtaSection() {
 
           {/* Right Column: Close-Up Photography (Figma Exact) */}
           <div
+            data-reveal="image"
             style={{
               height: '100%',
               minHeight: '440px',
               position: 'relative',
+              overflow: 'hidden',
               backgroundColor: '#121110',
             }}
           >
@@ -144,6 +150,7 @@ export default function PreFooterCtaSection() {
               src="/assets/images/prefooter_serum.jpg"
               alt="Hydrating serum application to glowing skin"
               loading="lazy"
+              data-parallax="0.08"
               style={{
                 width: '100%',
                 height: '100%',

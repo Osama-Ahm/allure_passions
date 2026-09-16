@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useMotionSystem from './motion/useMotionSystem';
+import PageCurtain from './motion/PageCurtain';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import TreatmentAreasSection from './components/TreatmentAreasSection';
@@ -38,6 +40,10 @@ function getRouteFromPath(pathname) {
   return { route: 'home', treatmentId: 'picoway' };
 }
 
+// Page curtain timings (keep in sync with apCurtainCover / apCurtainReveal in motion.css)
+const CURTAIN_COVER_MS = 650;
+const CURTAIN_REVEAL_MS = 900;
+
 function getPathFromRoute(route, treatmentId) {
   switch (route) {
     case 'about': return '/about';
@@ -54,6 +60,10 @@ export default function App() {
   const initial = getRouteFromPath(typeof window !== 'undefined' ? window.location.pathname : '/');
   const [currentRoute, setCurrentRoute] = useState(initial.route);
   const [selectedTreatmentId, setSelectedTreatmentId] = useState(initial.treatmentId);
+  const [curtainPhase, setCurtainPhase] = useState('idle');
+  const isTransitioning = useRef(false);
+
+  useMotionSystem();
 
   // Sync state with native browser Back and Forward button navigation
   useEffect(() => {
@@ -69,22 +79,57 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Navigation handler with HTML5 pushState and smooth scroll to top
-  const handleNavigate = (route, treatmentId = null) => {
+  const showRoute = (route, treatmentId) => {
     const path = getPathFromRoute(route, treatmentId);
-    if (typeof window !== 'undefined' && window.location.pathname !== path) {
+    if (window.location.pathname !== path) {
       window.history.pushState({ route, treatmentId }, '', path);
     }
     setCurrentRoute(route);
     if (treatmentId) {
       setSelectedTreatmentId(treatmentId);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Navigation handler: HTML5 pushState behind a branded curtain sweep
+  const handleNavigate = (route, treatmentId = null) => {
+    const isSamePage = route === currentRoute && (!treatmentId || treatmentId === selectedTreatmentId);
+    if (isSamePage) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      showRoute(route, treatmentId);
+      return;
+    }
+    if (isTransitioning.current) return;
+
+    const html = document.documentElement;
+    isTransitioning.current = true;
+    setCurtainPhase('cover');
+
+    window.setTimeout(() => {
+      // Swap pages while fully covered; the new page's entrances wait for the lift.
+      html.setAttribute('data-curtain', 'closed');
+      showRoute(route, treatmentId);
+
+      window.setTimeout(() => {
+        setCurtainPhase('reveal');
+        html.setAttribute('data-curtain', 'opening');
+
+        window.setTimeout(() => {
+          setCurtainPhase('idle');
+          html.removeAttribute('data-curtain');
+          isTransitioning.current = false;
+        }, CURTAIN_REVEAL_MS);
+      }, 80);
+    }, CURTAIN_COVER_MS);
   };
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F2', color: '#1C1B18', display: 'flex', flexDirection: 'column' }}>
-      
+      <PageCurtain phase={curtainPhase} />
+
       {/* Figma Exact Header: Fixed Overlay (Left MENU, Center AP Crest, Right ENQUIRE) */}
       <Navbar
         currentRoute={currentRoute}
@@ -113,15 +158,15 @@ export default function App() {
               onNavigate={handleNavigate}
             />
 
-            {/* Section 5: Clinical Pillars of Practice (Bespoke British Luxury Architectural Cards) */}
+            {/* Section 5: The Allure Standard (Editorial principles list with image that follows the active pillar) */}
             <PillarsSection />
 
-            {/* Section 6: Signature Treatments (Figma Exact: 3x2 White Cards on Dark Charcoal) */}
+            {/* Section 6: Signature Treatments (Staggered image gallery on night ground; swipe rail on phones) */}
             <SignatureTreatmentsSection
               onNavigate={handleNavigate}
             />
 
-            {/* Section 7: Treatment Menu & In-Page Pricing Directory (Figma Exact) */}
+            {/* Section 7: Treatment Menu & Pricing (Tabbed highlights sourced from the official price list) */}
             <PricingMenuSection
               onNavigate={handleNavigate}
             />

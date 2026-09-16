@@ -1,171 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
+import SplitWords from '../motion/SplitWords';
+import './PillarsSection.css';
 
 const PILLARS = [
   {
-    numeral: 'I',
     title: 'Tier-One Medical Platforms',
     description:
-      'We invest exclusively in gold-standard clinical systems—including Morpheus8™, PicoWay®, Sofwave™, ADVATx®, and Emsculpt Neo®. Every platform is FDA-cleared and chosen for verified clinical efficacy.',
-    detail: 'Morpheus8™ · PicoWay® · Sofwave™ · ADVATx® · Emsculpt Neo®',
+      'We invest exclusively in gold-standard clinical systems. Every platform in our Knightsbridge suite is FDA-cleared and chosen for verified clinical efficacy.',
+    details: ['Morpheus8™', 'PicoWay®', 'Sofwave™', 'ADVATx®', 'Emsculpt Neo®'],
+    image: '/assets/images/concern_hooded_brows.jpg',
+    imagePosition: '52% 50%',
   },
   {
-    numeral: 'II',
     title: 'Anatomical Calibration',
     description:
-      'No two tissue structures are alike. Every protocol begins with comprehensive anatomical analysis, matching energy wavelengths and penetration depths directly to your tissue biology.',
-    detail: 'Level 6 Medical Practice · JCCP Registered Oversight',
+      'No two tissue structures are alike. Every protocol begins with a comprehensive anatomical analysis, matching energy wavelengths and penetration depths to your tissue biology.',
+    details: ['Level 6 Medical Practice', 'JCCP Registered Oversight'],
+    image: '/assets/images/area_eyes.jpg',
+    imagePosition: '55% 45%',
   },
   {
-    numeral: 'III',
     title: 'Undetectable Rejuvenation',
     description:
-      'Our aesthetic philosophy avoids artificial distortion or over-filling. We stimulate your body’s endogenous collagen and elastin reserves for elegant, enduring transformation that honors your natural facial harmony.',
-    detail: 'Natural Facial Architecture · Autologous Neocollagenesis',
+      'Our philosophy avoids artificial distortion or over-filling. We stimulate your own collagen and elastin for elegant, enduring results that honour your natural facial harmony.',
+    details: ['Natural Facial Architecture', 'Collagen-Led Renewal'],
+    image: '/assets/images/area_jawline.jpg',
+    imagePosition: '50% 35%',
   },
 ];
 
+const pad = (value) => String(value).padStart(2, '0');
+
 export default function PillarsSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
-    <section
-      style={{
-        backgroundColor: '#121110',
-        color: '#FFFFFF',
-        padding: '6.5rem 0',
-        borderBottom: '1px solid rgba(168, 127, 61, 0.18)',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header - Minimal & Classy */}
-        <div style={{ textAlign: 'center', marginBottom: '4.5rem' }}>
-          <div
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#D4AF37',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            The Allure Standard
+    <section id="allure-standard" className="pillars" aria-labelledby="pillars-title">
+      <div className="ap-container">
+        <header className="ap-head">
+          <div className="ap-head__title">
+            <span className="ap-eyebrow" data-reveal>The Allure Standard</span>
+            <h2 id="pillars-title" className="ap-display" data-reveal="words">
+              <SplitWords>
+                Pillars of <em>Clinical Excellence</em>
+              </SplitWords>
+            </h2>
+          </div>
+          <div className="ap-head__aside" data-reveal>
+            <p className="ap-lede">
+              The principles of patient safety, anatomical precision and subtle aesthetic harmony that guide every
+              treatment at 189 Brompton Road.
+            </p>
+          </div>
+        </header>
+
+        <div className="pillars__layout">
+          {/* Decorative imagery follows whichever pillar is hovered or tapped */}
+          <div className="pillars__media" data-reveal="image" aria-hidden="true">
+            {PILLARS.map((pillar, index) => (
+              <img
+                key={pillar.title}
+                src={pillar.image}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className={`pillars__image${index === activeIndex ? ' is-active' : ''}`}
+                style={{ objectPosition: pillar.imagePosition }}
+              />
+            ))}
+            <div className="pillars__counter">
+              <span>{pad(activeIndex + 1)}</span>
+              <span className="pillars__counter-rule" />
+              <span>{pad(PILLARS.length)}</span>
+            </div>
           </div>
 
-          <h2
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
-              color: '#FFFFFF',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            Pillars of Clinical Excellence
-          </h2>
-
-          <p
-            style={{
-              color: '#C4C0B6',
-              fontSize: '1.05rem',
-              maxWidth: '620px',
-              margin: '0 auto',
-              fontWeight: '300',
-              lineHeight: '1.7',
-            }}
-          >
-            The core principles of patient safety, anatomical precision, and subtle aesthetic harmony that guide every treatment at 189 Brompton Road.
-          </p>
-        </div>
-
-        {/* 3 Minimalist, Understated Luxury Columns */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-            gap: '2.5rem',
-            marginBottom: '3rem',
-          }}
-        >
-          {PILLARS.map((pillar, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: 'rgba(24, 23, 21, 0.7)',
-                border: '1px solid rgba(168, 127, 61, 0.22)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '2.5rem 2rem',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                transition: 'border-color 0.3s ease, transform 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.5)';
-                e.currentTarget.style.transform = 'translateY(-3px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.22)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <div>
-                {/* Subtle Roman Numeral */}
-                <div
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.1rem',
-                    letterSpacing: '0.15em',
-                    color: '#D4AF37',
-                    fontWeight: '600',
-                    marginBottom: '1.25rem',
-                  }}
-                >
-                  {pillar.numeral}
-                </div>
-
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.6rem',
-                    color: '#FFFFFF',
-                    fontWeight: '400',
-                    lineHeight: '1.25',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  {pillar.title}
-                </h3>
-
-                <p
-                  style={{
-                    fontSize: '0.925rem',
-                    color: '#B8B3A8',
-                    lineHeight: '1.8',
-                    fontWeight: '300',
-                    marginBottom: '2rem',
-                  }}
-                >
-                  {pillar.description}
-                </p>
-              </div>
-
-              {/* Discreet Detail Footer */}
-              <div
-                style={{
-                  borderTop: '1px solid rgba(168, 127, 61, 0.15)',
-                  paddingTop: '1rem',
-                  fontSize: '0.75rem',
-                  color: '#A87F3D',
-                  letterSpacing: '0.04em',
-                }}
+          <ol className="pillars__list">
+            {PILLARS.map((pillar, index) => (
+              <li
+                key={pillar.title}
+                className={`pillars__item${index === activeIndex ? ' is-active' : ''}`}
+                data-reveal
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => setActiveIndex(index)}
               >
-                {pillar.detail}
-              </div>
-            </div>
-          ))}
+                <span className="pillars__index" aria-hidden="true">{pad(index + 1)}</span>
+                <h3 className="pillars__title">{pillar.title}</h3>
+                <p className="pillars__description">{pillar.description}</p>
+                <ul className="pillars__tags">
+                  {pillar.details.map((detail) => (
+                    <li key={detail} className="pillars__tag">{detail}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
         </div>
-
       </div>
     </section>
   );

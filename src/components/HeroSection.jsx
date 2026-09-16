@@ -1,9 +1,43 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, MessageSquare } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
 
 export default function HeroSection({ onNavigate }) {
+  const sectionRef = useRef(null);
+  const videoRef = useRef(null);
+  const contentRef = useRef(null);
+
+  // Scroll parallax: the film drifts slower than the page while the copy lifts and fades.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const height = section.offsetHeight;
+      const y = Math.min(Math.max(window.scrollY, 0), height);
+      if (videoRef.current) videoRef.current.style.translate = `0 ${(y * 0.35).toFixed(1)}px`;
+      if (contentRef.current) {
+        contentRef.current.style.translate = `0 ${(y * -0.12).toFixed(1)}px`;
+        contentRef.current.style.opacity = String(Math.max(0, 1 - y / (height * 0.75)).toFixed(3));
+      }
+    };
+    const handleScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       style={{
         position: 'relative',
         minHeight: '92vh',
@@ -18,6 +52,8 @@ export default function HeroSection({ onNavigate }) {
     >
       {/* 1. Cinematic Full-Bleed Video Background */}
       <video
+        ref={videoRef}
+        className="hero-media hero-parallax"
         src="/assets/videos/clinic_hero_walkthrough.mp4"
         poster="/assets/images/hero_clinic_ambiance.png"
         autoPlay
@@ -47,6 +83,8 @@ export default function HeroSection({ onNavigate }) {
 
       {/* 3. Hero Editorial Content (Figma Exact) */}
       <div
+        ref={contentRef}
+        className="hero-parallax"
         style={{
           position: 'relative',
           zIndex: 3,
@@ -62,7 +100,7 @@ export default function HeroSection({ onNavigate }) {
       >
         {/* Tracked Overline */}
         <div
-          className="animate-reveal-1"
+          className="hero-overline"
           style={{
             fontSize: '0.825rem',
             letterSpacing: '0.24em',
@@ -77,7 +115,7 @@ export default function HeroSection({ onNavigate }) {
 
         {/* Figma Exact Headline: "Advanced Aesthetics" */}
         <h1
-          className="animate-reveal-2"
+          className="hero-title"
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(2.8rem, 6.2vw, 5.2rem)',
@@ -90,12 +128,12 @@ export default function HeroSection({ onNavigate }) {
             textShadow: '0 4px 30px rgba(0, 0, 0, 0.6)',
           }}
         >
-          Advanced Aesthetics
+          <SplitWords>Advanced Aesthetics</SplitWords>
         </h1>
 
         {/* Supporting Clinical Tagline */}
         <p
-          className="animate-reveal-3"
+          className="hero-copy"
           style={{
             fontSize: 'clamp(1.05rem, 1.4vw, 1.25rem)',
             color: '#ECE8E1',
@@ -111,7 +149,7 @@ export default function HeroSection({ onNavigate }) {
 
         {/* Dual CTAs (Figma Exact: Left Gold Filled, Right Dark/Outline) */}
         <div
-          className="animate-reveal-4"
+          className="hero-actions"
           style={{
             display: 'flex',
             alignItems: 'center',

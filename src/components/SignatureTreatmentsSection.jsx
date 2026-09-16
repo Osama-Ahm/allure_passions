@@ -1,254 +1,139 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { POPULAR_TREATMENTS } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
+import { routeLinkHandler } from '../utils/navigation';
+import { withTrademarks } from '../utils/trademarks';
+import './SignatureTreatmentsSection.css';
+
+// Short image tags, plus focal points for the landscape crop of each square photograph.
+const CARD_DETAILS = {
+  picoway: { tag: 'Skin Renewal', imagePosition: '50% 0%' },
+  advatx: { tag: 'Redness & Rosacea', imagePosition: '50% 100%' },
+  morpheus8: { tag: 'Skin Tightening', imagePosition: '40% 55%' },
+  sofwave: { tag: 'Face & Neck Lift', imagePosition: '50% 100%' },
+  emsculpt_neo: { tag: 'Body Contouring', imagePosition: '50% 100%' },
+  emerald_laser: { tag: 'Targeted Fat Loss', imagePosition: '50% 85%' },
+};
+
+const startingPrice = (pricing = '') => pricing.match(/£[\d,]+/)?.[0];
 
 export default function SignatureTreatmentsSection({ onNavigate }) {
+  const railRef = useRef(null);
+  const progressRef = useRef(null);
+
+  // Mobile rail: mirror horizontal scroll position in the progress bar.
+  useEffect(() => {
+    const rail = railRef.current;
+    const progress = progressRef.current;
+    if (!rail || !progress) return undefined;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      const visible = rail.clientWidth / rail.scrollWidth;
+      const travelled = maxScroll > 0 ? rail.scrollLeft / maxScroll : 0;
+      progress.style.setProperty('--rail-size', visible.toFixed(3));
+      progress.style.setProperty('--rail-progress', travelled.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    rail.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      rail.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   return (
     <section
-      style={{
-        backgroundColor: '#1C1B18',
-        color: '#FFFFFF',
-        padding: '7rem 0',
-        borderBottom: '1px solid rgba(168, 127, 61, 0.22)',
-      }}
+      id="signature-treatments"
+      className="signature ap-on-dark"
+      aria-labelledby="signature-title"
     >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#D4AF37',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Clinical Excellence
+      <div className="ap-container">
+        <header className="ap-head">
+          <div className="ap-head__title">
+            <span className="ap-eyebrow" data-reveal>Clinical Excellence</span>
+            <h2 id="signature-title" className="ap-display" data-reveal="words">
+              <SplitWords>
+                Advanced Treatments. <em>Personalised to You.</em>
+              </SplitWords>
+            </h2>
           </div>
-          <h2
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-              color: '#FFFFFF',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            Signature Treatments
-          </h2>
-          <p
-            style={{
-              color: '#ECE8E1',
-              fontSize: '1.05rem',
-              maxWidth: '650px',
-              margin: '0 auto',
-              fontWeight: '300',
-            }}
-          >
-            Six world-class, FDA-cleared technologies delivering clinically transformative results across face, neck, and body.
-          </p>
-        </div>
-
-        {/* 3x2 Grid of 6 White Cards (Figma Exact) */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2rem',
-            marginBottom: '4rem',
-          }}
-        >
-          {POPULAR_TREATMENTS.map((treatment) => (
-            <div
-              key={treatment.id}
-              className="card-white-elevation"
-              style={{
-                borderRadius: 'var(--radius-sm)',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                backgroundColor: '#FFFFFF',
-                color: '#1C1B18',
-              }}
+          <div className="ap-head__aside" data-reveal>
+            <p className="ap-lede">
+              Every technology works differently, which is why each recommendation begins with your individual concern
+              and suitability. Explore our most sought-after treatments.
+            </p>
+            <a
+              href="/treatments"
+              className="ap-btn ap-btn--ghost"
+              onClick={routeLinkHandler(onNavigate, 'treatments')}
             >
-              {/* Card Image */}
-              <div
-                style={{
-                  height: '240px',
-                  width: '100%',
-                  overflow: 'hidden',
-                  position: 'relative',
-                  backgroundColor: '#EAE5DC',
-                }}
-              >
-                <img
-                  src={treatment.image}
-                  alt={treatment.name}
-                  loading="lazy"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.0)';
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '14px',
-                    left: '14px',
-                    background: 'rgba(20, 19, 17, 0.8)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    color: '#FFFFFF',
-                    fontSize: '0.68rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '2px',
-                    border: '1px solid rgba(212, 175, 55, 0.35)',
-                  }}
-                >
-                  {treatment.category}
+              <span>Explore All Treatments</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
+        </header>
+
+        <ul ref={railRef} className="signature__grid">
+          {POPULAR_TREATMENTS.map((treatment) => {
+            const price = startingPrice(treatment.pricing);
+            const details = CARD_DETAILS[treatment.id] || {};
+            return (
+              <li key={treatment.id} className="signature__cell">
+                <div className="signature__reveal" data-reveal>
+                  <a
+                    href={`/treatments/${treatment.id}`}
+                    className="signature__card"
+                    onClick={routeLinkHandler(onNavigate, 'treatment-detail', treatment.id)}
+                  >
+                    <div className="signature__media">
+                      <img
+                        src={treatment.image}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        style={{ objectPosition: details.imagePosition || 'center' }}
+                      />
+                      <span className="signature__category">{details.tag || treatment.category}</span>
+                      <span className="signature__arrow" aria-hidden="true">
+                        <ArrowUpRight size={18} strokeWidth={1.75} />
+                      </span>
+                    </div>
+
+                    <div className="signature__body">
+                      <h3 className="signature__name">{withTrademarks(treatment.name)}</h3>
+                      <p className="signature__summary">{treatment.summary || treatment.shortDesc}</p>
+                      <div className="signature__meta">
+                        {price && (
+                          <span className="signature__price">
+                            From <strong>{price}</strong>
+                          </span>
+                        )}
+                        <span className="signature__cta">
+                          Discover
+                          <ArrowRight size={15} />
+                        </span>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </div>
+              </li>
+            );
+          })}
+        </ul>
 
-              {/* Card Content */}
-              <div
-                style={{
-                  padding: '1.8rem 1.6rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '1.65rem',
-                      color: '#1C1B18',
-                      fontWeight: '600',
-                      marginBottom: '0.35rem',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {treatment.name}
-                  </h3>
-                  
-                  <div
-                    style={{
-                      fontSize: '0.8rem',
-                      color: '#A87F3D',
-                      fontWeight: '600',
-                      letterSpacing: '0.04em',
-                      marginBottom: '0.85rem',
-                    }}
-                  >
-                    {treatment.tagline}
-                  </div>
-
-                  <p
-                    style={{
-                      fontSize: '0.9rem',
-                      color: '#4A4740',
-                      lineHeight: '1.65',
-                      marginBottom: '1.25rem',
-                    }}
-                  >
-                    {treatment.shortDesc}
-                  </p>
-                </div>
-
-                {/* Price & Action Button */}
-                <div>
-                  <div
-                    style={{
-                      borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                      paddingTop: '1rem',
-                      marginBottom: '1.25rem',
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <span style={{ fontSize: '0.75rem', color: '#7A756C', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      Clinical Investment
-                    </span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1C1B18' }}>
-                      {treatment.pricing.split('|')[0].trim()}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={() => onNavigate && onNavigate('treatment-detail', treatment.id)}
-                    className="btn-bronze"
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1rem',
-                      fontSize: '0.825rem',
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem',
-                    }}
-                  >
-                    <span>View Treatment Details</span>
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div ref={progressRef} className="signature__progress" aria-hidden="true">
+          <span />
         </div>
-
-        {/* Bottom Centered Button (Figma Exact) */}
-        <div style={{ textAlign: 'center' }}>
-          <button
-            onClick={() => onNavigate && onNavigate('treatments')}
-            style={{
-              background: 'transparent',
-              color: '#FFFFFF',
-              border: '1px solid rgba(212, 175, 55, 0.5)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '0.95rem 2.8rem',
-              fontSize: '0.85rem',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.25s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--bronze-gradient)';
-              e.currentTarget.style.borderColor = '#D4AF37';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(168, 127, 61, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.5)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            View Full Treatment Portfolio
-          </button>
-        </div>
-
       </div>
     </section>
   );

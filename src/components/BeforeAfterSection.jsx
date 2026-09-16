@@ -1,11 +1,57 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 import { CLINIC_INFO } from '../data/treatmentData';
+import SplitWords from '../motion/SplitWords';
+import CountUp from '../motion/CountUp';
+
+// Divider positions for the one-time "try me" sweep, and ms per leg.
+const DEMO_STOPS = [50, 30, 68, 50];
+const DEMO_LEG_MS = 950;
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 export default function BeforeAfterSection() {
   const [sliderPos, setSliderPos] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
+  const hasInteracted = useRef(false);
+
+  // When the comparison first comes into view, sweep the divider once to show it can be dragged.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now() + 700;
+        const tick = (now) => {
+          if (hasInteracted.current) return;
+          const elapsed = (now - start) / DEMO_LEG_MS;
+          const leg = Math.floor(elapsed);
+          if (elapsed >= 0 && leg >= DEMO_STOPS.length - 1) {
+            setSliderPos(DEMO_STOPS[DEMO_STOPS.length - 1]);
+            return;
+          }
+          if (elapsed >= 0) {
+            const from = DEMO_STOPS[leg];
+            const to = DEMO_STOPS[leg + 1];
+            setSliderPos(from + (to - from) * easeInOutCubic(elapsed - leg));
+          }
+          frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+      },
+      { threshold: 0.6 }
+    );
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const updatePosition = useCallback((clientX) => {
     if (!containerRef.current) return;
@@ -15,7 +61,10 @@ export default function BeforeAfterSection() {
     setSliderPos(Math.min(Math.max(percentage, 5), 95));
   }, []);
 
-  const handleMouseDown = () => setIsDragging(true);
+  const handleMouseDown = () => {
+    hasInteracted.current = true;
+    setIsDragging(true);
+  };
   const handleMouseUp = () => setIsDragging(false);
 
   const handleMouseMove = (e) => {
@@ -24,6 +73,7 @@ export default function BeforeAfterSection() {
   };
 
   const handleTouchMove = (e) => {
+    hasInteracted.current = true;
     if (e.touches && e.touches[0]) {
       updatePosition(e.touches[0].clientX);
     }
@@ -46,6 +96,7 @@ export default function BeforeAfterSection() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div
+            data-reveal
             style={{
               fontSize: '0.8rem',
               letterSpacing: '0.22em',
@@ -58,6 +109,7 @@ export default function BeforeAfterSection() {
             Verified Clinical Outcomes
           </div>
           <h2
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
@@ -67,9 +119,10 @@ export default function BeforeAfterSection() {
               marginBottom: '1rem',
             }}
           >
-            Real Results & Patient Transformations
+            <SplitWords>Real Results & Patient Transformations</SplitWords>
           </h2>
           <p
+            data-reveal
             style={{
               color: '#4A4740',
               fontSize: '1.05rem',
@@ -83,6 +136,7 @@ export default function BeforeAfterSection() {
 
         {/* Before & After Interactive Showcase Container */}
         <div
+          data-reveal="frame"
           style={{
             maxWidth: '1000px',
             margin: '0 auto',
@@ -110,7 +164,10 @@ export default function BeforeAfterSection() {
             onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
-            onClick={(e) => updatePosition(e.clientX)}
+            onClick={(e) => {
+              hasInteracted.current = true;
+              updatePosition(e.clientX);
+            }}
           >
             {/* 1. Base Layer: AFTER Image (Visible on the Right) */}
             <img
@@ -290,7 +347,7 @@ export default function BeforeAfterSection() {
               </div>
               <div>
                 <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#A87F3D', fontFamily: 'var(--font-serif)' }}>
-                  100%
+                  <CountUp to={100} suffix="%" />
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#7A756C' }}>Patient Satisfaction</div>
               </div>

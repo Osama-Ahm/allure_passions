@@ -1,6 +1,7 @@
 import React from 'react';
 import { CLINIC_INFO } from '../data/treatmentData';
 import { Phone, Mail, MapPin, ArrowUp, ShieldCheck, Award } from 'lucide-react';
+import SplitWords from '../motion/SplitWords';
 
 export default function Footer({ onNavigate }) {
   const scrollToTop = () => {
@@ -39,6 +40,7 @@ export default function Footer({ onNavigate }) {
         >
           {/* Gold Serif AP Crest */}
           <div
+            data-reveal="frame"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: '3.8rem',
@@ -53,6 +55,7 @@ export default function Footer({ onNavigate }) {
           </div>
 
           <div
+            data-reveal="words"
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: '1.6rem',
@@ -62,10 +65,11 @@ export default function Footer({ onNavigate }) {
               marginBottom: '0.35rem',
             }}
           >
-            Allure Passions UK
+            <SplitWords>{CLINIC_INFO.name}</SplitWords>
           </div>
 
           <div
+            data-reveal="fade"
             style={{
               fontSize: '0.75rem',
               letterSpacing: '0.25em',
@@ -80,6 +84,7 @@ export default function Footer({ onNavigate }) {
 
         {/* 4 Directory Columns (Figma Exact) */}
         <div
+          data-reveal-children
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -159,6 +164,7 @@ export default function Footer({ onNavigate }) {
                 <li key={idx}>
                   <button
                     onClick={() => handleRoute('treatment-detail', item.id)}
+                    className="ap-underline"
                     style={{
                       background: 'none',
                       border: 'none',
@@ -209,6 +215,7 @@ export default function Footer({ onNavigate }) {
               ].map((item, idx) => (
                 <li key={idx}>
                   <button
+                    className="ap-underline"
                     onClick={() => {
                       if (item.isWhatsApp) {
                         window.open('https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20with%20your%20clinical%20team.', '_blank');
@@ -293,6 +300,7 @@ export default function Footer({ onNavigate }) {
 
         {/* Bottom Bar: Copyright & Back To Top */}
         <div
+          data-reveal="fade"
           style={{
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '2rem',
