@@ -100,6 +100,15 @@ ol[role='list'] {
 
 /* Utilities ---------------------------------------------------------------- */
 
+/* A hidden span is positioned absolutely, so without a containing block of its
+   own it resolves against the page and widens it from inside a scrolling row.
+   Whatever holds one becomes that containing block. */
+a:has(> .ap-visually-hidden),
+button:has(> .ap-visually-hidden),
+label:has(> .ap-visually-hidden) {
+  position: relative;
+}
+
 .ap-visually-hidden {
   position: absolute;
   width: 1px;

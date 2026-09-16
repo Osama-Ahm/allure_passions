@@ -1,0 +1,131 @@
+.ap-programmes {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 78vw;
+  gap: var(--space-24);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-16);
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.ap-programmes::-webkit-scrollbar {
+  display: none;
+}
+
+.ap-programme {
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+  padding-top: var(--space-24);
+  border-top: 2px solid var(--fg);
+  scroll-snap-align: start;
+}
+
+.ap-programme__name {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: var(--weight-title);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--leading-title);
+}
+
+/* Two lines' worth, so prices and the Includes lists line up across the row. */
+.ap-programme__subtitle {
+  min-height: 3em;
+  color: var(--fg-3);
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.ap-programme__price {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: var(--space-16);
+}
+
+.ap-programme__amount {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.ap-programme__terms {
+  color: var(--fg-3);
+  font-size: var(--text-label);
+}
+
+.ap-programme__label {
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--rule);
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.ap-programme__includes {
+  display: grid;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  font-size: var(--text-small);
+  line-height: 1.45;
+  list-style: none;
+}
+
+.ap-programme__includes li {
+  position: relative;
+  padding-left: var(--space-16);
+}
+
+.ap-programme__includes li::before {
+  content: '';
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 6px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.ap-programme__actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+  margin-top: var(--space-24);
+}
+
+@media (min-width: 640px) {
+  .ap-programmes {
+    grid-auto-columns: 46%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ap-programmes {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    overflow-x: visible;
+  }
+
+  .ap-programme {
+    padding-inline: var(--space-24);
+    border-left: 1px solid var(--rule);
+  }
+
+  .ap-programme:first-child {
+    padding-left: 0;
+  }
+
+  .ap-programme:last-child {
+    padding-right: 0;
+  }
+}

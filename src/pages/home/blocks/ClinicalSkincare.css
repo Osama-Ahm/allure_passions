@@ -1,0 +1,105 @@
+.ap-skincare {
+  display: grid;
+  gap: var(--space-32);
+}
+
+.ap-skincare__panel {
+  display: grid;
+  gap: var(--space-24);
+  padding: var(--space-32) 0 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.ap-skincare__body {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+  align-content: start;
+}
+
+.ap-skincare__packshot {
+  justify-self: start;
+  width: auto;
+  height: 9rem;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.ap-skincare__price {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.ap-skincare__notice {
+  padding-left: var(--space-12);
+  border-left: 2px solid var(--accent);
+  color: var(--fg);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-small);
+}
+
+/* Four-step flow ----------------------------------------------------------- */
+
+.ap-skincare__steps {
+  display: grid;
+  gap: var(--space-16);
+  width: 100%;
+  margin-block: var(--space-8);
+  list-style: none;
+}
+
+.ap-skincare__step {
+  display: flex;
+  align-items: start;
+  gap: var(--space-12);
+}
+
+.ap-skincare__step-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-round);
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+}
+
+.ap-skincare__step-text {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.ap-skincare__step-title {
+  color: var(--fg);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+}
+
+.ap-skincare__step-detail {
+  color: var(--fg-3);
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+@media (min-width: 768px) {
+  .ap-skincare {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-48);
+  }
+
+  .ap-skincare__panel {
+    grid-template-rows: auto 1fr;
+  }
+
+  .ap-skincare__panel--flow {
+    grid-template-rows: 1fr;
+  }
+}

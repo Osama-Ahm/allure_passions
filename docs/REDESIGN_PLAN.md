@@ -24,7 +24,7 @@
 | 5 | Signature treatments | **Built** and pushed to `origin/allure` |
 | 6 | Why Allure | **Built** and pushed to `origin/allure`. Press row withheld; no usable GHP artwork |
 | 7 | Reviews & Instagram | **Built** and pushed to `origin/allure`. Both hidden until a provider is connected |
-| 8 | Programmes & skincare teaser | Not started |
+| 8 | Programmes & skincare teaser | **Built** and pushed to `origin/allure` |
 | 9 | FAQ & Begin | Not started |
 | 10 | Treatments & treatment detail | Not started |
 | 11 | Pricing | Not started |
@@ -224,6 +224,31 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. With no provider **and** no Google Business Profile link (§11.5), the reviews section cannot show even the rating link, so it renders nothing rather than an empty frame. It appears in full the moment the adapter reports `configured: true`.
 2. The credentials ribbon's reviews cell now reads *Patient reviews · In our patients' own words* and is not a link while reviews are unconfigured, rather than pointing at a section that isn't on the page.
+
+---
+
+### Module 8 build log: Programmes & skincare teaser
+
+**Built**
+
+- **Block 8 · Signature programmes**: the four courses as image-free columns divided by hairlines — name, subtitle, course price with the per-session figure, an *Includes* list, an *Enquire* button that opens WhatsApp with the programme already named, and *See pricing*. A scroll-snap row with the next column peeking in below 1024 px.
+- **Block 9 · Clinical skincare**: two panels on stone. Kojivit Ultra with its packshot, a cosmetic description ("helps even the look of skin tone", never a medicinal claim), its price and a reserve-for-collection enquiry. Prescription skincare with the *Available only after a medical consultation* notice, the four-step flow (questionnaire → clinical review → written confirmation → collection in clinic) and *Start your consultation*. **The medicine is not named anywhere on the homepage** (D5, P5).
+- **Content** (`src/content/programmes.js`, `src/content/products.js`) with the price caveat recorded in the file itself.
+
+**Fixed along the way**
+
+- A hidden "(opens in a new tab)" span inside a horizontally scrolling row was widening the whole page on a phone: absolutely positioned with no containing block of its own, it resolved against the page instead of its scroller. Anything holding one now establishes that containing block (`base.css`). This had been adding up to 659 px of stray horizontal scroll at 375 px.
+
+**Verified**
+
+- All five pre-filled WhatsApp enquiries open with the right programme or product named.
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. Kojivit's call to action is *Reserve for collection* (WhatsApp) rather than *View product*, because `/skincare/kojivit-ultra` does not exist until Module 13 and the plan's own rule is that nothing links to a page that isn't there. Module 13 restores the product link.
+2. **Contour Luxe (£4,489) and Contour Advanced (£4,499) are ten pounds apart** in the clinic's price list, which looks like a typo. Both are shown as listed and flagged in §11.8; the note is repeated in `src/content/programmes.js` so it cannot be missed.
+3. Programme subtitles reserve two lines, so prices and *Includes* lists line up across the four columns.
 
 ---
 
