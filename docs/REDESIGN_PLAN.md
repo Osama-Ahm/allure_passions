@@ -19,7 +19,7 @@
 | 0 | Plan (this document) | **Approved** 17 Sep 2026 |
 | 1 | Foundation | **Built**; committed and pushed to `origin/allure` 17 Sep 2026 |
 | 2 | Header & footer | **Built** and pushed to `origin/allure`. One decision to confirm at review: the mobile quick-contact bar |
-| 3 | Hero & credentials ribbon | Not started |
+| 3 | Hero & credentials ribbon | **Built** and pushed to `origin/allure` |
 | 4 | Concern finder | Not started |
 | 5 | Signature treatments | Not started |
 | 6 | Why Allure | Not started |
@@ -109,6 +109,36 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 2. `/contact`, `/privacy` and `/terms` exist from now on in the interim form described above, because the header and footer both need them; Module 14 replaces all three.
 3. Kojivit Ultra joins the footer's Skincare column when Module 13 builds its page.
 4. The large brand lockup now scales with the viewport: the wordmark does not wrap, and at fixed size it pushed a 320 px screen sideways.
+
+---
+
+### Module 3 build log: Hero & credentials ribbon
+
+**Built**
+
+- **Hero** (Block 1): the walkthrough under a left-weighted ink scrim, with the eyebrow, H1, lede and consultation button on the left and the two-part pathway strip along the bottom edge. Height `min(100svh, 60rem)` with a 620 px floor. The pathway links scroll to the concern finder and the signature treatments, moving focus with them.
+- **Video**: re-encoded from 9.1 MB to **1.0 MB** (VP9/WebM, served first) and **2.5 MB** (H.264/MP4 fallback), muted, looping, no audio track. A 15 KB WebP poster is preloaded from `index.html`.
+- **Pause control** (WCAG 2.2.2): a discreet button at the bottom right whose label follows what the video is actually doing, so a blocked or failed autoplay never leaves it lying. Reduced-motion visitors get the poster, no download of the video at all (`preload="none"`) and a play button if they want it.
+- **Credentials ribbon** (Block 2): the award, JCCP registration, the Level 6 qualification and the reviews, on one hairline row with bronze line icons. The award cell links to Why Allure and the reviews cell to the reviews block.
+- **Reviews adapter** (`src/services/reviews.js`): reports `configured: false` until Module 7 connects a provider, so the ribbon shows **no rating and no review count** — nothing that isn't live (§8.11).
+
+**Removed**
+
+- The original 9.1 MB `clinic_hero_walkthrough.mp4`, which nothing uses now.
+
+**Verified**
+
+- Lint clean; production build clean.
+- **LCP 0.24 s, CLS 0.005** on a production build at 1440 px, against budgets of 2.5 s and 0.1. The homepage fetches 1.16 MB in total, video included.
+- Autoplay, pause, resume and the reduced-motion path all behave, and the WebM is the file the browser picks.
+- No horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. **The footage is not a clinic walkthrough.** The only video in the repository is a tight close-up of a facial treatment. It reads acceptably under the scrim, but a wider, calmer clip of the clinic would suit this hero far better — added to §11 as a content request.
+2. The LCP element measures as the H1 rather than the poster: the poster is preloaded and the hero paints at 0.24 s, so the goal behind that line is met. §10's wording is left as written.
+3. The ribbon stacks in one column below 480 px instead of 2×2, because the award title needs the width to stay readable.
+4. The pathway links and the ribbon's two linked cells point at Blocks 3–6, which arrive in Modules 4–7. Until then they do nothing in a production build; the scroll helper simply no-ops when the target isn't on the page.
 
 ---
 
@@ -909,16 +939,17 @@ Contrast ratios below were calculated for these exact values.
 
 None of these block the build: modules use clearly marked placeholders until the real content arrives.
 
-1. **Press:** a link or issue details for each feature (Vogue, Tatler, Harper's Bazaar, GQ, ELLE), plus preferred logo files.
-2. **Practitioner:** name, role, qualifications (with the Level 6 awarding body), JCCP registration or profile link, memberships, CPD highlights; optionally a portrait.
-3. **Official artwork:** JCCP registrant logo, GHP winner logo pack, the AP monogram as an SVG (and the wordmark, if one exists).
-4. **Google reviews:** a Google Business Profile link and a choice of provider (widget service or API).
-5. **Instagram:** confirmation that the account is Business or Creator, and a choice of provider.
-6. **Treatment facts** for each device: sessions, discomfort, downtime, time to results, contraindications and side effects, all clinically checked.
-7. **Prices:** confirm every price-list figure, the Kojivit price (£85 vs £45/30 g), Contour Luxe (£4,489) vs Contour Advanced (£4,499), and the consultation fee.
-8. **Clinic details:** opening hours, nearest stations, accessibility information, email address.
-9. **Legal:** a privacy notice (including health information sent via WhatsApp or email), terms, and a complaints procedure.
-10. **Copy sign-off:** concern descriptions, FAQ answers, programme inclusions.
+1. **Hero video:** a wider, calmer clip of the clinic (rooms, a practitioner at work, hands and equipment) to replace the current tight facial close-up. 20–30 seconds, no audio needed; we re-encode it.
+2. **Press:** a link or issue details for each feature (Vogue, Tatler, Harper's Bazaar, GQ, ELLE), plus preferred logo files.
+3. **Practitioner:** name, role, qualifications (with the Level 6 awarding body), JCCP registration or profile link, memberships, CPD highlights; optionally a portrait.
+4. **Official artwork:** JCCP registrant logo, GHP winner logo pack, the AP monogram as an SVG (and the wordmark, if one exists).
+5. **Google reviews:** a Google Business Profile link and a choice of provider (widget service or API).
+6. **Instagram:** confirmation that the account is Business or Creator, and a choice of provider.
+7. **Treatment facts** for each device: sessions, discomfort, downtime, time to results, contraindications and side effects, all clinically checked.
+8. **Prices:** confirm every price-list figure, the Kojivit price (£85 vs £45/30 g), Contour Luxe (£4,489) vs Contour Advanced (£4,499), and the consultation fee.
+9. **Clinic details:** opening hours, nearest stations, accessibility information, email address.
+10. **Legal:** a privacy notice (including health information sent via WhatsApp or email), terms, and a complaints procedure.
+11. **Copy sign-off:** concern descriptions, FAQ answers, programme inclusions.
 
 ---
 

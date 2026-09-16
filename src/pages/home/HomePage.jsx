@@ -1,11 +1,12 @@
 import usePageMeta from '../../lib/usePageMeta';
+import CredentialsRibbon from './blocks/CredentialsRibbon';
+import Hero from './blocks/Hero';
 import BlockPlaceholder from './BlockPlaceholder';
 
-// The homepage flow from docs/REDESIGN_PLAN.md §6. Each placeholder is swapped
-// for its real block as that module ships; ids double as in-page anchors.
+// The homepage flow from docs/REDESIGN_PLAN.md §6. Blocks 1 and 2 are built;
+// each remaining placeholder is swapped for its real block as that module
+// ships. Ids double as in-page anchors.
 const BLOCKS = [
-  { id: 'hero', number: 1, act: 'Discover', module: 3, tone: 'night', size: 'hero', name: 'Hero', purpose: 'Who, what and where in five seconds, with two starting points: a concern or a treatment.' },
-  { id: 'credentials', number: 2, act: 'Discover', module: 3, name: 'Credentials ribbon', purpose: 'GHP award, JCCP registration, Level 6 qualification and the Google rating at a glance.' },
   { id: 'concerns', number: 3, act: 'Discover', module: 4, name: 'Concern finder', purpose: 'What would you like to improve? Choose a concern and see the treatments that may help.' },
   { id: 'treatments', number: 4, act: 'Discover', module: 5, tone: 'stone', name: 'Signature treatments', purpose: 'The six flagship technologies as a numbered index, each linking to its page.' },
   { id: 'why-allure', number: 5, act: 'Trust', module: 6, name: 'Why Allure', purpose: 'Welcome to the clinic, expert credentials, awards and press, in one place.' },
@@ -22,6 +23,8 @@ export default function HomePage() {
 
   return (
     <>
+      <Hero />
+      <CredentialsRibbon />
       {BLOCKS.map((block) => (
         <BlockPlaceholder key={block.id} {...block} />
       ))}
