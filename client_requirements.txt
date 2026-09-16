@@ -1,0 +1,159 @@
+
+Create a premium, professional, informative and patient-centred website. The homepage should guide the visitor through who we are, what we specialise in, why they can trust us and the treatments available.
+
+Section 1 – Hero Banner / First Impression
+
+The hero banner should be an engaging visual introduction to the clinic, ideally an animated walkthrough or video showing the clinic experience, treatment spaces, technology and what makes the space unique.
+
+The messaging should immediately establish that Allure Passions UK Aesthetic Clinic is a destination for patients with skin, body and wellness concerns.
+
+The hero section should then lead into two clear areas:
+
+Explore your concern / treatment area
+
+For example: Skin, Body Contouring, Laser, Skin Tightening, Pigmentation and Wellness.
+
+Most sought-after treatments
+
+Highlighting key treatments such as PicoWay, ADVATx, Morpheus8, Sofwave, Emsculpt Neo and Emerald Green Laser Lipo.
+
+The aim is for the visitor to immediately understand both what concerns we treat and what advanced treatments are available.
+
+Section 2 – Welcome to Allure Passions UK Aesthetic Clinic
+
+Welcome to Allure Passions UK Aesthetic Clinic.
+
+An award-winning advanced aesthetic clinic, recognised as Best Advanced Skin & Body Aesthetics Clinic 2026 – London by Global Health & Pharma as part of the Global Excellence Awards.
+
+We pride ourselves on providing advanced, non-invasive treatments focused on skin health, body contouring, cellular health and wellbeing. Our treatment offering includes skin tightening, pigmentation and skin clarity treatments, alongside advanced solutions for patients looking to improve their skin, body and overall confidence.
+
+This section should give a concise introduction to who we are and what we specialise in, with a link to About the Clinic or Discover Our Approach.
+
+Section 3 – Expert Care You Can Trust
+
+This section should focus on why patients can feel confident choosing Allure Passions UK Aesthetic Clinic.
+
+Professional Registration & Credentials
+
+Visually highlight:
+
+* JCCP Registered
+* Advanced Aesthetic Practitioner
+* Level 6 and current professional qualifications
+* Advanced technology training
+* Continuing professional education
+* Relevant industry memberships and professional standards
+
+The purpose of this section is to clearly answer:
+
+Why should I trust this clinic?
+
+This should not just be a block of text. It should be visually presented with accreditation logos, qualifications, professional imagery and concise explanations.
+
+Section 4 – Our Most Popular Treatments
+
+Advanced Treatments. Personalised to You.
+
+Highlight the clinic's most sought-after treatments and briefly explain what makes each treatment different and what concerns it can address.
+
+For example:
+
+* PicoWay – Advanced picosecond laser technology for pigmentation, skin revitalisation and tattoo removal.
+* ADVATx – Advanced laser technology for concerns including acne, redness, pigmentation and overall skin rejuvenation.
+* Morpheus8 – Fractional radiofrequency microneedling for skin remodelling and tightening.
+* Sofwave – Non-invasive ultrasound technology designed to stimulate collagen for skin tightening.
+* Emsculpt Neo – Advanced body contouring combining muscle stimulation with radiofrequency technology.
+* Emerald Green Laser Lipo – Non-invasive low-level laser technology supporting body contouring and circumference reduction.
+
+Each treatment should have a Learn More button leading to a dedicated treatment page.
+
+Section 5 – What We Treat
+
+This section should show the breadth of concerns we are able to address.
+
+Skin, Body & Wellness Concerns
+
+We treat a wide range of skin and body concerns, including:
+
+* Hyperpigmentation
+* Acne
+* Acne scarring
+* Rosacea and redness
+* Melasma
+* Skin laxity
+* Signs of ageing
+* Fine lines and wrinkles
+* Striae
+* Lentigines
+* Vascular lesions
+* Lip enhancement and plumping
+* Tattoo removal
+* Stubborn fat
+* Body contouring
+* Muscle tone and definition
+* Skin clarity
+* Wellness and cellular health
+
+The design should allow patients to select a concern and explore the potential treatment options available.
+
+This is important because some patients will know exactly what treatment they want, while others will simply know the concern they want to improve.
+
+Section 6 – Awards, Accreditations & Recognition
+
+This section should bring together our professional recognition and credibility.
+
+Include:
+
+* Global Excellence Awards recognition
+* Best Advanced Skin & Body Aesthetics Clinic 2026 – London
+* JCCP registration
+* Other relevant professional accreditations and memberships
+* Press and media features
+
+This should be visually strong and presented through logos, badges and recognised publications where applicable.
+
+Section 7 – Patient Reviews
+
+Google reviews should be integrated directly into the homepage and, where possible, displayed live rather than manually added.
+
+This section should provide genuine social proof and allow visitors to see real patient experiences.
+
+Section 8 – Live Social Media Feed
+
+Integrate a live social media feed, preferably Instagram, showing:
+
+* Treatments
+* Patient journeys
+* Educational content
+* Behind the scenes
+* Clinic updates
+* Videos and demonstrations
+
+This keeps the website current and gives visitors a more immediate insight into the clinic.
+
+Section 9 – Featured Treatments
+
+Below the reviews and social media section, create a more detailed Featured Treatments area.
+
+This can expand on selected signature treatments and programmes, with larger visuals and more detailed descriptions.
+
+The overall flow should be:
+
+Clinic experience → Treatment areas → Most sought-after treatments → Welcome to the clinic → Expert credentials → Popular treatments → Concerns we treat → Awards and accreditations → Google reviews → Live social media → Featured treatments → Consultation / booking CTA.
+
+For the e-commerce integration, we currently have two key skincare products:
+
+* Kojivit Ultra – hyperpigmentation, skin brightening, exfoliating and anti-ageing cream.
+* Tretinoin 0.025% and 0.1% – prescription-only skincare.
+
+The tretinoin section must not function as a standard e-commerce checkout. It needs a mandatory medical consultation/suitability process before purchase.
+
+Customer journey:
+
+Tretinoin product page → Medical consultation form → Medical history and suitability questions → Submit → Clinical review → If suitable, confirmation by email → Collection in clinic / appropriate next step.
+
+The website must clearly communicate that tretinoin cannot simply be purchased online without completing the required consultation and being medically assessed as suitable.
+
+The e-commerce system should therefore support a consultation-led prescription skincare journey rather than allowing unrestricted direct purchase.
+
+The main point is that I do not want the homepage to feel like a generic aesthetics website with random treatment boxes. Every section should naturally lead the visitor into the next, building understanding, professional trust and confidence before encouraging them to book a consultation.
