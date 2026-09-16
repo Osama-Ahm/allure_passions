@@ -13,8 +13,8 @@ const InstagramIcon = ({ size = 18, color = "#1C1B18" }) => (
 const INSTAGRAM_POSTS = [
   {
     image: '/assets/images/hero_clinic_ambiance.png',
-    caption: 'Clinical precision during Morpheus8 subdermal remodeling in our Knightsbridge suite.',
-    tag: '#Morpheus8 #Knightsbridge',
+    caption: 'Clinical precision during Morpheus8 subdermal remodeling in our Fitzrovia suite.',
+    tag: '#Morpheus8 #Fitzrovia',
   },
   {
     image: '/assets/images/practitioner_portrait.jpg',
@@ -91,7 +91,7 @@ export default function InstagramSection() {
               margin: '0 auto',
             }}
           >
-            Daily clinical insights, practitioner masterclasses, and patient transformations from 189 Brompton Road.
+            Daily clinical insights, practitioner masterclasses, and patient transformations from 76 Cleveland Street.
           </p>
         </div>
 

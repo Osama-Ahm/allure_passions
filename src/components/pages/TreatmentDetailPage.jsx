@@ -7,7 +7,7 @@ const TREATMENT_PRICING_MAP = {
     {
       groupTitle: 'ADVATx® Laser — Vascular & Complexion Clarity',
       badge: 'FDA-Cleared 589nm / 1319nm Dual Laser',
-      description: 'Clinically targeted protocols for vascular lesions, rosacea, redness, and non-injectable lip plumping at our Knightsbridge clinic.',
+      description: 'Clinically targeted protocols for vascular lesions, rosacea, redness, and non-injectable lip plumping at our Fitzrovia clinic.',
       items: [
         { name: 'Telangiectasias (Facial Veins & Capillaries)', single: '£150 – £250', course6: '£899', saving: 'Save up to £600 on 6 sessions', note: 'Targeted photocoagulation of visible broken vessels' },
         { name: 'Sun Spots & Solar Lentigines (Facial)', single: '£150 – £280', course6: '£899', saving: 'Save up to £780 on 6 sessions', note: 'Epidermal pigment breakdown with zero crusting' },
@@ -139,7 +139,7 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
   );
 
   const whatsappBaseUrl = `https://wa.me/447342052249?text=${encodeURIComponent(
-    `Hello Allure Passions UK, I would like to consult regarding ${treatment.name} at your Knightsbridge clinic.`
+    `Hello Allure Passions UK, I would like to consult regarding ${treatment.name} at your Fitzrovia clinic.`
   )}`;
 
   return (
@@ -166,7 +166,7 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <span className="badge-bronze">
-                {treatment.category} • Knightsbridge Clinic
+                {treatment.category} • Fitzrovia Clinic
               </span>
               <span style={{ fontSize: '0.72rem', color: '#A87F3D', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 JCCP & Level 6 Practice
@@ -272,7 +272,7 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
               color: '#FFFFFF',
               fontSize: '0.75rem'
             }}>
-              <span>189 Brompton Road, Knightsbridge</span>
+              <span>76 Cleveland Street, Fitzrovia</span>
               <span style={{ color: '#D4AF37', fontWeight: '600' }}>Tier-1 Medical Grade Platform</span>
             </div>
           </div>
@@ -318,7 +318,7 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
               {treatment.name} — <span className="text-bronze-gradient">Complete Pricing Schedule</span>
             </h2>
             <p style={{ color: '#5A554E', fontSize: '1rem', marginTop: '0.5rem', maxWidth: '750px', fontWeight: '300' }}>
-              All treatment courses include an advanced multi-spectral clinical skin consultation, medical progress tracking, and dedicated aftercare guidance at 189 Brompton Road, Knightsbridge.
+              All treatment courses include an advanced multi-spectral clinical skin consultation, medical progress tracking, and dedicated aftercare guidance at 76 Cleveland Street, Fitzrovia.
             </p>
           </div>
 
@@ -471,7 +471,7 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
 
                         <a
                           href={`https://wa.me/447342052249?text=${encodeURIComponent(
-                            `Hello Allure Passions UK, I would like to book ${item.name} (${treatment.name}) at your Knightsbridge clinic.`
+                            `Hello Allure Passions UK, I would like to book ${item.name} (${treatment.name}) at your Fitzrovia clinic.`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -515,13 +515,13 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
           }}>
             <div>
               <span style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#D4AF37', fontWeight: '600' }}>
-                Knightsbridge Clinical Guarantee
+                Fitzrovia Clinical Guarantee
               </span>
               <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: '#FFFFFF', marginTop: '0.35rem', marginBottom: '0.75rem' }}>
                 Bespoke Clinical Assessment
               </h3>
               <p style={{ color: '#D6D2CA', fontSize: '0.95rem', lineHeight: '1.7', fontWeight: '300' }}>
-                Every course is customized to your tissue depth, Fitzpatrick phototype, and unique aesthetic goals. All consultations are performed under JCCP registered Level 6 clinical supervision at 189 Brompton Road.
+                Every course is customized to your tissue depth, Fitzpatrick phototype, and unique aesthetic goals. All consultations are performed under JCCP registered Level 6 clinical supervision at 76 Cleveland Street.
               </p>
             </div>
 

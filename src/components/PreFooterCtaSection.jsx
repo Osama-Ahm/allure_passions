@@ -67,13 +67,13 @@ export default function PreFooterCtaSection() {
                 maxWidth: '520px',
               }}
             >
-              Meet with our clinical practitioners in Knightsbridge to discuss your aesthetic goals, evaluate skin tissue health, and tailor an individualized treatment protocol.
+              Meet with our clinical practitioners in Fitzrovia to discuss your aesthetic goals, evaluate skin tissue health, and tailor an individualized treatment protocol.
             </p>
 
             <div data-reveal style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem', fontSize: '0.9rem', color: '#C7C2B8' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <MapPin size={16} color="#D4AF37" />
-                <span>189 Brompton Road, Knightsbridge, London, SW3 1NE</span>
+                <span>76 Cleveland Street, Fitzrovia, London, W1T 6NB</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <Phone size={16} color="#D4AF37" />

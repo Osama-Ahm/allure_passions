@@ -46,7 +46,7 @@ export default function PrescriptionSkincareSection({ onNavigate }) {
               Important Medical Regulations Notice: Prescription Tretinoin
             </div>
             <div style={{ fontSize: '0.85rem', color: '#4A4740', marginTop: '0.2rem', fontWeight: '300' }}>
-              Tretinoin is a prescription-only active medicine. It <strong>cannot be purchased direct online</strong> without practitioner clinical consultation and assessment. <strong>All payments are made physically at 189 Brompton Road upon collection.</strong>
+              Tretinoin is a prescription-only active medicine. It <strong>cannot be purchased direct online</strong> without practitioner clinical consultation and assessment. <strong>All payments are made physically at 76 Cleveland Street upon collection.</strong>
             </div>
           </div>
         </div>

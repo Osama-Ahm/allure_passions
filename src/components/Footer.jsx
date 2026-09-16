@@ -38,21 +38,17 @@ export default function Footer({ onNavigate }) {
             borderBottom: '1px solid rgba(168, 127, 61, 0.2)',
           }}
         >
-          {/* Gold Serif AP Crest */}
-          <div
+          {/* Brand Logo */}
+          <img
             data-reveal="frame"
+            src="/assets/images/allure_logo.png"
+            alt={CLINIC_INFO.name}
             style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '3.8rem',
-              fontWeight: '400',
-              color: '#D4AF37',
-              lineHeight: 1,
-              letterSpacing: '0.04em',
+              height: '72px',
+              width: 'auto',
               marginBottom: '0.75rem',
             }}
-          >
-            AP
-          </div>
+          />
 
           <div
             data-reveal="words"
@@ -78,7 +74,7 @@ export default function Footer({ onNavigate }) {
               fontWeight: '500',
             }}
           >
-            Knightsbridge • London
+            Fitzrovia • London
           </div>
         </div>
 
@@ -104,15 +100,15 @@ export default function Footer({ onNavigate }) {
                 letterSpacing: '0.04em',
               }}
             >
-              Knightsbridge Clinic
+              Fitzrovia Clinic
             </h4>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.875rem', color: '#9E988E', lineHeight: '1.6' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <MapPin size={16} color="#D4AF37" style={{ flexShrink: 0, marginTop: '3px' }} />
                 <span>
-                  189 Brompton Road, Knightsbridge,<br />
-                  London, SW3 1NE (Opposite Harrods)
+                  76 Cleveland Street, Fitzrovia,<br />
+                  London, W1T 6NB
                 </span>
               </div>
 
@@ -292,7 +288,7 @@ export default function Footer({ onNavigate }) {
                   lineHeight: '1.4',
                 }}
               >
-                UK POM Notice: Tretinoin requires medical suitability review and physical in-clinic collection at 189 Brompton Road.
+                UK POM Notice: Tretinoin requires medical suitability review and physical in-clinic collection at 76 Cleveland Street.
               </div>
             </div>
           </div>
@@ -314,7 +310,7 @@ export default function Footer({ onNavigate }) {
           }}
         >
           <div>
-            © {new Date().getFullYear()} Allure Passions UK Aesthetic Clinic. All rights reserved. 189 Brompton Road, Knightsbridge, London, SW3 1NE.
+            © {new Date().getFullYear()} Allure Passions UK Aesthetic Clinic. All rights reserved. 76 Cleveland Street, Fitzrovia, London, W1T 6NB.
           </div>
 
           <button

@@ -34,7 +34,7 @@ const SIGNATURE_PACKAGES = [
     saving: 'Full 6-Month Protocol Included',
     image: '/assets/images/picoway_laser.png',
     description: 'The world’s most effective clinical depigmentation method for severe hormonal melasma and stubborn solar lentigines.',
-    includes: ['In-clinic Phase 1 intensive depigmenting mask', '6-month Phase 2 active homecare maintenance protocol', 'Follow-up clinical reviews at 189 Brompton Road'],
+    includes: ['In-clinic Phase 1 intensive depigmenting mask', '6-month Phase 2 active homecare maintenance protocol', 'Follow-up clinical reviews at 76 Cleveland Street'],
   },
 ];
 
@@ -43,7 +43,7 @@ export default function PricingPage({ onNavigate }) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const whatsappUrl = `https://wa.me/447342052249?text=${encodeURIComponent(
-    'Hello Allure Passions UK, I would like to enquire regarding treatment pricing at your Knightsbridge clinic.'
+    'Hello Allure Passions UK, I would like to enquire regarding treatment pricing at your Fitzrovia clinic.'
   )}`;
 
   // Filter categories and items based on search query
@@ -109,7 +109,7 @@ export default function PricingPage({ onNavigate }) {
               marginBottom: '0.75rem',
             }}
           >
-            Official Clinical Schedule • 189 Brompton Road, Knightsbridge
+            Official Clinical Schedule • 76 Cleveland Street, Fitzrovia
           </div>
 
           <h1
@@ -622,7 +622,7 @@ export default function PricingPage({ onNavigate }) {
                             </div>
 
                             <div style={{ borderTop: '1px solid rgba(28, 27, 24, 0.08)', paddingTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <span style={{ fontSize: '0.72rem', color: '#7A756C' }}>189 Brompton Road</span>
+                              <span style={{ fontSize: '0.72rem', color: '#7A756C' }}>76 Cleveland Street</span>
                               <a
                                 href={`https://wa.me/447342052249?text=${encodeURIComponent(
                                   `Hello Allure Passions UK, I would like to book ${item.name} (${cleanCategoryName}).`
@@ -663,7 +663,7 @@ export default function PricingPage({ onNavigate }) {
         >
           <div>
             <div style={{ fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37', fontWeight: '600', marginBottom: '0.4rem' }}>
-              Knightsbridge Private Clinic
+              Fitzrovia Private Clinic
             </div>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: '#FFFFFF' }}>
               Bespoke Multi-Modality Treatment Planning

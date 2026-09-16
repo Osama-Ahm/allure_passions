@@ -69,7 +69,7 @@ export default function TestimonialsSection() {
               margin: '0 auto',
             }}
           >
-            Genuine reflections from patients treated at our private clinic opposite Harrods in Knightsbridge.
+            Genuine reflections from patients treated at our private clinic in Fitzrovia.
           </p>
         </div>
 

@@ -27,7 +27,7 @@ export default function CredentialsSection() {
       title: "GHP Global Excellence Award",
       authority: "Global Health & Pharma (GHP Magazine)",
       standard: "Best Advanced Skin & Body Aesthetics Clinic 2026 – London",
-      details: "Recognised nationally by healthcare editors for non-invasive clinical innovation, medical device safety, and transformative patient outcomes across Knightsbridge and Greater London.",
+      details: "Recognised nationally by healthcare editors for non-invasive clinical innovation, medical device safety, and transformative patient outcomes across Fitzrovia and Greater London.",
       sealText: "GHP 2026 WINNER",
     },
     {

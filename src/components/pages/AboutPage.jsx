@@ -28,7 +28,7 @@ export default function AboutPage({ onNavigate }) {
           </h1>
 
           <p style={{ fontSize: '1.2rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75' }}>
-            Recognised as <strong>Best Advanced Skin & Body Aesthetics Clinic 2026 – London</strong> by <em>Global Health & Pharma (GHP)</em> as part of the Global Excellence Awards. Located in the heart of Knightsbridge at 189 Brompton Road (opposite Harrods).
+            Recognised as <strong>Best Advanced Skin & Body Aesthetics Clinic 2026 – London</strong> by <em>Global Health & Pharma (GHP)</em> as part of the Global Excellence Awards. Located in the heart of Fitzrovia at 76 Cleveland Street.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function AboutPage({ onNavigate }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3.5rem', marginBottom: '5rem', alignItems: 'center' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#A87F3D', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-              <MapPin size={14} /> 189 Brompton Road, Knightsbridge
+              <MapPin size={14} /> 76 Cleveland Street, Fitzrovia
             </div>
 
             <h2 className="heading-lg" style={{ color: '#1C1B18', marginBottom: '1.25rem' }}>
@@ -48,7 +48,7 @@ export default function AboutPage({ onNavigate }) {
             </p>
 
             <p style={{ color: '#7A756C', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '2rem' }}>
-              Operating from our private Knightsbridge clinic suite, our practitioners hold Level 6 clinical qualifications, manufacturer masterclass certifications for PicoWay®, ADVATx®, Morpheus8™, Sofwave™, and Emsculpt Neo®, alongside official registration with the Joint Council for Cosmetic Practitioners (JCCP).
+              Operating from our private Fitzrovia clinic suite, our practitioners hold Level 6 clinical qualifications, manufacturer masterclass certifications for PicoWay®, ADVATx®, Morpheus8™, Sofwave™, and Emsculpt Neo®, alongside official registration with the Joint Council for Cosmetic Practitioners (JCCP).
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2.5rem' }}>
@@ -92,7 +92,7 @@ export default function AboutPage({ onNavigate }) {
             }}>
               <img
                 src="/assets/images/hero_clinic_ambiance.png"
-                alt="Allure Passions UK Knightsbridge Sanctuary"
+                alt="Allure Passions UK Fitzrovia Sanctuary"
                 loading="lazy"
                 decoding="async"
                 style={{ width: '100%', height: '480px', objectFit: 'cover', display: 'block' }}
@@ -111,10 +111,10 @@ export default function AboutPage({ onNavigate }) {
               maxWidth: '280px'
             }}>
               <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#A87F3D', fontWeight: '700' }}>
-                Knightsbridge Sanctuary
+                Fitzrovia Sanctuary
               </div>
               <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#1C1B18', marginTop: '0.2rem' }}>
-                Discreet, bespoke consultations opposite Harrods
+                Discreet, bespoke consultations in Fitzrovia
               </div>
             </div>
           </div>

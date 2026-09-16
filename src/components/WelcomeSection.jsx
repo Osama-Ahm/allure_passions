@@ -33,7 +33,7 @@ export default function WelcomeSection({ onNavigate }) {
             }}>
               <img
                 src="/assets/images/hero_clinic_ambiance.png"
-                alt="Allure Passions UK Knightsbridge Suite"
+                alt="Allure Passions UK Fitzrovia Suite"
                 loading="lazy"
                 decoding="async"
                 style={{
@@ -89,7 +89,7 @@ export default function WelcomeSection({ onNavigate }) {
           <div>
             
             <div className="badge-bronze" style={{ marginBottom: '1rem' }}>
-              <Sparkles size={13} /> The Knightsbridge Clinic Experience
+              <Sparkles size={13} /> The Fitzrovia Clinic Experience
             </div>
 
             <h2 className="heading-lg" style={{ marginBottom: '1.25rem', color: '#1C1B18' }}>
@@ -103,7 +103,7 @@ export default function WelcomeSection({ onNavigate }) {
               marginBottom: '1.25rem',
               fontWeight: '300'
             }}>
-              An award-winning advanced aesthetic clinic, recognised as <strong>Best Advanced Skin & Body Aesthetics Clinic 2026 – London</strong> by <em>Global Health & Pharma (GHP)</em> as part of the Global Excellence Awards. Located at 189 Brompton Road, Knightsbridge, moments from Harrods.
+              An award-winning advanced aesthetic clinic, recognised as <strong>Best Advanced Skin & Body Aesthetics Clinic 2026 – London</strong> by <em>Global Health & Pharma (GHP)</em> as part of the Global Excellence Awards. Located at 76 Cleveland Street, Fitzrovia, moments from Oxford Street.
             </p>
 
             <p style={{

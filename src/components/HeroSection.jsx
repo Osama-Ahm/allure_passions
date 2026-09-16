@@ -110,7 +110,7 @@ export default function HeroSection({ onNavigate }) {
             marginBottom: '1.25rem',
           }}
         >
-          Aesthetic & Cellular Medicine • Knightsbridge, London
+          Aesthetic & Cellular Medicine • Fitzrovia, London
         </div>
 
         {/* Figma Exact Headline: "Advanced Aesthetics" */}
@@ -144,7 +144,7 @@ export default function HeroSection({ onNavigate }) {
             textShadow: '0 2px 14px rgba(0, 0, 0, 0.5)',
           }}
         >
-          A doctor-led practice providing non-invasive clinical skin, body, and cellular rejuvenation with unmatched precision in the heart of Knightsbridge.
+          A doctor-led practice providing non-invasive clinical skin, body, and cellular rejuvenation with unmatched precision in the heart of Fitzrovia.
         </p>
 
         {/* Dual CTAs (Figma Exact: Left Gold Filled, Right Dark/Outline) */}

@@ -60,7 +60,7 @@ export default function FounderSection({ onNavigate }) {
                 marginBottom: '1.25rem',
               }}
             >
-              Founded on the belief that aesthetic medicine should enhance—never distort—your natural facial architecture, Allure Passions UK delivers doctor-led, evidence-based treatments in the heart of Knightsbridge.
+              Founded on the belief that aesthetic medicine should enhance—never distort—your natural facial architecture, Allure Passions UK delivers doctor-led, evidence-based treatments in the heart of Fitzrovia.
             </p>
 
             <p

@@ -28,7 +28,7 @@ export default function ReviewsSection() {
             Live Patient <span className="text-bronze-gradient">Reviews</span>
           </h2>
           <p>
-            Real patient experiences, clinical journeys, and verified Google feedback from our Knightsbridge & London patients.
+            Real patient experiences, clinical journeys, and verified Google feedback from our Fitzrovia & London patients.
           </p>
         </div>
 

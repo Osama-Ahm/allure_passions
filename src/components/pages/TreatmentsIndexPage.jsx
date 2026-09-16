@@ -86,7 +86,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('all');
 
   const whatsappUrl = `https://wa.me/447342052249?text=${encodeURIComponent(
-    'Hello Allure Passions UK, I would like to consult regarding treatments at your Knightsbridge clinic.'
+    'Hello Allure Passions UK, I would like to consult regarding treatments at your Fitzrovia clinic.'
   )}`;
 
   return (
@@ -115,7 +115,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
               marginBottom: '0.75rem',
             }}
           >
-            Clinical Portfolio • 189 Brompton Road, Knightsbridge
+            Clinical Portfolio • 76 Cleveland Street, Fitzrovia
           </div>
 
           <h1
@@ -539,7 +539,7 @@ export default function TreatmentsIndexPage({ onNavigate }) {
         >
           <div>
             <div style={{ fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37', fontWeight: '600', marginBottom: '0.4rem' }}>
-              189 Brompton Road • Knightsbridge Practice
+              76 Cleveland Street • Fitzrovia Practice
             </div>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: '#FFFFFF' }}>
               Require Direct Advice on Your Treatment Pathway?

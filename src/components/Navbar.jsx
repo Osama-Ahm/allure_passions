@@ -159,8 +159,12 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
               minWidth: 0,
             }}
           >
-            <span className="site-header__logo">{CLINIC_INFO.name}</span>
-            <span className="site-header__tagline">Knightsbridge • London</span>
+            <img
+              src="/assets/images/allure_logo.png"
+              alt={CLINIC_INFO.name}
+              className="site-header__logo-img"
+            />
+            <span className="site-header__tagline">Fitzrovia • London</span>
           </button>
 
           {/* Right: Gold ENQUIRE Button (Figma exact - Direct WhatsApp / Telephone) */}
@@ -241,7 +245,7 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
                       textTransform: 'uppercase',
                     }}
                   >
-                    Knightsbridge, London
+                    Fitzrovia, London
                   </div>
                 </div>
 

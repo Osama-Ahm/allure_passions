@@ -280,7 +280,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
                   }}
                 >
                   <ShieldAlert size={16} color="#A87F3D" style={{ flexShrink: 0 }} />
-                  <span>Physical in-clinic collection and payment at 189 Brompton Road.</span>
+                  <span>Physical in-clinic collection and payment at 76 Cleveland Street.</span>
                 </div>
               </div>
             </div>

@@ -63,7 +63,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
               UK Medical Compliance Notice: Prescription Tretinoin (POM)
             </div>
             <div style={{ fontSize: '0.875rem', color: '#4A4740', marginTop: '0.2rem', fontWeight: '300', lineHeight: '1.6' }}>
-              Tretinoin is a Prescription-Only Medicine (POM). In accordance with UK clinical guidelines, <strong>direct online checkout is strictly prohibited</strong>. Complete the medical consultation questionnaire below for practitioner evaluation. <strong>All payments and product collections are completed physically in-clinic at 189 Brompton Road, Knightsbridge, London SW3 1NE.</strong>
+              Tretinoin is a Prescription-Only Medicine (POM). In accordance with UK clinical guidelines, <strong>direct online checkout is strictly prohibited</strong>. Complete the medical consultation questionnaire below for practitioner evaluation. <strong>All payments and product collections are completed physically in-clinic at 76 Cleveland Street, Fitzrovia, London W1T 6NB.</strong>
             </div>
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
                     }}>
                       <ShieldAlert size={22} color="#A87F3D" style={{ flexShrink: 0, marginTop: '2px' }} />
                       <div style={{ fontSize: '0.875rem', color: '#4A4740', lineHeight: '1.6' }}>
-                        <strong>UK POM Regulatory Notice:</strong> Tretinoin is a Prescription-Only Medicine. In full compliance with UK medical regulations, we strictly operate a clinical consultation process with <strong>physical in-clinic collection and payment conducted at 189 Brompton Road, Knightsbridge, London SW3 1NE</strong> following practitioner review.
+                        <strong>UK POM Regulatory Notice:</strong> Tretinoin is a Prescription-Only Medicine. In full compliance with UK medical regulations, we strictly operate a clinical consultation process with <strong>physical in-clinic collection and payment conducted at 76 Cleveland Street, Fitzrovia, London W1T 6NB</strong> following practitioner review.
                       </div>
                     </div>
 
@@ -348,7 +348,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
                         </a>
 
                         <a
-                          href={`mailto:info@allurepassionsuk.com?subject=${encodeURIComponent(`Prescription Tretinoin ${formData.strength} Clinical Consultation`)}&body=${encodeURIComponent(`Hello Allure Passions UK,\n\nI would like to arrange a clinical consultation for Tretinoin ${formData.strength}.\nPrimary Concern: ${formData.primaryConcern}\nContraindications Cleared: ${formData.pregnantOrNursing === 'No' ? 'Yes' : 'No'}\n\nPlease advise your next available consultation appointment in Knightsbridge.`)}`}
+                          href={`mailto:info@allurepassionsuk.com?subject=${encodeURIComponent(`Prescription Tretinoin ${formData.strength} Clinical Consultation`)}&body=${encodeURIComponent(`Hello Allure Passions UK,\n\nI would like to arrange a clinical consultation for Tretinoin ${formData.strength}.\nPrimary Concern: ${formData.primaryConcern}\nContraindications Cleared: ${formData.pregnantOrNursing === 'No' ? 'Yes' : 'No'}\n\nPlease advise your next available consultation appointment in Fitzrovia.`)}`}
                           style={{
                             padding: '0.9rem 1.8rem',
                             fontSize: '0.85rem',
@@ -416,7 +416,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
 
                 <div style={{ background: 'rgba(168, 127, 61, 0.08)', padding: '1rem', borderRadius: '6px', border: '1px solid rgba(168, 127, 61, 0.2)', fontSize: '0.85rem', color: '#A87F3D', fontWeight: '500' }}>
                   <ShoppingBag size={14} style={{ display: 'inline', marginRight: '6px' }} />
-                  Reserve online for clinic collection. Payment is made physically at 189 Brompton Road, Knightsbridge upon collection.
+                  Reserve online for clinic collection. Payment is made physically at 76 Cleveland Street, Fitzrovia upon collection.
                 </div>
               </div>
             </div>
@@ -427,12 +427,12 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
                 Reserve Kojivit Ultra for Clinic Collection
               </h3>
               <p style={{ color: '#7A756C', fontSize: '0.9rem', marginBottom: '1.5rem', fontWeight: '300' }}>
-                Kojivit Ultra Cream (£45.00 / 30g) is available for direct reservation with physical collection and payment at 189 Brompton Road, Knightsbridge, London SW3 1NE.
+                Kojivit Ultra Cream (£45.00 / 30g) is available for direct reservation with physical collection and payment at 76 Cleveland Street, Fitzrovia, London W1T 6NB.
               </p>
 
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <a
-                  href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%20189%20Brompton%20Road."
+                  href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%2076%20Cleveland%20Street."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-bronze"
@@ -474,7 +474,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
                 </a>
 
                 <a
-                  href="mailto:info@allurepassionsuk.com?subject=Kojivit%20Ultra%20Cream%20Reservation&body=Hello%20Allure%20Passions%20UK,%0A%0AI%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%20189%20Brompton%20Road.%0A%0AThank%20you."
+                  href="mailto:info@allurepassionsuk.com?subject=Kojivit%20Ultra%20Cream%20Reservation&body=Hello%20Allure%20Passions%20UK,%0A%0AI%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%2076%20Cleveland%20Street.%0A%0AThank%20you."
                   style={{
                     padding: '0.9rem 1.8rem',
                     fontSize: '0.85rem',

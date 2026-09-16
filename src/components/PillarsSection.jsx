@@ -6,7 +6,7 @@ const PILLARS = [
   {
     title: 'Tier-One Medical Platforms',
     description:
-      'We invest exclusively in gold-standard clinical systems. Every platform in our Knightsbridge suite is FDA-cleared and chosen for verified clinical efficacy.',
+      'We invest exclusively in gold-standard clinical systems. Every platform in our Fitzrovia suite is FDA-cleared and chosen for verified clinical efficacy.',
     details: ['Morpheus8™', 'PicoWay®', 'Sofwave™', 'ADVATx®', 'Emsculpt Neo®'],
     image: '/assets/images/concern_hooded_brows.jpg',
     imagePosition: '52% 50%',
@@ -49,7 +49,7 @@ export default function PillarsSection() {
           <div className="ap-head__aside" data-reveal>
             <p className="ap-lede">
               The principles of patient safety, anatomical precision and subtle aesthetic harmony that guide every
-              treatment at 189 Brompton Road.
+              treatment at 76 Cleveland Street.
             </p>
           </div>
         </header>

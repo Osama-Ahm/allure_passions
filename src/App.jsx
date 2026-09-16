@@ -247,7 +247,7 @@ export default function App() {
         )}
       </div>
 
-      {/* Section 15: Deep Obsidian Luxury Footer (Figma Exact: Gold AP Crest & Knightsbridge Directory) */}
+      {/* Section 15: Deep Obsidian Luxury Footer (Figma Exact: Gold AP Crest & Fitzrovia Directory) */}
       <Footer
         onNavigate={handleNavigate}
       />

@@ -112,7 +112,7 @@ export default function BodyContouringSection({ onNavigate }) {
                 fontWeight: '600',
               }}
             >
-              189 Brompton Road • Body Suite
+              76 Cleveland Street • Body Suite
             </div>
           </div>
 

@@ -180,7 +180,7 @@ export default function AccreditationsSection({ onNavigate }) {
                 </div>
                 <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
                   <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Suite Location</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Knightsbridge</div>
+                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Fitzrovia</div>
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function AccreditationsSection({ onNavigate }) {
                 color: '#7A756C',
               }}
             >
-              <span>189 Brompton Road, SW3 1NE</span>
+              <span>76 Cleveland Street, W1T 6NB</span>
               <span style={{ color: '#A87F3D', fontWeight: '600' }}>Active PSA Registry</span>
             </div>
           </div>
