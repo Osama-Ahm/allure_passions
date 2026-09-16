@@ -1,0 +1,111 @@
+.ap-reviews {
+  display: grid;
+  gap: var(--space-48);
+}
+
+.ap-reviews__summary {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-16);
+  align-content: start;
+}
+
+.ap-reviews__rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-12);
+  margin-top: var(--space-8);
+}
+
+.ap-reviews__score {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.ap-reviews__stars {
+  display: inline-flex;
+  gap: 0.15rem;
+  color: var(--accent);
+}
+
+.ap-reviews__count {
+  flex-basis: 100%;
+  color: var(--fg-3);
+  font-size: var(--text-small);
+}
+
+/* Carousel ----------------------------------------------------------------- */
+
+/* Without this the scrolling track widens its grid cell instead of scrolling. */
+.ap-reviews__carousel {
+  min-width: 0;
+}
+
+.ap-reviews__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(16rem, 20rem);
+  column-gap: var(--grid-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-16);
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+.ap-reviews__card {
+  display: grid;
+  align-content: space-between;
+  gap: var(--space-24);
+  min-height: 15rem;
+  padding: var(--space-24);
+  background: var(--color-canvas);
+  border: 1px solid var(--rule);
+  scroll-snap-align: start;
+}
+
+.ap-reviews__quote p {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: var(--weight-display);
+  line-height: 1.5;
+}
+
+.ap-reviews__meta {
+  display: grid;
+  gap: 0.15rem;
+  color: var(--fg-3);
+  font-size: var(--text-small);
+}
+
+.ap-reviews__author {
+  color: var(--fg);
+  font-weight: var(--weight-medium);
+}
+
+.ap-reviews__controls {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+}
+
+@media (min-width: 1024px) {
+  .ap-reviews {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+  }
+
+  .ap-reviews__summary {
+    grid-column: 1 / span 4;
+  }
+
+  .ap-reviews__carousel {
+    grid-column: 6 / span 7;
+  }
+}

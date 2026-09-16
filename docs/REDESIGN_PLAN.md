@@ -23,7 +23,7 @@
 | 4 | Concern finder | **Built** and pushed to `origin/allure` |
 | 5 | Signature treatments | **Built** and pushed to `origin/allure` |
 | 6 | Why Allure | **Built** and pushed to `origin/allure`. Press row withheld; no usable GHP artwork |
-| 7 | Reviews & Instagram | Not started |
+| 7 | Reviews & Instagram | **Built** and pushed to `origin/allure`. Both hidden until a provider is connected |
 | 8 | Programmes & skincare teaser | Not started |
 | 9 | FAQ & Begin | Not started |
 | 10 | Treatments & treatment detail | Not started |
@@ -202,6 +202,28 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. **There is no usable GHP award artwork in the repository, so the award cell is set in type.** Of the four seal files present, `ghp_award_official.svg` is a made-up badge rather than GHP's own, `ghp_award_seal.png` and `jccp_accredited_seal.png` are generic gold medallions, `ghp_award_real.jpg` belongs to an unrelated organisation, and `ghp_corza.png` is another company's 2024 award. None of them should be published as this clinic's award. The real GHP winner logo pack is already §11.4; until it arrives the cell carries the citation in words. The JCCP cell uses the council's own logo, which is genuine.
 2. The JCCP mark sits at the foot of its cell rather than above the title, so all six titles in a row start level.
+
+---
+
+### Module 7 build log: Reviews & Instagram
+
+**Built**
+
+- **Adapters** (`src/services/reviews.js`, `src/services/instagram.js`): one interface each, with a single source of truth for whether the data is live. Connecting a provider means replacing one function body.
+- **Block 6 · Patient reviews**: the rating, stars and review count on the left with *Read all reviews on Google ↗*, and a scroll-snap carousel of quotes on the right with previous and next buttons that disable at each end. It scrolls by swipe, by button and by keyboard, and never advances on its own.
+- **Block 7 · Instagram**: six square tiles with reels marked, the handle and *Follow on Instagram ↗*. A scroll-snap strip on a phone, a six-column row from 768 px. The one image-led block on the page.
+- **Development fixtures** (`src/services/fixtures.js`): the sample reviews say in their own text that they are development fixtures, so nothing in a screenshot could be read as a patient's words.
+
+**Verified in a production build**
+
+- Neither block renders, no sample text appears anywhere in the page, and the strings do not survive into the bundle at all.
+- The credentials ribbon's fourth cell shows no rating and no link when no provider is connected.
+- Lint clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. With no provider **and** no Google Business Profile link (§11.5), the reviews section cannot show even the rating link, so it renders nothing rather than an empty frame. It appears in full the moment the adapter reports `configured: true`.
+2. The credentials ribbon's reviews cell now reads *Patient reviews · In our patients' own words* and is not a link while reviews are unconfigured, rather than pointing at a section that isn't on the page.
 
 ---
 

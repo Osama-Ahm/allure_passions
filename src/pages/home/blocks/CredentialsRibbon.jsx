@@ -36,9 +36,11 @@ export default function CredentialsRibbon() {
     {
       id: 'reviews',
       icon: Star,
-      title: reviews.configured ? `${reviews.rating} on Google` : 'Read our Google reviews',
-      detail: reviews.configured ? `${reviews.count} reviews` : 'In our patients’ own words',
-      target: 'reviews',
+      // No provider connected means no numbers, and nothing to link to either:
+      // the reviews block itself does not render (§8.11).
+      title: reviews.configured ? `${reviews.rating} on Google` : 'Patient reviews',
+      detail: reviews.configured ? `${reviews.count} Google reviews` : 'In our patients’ own words',
+      target: reviews.configured ? 'reviews' : null,
     },
   ];
 
