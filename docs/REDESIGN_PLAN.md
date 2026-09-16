@@ -22,7 +22,7 @@
 | 3 | Hero & credentials ribbon | **Built** and pushed to `origin/allure` |
 | 4 | Concern finder | **Built** and pushed to `origin/allure` |
 | 5 | Signature treatments | **Built** and pushed to `origin/allure` |
-| 6 | Why Allure | Not started |
+| 6 | Why Allure | **Built** and pushed to `origin/allure`. Press row withheld; no usable GHP artwork |
 | 7 | Reviews & Instagram | Not started |
 | 8 | Programmes & skincare teaser | Not started |
 | 9 | FAQ & Begin | Not started |
@@ -182,6 +182,26 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. **"Zero downtime" is gone from the facts.** The old site's wording ("Zero Downtime", "Minimal to Zero") is a guarantee of the kind §8.11 rules out, so downtime is now described — *Minimal*, *24–48 hours of redness*, *Minimal, some muscle soreness*. **All six fact sets still need the clinic's clinical confirmation** (§11.7).
 2. Treatment names are set without ® and ™, matching how they read in the navigation.
+
+---
+
+### Module 6 build log: Why Allure
+
+**Built**
+
+- **Part A · Welcome**: the eyebrow and display statement on the left, the focus areas and *Discover our approach* on the right.
+- **Part B · Expert care you can trust**: six hairline cells — JCCP registration, the Level 6 qualification, manufacturer training on each device, continuing professional development, professional standards, and the 2026 award. Three columns on desktop, two on tablet, one on a phone. Qualifications are stated exactly, with no implied medical title (D6).
+- **Part C · As featured in**: built, and **rendering nothing**, because press appears only with a verified link for each feature (D7, §8.11, §13). It appears the moment `src/content/press.js` has entries.
+
+**Verified**
+
+- Headings run in order through the page (H1 → H2 → H3 → H4) with one H1.
+- Lint clean; production build clean; no overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. **There is no usable GHP award artwork in the repository, so the award cell is set in type.** Of the four seal files present, `ghp_award_official.svg` is a made-up badge rather than GHP's own, `ghp_award_seal.png` and `jccp_accredited_seal.png` are generic gold medallions, `ghp_award_real.jpg` belongs to an unrelated organisation, and `ghp_corza.png` is another company's 2024 award. None of them should be published as this clinic's award. The real GHP winner logo pack is already §11.4; until it arrives the cell carries the citation in words. The JCCP cell uses the council's own logo, which is genuine.
+2. The JCCP mark sits at the foot of its cell rather than above the title, so all six titles in a row start level.
 
 ---
 
