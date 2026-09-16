@@ -5,6 +5,7 @@ import HomePage from '../pages/home/HomePage';
 import LegalNoticePage from '../pages/legal/LegalNoticePage';
 import { legalPages } from '../pages/legal/legalPages';
 import NotFoundPage from '../pages/NotFoundPage';
+import PricingPage from '../pages/pricing/PricingPage';
 import TreatmentDetailPage from '../pages/treatments/TreatmentDetailPage';
 import TreatmentsPage from '../pages/treatments/TreatmentsPage';
 import RootLayout from './RootLayout';
@@ -18,6 +19,7 @@ const routes = [
       { index: true, element: <HomePage /> },
       { path: 'contact', element: <ContactPage /> },
       { path: 'treatments', element: <TreatmentsPage /> },
+      { path: 'pricing', element: <PricingPage /> },
       { path: 'treatments/:slug', element: <TreatmentDetailPage /> },
       { path: 'privacy', element: <LegalNoticePage {...legalPages.privacy} /> },
       { path: 'terms', element: <LegalNoticePage {...legalPages.terms} /> },

@@ -24,9 +24,11 @@ export default function PriceTable({ category }) {
           {category.items.map((item) => (
             <tr key={item.name}>
               <th scope="row">{item.name}</th>
-              <td className="ap-nums">{item.single ?? '—'}</td>
+              <td className="ap-nums" data-label="Single session">
+                {item.single ?? '—'}
+              </td>
               {hasCourse && (
-                <td className="ap-nums">
+                <td className="ap-nums" data-label="Course">
                   {item.course ? (
                     <>
                       {item.course}

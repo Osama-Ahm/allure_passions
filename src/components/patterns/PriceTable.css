@@ -1,20 +1,69 @@
-.ap-prices {
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-}
-
+/* A phone gets stacked rows rather than a table to scroll sideways; from
+   40rem the same markup reads as a three-column table. */
 .ap-prices__table {
   width: 100%;
-  min-width: 30rem;
   border-collapse: collapse;
   text-align: left;
 }
 
-.ap-prices__table th,
-.ap-prices__table td {
-  padding: var(--space-16) var(--space-16) var(--space-16) 0;
+.ap-prices__table thead {
+  display: none;
+}
+
+.ap-prices__table tr {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-16);
+  padding-block: var(--space-16);
   border-bottom: 1px solid var(--rule);
-  vertical-align: top;
+}
+
+.ap-prices__table tbody th {
+  grid-column: 1 / -1;
+}
+
+.ap-prices__table td::before {
+  content: attr(data-label);
+  display: block;
+  color: var(--fg-3);
+  font-size: var(--text-label);
+  font-variant-numeric: normal;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+@media (min-width: 40rem) {
+  .ap-prices {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .ap-prices__table {
+    min-width: 30rem;
+  }
+
+  .ap-prices__table thead {
+    display: table-header-group;
+  }
+
+  .ap-prices__table tr {
+    display: table-row;
+    padding-block: 0;
+    border-bottom: 0;
+  }
+
+  .ap-prices__table td::before {
+    display: none;
+  }
+}
+
+@media (min-width: 40rem) {
+  .ap-prices__table th,
+  .ap-prices__table td {
+    padding: var(--space-16) var(--space-16) var(--space-16) 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
 }
 
 .ap-prices__table thead th {

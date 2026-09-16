@@ -27,7 +27,7 @@
 | 8 | Programmes & skincare teaser | **Built** and pushed to `origin/allure` |
 | 9 | FAQ & Begin | **Built** and pushed to `origin/allure`. Homepage complete |
 | 10 | Treatments & treatment detail | **Built** and pushed to `origin/allure` |
-| 11 | Pricing | Not started |
+| 11 | Pricing | **Built** and pushed to `origin/allure` |
 | 12 | About | Not started |
 | 13 | Clinical skincare | Not started |
 | 14 | Contact, 404 & legal | Not started |
@@ -302,6 +302,30 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. §7.1's sticky bottom bar on mobile is **not** added: the quick-contact bar built in Module 2 already offers *Request a consultation* on every page below 1200 px, and two stacked bars would fight each other.
 2. Treatments without a detail page link to their price category anchor (`/pricing#peels`), which Module 11 will land on.
+
+---
+
+### Module 11 build log: Pricing
+
+**Built**
+
+- **`/pricing`** (plan §7.3): a header carrying the two notes that matter — treatment begins with a consultation, and payment is taken in clinic — then the eight categories and the programmes, with no gradients and no cards.
+- **Category index**: a left rail on desktop that marks where you are as you scroll, and a row of chips on a phone. Both move to the category and take focus with them.
+- **All 52 prices** across eight categories, in tabular numerals on hairline rows, with the course column dropped where a category has none.
+- Anchors work from anywhere: `/pricing#peels` lands on the right category, which is where Module 10's "also at the clinic" links point.
+
+**Removed**
+
+- The pre-redesign pricing page.
+
+**Verified**
+
+- Eight categories plus programmes, 52 rows, the index marking the category in view, and `/pricing#peels` landing correctly.
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. On a phone the price tables **stack** rather than scrolling sideways: each row becomes the treatment area with labelled *Single session* and *Course* figures beneath it. A 30 rem table in a 335 px column is technically scrollable and practically unreadable, and §7.3 asks for tables that read on mobile. The same markup becomes a three-column table from 40 rem, so the semantics never change.
 
 ---
 
