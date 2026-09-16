@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { legacyRoutes } from '../legacy/legacyRoutes';
+import AboutPage from '../pages/about/AboutPage';
 import ContactPage from '../pages/contact/ContactPage';
 import HomePage from '../pages/home/HomePage';
 import LegalNoticePage from '../pages/legal/LegalNoticePage';
@@ -17,6 +18,7 @@ const routes = [
     errorElement: <RouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'about', element: <AboutPage /> },
       { path: 'contact', element: <ContactPage /> },
       { path: 'treatments', element: <TreatmentsPage /> },
       { path: 'pricing', element: <PricingPage /> },

@@ -28,7 +28,7 @@
 | 9 | FAQ & Begin | **Built** and pushed to `origin/allure`. Homepage complete |
 | 10 | Treatments & treatment detail | **Built** and pushed to `origin/allure` |
 | 11 | Pricing | **Built** and pushed to `origin/allure` |
-| 12 | About | Not started |
+| 12 | About | **Built** and pushed to `origin/allure`. No practitioner name or portrait; see below |
 | 13 | Clinical skincare | Not started |
 | 14 | Contact, 404 & legal | Not started |
 | 15 | QA & launch prep | Not started |
@@ -326,6 +326,31 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 **Changes to the plan made during this module**
 
 1. On a phone the price tables **stack** rather than scrolling sideways: each row becomes the treatment area with labelled *Single session* and *Course* figures beneath it. A 30 rem table in a 335 px column is technically scrollable and practically unreadable, and §7.3 asks for tables that read on mobile. The same markup becomes a three-column table from 40 rem, so the semantics never change.
+
+---
+
+### Module 12 build log: About
+
+**Built**
+
+- **`/about`** (plan §7.4): a statement header, then the clinic in three parts (what it is, Fitzrovia, our approach), *Your practitioner*, the credentials grid expanded to six cells, *Recognition* explaining what the award is and who gives it, and *Our standards* — consultation first, hygiene and safety, aftercare, and what happens if something goes wrong.
+- The credentials cells read from the same content as the homepage, so the two can never contradict each other.
+- The press section is built and, as on the homepage, renders nothing until each feature has a verified link (D7).
+
+**Removed**
+
+- The pre-redesign About page.
+
+**Verified**
+
+- One H1, headings in order, six credential cells, four standards, no overflow at any width, no console errors.
+- The word "doctor" does not appear on the page (D6).
+
+**Changes to the plan made during this module**
+
+1. **There is no practitioner name, role or JCCP profile link on this page, and no portrait.** §7.4 asks for all four and none has been supplied (§11.3). The section describes the qualification and registration exactly, which is what we can stand behind, and is written to take a name and a link the moment they arrive.
+2. **`practitioner_portrait.jpg` must not be published.** The person in it is wearing a uniform branded for a different clinic — "Vital Aesthetics" — so it is not this clinic's practitioner, and using it would misrepresent who treats you. It stays out of the build; Module 15 removes it from `public/` along with the other unused assets. A real portrait is added to §11.3.
+3. No award seal appears here either, for the reason given in the Module 6 log.
 
 ---
 
@@ -1128,7 +1153,7 @@ None of these block the build: modules use clearly marked placeholders until the
 
 1. **Hero video:** a wider, calmer clip of the clinic (rooms, a practitioner at work, hands and equipment) to replace the current tight facial close-up. 20–30 seconds, no audio needed; we re-encode it.
 2. **Press:** a link or issue details for each feature (Vogue, Tatler, Harper's Bazaar, GQ, ELLE), plus preferred logo files.
-3. **Practitioner:** name, role, qualifications (with the Level 6 awarding body), JCCP registration or profile link, memberships, CPD highlights; optionally a portrait.
+3. **Practitioner:** name, role, qualifications (with the Level 6 awarding body), JCCP registration or profile link, memberships, CPD highlights, **and a portrait of the actual practitioner** — the `practitioner_portrait.jpg` in the repository shows someone in another clinic's branded uniform and cannot be used.
 4. **Official artwork:** JCCP registrant logo, GHP winner logo pack, the AP monogram as an SVG (and the wordmark, if one exists).
 5. **Google reviews:** a Google Business Profile link and a choice of provider (widget service or API).
 6. **Instagram:** confirmation that the account is Business or Creator, and a choice of provider.
