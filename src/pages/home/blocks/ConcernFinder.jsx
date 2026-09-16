@@ -1,10 +1,7 @@
-import { ArrowRight, MessageCircle } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Link } from 'react-router';
-import { allConcerns, concernGroups, concernPath } from '../../../content/concerns';
-import { treatmentOptions } from '../../../content/treatments';
-import { enquiryMessage, whatsappHref } from '../../../utils/contact';
-import { ArrowLink, Button, Chip, Container, Heading, Section, SectionHeader, Text } from '../../../components/ui';
+import { allConcerns, concernGroups } from '../../../content/concerns';
+import ConcernPanel from '../../../components/patterns/ConcernPanel';
+import { Chip, Container, Section, SectionHeader } from '../../../components/ui';
 import './ConcernFinder.css';
 
 const HASH_PREFIX = '#concern-';
@@ -121,42 +118,7 @@ export default function ConcernFinder() {
             </div>
 
             <div className="ap-finder__panel" aria-live="polite">
-              <div className="ap-finder__result" key={concern.id}>
-                <Heading as="h3" size="m">
-                  {concern.name}
-                </Heading>
-                <Text>{concern.description}</Text>
-
-                <p className="ap-finder__label" id={`ap-matches-${concern.id}`}>
-                  Treatments that may help
-                </p>
-                <ul className="ap-finder__matches" aria-labelledby={`ap-matches-${concern.id}`}>
-                  {concern.treatments.map((match) => {
-                    const option = treatmentOptions[match.id];
-                    return (
-                      <li key={match.id}>
-                        <Link className="ap-finder__match" to={option.to} viewTransition>
-                          <span className="ap-finder__match-name">{option.name}</span>
-                          <span className="ap-finder__match-reason">{match.reason}</span>
-                          <ArrowRight className="ap-finder__match-icon" aria-hidden="true" size={18} strokeWidth={1.25} absoluteStrokeWidth />
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                <div className="ap-finder__actions">
-                  <Button
-                    href={whatsappHref(enquiryMessage.concern(concern.name.toLowerCase()))}
-                    external
-                    icon={MessageCircle}
-                    iconPosition="start"
-                  >
-                    Discuss this concern
-                  </Button>
-                  <ArrowLink to={concernPath(concern.id)}>See all treatments for this concern</ArrowLink>
-                </div>
-              </div>
+              <ConcernPanel concern={concern} key={concern.id} />
             </div>
           </div>
         </div>

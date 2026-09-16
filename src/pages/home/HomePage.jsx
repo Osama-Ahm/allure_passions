@@ -1,5 +1,5 @@
 import usePageMeta from '../../lib/usePageMeta';
-import BeginConsultation from './blocks/BeginConsultation';
+import BeginConsultation from '../../components/patterns/BeginConsultation';
 import ClinicalSkincare from './blocks/ClinicalSkincare';
 import ConcernFinder from './blocks/ConcernFinder';
 import CredentialsRibbon from './blocks/CredentialsRibbon';

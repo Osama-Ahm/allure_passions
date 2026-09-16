@@ -1,9 +1,5 @@
-import { useParams, Navigate } from 'react-router';
-import { POPULAR_TREATMENTS } from '../data/treatmentData';
 import usePageMeta from '../lib/usePageMeta';
-import NotFoundPage from '../pages/NotFoundPage';
-import { toSlug, toTreatmentId, useLegacyNavigate } from './legacyNavigation';
-import TreatmentDetailPage from './pages/TreatmentDetailPage';
+import { useLegacyNavigate } from './legacyNavigation';
 import './legacy.css';
 
 /** Wraps pre-redesign markup so its scoped styles apply. */
@@ -21,15 +17,4 @@ export function LegacyPage({ title, page: Page, ...pageProps }) {
       <Page onNavigate={onNavigate} {...pageProps} />
     </LegacyScope>
   );
-}
-
-export function LegacyTreatmentPage() {
-  const { slug = '' } = useParams();
-
-  if (slug.includes('_')) return <Navigate to={`/treatments/${toSlug(slug)}`} replace />;
-
-  const treatment = POPULAR_TREATMENTS.find((item) => item.id === toTreatmentId(slug));
-  if (!treatment) return <NotFoundPage />;
-
-  return <LegacyPage title={treatment.name} page={TreatmentDetailPage} treatmentId={treatment.id} />;
 }

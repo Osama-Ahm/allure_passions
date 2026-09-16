@@ -8,6 +8,7 @@
   color: var(--fg);
   font-size: var(--text-small);
   line-height: 1.2;
+  text-decoration: none;
   white-space: nowrap;
   transition:
     background-color var(--dur-quick) var(--ease-out),

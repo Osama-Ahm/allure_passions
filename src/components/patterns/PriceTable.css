@@ -1,0 +1,57 @@
+.ap-prices {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.ap-prices__table {
+  width: 100%;
+  min-width: 30rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ap-prices__table th,
+.ap-prices__table td {
+  padding: var(--space-16) var(--space-16) var(--space-16) 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.ap-prices__table thead th {
+  border-bottom-color: var(--rule-strong);
+  color: var(--fg-3);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ap-prices__table tbody th {
+  color: var(--fg);
+  font-size: var(--text-small);
+  font-weight: var(--weight-body);
+  line-height: 1.45;
+}
+
+.ap-prices__table td {
+  color: var(--fg);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ap-prices__table tbody tr:hover {
+  background: var(--fill-hover);
+}
+
+.ap-prices__note {
+  display: block;
+  color: var(--fg-3);
+  font-size: var(--text-label);
+}
+
+.ap-prices__table th:last-child,
+.ap-prices__table td:last-child {
+  padding-right: 0;
+}

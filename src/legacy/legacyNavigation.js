@@ -11,11 +11,8 @@ const ROUTE_PATHS = {
   'prescription-skincare': '/skincare/tretinoin',
 };
 
-export const toSlug = (treatmentId = 'picoway') => treatmentId.replace(/_/g, '-');
-export const toTreatmentId = (slug = 'picoway') => slug.replace(/-/g, '_');
-
 export function legacyPath(route, treatmentId) {
-  if (route === 'treatment-detail') return `/treatments/${toSlug(treatmentId || 'picoway')}`;
+  if (route === 'treatment-detail') return `/treatments/${(treatmentId || 'picoway').replaceAll('_', '-')}`;
   return ROUTE_PATHS[route] ?? '/';
 }
 

@@ -4,12 +4,15 @@ import './Chip.css';
 /**
  * Selectable pill. The caller supplies the selection semantics
  * (aria-pressed for toggles, role="radio" + aria-checked inside a radio group).
+ * `as` makes it a link where the chip navigates rather than selects.
  */
-export function Chip({ selected = false, className, children, ...rest }) {
+export function Chip({ as: Element = 'button', selected = false, className, children, ...rest }) {
+  const buttonProps = Element === 'button' ? { type: 'button' } : {};
+
   return (
-    <button type="button" className={cx('ap-chip', selected && 'is-selected', className)} {...rest}>
+    <Element className={cx('ap-chip', selected && 'is-selected', className)} {...buttonProps} {...rest}>
       {children}
-    </button>
+    </Element>
   );
 }
 

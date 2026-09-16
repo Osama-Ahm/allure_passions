@@ -1,9 +1,9 @@
 import { ArrowUpRight, Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { Link } from 'react-router';
-import { addressLines, clinic } from '../../../content/clinic';
-import { consultationCta } from '../../../content/navigation';
-import { emailHref, enquiryMessage, telHref, whatsappHref } from '../../../utils/contact';
-import { Button, Container, Icon, Section, SectionHeader } from '../../../components/ui';
+import { addressLines, clinic } from '../../content/clinic';
+import { consultationCta } from '../../content/navigation';
+import { emailHref, enquiryMessage, telHref, whatsappHref } from '../../utils/contact';
+import { Button, Container, Icon, Section, SectionHeader } from '../ui';
 import './BeginConsultation.css';
 
 const STEPS = [
@@ -14,17 +14,18 @@ const STEPS = [
 ];
 
 /**
- * Block 11 (plan §6): what happens next, in four steps, and every way to
- * reach the clinic. A low-pressure close that leads with the consultation (D9).
+ * The consultation close (plan §6, Block 11): what happens next, in four
+ * steps, and every way to reach the clinic. Used to end the homepage and the
+ * treatment pages, so `id` can be left off where it would duplicate.
  */
-export default function BeginConsultation() {
+export default function BeginConsultation({ id = 'begin' }) {
   return (
-    <Section id="begin" tone="stone" aria-labelledby="ap-begin-title">
+    <Section id={id} tone="stone" aria-labelledby={`${id}-title`}>
       <Container>
         <SectionHeader
           eyebrow="Begin with a consultation"
           title="Your treatment starts with a conversation."
-          titleId="ap-begin-title"
+          titleId={`${id}-title`}
         />
 
         <ol className="ap-begin__steps">

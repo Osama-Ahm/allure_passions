@@ -26,7 +26,7 @@
 | 7 | Reviews & Instagram | **Built** and pushed to `origin/allure`. Both hidden until a provider is connected |
 | 8 | Programmes & skincare teaser | **Built** and pushed to `origin/allure` |
 | 9 | FAQ & Begin | **Built** and pushed to `origin/allure`. Homepage complete |
-| 10 | Treatments & treatment detail | Not started |
+| 10 | Treatments & treatment detail | **Built** and pushed to `origin/allure` |
 | 11 | Pricing | Not started |
 | 12 | About | Not started |
 | 13 | Clinical skincare | Not started |
@@ -274,6 +274,34 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 **Changes to the plan made during this module**
 
 1. Business (LocalBusiness) structured data stays with the rest of the SEO work in Module 15; only the FAQ markup ships here, as §10 asks.
+
+---
+
+### Module 10 build log: Treatments & treatment detail
+
+**Built**
+
+- **`/treatments/:slug` ×6** (plan §7.1): breadcrumbs, the technology type, name, summary and concern chips, then a consultation button and a WhatsApp link that names the treatment. Below that, overview, what it can help with, how it works in three steps, before · during · after, sessions and results, suitability and side effects, aftercare and three questions — beside a **spec card that sticks 96 px from the top** with duration, comfort, downtime, sessions and the from-price. Then that treatment's own price rows, related treatments as index rows, and the consultation close.
+- **`/treatments`** (plan §7.2): a page header with *By concern* | *By treatment*. By concern shows all 18 concerns at once, with the group list sticky and the panel beside it; `?concern=melasma` opens that concern and choosing one updates the URL. By treatment shows the signature index, then the rest of the menu linked to its price category. Programmes and the consultation close follow.
+- **Treatment content** (`src/content/treatmentDetails.js`): overview, three-step mechanism, before/during/after, results, suitability, side effects, aftercare and three questions for each of the six. Written to §8.11 and **entirely a draft for the clinic's clinical confirmation** (§11.7).
+- **Price list** (`src/content/pricing.js`): all 52 rows in eight categories, each category naming the treatments it belongs to, so a treatment page shows its own rows and Module 11 can show them all.
+- **Shared patterns** (`src/components/patterns/`): `BeginConsultation`, `TreatmentIndex`, `ConcernPanel`, `Breadcrumbs` and `PriceTable`, so the homepage and the treatment pages cannot drift apart. `Chip` now takes an `as`, which lets a concern chip be a real link.
+
+**Removed**
+
+- The pre-redesign treatments index and treatment detail pages, and the slug helpers only they used.
+
+**Verified**
+
+- All six detail pages render with the right spec values, price rows, related treatments and breadcrumbs; the spec card sticks on scroll (top 652 px → 96 px).
+- `?concern=` opens the right concern; both views work by pointer and keyboard.
+- Old underscore URLs still redirect (`/treatments/emsculpt_neo` → `/treatments/emsculpt-neo`).
+- Lint clean; production build clean; no horizontal overflow at 1440, 768, 375 or 320 px; no console errors.
+
+**Changes to the plan made during this module**
+
+1. §7.1's sticky bottom bar on mobile is **not** added: the quick-contact bar built in Module 2 already offers *Request a consultation* on every page below 1200 px, and two stacked bars would fight each other.
+2. Treatments without a detail page link to their price category anchor (`/pricing#peels`), which Module 11 will land on.
 
 ---
 
