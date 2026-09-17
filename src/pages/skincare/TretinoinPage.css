@@ -1,0 +1,110 @@
+.ap-pom {
+  padding-top: calc(var(--space-32) + var(--space-16));
+}
+
+.ap-pom__type {
+  margin-top: var(--space-32);
+}
+
+.ap-pom .ap-heading {
+  margin-block: var(--space-12) var(--space-24);
+}
+
+.ap-pom__notice {
+  margin-bottom: var(--space-48);
+}
+
+.ap-pom__sections {
+  display: grid;
+  gap: var(--space-48);
+}
+
+.ap-pom__sections section {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
+}
+
+.ap-pom__heading {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: var(--weight-title);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--leading-title);
+}
+
+.ap-pom__heading--large {
+  margin-bottom: var(--space-12);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display-m);
+  line-height: var(--leading-display-m);
+}
+
+.ap-pom__list {
+  display: grid;
+  gap: var(--space-8);
+  list-style: none;
+}
+
+.ap-pom__list li {
+  position: relative;
+  padding-left: var(--space-16);
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+
+.ap-pom__list li::before {
+  content: '';
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 6px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.ap-pom__steps {
+  display: grid;
+  gap: var(--space-16);
+  width: 100%;
+  list-style: none;
+}
+
+.ap-pom__steps li {
+  display: flex;
+  align-items: start;
+  gap: var(--space-12);
+}
+
+.ap-pom__step-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-round);
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+}
+
+.ap-pom__step-title {
+  display: block;
+  color: var(--fg);
+  font-weight: var(--weight-medium);
+}
+
+.ap-pom__step-detail {
+  display: block;
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+.ap-pom__start {
+  margin-top: var(--space-8);
+}

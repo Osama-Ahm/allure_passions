@@ -34,9 +34,9 @@ export const footerColumns = [
   {
     id: 'skincare',
     title: 'Skincare',
-    // Kojivit Ultra joins this column when Module 13 builds its page.
     links: [
       { label: 'Clinical skincare', to: '/skincare' },
+      { label: 'Kojivit Ultra', to: '/skincare/kojivit-ultra' },
       { label: 'Prescription skincare', to: '/skincare/tretinoin' },
     ],
   },

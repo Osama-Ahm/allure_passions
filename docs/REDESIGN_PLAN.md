@@ -29,7 +29,7 @@
 | 10 | Treatments & treatment detail | **Built** and pushed to `origin/allure` |
 | 11 | Pricing | **Built** and pushed to `origin/allure` |
 | 12 | About | **Built** and pushed to `origin/allure`. No practitioner name or portrait; see below |
-| 13 | Clinical skincare | Not started |
+| 13 | Clinical skincare | **Built** and pushed to `origin/allure` |
 | 14 | Contact, 404 & legal | Not started |
 | 15 | QA & launch prep | Not started |
 
@@ -351,6 +351,33 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 1. **There is no practitioner name, role or JCCP profile link on this page, and no portrait.** §7.4 asks for all four and none has been supplied (§11.3). The section describes the qualification and registration exactly, which is what we can stand behind, and is written to take a name and a link the moment they arrive.
 2. **`practitioner_portrait.jpg` must not be published.** The person in it is wearing a uniform branded for a different clinic — "Vital Aesthetics" — so it is not this clinic's practitioner, and using it would misrepresent who treats you. It stays out of the build; Module 15 removes it from `public/` along with the other unused assets. A real portrait is added to §11.3.
 3. No award seal appears here either, for the reason given in the Module 6 log.
+
+---
+
+### Module 13 build log: Clinical skincare
+
+**Built**
+
+- **`/skincare`** (§7.5): a header, the two product rows with the prescription notice, how collection works in three steps, and four questions — the first of which answers "Can I buy either of these online?" with "No."
+- **`/skincare/kojivit-ultra`** (§7.6): the packshot on a stone panel beside the name, type, price, description, key ingredients and how to use, with *Reserve via WhatsApp* and *Reserve by email*, both pre-filled, and a line on collection and payment. Claims stay cosmetic throughout — "helps even the look of skin tone", never "treats melasma".
+- **`/skincare/tretinoin`** (§7.7, D5, R1): the notice first and prominent, then what it is, the strengths dispensed, who it is not suitable for and common side effects, then the four-step route. **No price, no offer and no basket anywhere on the page**, and a line pointing to the patient information leaflet.
+- **Medical questionnaire**: four steps and a review screen. Answers that rule out supply — pregnancy, breastfeeding or planning a pregnancy, and a previous reaction to a retinoid — **stop the flow immediately**, explain why, and offer a conversation about alternatives rather than a dead end. Validation covers required answers, email and phone format and an age check. The review screen lists every answer, requires an explicit consent tick linked to the privacy notice, and states in both the interface and the message itself that sending is a request for assessment, not a purchase.
+- **Form primitives** (§8.6): `TextField`, `TextArea`, `RadioCards` and `Checkbox`, each with a label, optional help and an error linked through `aria-describedby`, plus the `Notice` panel with its left rule.
+
+**Removed**
+
+- The pre-redesign prescription page. `src/legacy/` now holds only the `/prescription-skincare` redirect and the scoped stylesheet.
+
+**Verified**
+
+- Every step of the questionnaire: empty-state validation, the stop rule, the email check, the review screen, the consent gate (sending is blocked until consent is ticked) and both hand-off messages, which carry only the questions and answers, the consent line and the "not a purchase" line.
+- Three new routes render with one H1 each; no "buy" or "add to basket" wording on either product page; no overflow at 1440, 768, 375 or 320 px; no console errors.
+- Lint clean; production build clean.
+
+**Changes to the plan made during this module**
+
+1. The footer's Skincare column and the homepage teaser now link to the Kojivit page, closing the two deferrals from Modules 2 and 8.
+2. A stop answer ends the flow the moment it is chosen rather than at the next step, so nobody fills in a medical history that cannot be used.
 
 ---
 

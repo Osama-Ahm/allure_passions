@@ -7,6 +7,9 @@ import LegalNoticePage from '../pages/legal/LegalNoticePage';
 import { legalPages } from '../pages/legal/legalPages';
 import NotFoundPage from '../pages/NotFoundPage';
 import PricingPage from '../pages/pricing/PricingPage';
+import KojivitPage from '../pages/skincare/KojivitPage';
+import SkincarePage from '../pages/skincare/SkincarePage';
+import TretinoinPage from '../pages/skincare/TretinoinPage';
 import TreatmentDetailPage from '../pages/treatments/TreatmentDetailPage';
 import TreatmentsPage from '../pages/treatments/TreatmentsPage';
 import RootLayout from './RootLayout';
@@ -22,6 +25,9 @@ const routes = [
       { path: 'contact', element: <ContactPage /> },
       { path: 'treatments', element: <TreatmentsPage /> },
       { path: 'pricing', element: <PricingPage /> },
+      { path: 'skincare', element: <SkincarePage /> },
+      { path: 'skincare/kojivit-ultra', element: <KojivitPage /> },
+      { path: 'skincare/tretinoin', element: <TretinoinPage /> },
       { path: 'treatments/:slug', element: <TreatmentDetailPage /> },
       { path: 'privacy', element: <LegalNoticePage {...legalPages.privacy} /> },
       { path: 'terms', element: <LegalNoticePage {...legalPages.terms} /> },

@@ -1,0 +1,108 @@
+.ap-product {
+  padding-top: calc(var(--space-32) + var(--space-16));
+}
+
+.ap-product__layout {
+  display: grid;
+  gap: var(--space-32);
+  margin-top: var(--space-32);
+}
+
+.ap-product__media {
+  display: grid;
+  place-items: center;
+  padding: var(--space-32);
+  background: var(--color-stone);
+}
+
+.ap-product__media img {
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.ap-product__body {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+  align-content: start;
+}
+
+.ap-product__price {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.ap-product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  margin-top: var(--space-8);
+}
+
+.ap-product__section {
+  width: 100%;
+  margin-top: var(--space-24);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
+}
+
+.ap-product__heading {
+  margin-bottom: var(--space-12);
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.ap-product__list {
+  display: grid;
+  gap: var(--space-8);
+  list-style: none;
+  counter-reset: steps;
+}
+
+.ap-product__list li {
+  position: relative;
+  padding-left: var(--space-24);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+.ap-product__list li::before {
+  content: '';
+  position: absolute;
+  top: 0.6em;
+  left: 0;
+  width: 8px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.ap-product__list--ordered li {
+  counter-increment: steps;
+}
+
+.ap-product__list--ordered li::before {
+  content: counter(steps);
+  top: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  color: var(--accent-text);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .ap-product__layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-64);
+    align-items: start;
+  }
+}

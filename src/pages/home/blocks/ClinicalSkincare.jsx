@@ -1,6 +1,4 @@
-import { MessageCircle } from 'lucide-react';
 import { kojivit, prescriptionRoute } from '../../../content/products';
-import { enquiryMessage, whatsappHref } from '../../../utils/contact';
 import { Button, Container, Heading, Section, SectionHeader, Text } from '../../../components/ui';
 import './ClinicalSkincare.css';
 
@@ -36,15 +34,8 @@ export default function ClinicalSkincare() {
               </Heading>
               <Text size="small">{kojivit.summary}</Text>
               <p className="ap-skincare__price ap-nums">{kojivit.price}</p>
-              <Button
-                href={whatsappHref(enquiryMessage.treatment(kojivit.name))}
-                external
-                variant="secondary"
-                size="sm"
-                icon={MessageCircle}
-                iconPosition="start"
-              >
-                Reserve for collection
+              <Button to={`/skincare/${kojivit.slug}`} variant="secondary" size="sm">
+                View product
               </Button>
             </div>
           </article>
