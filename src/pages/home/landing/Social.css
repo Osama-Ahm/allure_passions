@@ -124,13 +124,13 @@
 .ap-review footer small {
   display: block;
   color: var(--color-ink-3);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
 }
 
 .ap-review__src {
   margin-left: auto;
   color: var(--color-ink-3);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 
 @media (max-width: 960px) {

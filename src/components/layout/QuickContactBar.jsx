@@ -7,7 +7,7 @@ import { whatsappHref } from '../../utils/contact';
 import { Button } from '../ui';
 import './QuickContactBar.css';
 
-const COMPACT_QUERY = '(max-width: 74.99rem)';
+const COMPACT_QUERY = '(max-width: 63.99rem)';
 const SHOW_AFTER = 520; // about one hero's worth of scrolling
 
 /**

@@ -58,6 +58,16 @@
   color: var(--bg);
 }
 
+@media (max-width: 29.99rem) {
+  .ap-button {
+    max-width: 100%;
+    padding-block: var(--space-8);
+    line-height: 1.35;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
 .ap-button--sm {
   min-height: 2.5rem;
   padding-inline: var(--space-16);

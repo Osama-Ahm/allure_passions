@@ -91,13 +91,13 @@ export function Begin() {
   };
 
   return (
-    <section className="ap-begin" id="begin" data-chapter="begin" aria-labelledby="ap-begin-title">
+    <section className="ap-closing" id="begin" data-chapter="begin" aria-labelledby="ap-begin-title">
       <div className="ap-wrap">
         <Chapter id="begin" style={{ paddingTop: 0 }} />
-        <blockquote className="ap-begin__quote ap-serif" data-reveal>
+        <blockquote className="ap-closing__quote ap-serif" data-reveal>
           &ldquo;{consultationQuote}&rdquo;
         </blockquote>
-        <h2 className="ap-begin__big ap-serif" id="ap-begin-title">
+        <h2 className="ap-closing__big ap-serif" id="ap-begin-title">
           <span className="ap-mask">
             <span>Your plan</span>
           </span>{' '}
@@ -107,7 +107,7 @@ export function Begin() {
             </span>
           </span>
         </h2>
-        <div className="ap-begin__row">
+        <div className="ap-closing__row">
           <Link
             ref={magnetRef}
             className="ap-magnet"
@@ -123,20 +123,20 @@ export function Begin() {
             </span>
           </Link>
         </div>
-        <ul className="ap-contacts" data-reveal>
+        <ul className="ap-closing__contacts" data-reveal>
           <li>
-            <a className="ap-contact" href={whatsappHref()} target="_blank" rel="noopener noreferrer">
+            <a className="ap-closing__contact" href={whatsappHref()} target="_blank" rel="noopener noreferrer">
               WhatsApp · {clinic.phone.display}
               <span className="ap-visually-hidden"> (opens in a new tab)</span>
             </a>
           </li>
           <li>
-            <a className="ap-contact" href={emailHref()}>
+            <a className="ap-closing__contact" href={emailHref()}>
               {clinic.email}
             </a>
           </li>
           <li>
-            <a className="ap-contact" href={clinic.directionsUrl} target="_blank" rel="noopener noreferrer">
+            <a className="ap-closing__contact" href={clinic.directionsUrl} target="_blank" rel="noopener noreferrer">
               {clinic.address.street}, {clinic.address.postcode}
               <span className="ap-visually-hidden"> — directions to {addressText} (opens in a new tab)</span>
             </a>

@@ -250,12 +250,21 @@
   border-radius: var(--radius-pill);
   background: var(--color-surface);
   color: inherit;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   text-decoration: none;
 }
 
 .ap-stage__proof a {
   border-color: var(--color-ink);
+}
+
+@media (pointer: coarse), (max-width: 47.99rem) {
+  .ap-stage__proof a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 0.9rem;
+  }
 }
 
 .ap-stage__proof a:hover {

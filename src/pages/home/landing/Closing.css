@@ -120,13 +120,13 @@
 
 /* Begin ------------------------------------------------------------------- */
 
-.ap-begin {
+.ap-closing {
   padding: 0 0 clamp(60px, 8vw, 120px);
   overflow: hidden;
   text-align: center;
 }
 
-.ap-begin__quote {
+.ap-closing__quote {
   max-width: 30ch;
   margin: 0 auto;
   color: var(--color-ink-2);
@@ -135,19 +135,19 @@
   line-height: 1.25;
 }
 
-.ap-begin__big {
+.ap-closing__big {
   margin: 2.5rem 0 0;
   color: var(--color-ink);
   font-size: calc(var(--ds) * clamp(3.6rem, 1rem + 11vw, 13rem));
   line-height: 0.88;
 }
 
-.ap-begin__big em {
+.ap-closing__big em {
   color: var(--color-bronze);
   font-style: italic;
 }
 
-.ap-begin__row {
+.ap-closing__row {
   display: flex;
   justify-content: center;
   margin-top: -1.2rem;
@@ -179,7 +179,7 @@
   pointer-events: none;
 }
 
-.ap-contacts {
+.ap-closing__contacts {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -189,7 +189,7 @@
   list-style: none;
 }
 
-.ap-contact {
+.ap-closing__contact {
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -206,13 +206,13 @@
     transform 0.5s var(--ease-expo);
 }
 
-.ap-contact:hover {
+.ap-closing__contact:hover {
   border-color: var(--color-ink);
   transform: translateY(-2px);
 }
 
 @media (max-width: 700px) {
-  .ap-begin__row {
+  .ap-closing__row {
     margin-top: 1.5rem;
   }
 }

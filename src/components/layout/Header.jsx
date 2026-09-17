@@ -13,7 +13,7 @@ import MegaMenu from './MegaMenu';
 import MobileMenu from './MobileMenu';
 import './Header.css';
 
-const DESKTOP_QUERY = '(min-width: 75rem)'; // 1200px: below this the links collapse into the menu (§5.2)
+const DESKTOP_QUERY = '(min-width: 64rem)'; // 1024px: below this the links collapse into the menu (§5.2)
 const HOVER_QUERY = '(hover: hover) and (pointer: fine)';
 const MEGA_MENU_ID = 'ap-treatments-menu';
 const MOBILE_MENU_ID = 'ap-mobile-menu';

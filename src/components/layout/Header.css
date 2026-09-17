@@ -78,6 +78,7 @@
   padding: 0.3rem;
   border-radius: 50%;
   background: var(--color-on-night);
+  box-shadow: inset 0 0 0 1px var(--color-line);
   object-fit: contain;
 }
 
@@ -181,6 +182,17 @@
 .ap-header.is-transparent .ap-header__menu-button {
   background: var(--color-on-night);
   color: var(--color-ink);
+}
+
+/* 1024–1199px: the full navigation still fits once the gaps tighten. */
+@media (min-width: 64rem) and (max-width: 74.99rem) {
+  .ap-header__inner.ap-container {
+    gap: var(--space-8);
+  }
+
+  .ap-header__link {
+    padding-inline: 0.65rem;
+  }
 }
 
 /* Below 480px the monogram carries the brand on its own, so the header

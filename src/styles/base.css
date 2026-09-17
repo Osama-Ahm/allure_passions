@@ -144,6 +144,44 @@ label:has(> .ap-visually-hidden) {
   transform: none;
 }
 
+/* Touch targets ------------------------------------------------------------ */
+
+/* On touch screens (and any phone-width window) every standalone control is
+   at least 44px tall (plan §8.10). Links set inside a sentence keep their
+   natural height. `:root` lifts these above the components' own sizes, which
+   load after this file. */
+@media (pointer: coarse), (max-width: 47.99rem) {
+  :root .ap-button,
+  :root .ap-chip,
+  :root .ap-treatments__tab,
+  :root .ap-pricing__index-link {
+    min-height: 44px;
+  }
+
+  :root .ap-arrow-link,
+  :root .ap-line-link,
+  :root .ap-breadcrumbs a,
+  :root .ap-begin__page-link,
+  :root .ap-begin__directions,
+  :root .ap-header__brand,
+  :root .ap-footer__list a,
+  :root .ap-footer__legal a,
+  :root .ap-cpanel li b a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  :root .ap-header__brand,
+  :root .ap-breadcrumbs a {
+    min-width: 44px;
+  }
+
+  :root .ap-footer__list {
+    gap: 0;
+  }
+}
+
 /* Page transitions (React Router viewTransition) ------------------------- */
 
 ::view-transition-old(root),

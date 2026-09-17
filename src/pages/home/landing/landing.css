@@ -42,7 +42,7 @@
   gap: 0.6em;
   margin: 0;
   color: var(--color-bronze-text);
-  font: 600 0.72rem/1.4 var(--font-sans);
+  font: 600 0.75rem/1.4 var(--font-sans);
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -146,7 +146,7 @@
   padding: 0.35rem 0.75rem;
   border: 1px dashed currentColor;
   border-radius: var(--radius-pill);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   line-height: 1.4;
   opacity: 0.75;
@@ -236,7 +236,7 @@
 }
 
 .ap-chapter__name {
-  font: 600 0.72rem/1.4 var(--font-sans);
+  font: 600 0.75rem/1.4 var(--font-sans);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }

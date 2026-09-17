@@ -16,7 +16,7 @@ import './MobileMenu.css';
 const menuLinks = [...primaryLinks, { label: 'Contact', to: consultationCta.to }];
 
 /**
- * Full-screen menu below 1200px (plan §5.2). Covers the whole viewport so the
+ * Full-screen menu below 1024px (plan §5.2). Covers the whole viewport so the
  * dialog holds its own close button, traps focus, closes on Escape and returns
  * focus to the button that opened it.
  */

@@ -101,7 +101,7 @@
 .ap-hero__path small {
   display: block;
   color: var(--color-champagne);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   line-height: 1.6;
@@ -233,6 +233,28 @@
 
   .ap-hero__seal {
     display: none;
+  }
+}
+
+/* Phones held sideways: the hero keeps to the screen. The two shortcut cards
+   step aside (the concern and treatment sections follow directly below). */
+@media (max-height: 520px) and (orientation: landscape) {
+  .ap-hero__inner {
+    padding-top: 84px;
+    gap: 16px;
+  }
+
+  .ap-hero__copy .ap-dot-eyebrow {
+    margin-bottom: 0.6rem;
+  }
+
+  .ap-hero__path {
+    display: none;
+  }
+
+  .ap-hero__bottom {
+    grid-template-columns: auto auto;
+    justify-content: start;
   }
 }
 

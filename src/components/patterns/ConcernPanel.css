@@ -26,6 +26,7 @@
 }
 
 .ap-concern-panel__matches {
+  container-type: inline-size;
   width: 100%;
   list-style: none;
   border-top: 1px solid var(--rule);
@@ -82,7 +83,9 @@
   margin-top: var(--space-16);
 }
 
-@media (min-width: 1024px) {
+/* Three columns only when the list itself has room, not merely the window:
+   beside the concern chips on a laptop the panel is still narrow. */
+@container (min-width: 40rem) {
   .ap-concern-panel__match {
     grid-template-columns: 16.5rem minmax(0, 1fr) auto;
     align-items: baseline;

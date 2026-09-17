@@ -122,7 +122,7 @@
   padding: 0.35rem 0.7rem;
   border: 1px solid currentColor;
   border-radius: var(--radius-pill);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -239,7 +239,7 @@
   border: 1px solid rgb(247 243 236 / 0.12);
   border-radius: var(--radius-pill);
   background: rgb(18 16 14 / 0.7);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -265,7 +265,7 @@
 
 .ap-prod__type {
   color: var(--color-champagne);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -339,9 +339,16 @@
   font-size: 0.9rem;
 }
 
+@media (max-width: 480px) {
+  .ap-rx-facts div {
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.75rem;
+  }
+}
+
 .ap-rx-facts dt {
   color: var(--color-champagne);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   line-height: 2;
@@ -391,7 +398,7 @@
   border: 1px solid rgb(247 243 236 / 0.3);
   border-radius: var(--radius-pill);
   color: var(--color-on-night-2);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
 }
 
