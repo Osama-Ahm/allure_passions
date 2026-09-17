@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, ScrollRestoration, useLocation } from 'react-router';
+import BusinessStructuredData from '../components/patterns/BusinessStructuredData';
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import QuickContactBar from '../components/layout/QuickContactBar';
@@ -24,6 +25,7 @@ export default function RootLayout() {
 
   return (
     <>
+      <BusinessStructuredData />
       <a className="ap-skip-link" href="#main">
         Skip to content
       </a>

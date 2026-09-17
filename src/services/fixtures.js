@@ -42,16 +42,24 @@ export const reviewsFixture = {
   ],
 };
 
-export const instagramFixture = {
+/** Tiles drawn in place rather than pulled from the asset library, so the
+ *  fixture needs no images and cannot be mistaken for the real feed. */
+const tile = (label) =>
+  `data:image/svg+xml;utf8,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="%23EAE3D6"/><text x="200" y="196" text-anchor="middle" font-family="sans-serif" font-size="22" fill="%236F6A62">${label}</text><text x="200" y="228" text-anchor="middle" font-family="sans-serif" font-size="16" fill="%236F6A62">fixture</text></svg>`,
+  )}`;
+
+/* Built on call, not at module scope: a computed value here would survive
+   tree-shaking and ship the fixture strings in the production bundle. */
+export const instagramFixture = () => ({
   configured: true,
   handle: '@allurepassionsuk',
   url: 'https://www.instagram.com/allurepassionsuk/',
-  posts: [
-    { id: 'fixture-1', image: '/assets/images/morpheus8_rf.png', caption: 'Morpheus8 radiofrequency microneedling', isReel: true, href: 'https://www.instagram.com/allurepassionsuk/' },
-    { id: 'fixture-2', image: '/assets/images/hero_clinic_ambiance.png', caption: 'Inside the clinic', isReel: false, href: 'https://www.instagram.com/allurepassionsuk/' },
-    { id: 'fixture-3', image: '/assets/images/picoway_laser.png', caption: 'PicoWay picosecond laser', isReel: true, href: 'https://www.instagram.com/allurepassionsuk/' },
-    { id: 'fixture-4', image: '/assets/images/sofwave_lift.png', caption: 'Sofwave ultrasound lifting', isReel: false, href: 'https://www.instagram.com/allurepassionsuk/' },
-    { id: 'fixture-5', image: '/assets/images/emsculpt_neo.png', caption: 'Emsculpt Neo body contouring', isReel: false, href: 'https://www.instagram.com/allurepassionsuk/' },
-    { id: 'fixture-6', image: '/assets/images/kojivit_ultra_cream.png', caption: 'Kojivit Ultra', isReel: false, href: 'https://www.instagram.com/allurepassionsuk/' },
-  ],
-};
+  posts: [1, 2, 3, 4, 5, 6].map((index) => ({
+    id: `fixture-${index}`,
+    image: tile(`Tile ${index}`),
+    caption: `Development fixture ${index}`,
+    isReel: index % 3 === 1,
+    href: 'https://www.instagram.com/allurepassionsuk/',
+  })),
+});

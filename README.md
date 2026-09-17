@@ -1,16 +1,44 @@
-# React + Vite
+# Allure Passions UK
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The website for Allure Passions UK, a practitioner-led aesthetic clinic in Fitzrovia, London.
 
-Currently, two official plugins are available:
+Built with Vite, React 19 and React Router 8. No CSS framework: the design system lives in
+`src/styles/tokens.css` and a set of primitives in `src/components/ui`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Running it
 
-## React Compiler
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # production build into dist/
+npm run preview    # serve the production build
+npm run lint       # oxlint
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+`http://localhost:5173/styleguide` shows every token and primitive. It is a development route and
+is not part of a production build.
 
-## Expanding the Oxlint configuration
+## How it is laid out
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+| Path | What lives there |
+|---|---|
+| `src/content/` | All copy and data: clinic details, concerns, treatments, pricing, programmes, products, credentials, FAQs, navigation. Edit the site's words here, not in components. |
+| `src/components/ui/` | Primitives: Button, Chip, Icon, Section, form fields, Notice and the typography set. |
+| `src/components/patterns/` | Reusable blocks shared across pages: the treatment index, concern panel, price table, breadcrumbs and the consultation close. |
+| `src/components/layout/` | Header, mega menu, mobile menu, footer and the mobile quick-contact bar. |
+| `src/pages/` | One folder per route, with the homepage's blocks in `pages/home/blocks/`. |
+| `src/services/` | Adapters for Google reviews and Instagram. Both report `configured: false` until a provider is connected, and the sections they feed render nothing until then. |
+| `src/utils/contact.js` | Every WhatsApp, phone and email link, built from one phone number. |
+| `docs/REDESIGN_PLAN.md` | The plan this site was built to, with a build log for each module. |
+
+## Things worth knowing before you change anything
+
+- **No booking engine.** Every call to action leads to a consultation request by WhatsApp, phone,
+  email or the contact form. The forms compose a message; nothing is posted to a server.
+- **Nothing claims what it cannot support.** No ratings appear until a live reviews provider is
+  connected; no press appears without a link to the feature; no award artwork appears that the
+  clinic has not supplied.
+- **Prescription medicine is handled carefully.** `/skincare/tretinoin` has no price, no basket and
+  no offer to sell, and supply depends on the questionnaire and a prescriber's decision.
+- **Clinical facts are drafts.** Durations, downtime, session counts, contraindications and side
+  effects are awaiting the clinic's confirmation. See §11 of the plan.

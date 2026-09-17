@@ -14,7 +14,7 @@ export const kojivit = {
     'A cosmetic cream for the appearance of uneven tone, dark patches and dullness. It is used in the evening, alongside daily sun protection — without which the look of pigmentation returns.',
   // The clinic lists £85 and £45/30 g in different places; £85 needs confirming (§11.8).
   price: '£85',
-  image: '/assets/images/kojivit_ultra_cream.png',
+  image: '/assets/images/kojivit-ultra.webp',
   ingredients: [
     'Kojic acid dipalmitate',
     'Arbutin',

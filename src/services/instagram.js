@@ -8,6 +8,6 @@ import { instagramFixture } from './fixtures';
 const NOT_CONFIGURED = { configured: false, handle: null, url: null, posts: [] };
 
 export function getInstagramFeed() {
-  if (import.meta.env.DEV) return instagramFixture;
+  if (import.meta.env.DEV) return instagramFixture();
   return NOT_CONFIGURED;
 }

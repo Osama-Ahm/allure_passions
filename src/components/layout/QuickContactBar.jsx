@@ -57,7 +57,12 @@ export default function QuickContactBar() {
   const isShown = isPastHero && !isFooterInView;
 
   return (
-    <div className={cx('ap-quick-contact', isShown && 'is-shown')} aria-hidden={!isShown} inert={!isShown || undefined}>
+    <aside
+      className={cx('ap-quick-contact', isShown && 'is-shown')}
+      aria-label="Quick contact"
+      aria-hidden={!isShown}
+      inert={!isShown || undefined}
+    >
       <Button className="ap-quick-contact__action" to={consultationCta.to} size="sm">
         {consultationCta.label}
       </Button>
@@ -73,6 +78,6 @@ export default function QuickContactBar() {
       >
         WhatsApp
       </Button>
-    </div>
+    </aside>
   );
 }

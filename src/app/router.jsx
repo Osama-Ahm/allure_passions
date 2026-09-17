@@ -1,5 +1,4 @@
-import { createBrowserRouter } from 'react-router';
-import { legacyRoutes } from '../legacy/legacyRoutes';
+import { createBrowserRouter, Navigate } from 'react-router';
 import AboutPage from '../pages/about/AboutPage';
 import ContactPage from '../pages/contact/ContactPage';
 import HomePage from '../pages/home/HomePage';
@@ -31,7 +30,8 @@ const routes = [
       { path: 'treatments/:slug', element: <TreatmentDetailPage /> },
       { path: 'privacy', element: <LegalNoticePage {...legalPages.privacy} /> },
       { path: 'terms', element: <LegalNoticePage {...legalPages.terms} /> },
-      ...legacyRoutes,
+      // The previous site's prescription URL.
+      { path: 'prescription-skincare', element: <Navigate to="/skincare/tretinoin" replace /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

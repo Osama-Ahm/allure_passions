@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| **Status** | Plan approved. Implementation in progress, one module at a time (see Progress) |
+| **Status** | Plan approved. **All fifteen modules built** and pushed to `origin/allure`; awaiting client content (§11) and review |
 | **Branch** | `allure`, pushed to `origin`; not merged into `main` |
 | **Date** | 17 September 2026 (last updated 17 September 2026) |
-| **Supersedes** | `DESIGN_SPEC_AND_GUIDELINES.md` (rules that still apply are carried over in §13) |
+| **Supersedes** | `DESIGN_SPEC_AND_GUIDELINES.md`, retired in Module 15 (rules that still apply are carried over in §13; the file remains in `main`'s history) |
 | **Reference sites** | [yukiclinic.co.uk](https://www.yukiclinic.co.uk), [skinstation.co.uk](https://www.skinstation.co.uk) |
 
 ---
@@ -31,7 +31,7 @@
 | 12 | About | **Built** and pushed to `origin/allure`. No practitioner name or portrait; see below |
 | 13 | Clinical skincare | **Built** and pushed to `origin/allure` |
 | 14 | Contact, 404 & legal | **Built** and pushed to `origin/allure` |
-| 15 | QA & launch prep | Not started |
+| 15 | QA & launch prep | **Built** and pushed to `origin/allure`. All fifteen modules complete |
 
 **How to review:** run `npm run dev`, then open `http://localhost:5173/styleguide` for the design system and `http://localhost:5173/` for the homepage as it takes shape. Blocks that aren't built yet show as dashed placeholders in development only.
 
@@ -395,6 +395,36 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 - Empty submit raises six errors and does not navigate; a completed form composes a message carrying only the fields collected plus the consent line.
 - All 14 routes resolve; legal pages render the notice and outline; the 404 offers four ways on.
 - Lint clean; production build clean; no overflow at 1440, 768, 375 or 320 px; no console errors.
+
+---
+
+### Module 15 build log: QA & launch prep
+
+**Audited**
+
+- **Accessibility: zero violations.** axe-core (WCAG 2.0/2.1/2.2 A and AA, plus best practice) across eleven routes at 1440 px and 375 px, and again on the interactive states a static scan misses — the mobile menu open, the Treatments panel open, the questionnaire's review screen, the enquiry form showing errors, and the quick-contact bar. One finding, the contact bar sitting outside any landmark, was fixed.
+- **Lighthouse (simulated mobile):** accessibility **100**, best practices **100**, SEO **100** on the homepage, a treatment page, pricing, the prescription page and contact — against a target of 95. Performance 93 on Lighthouse's throttled mobile profile; on the production build unthrottled, **LCP 0.24 s and CLS 0.005** against budgets of 2.5 s and 0.1.
+- **Responsive sweep:** nineteen routes at 1920, 1440, 1024, 768, 414, 375 and 320 px. No horizontal overflow anywhere, one H1 per page, header and footer on every page, no broken images, no console errors. No reflow problem at the 200% zoom equivalent.
+- **Reduced motion:** no intro, no video download, no transitions.
+
+**Cleaned up**
+
+- **`src/legacy/` and `src/data/` are gone.** The last redirect moved into the router. No legacy import remains anywhere.
+- **`public/` is down from 19 MB to 3.6 MB**: every unused image removed, the Kojivit packshot re-encoded from a 670 KB PNG to a 31 KB WebP. What is left is the hero video and poster, the Kojivit packshot, the JCCP logo and the brand marks.
+- **`practitioner_portrait.jpg` deleted**, for the reason in the Module 12 log.
+- The Instagram development fixture now draws its own tiles instead of borrowing photographs, and both fixtures are **confirmed absent from the production bundle**.
+- `DESIGN_SPEC_AND_GUIDELINES.md` retired; it remains in `main`'s history.
+- `README.md` rewritten: how to run the site, where everything lives, and the four rules worth knowing before changing anything.
+
+**Added**
+
+- **Business structured data** (`MedicalClinic` JSON-LD) from the layout, carrying only facts we hold — and no rating, because no reviews provider is connected.
+- `robots.txt`, with the sitemap line left commented until the production domain is known.
+
+**Changes to the plan made during this module**
+
+1. **Route-level code splitting was tried and reverted.** It cut the first load by 16 kB gzipped but made every inner page *slower* on a throttled connection (Lighthouse performance 93 → 89), because a direct visit then needs two round trips instead of one. At this bundle size the extra request costs more than the bytes saved, so the routes stay eager. Worth revisiting if the bundle grows.
+2. Static prerendering (§9's option for this module) was not needed to reach 100 for SEO, so it is left alone.
 
 ---
 
