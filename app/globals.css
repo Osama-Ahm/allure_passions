@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Lenis smooth scroll. Lenis drives the scroll position itself, so the native
+   smooth-scroll behaviour has to be off or the two fight each other.
+   --------------------------------------------------------------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@layer base {
+  /* The walkthrough is a scroll-scrubbed pin, so the anchor jumps that the
+     wayfinding links make need to land without the browser animating too. */
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.sanctuary.gold.deep');
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Editorial eyebrow: the small tracked caps that head every section. */
+  .eyebrow {
+    @apply block font-sans text-xs uppercase tracking-[0.3em] text-sanctuary-gold-deep;
+  }
+
+  /* Visible only to screen readers, for the DOM mirror of the canvas narrative. */
+  .sr-only-narrative {
+    @apply sr-only;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion. The 3D walkthrough is decorative; anyone who has asked for
+   less movement gets the static composition and the ordinary document scroll.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
