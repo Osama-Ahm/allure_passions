@@ -1,37 +1,47 @@
+import { useRef } from 'react';
 import usePageMeta from '../../lib/usePageMeta';
-import BeginConsultation from '../../components/patterns/BeginConsultation';
-import ClinicalSkincare from './blocks/ClinicalSkincare';
-import ConcernFinder from './blocks/ConcernFinder';
-import CredentialsRibbon from './blocks/CredentialsRibbon';
-import Faq from './blocks/Faq';
-import Hero from './blocks/Hero';
-import InstagramStrip from './blocks/InstagramStrip';
-import PatientReviews from './blocks/PatientReviews';
-import Programmes from './blocks/Programmes';
-import SignatureTreatments from './blocks/SignatureTreatments';
-import WhyAllure from './blocks/WhyAllure';
+import { Begin, Faq } from './landing/Closing';
+import Concerns from './landing/Concerns';
+import Hero from './landing/Hero';
+import { Programmes, Skincare } from './landing/Plan';
+import Recognition from './landing/Recognition';
+import Results from './landing/Results';
+import { Instagram, Reviews } from './landing/Social';
+import Statement from './landing/Statement';
+import Technologies from './landing/Technologies';
+import Trust from './landing/Trust';
+import { useRevealOnScroll } from './landing/useLandingMotion';
+import { ChapterPill, Cursor } from './landing/Wayfinding';
+import './landing/landing.css';
 
 /**
- * The homepage flow from docs/REDESIGN_PLAN.md §6: four acts, twelve blocks,
- * with the footer as Block 12. Block ids double as in-page anchors. The reviews
- * and Instagram blocks render only when their provider is connected.
+ * The homepage, built from design/landing.html: the story told in six chapters
+ * (Discover, Explore, Evidence, Trust, Plan, Begin), with the chapter pill
+ * following along. Section ids double as in-page anchors. Reviews and
+ * Instagram render only once their provider is connected.
  */
 export default function HomePage() {
+  const rootRef = useRef(null);
   usePageMeta();
+  useRevealOnScroll(rootRef);
 
   return (
-    <>
+    <div className="ap-landing" ref={rootRef}>
       <Hero />
-      <CredentialsRibbon />
-      <ConcernFinder />
-      <SignatureTreatments />
-      <WhyAllure />
-      <PatientReviews />
-      <InstagramStrip />
+      <Statement />
+      <Concerns />
+      <Technologies />
+      <Results />
+      <Trust />
+      <Recognition />
+      <Reviews />
+      <Instagram />
       <Programmes />
-      <ClinicalSkincare />
+      <Skincare />
       <Faq />
-      <BeginConsultation />
-    </>
+      <Begin />
+      <ChapterPill rootRef={rootRef} />
+      <Cursor />
+    </div>
   );
 }

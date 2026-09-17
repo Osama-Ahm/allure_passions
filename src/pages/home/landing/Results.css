@@ -1,0 +1,100 @@
+.ap-results-lp {
+  padding-bottom: clamp(96px, 12vw, 170px);
+  background: var(--color-night);
+  color: var(--color-on-night);
+}
+
+.ap-results-lp__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+}
+
+.ap-results-lp h2 {
+  margin-top: 0.8rem;
+}
+
+.ap-results-lp__lede {
+  margin-top: 1.2rem !important;
+}
+
+.ap-cases {
+  margin: 2rem 0;
+  border-top: 1px solid rgb(247 243 236 / 0.12);
+}
+
+.ap-case {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  width: 100%;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgb(247 243 236 / 0.12);
+  color: var(--color-on-night-2);
+  text-align: left;
+  transition:
+    color 0.3s,
+    padding 0.5s var(--ease-expo);
+}
+
+.ap-case b {
+  font-size: calc(var(--ds) * 1.75rem);
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.ap-case small {
+  font-size: 0.8rem;
+}
+
+.ap-case:hover {
+  color: var(--color-on-night);
+}
+
+.ap-case[aria-selected='true'] {
+  padding-left: 1rem;
+  color: var(--color-on-night);
+}
+
+.ap-case[aria-selected='true'] b {
+  color: var(--color-champagne);
+  font-style: italic;
+}
+
+/* Rounded on the comparison itself, so its focus ring is not clipped. */
+.ap-results-lp__frame .ap-compare {
+  border-radius: var(--radius-lg);
+}
+
+.ap-results-lp__frame .ap-compare__tag {
+  top: auto;
+  bottom: 16px;
+}
+
+.ap-results-lp__frame .ap-compare__divider {
+  width: 2px;
+  margin-left: -1px;
+  box-shadow: none;
+}
+
+.ap-results-lp__frame .ap-compare__handle {
+  width: 62px;
+  height: 62px;
+  border-color: rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.2);
+}
+
+.ap-results-lp__note {
+  margin-top: 1rem !important;
+  color: var(--color-on-night-2);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 900px) {
+  .ap-results-lp__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -6,6 +6,7 @@
 }
 
 .ap-begin__step {
+  position: relative;
   display: grid;
   gap: var(--space-8);
   padding-top: var(--space-16);
@@ -47,6 +48,10 @@
   gap: var(--space-48);
   padding-top: clamp(var(--space-48), 5vw, var(--space-64));
   border-top: 1px solid var(--rule);
+}
+
+.ap-begin__image {
+  box-shadow: var(--shadow-lift);
 }
 
 .ap-begin__actions {
@@ -117,11 +122,17 @@
     column-gap: var(--grid-gap);
   }
 
-  .ap-begin__actions {
+  .ap-begin__image {
     grid-column: 1 / span 5;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .ap-begin__actions {
+    grid-column: 7 / span 6;
   }
 
   .ap-begin__visit {
-    grid-column: 7 / span 5;
+    grid-column: 7 / span 6;
   }
 }

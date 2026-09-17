@@ -46,7 +46,7 @@ export const reviewsFixture = {
  *  fixture needs no images and cannot be mistaken for the real feed. */
 const tile = (label) =>
   `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="%23EAE3D6"/><text x="200" y="196" text-anchor="middle" font-family="sans-serif" font-size="22" fill="%236F6A62">${label}</text><text x="200" y="228" text-anchor="middle" font-family="sans-serif" font-size="16" fill="%236F6A62">fixture</text></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#EAE3D6"/><text x="200" y="196" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#6F6A62">${label}</text><text x="200" y="228" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#6F6A62">fixture</text></svg>`,
   )}`;
 
 /* Built on call, not at module scope: a computed value here would survive

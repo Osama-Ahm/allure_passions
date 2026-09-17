@@ -1,0 +1,296 @@
+/* ==========================================================================
+   Homepage: shared pieces of the landing design (design/landing.html).
+   Type pairing C: Fraunces at a light weight with tight tracking, scaled a
+   touch smaller than the prototype's default pairing (--ds).
+   ========================================================================== */
+
+.ap-landing {
+  --ds: 0.92;
+  --gutter: clamp(16px, 4vw, 56px);
+
+  color: var(--color-ink);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  overflow-x: clip;
+}
+
+.ap-landing [data-tone='night'] {
+  color: var(--color-on-night);
+}
+
+.ap-landing p {
+  margin: 0;
+}
+
+.ap-landing h2,
+.ap-landing h3,
+.ap-landing h4 {
+  color: inherit;
+}
+
+.ap-wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Eyebrow with a leading dot */
+.ap-dot-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0;
+  color: var(--color-bronze-text);
+  font: 600 0.72rem/1.4 var(--font-sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ap-dot-eyebrow::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+[data-tone='night'] .ap-dot-eyebrow {
+  color: var(--color-champagne);
+}
+
+/* Display type */
+.ap-display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.ap-display em {
+  color: var(--color-bronze);
+  font-style: italic;
+}
+
+[data-tone='night'] .ap-display em {
+  color: var(--color-champagne);
+}
+
+.ap-display--xl {
+  font-size: calc(var(--ds) * clamp(3rem, min(1.2rem + 6vw, 11svh), 8rem));
+}
+
+.ap-display--l {
+  font-size: calc(var(--ds) * clamp(2.5rem, 1.6rem + 3.4vw, 5.2rem));
+}
+
+.ap-display--m {
+  font-size: calc(var(--ds) * clamp(2rem, 1.5rem + 1.8vw, 3.2rem));
+  line-height: 1.02;
+}
+
+/* Serif at a given size, for card titles and rows */
+.ap-serif {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144;
+  letter-spacing: -0.035em;
+}
+
+.ap-lede {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--color-ink-2);
+  font-size: clamp(1.05rem, 1rem + 0.25vw, 1.22rem);
+}
+
+[data-tone='night'] .ap-lede {
+  color: var(--color-on-night-2);
+}
+
+/* Underline-on-hover arrow link */
+.ap-line-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-size 0.5s var(--ease-expo);
+}
+
+.ap-line-link:hover {
+  background-size: 100% 1px;
+}
+
+.ap-line-link svg {
+  transition: transform 0.5s var(--ease-expo);
+}
+
+.ap-line-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* Development-only marker for content the clinic still has to supply */
+.ap-pending-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px dashed currentColor;
+  border-radius: var(--radius-pill);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+/* Shared keyframes -------------------------------------------------------- */
+
+@keyframes ap-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ap-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ap-answer-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(14px);
+  }
+}
+
+/* Entrances --------------------------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 1s var(--ease-expo),
+    transform 1s var(--ease-expo);
+  transition-delay: var(--d, 0s);
+}
+
+[data-reveal][data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.ap-mask {
+  display: block;
+  margin-bottom: -0.1em;
+  padding-bottom: 0.1em;
+  overflow: hidden;
+}
+
+.ap-mask > span {
+  display: block;
+  transform: translateY(108%);
+  transition: transform 1.2s var(--ease-expo);
+  transition-delay: var(--d, 0s);
+}
+
+.ap-mask[data-in] > span {
+  transform: none;
+}
+
+/* Chapter dividers: the thread from one part of the story to the next ----- */
+
+.ap-chapter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 0.5rem 1.5rem;
+  padding-top: clamp(80px, 11vw, 160px);
+  padding-bottom: clamp(32px, 4vw, 56px);
+  text-align: left;
+}
+
+.ap-chapter__no {
+  color: var(--color-bronze);
+  font: italic 300 calc(var(--ds) * clamp(3.4rem, 2.4rem + 3vw, 5.6rem)) / 0.8 var(--font-display);
+  font-variation-settings: 'opsz' 144;
+  letter-spacing: -0.035em;
+}
+
+[data-tone='night'] .ap-chapter__no {
+  color: var(--color-champagne);
+}
+
+.ap-chapter__txt {
+  padding-bottom: 0.35rem;
+}
+
+.ap-chapter__name {
+  font: 600 0.72rem/1.4 var(--font-sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.ap-chapter__bridge {
+  max-width: 52ch;
+  margin-top: 0.2rem !important;
+  color: var(--color-ink-3);
+  font-size: 0.98rem;
+}
+
+[data-tone='night'] .ap-chapter__bridge {
+  color: var(--color-on-night-2);
+}
+
+.ap-chapter__line {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 1px;
+  overflow: hidden;
+  background: var(--color-line);
+}
+
+[data-tone='night'] .ap-chapter__line {
+  background: rgb(247 243 236 / 0.12);
+}
+
+.ap-chapter__line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-bronze);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.6s var(--ease-expo) 0.2s;
+}
+
+.ap-chapter[data-in] .ap-chapter__line::after {
+  transform: scaleX(0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .ap-mask > span {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .ap-landing *,
+  .ap-landing *::before,
+  .ap-landing *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

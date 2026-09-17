@@ -265,3 +265,19 @@
     border-bottom: 1px solid var(--rule);
   }
 }
+
+/* The treatment's photograph, as a wide band under the introduction. */
+.ap-treatment__band {
+  margin-top: var(--section-space-compact);
+}
+
+.ap-treatment__band .ap-media {
+  aspect-ratio: 21 / 8;
+  box-shadow: var(--shadow-lift);
+}
+
+@media (max-width: 767px) {
+  .ap-treatment__band .ap-media {
+    aspect-ratio: 4 / 3;
+  }
+}

@@ -1,11 +1,13 @@
 import { Clock, Coins, Gauge, MessageCircle, Repeat, Sun } from 'lucide-react';
 import { Link, useParams, Navigate } from 'react-router';
 import { findConcern, concernPath } from '../../content/concerns';
+import { treatmentMedia } from '../../content/media';
 import { pricingFor } from '../../content/pricing';
 import { treatmentDetails } from '../../content/treatmentDetails';
 import { signatureTreatments } from '../../content/treatments';
 import usePageMeta from '../../lib/usePageMeta';
 import { enquiryMessage, whatsappHref } from '../../utils/contact';
+import Media from '../../components/media/Media';
 import BeginConsultation from '../../components/patterns/BeginConsultation';
 import Breadcrumbs from '../../components/patterns/Breadcrumbs';
 import PriceTable from '../../components/patterns/PriceTable';
@@ -78,6 +80,12 @@ function TreatmentDetail({ treatment, detail }) {
           </div>
         </Container>
       </Section>
+
+      {treatmentMedia[treatment.slug] && (
+        <Container className="ap-treatment__band">
+          <Media slot={treatmentMedia[treatment.slug]} parallax fill priority />
+        </Container>
+      )}
 
       <Section spacing="compact" className="ap-treatment__main">
         <Container>

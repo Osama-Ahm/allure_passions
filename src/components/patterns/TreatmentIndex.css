@@ -3,7 +3,13 @@
   border-top: 1px solid var(--rule);
 }
 
+.ap-index-wrap {
+  position: relative;
+}
+
 .ap-index__row {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: var(--space-12);
   min-height: 6rem;
@@ -11,11 +17,71 @@
   border-bottom: 1px solid var(--rule);
   color: var(--fg-2);
   text-decoration: none;
-  transition: background-color var(--dur-quick) var(--ease-out);
 }
 
-.ap-index__row:hover {
+/* The hover fill wipes in from the left rather than snapping on. */
+.ap-index__row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--fill-hover);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 450ms var(--ease-out);
+}
+
+.ap-index__row:hover::before {
+  transform: scaleX(1);
+}
+
+.ap-index__name {
+  transition: transform 450ms var(--ease-out), color var(--dur-base) var(--ease-out);
+}
+
+.ap-index__row:hover .ap-index__name {
+  transform: translateX(6px);
+}
+
+.ap-index__row:hover .ap-index__number {
+  color: var(--accent-text);
+}
+
+/* Cursor-following preview ------------------------------------------------------ */
+
+.ap-index__preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 20rem;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  transform: translate3d(calc(var(--pointer-x, 0px) + 2rem - var(--pointer-rx, 0) * (100% + 4rem)), calc(var(--pointer-y, 0px) - 50%), 0) scale(0.9) rotate(-2deg);
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ap-index-wrap.is-previewing .ap-index__preview {
+  opacity: 1;
+  transform: translate3d(calc(var(--pointer-x, 0px) + 2rem - var(--pointer-rx, 0) * (100% + 4rem)), calc(var(--pointer-y, 0px) - 50%), 0) scale(1) rotate(0deg);
+}
+
+.ap-index__preview-image {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ap-index__preview-image.is-active {
+  clip-path: inset(0 0 0 0);
+  z-index: 1;
 }
 
 .ap-index__number {

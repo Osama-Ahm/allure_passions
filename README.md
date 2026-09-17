@@ -26,10 +26,11 @@ is not part of a production build.
 | `src/components/ui/` | Primitives: Button, Chip, Icon, Section, form fields, Notice and the typography set. |
 | `src/components/patterns/` | Reusable blocks shared across pages: the treatment index, concern panel, price table, breadcrumbs and the consultation close. |
 | `src/components/layout/` | Header, mega menu, mobile menu, footer and the mobile quick-contact bar. |
-| `src/pages/` | One folder per route, with the homepage's blocks in `pages/home/blocks/`. |
+| `src/pages/` | One folder per route, with the homepage's sections in `pages/home/landing/` (built from `design/landing.html`). |
 | `src/services/` | Adapters for Google reviews and Instagram. Both report `configured: false` until a provider is connected, and the sections they feed render nothing until then. |
 | `src/utils/contact.js` | Every WhatsApp, phone and email link, built from one phone number. |
 | `docs/REDESIGN_PLAN.md` | The plan this site was built to, with a build log for each module. |
+| `docs/IMAGE_BRIEF.md` | What every photograph slot needs, with generation prompts. Images go in `public/assets/images/site/` under the filenames listed there; `src/content/media.js` defines the slots. |
 
 ## Things worth knowing before you change anything
 
@@ -40,5 +41,7 @@ is not part of a production build.
   clinic has not supplied.
 - **Prescription medicine is handled carefully.** `/skincare/tretinoin` has no price, no basket and
   no offer to sell, and supply depends on the questionnaire and a prescriber's decision.
+- **Before/after images are real or absent.** The Real Results slots take genuine, consented,
+  unretouched clinic photographs only. Never generate them (see `docs/IMAGE_BRIEF.md` §5).
 - **Clinical facts are drafts.** Durations, downtime, session counts, contraindications and side
   effects are awaiting the clinic's confirmation. See §11 of the plan.

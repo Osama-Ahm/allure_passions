@@ -551,7 +551,7 @@ Sources in §14.
 | # | Decision | Choice |
 |---|---|---|
 | D1 | Colour scheme | Keep: cream, ink, bronze, champagne, night |
-| D2 | Typography | Modern serif + clean sans: Newsreader + Instrument Sans (§8.3) |
+| D2 | Typography | Modern serif + clean sans. **Changed 17 Sep 2026:** Fraunces + Outfit (pairing C from `design/landing.html`), replacing Newsreader + Instrument Sans (§8.3) |
 | D3 | Intro and transitions | Keep a brief logo intro (first visit only, under 1 s); remove the page curtain |
 | D4 | Workflow | Local `redesign` branch; after each module, verify, send screenshots and wait for approval; commit locally only after approval; no pushing |
 | D5 | Tretinoin | Named product page with a "consultation required" disclaimer, as briefed. **Client-accepted risk** (R1) |
@@ -569,7 +569,7 @@ Sources in §14.
 | P2 | Reviews and Instagram are built against a data adapter; the provider is chosen before launch | Doesn't block design, and placeholder content can't ship |
 | P3 | Adopt React Router for real routes | Proper links, 404 page, scroll restoration, `?concern=` filters |
 | P4 | Self-host the fonts | Faster, and no third-party font requests |
-| P5 | The homepage skincare teaser and concern finder say "prescription skincare" rather than naming the medicine; the product page names it (D5) | No loss of function, less exposure |
+| P5 | The homepage skincare teaser and concern finder say "prescription skincare" rather than naming the medicine; the product page names it (D5). **Revised 17 Sep 2026 at the client's request:** the homepage skincare card names Tretinoin, always with the prescription-only disclaimer beside it and no price | Client decision; see R1 |
 
 ---
 

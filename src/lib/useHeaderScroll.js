@@ -6,9 +6,10 @@ const DELTA = 6; // ignore scroll jitter and trackpad noise
 
 /**
  * Header scroll state: solid once the page has moved, tucked away while
- * scrolling down and back on the way up.
+ * scrolling down and back on the way up. Over a full-height hero, `overHero`
+ * keeps it glassy until most of the hero has scrolled past.
  */
-export default function useHeaderScroll() {
+export default function useHeaderScroll({ overHero = false } = {}) {
   const [state, setState] = useState({ isScrolled: false, isHidden: false });
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function useHeaderScroll() {
     const update = () => {
       frame = 0;
       const y = window.scrollY;
-      const isScrolled = y > SOLID_AFTER;
+      const isScrolled = y > (overHero ? window.innerHeight * 0.8 : SOLID_AFTER);
 
       let hidden = null; // null keeps whatever the header is already doing
       if (y < HIDE_AFTER) hidden = false;
@@ -43,7 +44,7 @@ export default function useHeaderScroll() {
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [overHero]);
 
   return state;
 }

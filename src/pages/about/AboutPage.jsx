@@ -1,8 +1,10 @@
 import { practitioner, standards, story } from '../../content/about';
 import { clinic } from '../../content/clinic';
 import { credentials } from '../../content/credentials';
+import { media } from '../../content/media';
 import { pressFeatures } from '../../content/press';
 import usePageMeta from '../../lib/usePageMeta';
+import Media from '../../components/media/Media';
 import BeginConsultation from '../../components/patterns/BeginConsultation';
 import { ArrowLink, Container, Eyebrow, Heading, Section, Text } from '../../components/ui';
 import './AboutPage.css';
@@ -27,6 +29,10 @@ export default function AboutPage() {
           </Text>
         </Container>
       </Section>
+
+      <Container className="ap-about__band">
+        <Media slot={media.aboutClinic} parallax priority />
+      </Container>
 
       <Section spacing="compact" aria-labelledby="ap-about-story">
         <Container>

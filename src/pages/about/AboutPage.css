@@ -122,3 +122,18 @@
     border-left: 1px solid var(--rule);
   }
 }
+
+/* Wide photograph between the introduction and the story. */
+.ap-about__band {
+  margin-top: var(--section-space-compact);
+}
+
+.ap-about__band .ap-media {
+  box-shadow: var(--shadow-lift);
+}
+
+@media (max-width: 767px) {
+  .ap-about__band .ap-media {
+    aspect-ratio: 4 / 3 !important;
+  }
+}

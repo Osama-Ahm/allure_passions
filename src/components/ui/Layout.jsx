@@ -1,4 +1,5 @@
 import cx from '../../lib/cx';
+import RevealWords from '../motion/RevealWords';
 import { Eyebrow, Heading, Text } from './Typography';
 import './Layout.css';
 
@@ -49,7 +50,7 @@ export function SectionHeader({
       <div className="ap-section-header__main">
         {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
         <Heading as={titleAs} size={titleSize} id={titleId}>
-          {title}
+          <RevealWords>{title}</RevealWords>
         </Heading>
       </div>
       {hasAside && (

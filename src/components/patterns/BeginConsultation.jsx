@@ -1,8 +1,11 @@
 import { ArrowUpRight, Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { Link } from 'react-router';
 import { addressLines, clinic } from '../../content/clinic';
+import { media } from '../../content/media';
 import { consultationCta } from '../../content/navigation';
 import { emailHref, enquiryMessage, telHref, whatsappHref } from '../../utils/contact';
+import Media from '../media/Media';
+import Reveal from '../motion/Reveal';
 import { Button, Container, Icon, Section, SectionHeader } from '../ui';
 import './BeginConsultation.css';
 
@@ -28,7 +31,7 @@ export default function BeginConsultation({ id = 'begin' }) {
           titleId={`${id}-title`}
         />
 
-        <ol className="ap-begin__steps">
+        <Reveal as="ol" stagger className="ap-begin__steps">
           {STEPS.map((step, index) => (
             <li className="ap-begin__step" key={step.id}>
               <span className="ap-begin__node ap-nums" aria-hidden="true">
@@ -38,9 +41,11 @@ export default function BeginConsultation({ id = 'begin' }) {
               <p className="ap-begin__step-detail">{step.detail}</p>
             </li>
           ))}
-        </ol>
+        </Reveal>
 
         <div className="ap-begin__contact">
+          <Media slot={media.consultation} parallax className="ap-begin__image" />
+
           <div className="ap-begin__actions">
             <Button href={whatsappHref(enquiryMessage.general)} external icon={MessageCircle} iconPosition="start">
               Message us on WhatsApp

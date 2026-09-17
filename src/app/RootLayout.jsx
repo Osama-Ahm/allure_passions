@@ -4,6 +4,7 @@ import BusinessStructuredData from '../components/patterns/BusinessStructuredDat
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import QuickContactBar from '../components/layout/QuickContactBar';
+import ScrollProgress from '../components/motion/ScrollProgress';
 import cx from '../lib/cx';
 import './RootLayout.css';
 
@@ -29,12 +30,14 @@ export default function RootLayout() {
       <a className="ap-skip-link" href="#main">
         Skip to content
       </a>
+      <ScrollProgress />
       <Header overHero={hasHero} />
       <main id="main" ref={mainRef} tabIndex={-1} className={cx('ap-main', !hasHero && 'ap-main--offset')}>
         <Outlet />
       </main>
       <Footer />
-      <QuickContactBar />
+      {/* The homepage has its own chapter pill at the foot of the screen. */}
+      {!hasHero && <QuickContactBar />}
       <ScrollRestoration />
     </>
   );

@@ -4,6 +4,8 @@
  * Kojivit is a cosmetic product, so its claims stay cosmetic (§8.11). The
  * prescription route is described by what happens, never by the medicine's
  * name, anywhere on the homepage (D5, P5).
+ * Revised 17 Sep 2026: at the client's request the homepage skincare card now
+ * names Tretinoin, always with `tretinoin.notice` beside it and no price.
  */
 export const kojivit = {
   slug: 'kojivit-ultra',

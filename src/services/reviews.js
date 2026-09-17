@@ -16,9 +16,3 @@ export function getReviews() {
   if (import.meta.env.DEV) return reviewsFixture;
   return NOT_CONFIGURED;
 }
-
-/** Just the numbers, for the credentials ribbon. */
-export function getReviewsSummary() {
-  const { configured, rating, count, url } = getReviews();
-  return { configured, rating, count, url };
-}

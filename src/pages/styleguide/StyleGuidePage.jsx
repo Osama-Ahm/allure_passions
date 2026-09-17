@@ -98,16 +98,16 @@ const COLOUR_GROUPS = [
 ];
 
 const TYPE_SCALE = [
-  { name: 'Display XL', token: '--text-display-xl', spec: 'Newsreader · 44 → 88px · 1.02 · −0.02em', size: 'xl', sample: 'Advanced care for skin, body & wellbeing.' },
-  { name: 'Display L', token: '--text-display-l', spec: 'Newsreader · 36 → 60px · 1.05 · −0.015em', size: 'l', sample: <>Advanced treatments. <em>Personalised</em> to you.</> },
-  { name: 'Display M', token: '--text-display-m', spec: 'Newsreader · 28 → 40px · 1.15 · −0.01em', size: 'm', sample: 'An award-winning clinic for advanced, non-invasive skin and body care.' },
-  { name: 'Title', token: '--text-title', spec: 'Newsreader · 22 → 26px · 1.2', size: 'title', sample: 'PicoWay — picosecond laser' },
+  { name: 'Display XL', token: '--text-display-xl', spec: 'Fraunces · 44 → 88px · 1.02 · −0.02em', size: 'xl', sample: 'Advanced care for skin, body & wellbeing.' },
+  { name: 'Display L', token: '--text-display-l', spec: 'Fraunces · 36 → 60px · 1.05 · −0.015em', size: 'l', sample: <>Advanced treatments. <em>Personalised</em> to you.</> },
+  { name: 'Display M', token: '--text-display-m', spec: 'Fraunces · 28 → 40px · 1.15 · −0.01em', size: 'm', sample: 'An award-winning clinic for advanced, non-invasive skin and body care.' },
+  { name: 'Title', token: '--text-title', spec: 'Fraunces · 22 → 26px · 1.2', size: 'title', sample: 'PicoWay — picosecond laser' },
 ];
 
 const TEXT_SCALE = [
-  { name: 'Lede', token: '--text-lede', spec: 'Instrument Sans · 18 → 20px · 1.6', size: 'lede', sample: 'Choose a concern to see treatments that may help. Your plan is always confirmed at consultation.' },
-  { name: 'Body', token: '--text-body', spec: 'Instrument Sans · 16 → 17px · 1.65', size: 'body', sample: 'Every treatment begins with a consultation. We take a full medical history, assess your skin and talk through what is realistic, so your plan is built around you rather than a single device.' },
-  { name: 'Small', token: '--text-small', spec: 'Instrument Sans · 14px · 1.5', size: 'small', sample: 'Prices are confirmed at consultation. Payment is taken in clinic.' },
+  { name: 'Lede', token: '--text-lede', spec: 'Outfit · 18 → 20px · 1.6', size: 'lede', sample: 'Choose a concern to see treatments that may help. Your plan is always confirmed at consultation.' },
+  { name: 'Body', token: '--text-body', spec: 'Outfit · 16 → 17px · 1.65', size: 'body', sample: 'Every treatment begins with a consultation. We take a full medical history, assess your skin and talk through what is realistic, so your plan is built around you rather than a single device.' },
+  { name: 'Small', token: '--text-small', spec: 'Outfit · 14px · 1.5', size: 'small', sample: 'Prices are confirmed at consultation. Payment is taken in clinic.' },
 ];
 
 const SPACING = [4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 160];
@@ -252,11 +252,11 @@ export default function StyleGuidePage() {
             <dl className="sg-header__meta">
               <div>
                 <dt>Display</dt>
-                <dd>Newsreader</dd>
+                <dd>Fraunces</dd>
               </div>
               <div>
                 <dt>Interface</dt>
-                <dd>Instrument Sans</dd>
+                <dd>Outfit</dd>
               </div>
               <div>
                 <dt>Standard</dt>
@@ -286,7 +286,7 @@ export default function StyleGuidePage() {
           <StyleSection
             id="brand"
             title="Brand"
-            intro="The AP monogram beside a live-text wordmark set in Newsreader. If the clinic has an official wordmark file, it replaces the text version."
+            intro="The AP monogram beside a live-text wordmark set in Fraunces. If the clinic has an official wordmark file, it replaces the text version."
           >
             <div className="sg-lockups">
               {['canvas', 'stone', 'night'].map((tone) => (
@@ -329,7 +329,7 @@ export default function StyleGuidePage() {
           <StyleSection
             id="typography"
             title="Typography"
-            intro="Newsreader carries hierarchy at display sizes, with optical sizing switched on; Instrument Sans handles everything functional. Headings use light weights and tight tracking; labels are small, uppercase and widely tracked."
+            intro="Fraunces carries hierarchy at display sizes, with optical sizing switched on; Outfit handles everything functional. Headings use light weights and tight tracking; labels are small, uppercase and widely tracked."
           >
             <div className="sg-families">
               <div className="sg-family sg-family--display">
@@ -337,7 +337,7 @@ export default function StyleGuidePage() {
                   Aa<em>Aa</em>
                 </span>
                 <div>
-                  <p className="sg-family__name">Newsreader</p>
+                  <p className="sg-family__name">Fraunces</p>
                   <Text size="small" tone="muted">
                     Display & headings · variable 200–800 · optical sizes 6–72 · italic
                   </Text>
@@ -348,7 +348,7 @@ export default function StyleGuidePage() {
                   Aa
                 </span>
                 <div>
-                  <p className="sg-family__name">Instrument Sans</p>
+                  <p className="sg-family__name">Outfit</p>
                   <Text size="small" tone="muted">
                     Interface & body · variable 400–700 · italic
                   </Text>
@@ -383,7 +383,7 @@ export default function StyleGuidePage() {
                 <div className="sg-type-row__meta">
                   <span className="sg-type-row__name">Label</span>
                   <code>--text-label</code>
-                  <span>Instrument Sans · 12px · uppercase · 0.14em · 500</span>
+                  <span>Outfit · 12px · uppercase · 0.14em · 500</span>
                 </div>
                 <Eyebrow>Signature treatments</Eyebrow>
               </div>

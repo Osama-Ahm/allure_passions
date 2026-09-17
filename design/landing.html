@@ -1,0 +1,1582 @@
+<!doctype html>
+<html lang="en-GB" data-type="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allure Passions UK — Landing prototype</title>
+<meta name="description" content="Design prototype for the Allure Passions UK homepage revamp.">
+<link rel="icon" href="../public/assets/brand/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Outfit:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   Tokens
+   ========================================================================= */
+:root {
+  --canvas: #F6F1EA;
+  --canvas-2: #EDE5D9;
+  --surface: #FFFDF9;
+  --ink: #1C1B18;
+  --ink-2: #4A4740;
+  --ink-3: #6F6A62;
+  --line: rgb(28 27 24 / .12);
+  --night: #12100E;
+  --night-2: #1D1A17;
+  --on-night: #F7F3EC;
+  --on-night-2: rgb(247 243 236 / .68);
+  --line-night: rgb(247 243 236 / .12);
+  --champagne: #D6BD8A;
+  --bronze: #A87F3D;
+  --bronze-text: #7F6029;
+  --blush: #E9D3C4;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1440px;
+  --r-sm: 14px;
+  --r-md: 24px;
+  --r-lg: 36px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Type pairings — prototype switcher (bottom-left). A is the proposal. */
+[data-type="a"] { --serif: 'Instrument Serif', Georgia, serif; --sans: 'Manrope', system-ui, sans-serif; --dw: 400; --dt: -.015em; --ds: 1; --dlh: .98; }
+[data-type="b"] { --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Jost', system-ui, sans-serif; --dw: 400; --dt: -.015em; --ds: 1.08; --dlh: .92; }
+[data-type="c"] { --serif: 'Fraunces', Georgia, serif; --sans: 'Outfit', system-ui, sans-serif; --dw: 300; --dt: -.035em; --ds: .92; --dlh: 1; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--canvas); color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; border-radius: 6px; }
+::selection { background: var(--champagne); color: var(--ink); }
+
+.wrap { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.night { background: var(--night); color: var(--on-night); }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .6em; margin: 0;
+  font: 600 .72rem/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--bronze-text);
+}
+.eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.night .eyebrow { color: var(--champagne); }
+.display {
+  font-family: var(--serif); font-weight: var(--dw); letter-spacing: var(--dt); line-height: var(--dlh);
+  font-variation-settings: "opsz" 144; margin: 0; text-wrap: balance;
+}
+.display em { font-style: italic; color: var(--bronze); }
+.night .display em { color: var(--champagne); }
+.h-xl { font-size: calc(var(--ds) * clamp(3rem, min(1.2rem + 6vw, 11svh), 8rem)); }
+.h-l  { font-size: calc(var(--ds) * clamp(2.5rem, 1.6rem + 3.4vw, 5.2rem)); }
+.h-m  { font-size: calc(var(--ds) * clamp(2rem, 1.5rem + 1.8vw, 3.2rem)); line-height: 1.02; }
+.lede { font-size: clamp(1.05rem, 1rem + .25vw, 1.22rem); color: var(--ink-2); max-width: 44ch; margin: 0; }
+.night .lede { color: var(--on-night-2); }
+.placeholder-note {
+  display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .75rem; border-radius: 999px;
+  border: 1px dashed currentColor; font-size: .74rem; letter-spacing: .04em; opacity: .75;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.btn {
+  --bg: var(--ink); --fg: var(--canvas);
+  position: relative; display: inline-flex; align-items: center; gap: .75rem;
+  padding: .45rem .45rem .45rem 1.35rem; border-radius: 999px; background: var(--bg); color: var(--fg);
+  font: 500 .875rem/1 var(--sans); letter-spacing: .01em; white-space: nowrap;
+  overflow: hidden; isolation: isolate; transition: color .4s;
+}
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: var(--bronze); transform: translateY(101%); transition: transform .55s var(--ease);
+}
+.btn:hover::before { transform: translateY(0); }
+.btn:hover { color: var(--on-night); }
+.btn__icon {
+  display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border-radius: 50%;
+  background: var(--fg); color: var(--bg); transition: transform .55s var(--ease), background .4s, color .4s;
+}
+.btn:hover .btn__icon { transform: rotate(-45deg); background: var(--on-night); color: var(--bronze); }
+.btn--light { --bg: var(--on-night); --fg: var(--ink); }
+.btn--ghost { --bg: transparent; --fg: currentColor; border: 1px solid currentColor; }
+.btn--ghost .btn__icon { background: var(--ink); color: var(--canvas); }
+.night .btn--ghost .btn__icon { background: var(--on-night); color: var(--night); }
+.btn--ghost:hover { border-color: var(--bronze); }
+
+.link-arrow {
+  display: inline-flex; align-items: center; gap: .5rem; font-weight: 500; font-size: .95rem;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .5s var(--ease);
+}
+.link-arrow:hover { background-size: 100% 1px; }
+.link-arrow svg { transition: transform .5s var(--ease); }
+.link-arrow:hover svg { transform: translateX(4px); }
+
+/* Reveal ------------------------------------------------------------------ */
+.rv { opacity: 0; transform: translateY(28px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
+.rv.in { opacity: 1; transform: none; }
+.mask { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.mask > span { display: block; transform: translateY(108%); transition: transform 1.2s var(--ease); transition-delay: var(--d, 0s); }
+.in .mask > span, .mask.in > span { transform: none; }
+
+/* Chapter dividers — the thread that ties one section to the next -------- */
+.chapter { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: .5rem 1.5rem; padding-top: clamp(80px, 11vw, 160px); padding-bottom: clamp(32px, 4vw, 56px); }
+.chapter__no { font: italic var(--dw) calc(var(--ds) * clamp(3.4rem, 2.4rem + 3vw, 5.6rem))/.8 var(--serif); color: var(--bronze); }
+.night .chapter__no { color: var(--champagne); }
+.chapter__txt { padding-bottom: .35rem; }
+.chapter__name { margin: 0; font: 600 .72rem/1.4 var(--sans); letter-spacing: .18em; text-transform: uppercase; }
+.chapter__bridge { margin: .2rem 0 0; font-size: .98rem; color: var(--ink-3); max-width: 52ch; }
+.night .chapter__bridge { color: var(--on-night-2); }
+.chapter__line { grid-column: 1 / -1; height: 1px; background: var(--line); position: relative; overflow: hidden; }
+.night .chapter__line { background: var(--line-night); }
+.chapter__line::after { content: ""; position: absolute; inset: 0; background: var(--bronze); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.6s var(--ease) .2s; }
+.chapter.in .chapter__line::after { transform: scaleX(.18); }
+
+/* Scroll progress + cursor ----------------------------------------------- */
+.progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--bronze), var(--champagne)); }
+.cursor {
+  position: fixed; left: 0; top: 0; z-index: 70; pointer-events: none; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%;
+  background: var(--ink); color: var(--ink); display: grid; place-items: center; font: 600 .68rem/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
+  transition: width .4s var(--ease), height .4s var(--ease), margin .4s var(--ease), background .3s, opacity .3s; opacity: 0;
+}
+.cursor span { opacity: 0; transition: opacity .2s; }
+.cursor.is-label { width: 84px; height: 84px; margin: -42px 0 0 -42px; background: var(--champagne); }
+.cursor.is-label span { opacity: 1; transition-delay: .1s; }
+@media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+/* =========================================================================
+   Navigation
+   ========================================================================= */
+.nav { position: fixed; z-index: 50; top: 16px; left: 50%; width: min(calc(100% - 32px), 1180px); transform: translate(-50%, 0); transition: transform .6s var(--ease); }
+.nav.is-hidden { transform: translate(-50%, -140%); }
+.nav__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .4rem .4rem .4rem 1rem; border-radius: 999px; color: var(--on-night);
+  background: rgb(18 16 14 / .2); border: 1px solid rgb(255 255 255 / .16);
+  backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  transition: background .5s, color .5s, border-color .5s, box-shadow .5s;
+}
+.nav.is-solid .nav__bar { background: rgb(255 253 249 / .8); color: var(--ink); border-color: var(--line); box-shadow: 0 10px 40px -20px rgb(28 27 24 / .35); }
+.brand { display: flex; align-items: center; gap: .65rem; }
+.brand img { width: 34px; height: 34px; border-radius: 50%; background: var(--on-night); padding: 4px; }
+.brand b { font: 600 .74rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; white-space: nowrap; }
+.nav__links { display: flex; gap: .15rem; list-style: none; margin: 0; padding: 0; }
+.nav__links a { display: block; padding: .6rem .85rem; border-radius: 999px; font-size: .86rem; font-weight: 500; transition: background .3s; }
+.nav__links a:hover { background: rgb(255 255 255 / .14); }
+.nav.is-solid .nav__links a:hover { background: var(--canvas-2); }
+.nav__cta .btn__icon { width: 2.1rem; height: 2.1rem; }
+.nav.is-solid .nav__cta { --bg: var(--ink); --fg: var(--canvas); }
+.nav__menu { display: none; width: 44px; height: 44px; border-radius: 50%; background: var(--on-night); color: var(--ink); place-items: center; }
+.nav.is-solid .nav__menu { background: var(--ink); color: var(--canvas); }
+.sheet {
+  position: fixed; inset: 0; z-index: 49; background: var(--night); color: var(--on-night);
+  padding: 110px var(--gutter) 32px; display: flex; flex-direction: column; justify-content: space-between;
+  clip-path: circle(0 at calc(100% - 44px) 40px); transition: clip-path .8s var(--ease); visibility: hidden;
+}
+.sheet.is-open { clip-path: circle(150% at calc(100% - 44px) 40px); visibility: visible; }
+.sheet ul { list-style: none; margin: 0; padding: 0; }
+.sheet li a { display: block; font: var(--dw) calc(var(--ds) * 2.6rem)/1.2 var(--serif); padding: .15rem 0; }
+@media (max-width: 1060px) { .nav__links, .nav__cta { display: none; } .nav__menu { display: grid; } }
+
+/* Chapter pill — bottom centre, tells you where you are in the story ---- */
+.pill {
+  position: fixed; z-index: 45; left: 50%; bottom: 18px; transform: translate(-50%, 160%);
+  display: flex; align-items: center; gap: .8rem; padding: .35rem .35rem .35rem .45rem; border-radius: 999px;
+  background: rgb(18 16 14 / .88); color: var(--on-night); border: 1px solid rgb(255 255 255 / .1);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / .5); transition: transform .7s var(--ease);
+}
+.pill.is-on { transform: translate(-50%, 0); }
+.pill__ring { position: relative; width: 38px; height: 38px; flex: none; }
+.pill__ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pill__ring b { position: absolute; inset: 0; display: grid; place-items: center; font: 600 .68rem/1 var(--sans); }
+.pill__label { display: grid; line-height: 1.2; min-width: 170px; }
+.pill__label small { font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--champagne); }
+.pill__label span { font-size: .86rem; white-space: nowrap; }
+.pill .btn { padding-left: 1rem; }
+.pill .btn__icon { width: 2rem; height: 2rem; }
+@media (max-width: 600px) { .pill { width: calc(100% - 24px); justify-content: space-between; bottom: 12px; } .pill__label { min-width: 0; } }
+
+/* Type switcher (prototype only) ------------------------------------------ */
+.typesw { position: fixed; z-index: 46; left: 18px; bottom: 18px; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 10px 30px -18px rgb(0 0 0 / .4); }
+.typesw span { align-self: center; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; padding: 0 .5rem 0 .6rem; color: var(--ink-3); }
+.typesw button { padding: .45rem .75rem; border-radius: 999px; font-size: .8rem; }
+.typesw button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+@media (max-width: 600px) { .typesw { bottom: 78px; left: 12px; } .typesw span { display: none; } }
+
+/* =========================================================================
+   Hero
+   ========================================================================= */
+.hero { position: relative; }
+.hero__shell { position: relative; overflow: hidden; background: var(--night); will-change: transform; transform-origin: 50% 0; }
+.hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); }
+.hero__scrim { position: absolute; inset: 0; background: radial-gradient(120% 80% at 10% 100%, rgb(18 16 14 / .88), transparent 62%), linear-gradient(180deg, rgb(18 16 14 / .5), rgb(18 16 14 / .1) 35%, rgb(18 16 14 / .6)); }
+.hero__inner {
+  position: relative; z-index: 2; min-height: 100svh; color: var(--on-night);
+  display: grid; grid-template-rows: 1fr auto; gap: clamp(24px, 4svh, 48px);
+  padding-top: 110px; padding-bottom: clamp(20px, 3vw, 36px);
+}
+.hero__copy { align-self: end; }
+.hero__copy .eyebrow { color: var(--champagne); margin-bottom: 1.2rem; }
+.hero h1 { max-width: 13ch; }
+.hero h1 em { color: var(--champagne); }
+.hero__sub { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.2rem 3rem; margin-top: clamp(1rem, 2.5svh, 2rem); }
+.hero__sub p { margin: 0; max-width: 40ch; color: var(--on-night-2); font-size: clamp(1rem, .95rem + .25vw, 1.15rem); }
+.hero__bottom { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
+.path {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1rem .9rem 1.2rem; border-radius: var(--r-md);
+  background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  transition: background .4s, transform .5s var(--ease);
+}
+.path:hover { background: rgb(255 255 255 / .16); transform: translateY(-3px); }
+.path small { display: block; font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--champagne); }
+.path span { font-size: .92rem; }
+.path__arrow { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--on-night); color: var(--ink); transition: transform .5s var(--ease); }
+.path:hover .path__arrow { transform: rotate(-45deg); }
+.status { display: flex; align-items: center; gap: .7rem; padding: .9rem 1.2rem; border-radius: var(--r-md); background: rgb(18 16 14 / .35); border: 1px solid rgb(255 255 255 / .12); font-size: .85rem; white-space: nowrap; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: #7FC29B; animation: ping 2s infinite; }
+.status.is-closed i { background: var(--champagne); animation: none; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgb(127 194 155 / .6); } 70%, 100% { box-shadow: 0 0 0 10px rgb(127 194 155 / 0); } }
+.seal { position: absolute; z-index: 2; right: var(--gutter); top: 130px; width: 124px; height: 124px; color: var(--on-night); }
+.seal svg { width: 100%; height: 100%; animation: spin 22s linear infinite; }
+.seal b { position: absolute; inset: 0; display: grid; place-items: center; font: italic var(--dw) 1.7rem/1 var(--serif); color: var(--champagne); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 860px) {
+  .hero__bottom { grid-template-columns: 1fr; }
+  .status { order: -1; justify-self: start; padding: .55rem 1rem; }
+  .seal { display: none; }
+}
+
+/* Ticker ------------------------------------------------------------------ */
+.ticker { padding: 20px 0; border-bottom: 1px solid var(--line); overflow: hidden; }
+.ticker__track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.ticker:hover .ticker__track { animation-play-state: paused; }
+.ticker__group { display: flex; align-items: center; gap: 2.5rem; padding-right: 2.5rem; }
+.ticker__item { display: flex; align-items: center; gap: 2.5rem; font: var(--dw) calc(var(--ds) * clamp(1.35rem, 1rem + 1vw, 2rem))/1 var(--serif); white-space: nowrap; }
+.ticker__item::after { content: "✦"; font-size: .8rem; color: var(--bronze); }
+.ticker__item em { color: var(--bronze); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* =========================================================================
+   01 · Statement
+   ========================================================================= */
+.statement { padding-bottom: clamp(40px, 6vw, 80px); }
+.statement__grid { display: grid; grid-template-columns: 220px 1fr; gap: 2rem 4rem; align-items: start; }
+.statement__grid > .eyebrow { padding-top: .9rem; }
+.statement__text { font: var(--dw) calc(var(--ds) * clamp(2rem, 1.1rem + 3.2vw, 4.4rem))/1.1 var(--serif); letter-spacing: var(--dt); margin: 0; }
+.statement__text .w { opacity: .15; transition: opacity .35s linear; }
+.statement__text .w.on { opacity: 1; }
+.statement__text em { font-style: italic; color: var(--bronze); }
+.inline-img { display: inline-block; vertical-align: middle; width: 2.2em; height: .95em; margin: -.1em .12em 0; border-radius: 999px; overflow: hidden; transform: scale(.4); opacity: 0; transition: transform 1s var(--ease), opacity .6s; }
+.inline-img.on { transform: none; opacity: 1; }
+.inline-img img { width: 100%; height: 100%; object-fit: cover; }
+.statement__facts { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 900px; }
+.fact { padding: 1.1rem 1.2rem; border-radius: var(--r-sm); border: 1px solid var(--line); }
+.fact b { display: block; font: var(--dw) calc(var(--ds) * 2.4rem)/1 var(--serif); letter-spacing: var(--dt); }
+.fact span { font-size: .88rem; color: var(--ink-3); }
+@media (max-width: 860px) { .statement__grid { grid-template-columns: 1fr; } .fact { padding: .9rem; } .fact span { font-size: .78rem; } }
+
+/* =========================================================================
+   02 · What we treat
+   ========================================================================= */
+.treats__head { display: grid; grid-template-columns: 1.15fr .85fr; gap: 1.5rem 4rem; align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.filters { position: relative; display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--canvas-2); margin-top: 1.4rem; }
+.filters button { position: relative; z-index: 1; padding: .55rem 1.05rem; border-radius: 999px; font-size: .88rem; font-weight: 500; color: var(--ink-2); transition: color .35s; }
+.filters button[aria-pressed="true"] { color: var(--canvas); }
+.filters__pill { position: absolute; z-index: 0; border-radius: 999px; background: var(--ink); transition: all .5s var(--ease); }
+.filters button small { opacity: .6; margin-left: .3rem; font-size: .75em; }
+
+.treats__body { display: grid; grid-template-columns: 1fr minmax(0, 520px); gap: clamp(24px, 4vw, 72px); align-items: start; }
+.clist { display: grid; gap: 10px; }
+.cgroup { border-radius: var(--r-md); background: rgb(255 253 249 / .55); border: 1px solid var(--line); transition: background .5s, border-color .5s, box-shadow .5s; }
+.cgroup.is-open { background: var(--surface); border-color: transparent; box-shadow: 0 24px 50px -40px rgb(28 27 24 / .45); }
+.cgroup.is-hidden { display: none; }
+.cgroup__head { width: 100%; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .3rem 1rem; padding: 1.15rem 1.2rem 1.15rem 1.4rem; text-align: left; }
+.cgroup__title { display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap; }
+.cgroup__name { font: var(--dw) calc(var(--ds) * clamp(1.6rem, 1.3rem + .9vw, 2.3rem))/1.05 var(--serif); letter-spacing: var(--dt); }
+.cgroup__count { font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--bronze-text); }
+.cgroup__peek { grid-column: 1; font-size: .88rem; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 1.6em; transition: opacity .4s, max-height .5s var(--ease); }
+.cgroup.is-open .cgroup__peek { opacity: 0; max-height: 0; }
+.cgroup__toggle { grid-column: 2; grid-row: 1 / span 2; position: relative; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); transition: background .4s, color .4s, border-color .4s, transform .6s var(--ease); }
+.cgroup__toggle::before, .cgroup__toggle::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; margin-left: -6px; background: currentColor; transition: transform .6s var(--ease); }
+.cgroup__toggle::after { transform: rotate(90deg); }
+.cgroup__head:hover .cgroup__toggle { border-color: var(--ink); }
+.cgroup.is-open .cgroup__toggle { background: var(--ink); color: var(--canvas); border-color: var(--ink); transform: rotate(180deg); }
+.cgroup.is-open .cgroup__toggle::after { transform: rotate(0); }
+.cgroup__body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+.cgroup.is-open .cgroup__body { grid-template-rows: 1fr; }
+.cgroup__inner { overflow: hidden; padding-inline: 1rem; }
+.cgroup.is-open .cgroup__inner { padding-bottom: .7rem; }
+.crow {
+  position: relative; width: 100%; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: .8rem;
+  padding: .7rem .4rem; border-top: 1px solid var(--line); text-align: left; isolation: isolate;
+}
+.crow::before { content: ""; position: absolute; inset: 3px -8px; z-index: -1; border-radius: 16px; background: var(--surface); opacity: 0; transform: scaleY(.6); transition: opacity .4s, transform .5s var(--ease); }
+.crow:hover::before { opacity: .7; transform: none; }
+.crow[aria-expanded="true"]::before { opacity: 1; transform: none; background: var(--champagne); }
+.crow__no { font-size: .78rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.crow__name { font: var(--dw) calc(var(--ds) * clamp(1.3rem, 1.1rem + .6vw, 1.75rem))/1.1 var(--serif); letter-spacing: var(--dt); transition: transform .5s var(--ease); }
+.crow:hover .crow__name, .crow[aria-expanded="true"] .crow__name { transform: translateX(6px); }
+.crow__go { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); transition: background .4s, color .4s, transform .5s var(--ease), border-color .4s; }
+.crow[aria-expanded="true"] .crow__go { background: var(--ink); color: var(--canvas); border-color: var(--ink); transform: rotate(-45deg); }
+.crow.is-hidden { display: none; }
+
+.cpanel-home { position: sticky; top: 92px; }
+.cpanel { border-radius: var(--r-lg); overflow: hidden; background: var(--night); color: var(--on-night); box-shadow: 0 40px 80px -50px rgb(28 27 24 / .6); }
+.cpanel__media { position: relative; height: 210px; overflow: hidden; }
+.cpanel__media img { width: 100%; height: 100%; object-fit: cover; animation: panelImg 1.1s var(--ease) both; }
+.cpanel__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, var(--night)); }
+@keyframes panelImg { from { transform: scale(1.15); opacity: .3; } }
+.cpanel__count { position: absolute; z-index: 1; top: 14px; right: 14px; padding: .35rem .7rem; border-radius: 999px; background: rgb(18 16 14 / .5); backdrop-filter: blur(8px); font-size: .75rem; }
+.cpanel__body { position: relative; padding: 0 clamp(20px, 2.4vw, 34px) clamp(20px, 2.4vw, 32px); margin-top: -46px; animation: answerIn .7s var(--ease) both; }
+@keyframes answerIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } }
+.cpanel h3 { margin: .5rem 0 .6rem; font: var(--dw) calc(var(--ds) * clamp(2.1rem, 1.7rem + 1vw, 2.8rem))/1 var(--serif); letter-spacing: var(--dt); }
+.cpanel p { margin: 0; color: var(--on-night-2); font-size: .96rem; }
+.cpanel .cpanel__label { margin: 1.4rem 0 .2rem; font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--champagne); }
+.cpanel ol { list-style: none; margin: 0; padding: 0; counter-reset: t; }
+.cpanel li { counter-increment: t; display: grid; grid-template-columns: 2rem 1fr; padding: .75rem 0; border-top: 1px solid var(--line-night); animation: answerIn .6s var(--ease) both; animation-delay: calc(var(--i) * 80ms + 100ms); }
+.cpanel li::before { content: "0" counter(t); font-size: .72rem; color: var(--champagne); padding-top: .2rem; }
+.cpanel li b { font-weight: 500; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.cpanel li b i { font-style: normal; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; padding: .15rem .45rem; border-radius: 999px; background: rgb(214 189 138 / .18); color: var(--champagne); }
+.cpanel li span { grid-column: 2; color: var(--on-night-2); font-size: .88rem; line-height: 1.5; }
+.cpanel__cta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1.3rem; }
+.cpanel__next { font-size: .88rem; color: var(--on-night-2); display: inline-flex; gap: .4rem; align-items: center; }
+.cpanel__next:hover { color: var(--on-night); }
+.treats__bridge { margin-top: clamp(40px, 5vw, 64px); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.2rem 1.4rem; border-radius: var(--r-md); background: var(--canvas-2); }
+.treats__bridge p { margin: 0; font: var(--dw) calc(var(--ds) * 1.45rem)/1.2 var(--serif); }
+@media (max-width: 960px) {
+  .treats__head, .treats__body { grid-template-columns: 1fr; }
+  .cpanel-home { display: none; }
+  .crow { grid-template-columns: 30px 1fr auto; }
+  .cgroup__inner { padding-inline: .6rem; }
+  .cgroup__head { padding: 1rem 1rem 1rem 1.1rem; }
+  .clist .cpanel { margin: .4rem 0 .9rem; }
+}
+
+/* =========================================================================
+   Technologies — pinned horizontal gallery
+   ========================================================================= */
+.tech { position: relative; margin-top: clamp(80px, 10vw, 140px); border-radius: var(--r-lg) var(--r-lg) 0 0; }
+.tech__sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 4vh, 44px); }
+.tech__head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; }
+.tech__count { font: var(--dw) 1.1rem/1 var(--serif); color: var(--on-night-2); display: flex; align-items: center; gap: 1rem; }
+.tech__count b { font-weight: var(--dw); font-size: 2.4rem; color: var(--on-night); }
+.tech__bar { width: 120px; height: 1px; background: rgb(255 255 255 / .2); position: relative; overflow: hidden; }
+.tech__bar i { position: absolute; inset: 0; background: var(--champagne); transform-origin: 0 50%; transform: scaleX(0); }
+.tech__track { display: flex; gap: 18px; padding-inline: var(--gutter); will-change: transform; width: max-content; }
+.tcard { position: relative; flex: none; width: clamp(290px, 29vw, 430px); height: min(58svh, 540px); border-radius: var(--r-md); overflow: hidden; background: var(--night-2); display: flex; flex-direction: column; justify-content: end; isolation: isolate; }
+.tcard img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transform: scale(1.06); transition: transform 1.2s var(--ease), filter 1.2s var(--ease); filter: saturate(.85); }
+.tcard::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(18 16 14 / .1) 30%, rgb(18 16 14 / .9)); }
+.tcard:hover img { transform: scale(1.14); filter: saturate(1); }
+.tcard__num { position: absolute; top: 18px; left: 20px; font-size: .85rem; }
+.tcard__price { position: absolute; top: 14px; right: 14px; padding: .45rem .8rem; border-radius: 999px; background: rgb(255 255 255 / .14); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: .8rem; }
+.tcard__body { padding: 22px; }
+.tcard__type { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--champagne); }
+.tcard h3 { font: var(--dw) calc(var(--ds) * clamp(2.1rem, 1.6rem + 1.2vw, 2.9rem))/1 var(--serif); margin: .4rem 0 0; letter-spacing: var(--dt); }
+.tcard__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .7s var(--ease); }
+.tcard__more > div { overflow: hidden; }
+.tcard:hover .tcard__more, .tcard:focus-within .tcard__more { grid-template-rows: 1fr; }
+.tcard__more p { margin: .8rem 0 1rem; color: var(--on-night-2); font-size: .93rem; }
+.tcard__meta { display: flex; gap: .4rem; flex-wrap: wrap; }
+.tcard__meta span { font-size: .76rem; padding: .35rem .7rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .2); }
+.tcard--end { background: var(--champagne); color: var(--ink); justify-content: space-between; padding: 26px; }
+.tcard--end::after { display: none; }
+@media (max-width: 900px) {
+  .tech { height: auto !important; }
+  .tech__sticky { position: relative; height: auto; padding: 24px 0 72px; }
+  .tech__track { transform: none !important; overflow-x: auto; width: 100%; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .tech__track::-webkit-scrollbar { display: none; }
+  .tcard { scroll-snap-align: center; width: 82vw; height: 470px; }
+  .tcard__more { grid-template-rows: 1fr; }
+}
+
+/* =========================================================================
+   03 · Results
+   ========================================================================= */
+.results { padding-bottom: clamp(96px, 12vw, 170px); }
+.results__grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+.cases { margin: 2rem 0; border-top: 1px solid var(--line-night); }
+.case { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line-night); text-align: left; color: var(--on-night-2); transition: color .3s, padding .5s var(--ease); }
+.case b { font: var(--dw) calc(var(--ds) * 1.75rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.case small { font-size: .8rem; }
+.case[aria-selected="true"] { color: var(--on-night); padding-left: 1rem; }
+.case[aria-selected="true"] b { font-style: italic; color: var(--champagne); }
+.ba { position: relative; aspect-ratio: 4 / 3.2; border-radius: var(--r-lg); overflow: hidden; user-select: none; touch-action: pan-y; background: var(--night-2); }
+.ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.ba__after { clip-path: inset(0 0 0 var(--x, 50%)); }
+.ba__handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; margin-left: -1px; background: var(--on-night); pointer-events: none; }
+.ba__knob { position: absolute; top: 50%; left: 50%; width: 62px; height: 62px; margin: -31px 0 0 -31px; border-radius: 50%; background: rgb(255 255 255 / .2); border: 1px solid rgb(255 255 255 / .6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: grid; place-items: center; }
+.ba__tag { position: absolute; bottom: 16px; padding: .4rem .8rem; border-radius: 999px; background: rgb(18 16 14 / .55); font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; backdrop-filter: blur(8px); }
+.ba__tag--l { left: 16px; } .ba__tag--r { right: 16px; }
+.ba input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.ba:has(input:focus-visible) { outline: 2px solid var(--champagne); outline-offset: 4px; }
+.note { font-size: .78rem; color: var(--on-night-2); margin-top: 1rem; }
+@media (max-width: 900px) { .results__grid { grid-template-columns: 1fr; } }
+
+/* =========================================================================
+   04 · Trust — credential dossier
+   ========================================================================= */
+.trust__head { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1.5rem 4rem; align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.dossier { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(20px, 3vw, 48px); align-items: stretch; }
+.creds { display: grid; align-content: start; }
+.cred { position: relative; display: grid; grid-template-columns: 52px 1fr; gap: 1rem; padding: 1.05rem 0; border-top: 1px solid var(--line); text-align: left; width: 100%; }
+.cred:last-child { border-bottom: 1px solid var(--line); }
+.cred__badge { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface); font: italic var(--dw) calc(var(--ds) * 1.2rem)/1 var(--serif); transition: background .5s, color .5s, border-color .5s; }
+.cred__badge img { width: 34px; }
+.cred__title { font: var(--dw) calc(var(--ds) * clamp(1.35rem, 1.15rem + .6vw, 1.8rem))/1.15 var(--serif); letter-spacing: var(--dt); display: block; padding-top: .55rem; transition: color .4s; }
+.cred__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+.cred__more > span { overflow: hidden; color: var(--ink-2); font-size: .94rem; }
+.cred[aria-selected="true"] .cred__more { grid-template-rows: 1fr; }
+.cred[aria-selected="true"] .cred__more > span { padding-top: .4rem; }
+.cred[aria-selected="true"] .cred__badge { background: var(--ink); color: var(--champagne); border-color: var(--ink); }
+.cred[aria-selected="true"] .cred__badge img { filter: brightness(0) invert(1); }
+.cred[aria-selected="false"] .cred__title { color: var(--ink-3); }
+.cred:hover .cred__title { color: var(--ink); }
+.cred__bar { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--bronze); transform-origin: 0 50%; transform: scaleX(0); }
+.cred[aria-selected="true"] .cred__bar { animation: credBar 7s linear forwards; }
+.creds.is-paused .cred__bar { animation-play-state: paused; }
+@keyframes credBar { to { transform: scaleX(1); } }
+
+.stage { position: relative; min-height: 600px; border-radius: var(--r-lg); overflow: hidden; background: var(--night); }
+.stage__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; clip-path: inset(100% 0 0 0); transition: clip-path 1.1s var(--ease), transform 6s linear; transform: scale(1.08); }
+.stage__img.is-prev { clip-path: inset(0); z-index: 1; transition: none; }
+.stage__img.is-active { clip-path: inset(0); z-index: 2; transform: scale(1); }
+.stage::after { content: ""; position: absolute; inset: 0; z-index: 3; background: linear-gradient(180deg, transparent 40%, rgb(18 16 14 / .55)); pointer-events: none; }
+.stage__card {
+  position: absolute; z-index: 4; left: 18px; right: 18px; bottom: 18px; max-width: 460px;
+  padding: 1.3rem 1.4rem; border-radius: var(--r-md); color: var(--ink);
+  background: rgb(255 253 249 / .88); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.stage__card-inner { animation: answerIn .7s var(--ease) both; }
+.stage__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
+.stage__logo img { height: 44px; width: auto; }
+.stage__seal { width: 48px; height: 48px; border-radius: 50%; background: var(--ink); color: var(--champagne); display: grid; place-items: center; font: italic var(--dw) calc(var(--ds) * 1.2rem)/1 var(--serif); }
+.stage__step { font-size: .75rem; color: var(--ink-3); }
+.stage__card h3 { margin: 0 0 .4rem; font: var(--dw) calc(var(--ds) * 1.7rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.stage__card p { margin: 0; font-size: .92rem; color: var(--ink-2); }
+.stage__proof { margin-top: .9rem; display: flex; gap: .35rem; flex-wrap: wrap; }
+.stage__proof span, .stage__proof a { font-size: .74rem; padding: .3rem .65rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.stage__proof a { border-color: var(--ink); }
+.stage__proof .dashed { border-style: dashed; color: var(--ink-3); background: transparent; }
+@media (max-width: 960px) {
+  .trust__head, .dossier { grid-template-columns: 1fr; }
+  .stage { min-height: 520px; order: -1; }
+}
+
+/* =========================================================================
+   Recognition — awards, accreditations, press
+   ========================================================================= */
+.recog { padding: clamp(80px, 10vw, 140px) 0; background: var(--canvas-2); border-radius: var(--r-lg); margin-top: clamp(80px, 10vw, 140px); }
+.recog__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: clamp(32px, 4vw, 56px); }
+.award {
+  grid-column: span 7; position: relative; overflow: hidden; border-radius: var(--r-md); background: var(--night); color: var(--on-night);
+  padding: clamp(24px, 3vw, 44px); min-height: 400px; display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center;
+}
+.award::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgb(214 189 138 / .16), transparent); transform: skewX(-18deg); pointer-events: none; }
+.award.in::after { animation: shine 2.4s var(--ease) .6s; }
+@keyframes shine { to { left: 130%; } }
+.laurel { position: relative; width: clamp(150px, 15vw, 200px); aspect-ratio: 1; color: var(--champagne); }
+.laurel svg { width: 100%; height: 100%; }
+.laurel__ring { position: absolute; inset: 0; animation: spin 30s linear infinite; }
+.laurel b { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; font: italic var(--dw) calc(var(--ds) * 2.4rem)/.9 var(--serif); }
+.laurel b small { display: block; font: 600 .6rem/1 var(--sans); font-style: normal; letter-spacing: .2em; margin-top: .45rem; }
+.award h3 { margin: .8rem 0 .8rem; font: var(--dw) calc(var(--ds) * clamp(1.9rem, 1.4rem + 1.4vw, 3rem))/1.02 var(--serif); letter-spacing: var(--dt); }
+.award p { margin: 0; color: var(--on-night-2); font-size: .92rem; }
+.rtile { grid-column: span 5; border-radius: var(--r-md); background: var(--surface); padding: clamp(22px, 2.6vw, 36px); display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; }
+.rtile img { width: 170px; }
+.rtile h4 { margin: 0 0 .4rem; font: var(--dw) calc(var(--ds) * 1.7rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.rtile p { margin: 0; color: var(--ink-2); font-size: .94rem; }
+.members { grid-column: span 12; display: grid; grid-template-columns: 1.1fr repeat(4, 1fr); gap: 14px; }
+.members__intro { padding: 1.2rem 0; }
+.members__intro h4 { margin: .6rem 0 0; font: var(--dw) calc(var(--ds) * 1.6rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.logo-slot { min-height: 150px; border-radius: var(--r-md); background: var(--surface); display: grid; place-items: center; text-align: center; padding: 1rem; transition: transform .5s var(--ease), box-shadow .5s; }
+.logo-slot:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -30px rgb(28 27 24 / .5); }
+.logo-slot.is-empty { background: transparent; border: 1px dashed rgb(28 27 24 / .28); color: var(--ink-3); font-size: .8rem; }
+.logo-slot .word { font: var(--dw) calc(var(--ds) * 1.4rem)/1.1 var(--serif); }
+.logo-slot small { display: block; font-size: .72rem; color: var(--ink-3); margin-top: .3rem; }
+.press { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; align-items: center; }
+.press__row { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.press__item { position: relative; min-height: 96px; display: grid; place-items: center; padding: 1rem; border-left: 1px solid var(--line); overflow: hidden; color: var(--ink-3); }
+.press__item:first-child { border-left: 0; }
+.press__item span { font: italic var(--dw) calc(var(--ds) * 1.3rem)/1 var(--serif); transition: transform .5s var(--ease), opacity .4s; }
+.press__item em { position: absolute; font-style: normal; font-size: .8rem; color: var(--ink); transform: translateY(250%); transition: transform .5s var(--ease); }
+.press__item:hover span { transform: translateY(-150%); opacity: 0; }
+.press__item:hover em { transform: none; }
+@media (max-width: 1000px) {
+  .award, .rtile { grid-column: span 12; }
+  .award { grid-template-columns: 1fr; min-height: 0; }
+  .members { grid-template-columns: 1fr 1fr; }
+  .members__intro { grid-column: 1 / -1; }
+  .press { grid-template-columns: 1fr; }
+  .press__row { grid-template-columns: repeat(3, 1fr); }
+  .press__item:nth-child(n+4) { display: none; }
+}
+
+/* =========================================================================
+   Reviews
+   ========================================================================= */
+.reviews { padding: clamp(80px, 10vw, 140px) 0 0; }
+.reviews__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+.rating { margin-top: 2rem; padding: 1.4rem; border-radius: var(--r-md); background: var(--surface); display: grid; grid-template-columns: auto 1fr; gap: .4rem 1.2rem; align-items: center; max-width: 420px; }
+.rating b { grid-row: span 2; font: var(--dw) calc(var(--ds) * 4.2rem)/1 var(--serif); letter-spacing: var(--dt); }
+.stars { display: flex; gap: 2px; color: var(--bronze); }
+.rating span { font-size: .88rem; color: var(--ink-2); }
+.rating .actions { grid-column: 1 / -1; display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .8rem; }
+.walls { position: relative; height: 640px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); }
+.wall__track { display: grid; gap: 14px; animation: wallUp var(--dur, 40s) linear infinite; }
+.wall:nth-child(2) .wall__track { animation-direction: reverse; }
+.walls:hover .wall__track { animation-play-state: paused; }
+@keyframes wallUp { to { transform: translateY(calc(-50% - 7px)); } }
+.review { padding: 1.2rem; border-radius: var(--r-sm); background: var(--surface); border: 1px solid var(--line); }
+.review p { margin: .7rem 0 1rem; font-size: .93rem; color: var(--ink-2); }
+.review footer { display: flex; align-items: center; gap: .6rem; font-size: .82rem; }
+.review__av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--canvas-2); font-weight: 600; font-size: .8rem; flex: none; }
+.review footer small { display: block; color: var(--ink-3); font-size: .74rem; }
+.review__src { margin-left: auto; font-size: .72rem; color: var(--ink-3); }
+@media (max-width: 960px) {
+  .reviews__grid { grid-template-columns: 1fr; }
+  .walls { grid-template-columns: 1fr 1fr; height: 520px; }
+  .wall:nth-child(3) { display: none; }
+}
+@media (max-width: 560px) { .walls { grid-template-columns: 1fr; } .wall:nth-child(2) { display: none; } }
+
+/* =========================================================================
+   Instagram
+   ========================================================================= */
+.insta { padding: clamp(80px, 10vw, 140px) 0 0; overflow: hidden; }
+.insta__head { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; flex-wrap: wrap; margin-bottom: clamp(28px, 3vw, 44px); }
+.insta__strip { display: flex; align-items: flex-start; width: max-content; gap: 14px; animation: marquee 60s linear infinite; padding: 0 0 40px 14px; }
+.insta:hover .insta__strip { animation-play-state: paused; }
+.post { position: relative; flex: none; width: clamp(220px, 20vw, 300px); aspect-ratio: 4 / 5; border-radius: var(--r-md); overflow: hidden; background: var(--canvas-2); }
+.post:nth-child(even) { margin-top: 36px; }
+.post img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.post__over { position: absolute; inset: 0; padding: 1rem; display: flex; flex-direction: column; justify-content: end; color: var(--on-night); background: linear-gradient(180deg, transparent 40%, rgb(18 16 14 / .8)); opacity: 0; transition: opacity .5s; font-size: .86rem; }
+.post:hover .post__over, .post:focus-visible .post__over { opacity: 1; }
+.post:hover img { transform: scale(1.07); }
+.post__type { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgb(18 16 14 / .45); color: #fff; backdrop-filter: blur(6px); }
+
+/* =========================================================================
+   05 · Programmes
+   ========================================================================= */
+.prog__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+.prog__intro { position: sticky; top: 120px; }
+.prog__stack { display: grid; gap: 24px; }
+.pcard { position: sticky; top: calc(110px + var(--i) * 22px); border-radius: var(--r-md); padding: clamp(22px, 3vw, 40px); min-height: 350px; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem 2rem; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 -20px 50px -30px rgb(28 27 24 / .25); }
+.pcard:nth-child(2) { background: var(--canvas-2); }
+.pcard:nth-child(3) { background: var(--night); color: var(--on-night); border-color: transparent; }
+.pcard:nth-child(4) { background: var(--champagne); border-color: transparent; }
+.pcard h3 { margin: .5rem 0 0; font: var(--dw) calc(var(--ds) * clamp(1.9rem, 1.4rem + 1.2vw, 2.7rem))/1.02 var(--serif); letter-spacing: var(--dt); }
+.pcard__sub { font-size: .9rem; opacity: .72; }
+.pcard__price { text-align: right; }
+.pcard__price b { display: block; font: var(--dw) calc(var(--ds) * clamp(2.1rem, 1.6rem + 1.2vw, 3.1rem))/1 var(--serif); }
+.pcard__price small { opacity: .7; }
+.pcard ul { grid-column: 1 / -1; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .2rem 1.5rem; align-self: end; }
+.pcard li { padding: .7rem 0; border-top: 1px solid rgb(128 120 110 / .25); font-size: .93rem; display: flex; gap: .6rem; }
+.pcard li::before { content: "+"; color: var(--bronze); }
+.pcard:nth-child(3) li::before { color: var(--champagne); }
+.pcard__tag { display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; padding: .35rem .7rem; border-radius: 999px; border: 1px solid currentColor; opacity: .75; }
+@media (max-width: 900px) { .prog__grid { grid-template-columns: 1fr; } .prog__intro { position: static; } .pcard { grid-template-columns: 1fr; } .pcard__price { text-align: left; } .pcard ul { grid-template-columns: 1fr; } }
+
+/* =========================================================================
+   Clinical skincare — consultation-led, never a checkout
+   ========================================================================= */
+.skin { margin-top: clamp(80px, 10vw, 140px); padding: clamp(72px, 9vw, 130px) 0; border-radius: var(--r-lg); position: relative; overflow: hidden; }
+.skin::before { content: ""; position: absolute; width: 700px; height: 700px; left: -250px; top: -300px; border-radius: 50%; background: radial-gradient(circle, rgb(214 189 138 / .16), transparent 70%); pointer-events: none; }
+.skin__head { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1.5rem 4rem; align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.skin__cards { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+.prod { position: relative; border-radius: var(--r-md); overflow: hidden; padding: clamp(22px, 3vw, 40px); background: var(--night-2); border: 1px solid var(--line-night); }
+.prod--kojivit { display: grid; grid-template-columns: .9fr 1.1fr; gap: 1.5rem; align-items: center; }
+.prod__visual { position: relative; aspect-ratio: 1; display: grid; place-items: center; }
+.prod__visual::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #F3E6CC, var(--champagne) 55%, #9C7D49); opacity: .9; }
+.prod__visual img { position: relative; width: 72%; filter: drop-shadow(0 30px 30px rgb(0 0 0 / .45)); animation: float 6s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-10px) rotate(-1.5deg); } }
+.orbit { position: absolute; padding: .3rem .65rem; border-radius: 999px; background: rgb(18 16 14 / .7); border: 1px solid var(--line-night); font-size: .72rem; white-space: nowrap; backdrop-filter: blur(6px); animation: float 7s ease-in-out infinite; }
+.orbit:nth-of-type(1) { top: 6%; left: 0; animation-delay: -2s; }
+.orbit:nth-of-type(2) { top: 44%; right: -2%; animation-delay: -4s; }
+.orbit:nth-of-type(3) { bottom: 6%; left: 8%; }
+.prod__type { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--champagne); }
+.prod h3 { margin: .4rem 0 .6rem; font: var(--dw) calc(var(--ds) * clamp(2.1rem, 1.6rem + 1.2vw, 3rem))/1 var(--serif); letter-spacing: var(--dt); }
+.prod p { margin: 0; color: var(--on-night-2); font-size: .94rem; }
+.benefits { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.1rem 0; }
+.benefits span { font-size: .78rem; padding: .35rem .7rem; border-radius: 999px; border: 1px solid var(--line-night); }
+.prod__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1.2rem; }
+.prod__price { font: var(--dw) calc(var(--ds) * 1.9rem)/1 var(--serif); }
+.prod__price small { font: .74rem var(--sans); color: var(--on-night-2); margin-left: .4rem; }
+.prod .fine { display: block; margin-top: .8rem; font-size: .76rem; color: var(--on-night-2); }
+.prod--rx { display: flex; flex-direction: column; justify-content: space-between; gap: 1.4rem; background: linear-gradient(160deg, var(--night-2), #262019); }
+.lock { position: relative; height: 150px; border-radius: var(--r-sm); overflow: hidden; display: grid; place-items: center; background: repeating-linear-gradient(135deg, rgb(214 189 138 / .06) 0 10px, transparent 10px 20px); border: 1px solid var(--line-night); }
+.lock__icon { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--champagne); color: var(--ink); box-shadow: 0 0 0 10px rgb(214 189 138 / .12), 0 0 0 22px rgb(214 189 138 / .06); }
+.notice { display: flex; gap: .6rem; align-items: flex-start; padding: .8rem 1rem; border-radius: var(--r-sm); background: rgb(214 189 138 / .12); color: var(--champagne); font-size: .84rem; line-height: 1.45; }
+.route { margin-top: 14px; border-radius: var(--r-md); border: 1px solid var(--line-night); padding: clamp(20px, 2.6vw, 34px); }
+.route__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+.route__head h4 { margin: 0; font: var(--dw) calc(var(--ds) * 1.6rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; counter-reset: s; }
+.steps::before { content: ""; position: absolute; left: 24px; right: 24px; top: 23px; height: 1px; background: var(--line-night); }
+.steps::after { content: ""; position: absolute; left: 24px; right: 24px; top: 23px; height: 1px; background: var(--champagne); transform: scaleX(0); transform-origin: 0 50%; transition: transform 2.2s var(--ease) .3s; }
+.steps.in::after { transform: scaleX(1); }
+.steps li { position: relative; counter-increment: s; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--night); border: 1px solid var(--champagne); color: var(--champagne); font: italic var(--dw) 1.2rem/1 var(--serif); margin-bottom: .9rem; position: relative; z-index: 1; }
+.steps b { display: block; font-weight: 500; margin-bottom: .2rem; }
+.steps span { font-size: .86rem; color: var(--on-night-2); line-height: 1.5; display: block; }
+@media (max-width: 1000px) {
+  .skin__head, .skin__cards { grid-template-columns: 1fr; }
+  .prod--kojivit { grid-template-columns: 1fr; }
+  .prod__visual { max-width: 320px; margin-inline: auto; width: 100%; }
+  .steps { grid-template-columns: 1fr 1fr; row-gap: 1.6rem; }
+  .steps::before, .steps::after { display: none; }
+}
+
+/* Suitability dialog ------------------------------------------------------ */
+dialog.suit { width: min(560px, calc(100% - 24px)); border: 0; padding: 0; border-radius: var(--r-md); background: var(--surface); color: var(--ink); box-shadow: 0 40px 100px -30px rgb(0 0 0 / .6); }
+dialog.suit::backdrop { background: rgb(18 16 14 / .55); backdrop-filter: blur(6px); }
+dialog.suit[open] { animation: answerIn .5s var(--ease); }
+.suit__head { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--line); }
+.suit__close { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; }
+.suit__bar { height: 3px; background: var(--canvas-2); }
+.suit__bar i { display: block; height: 100%; background: var(--bronze); transition: width .5s var(--ease); }
+.suit__body { padding: 1.6rem 1.3rem 1.4rem; min-height: 260px; }
+.suit__body h3 { margin: .5rem 0 1.2rem; font: var(--dw) calc(var(--ds) * 1.9rem)/1.1 var(--serif); letter-spacing: var(--dt); }
+.suit__opts { display: grid; gap: .5rem; }
+.suit__opts button { text-align: left; padding: .95rem 1.1rem; border-radius: var(--r-sm); border: 1px solid var(--line); transition: border-color .3s, background .3s; }
+.suit__opts button:hover { border-color: var(--ink); background: var(--canvas); }
+.suit__foot { margin: 0; padding: 0 1.3rem 1.2rem; font-size: .76rem; color: var(--ink-3); }
+
+/* =========================================================================
+   FAQ + Begin + Footer
+   ========================================================================= */
+.faq { padding: clamp(80px, 10vw, 140px) 0; }
+.faq__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 96px); }
+.qa { border-top: 1px solid var(--line); }
+.qa:last-child { border-bottom: 1px solid var(--line); }
+.qa button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.3rem 0; text-align: left; font: var(--dw) calc(var(--ds) * clamp(1.25rem, 1.05rem + .5vw, 1.6rem))/1.25 var(--serif); letter-spacing: var(--dt); }
+.qa__plus { flex: none; position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); transition: background .4s, border-color .4s, transform .6s var(--ease); }
+.qa__plus::before, .qa__plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1px; margin-left: -6px; background: currentColor; transition: transform .6s var(--ease); }
+.qa__plus::after { transform: rotate(90deg); }
+.qa button[aria-expanded="true"] .qa__plus { background: var(--ink); color: var(--canvas); border-color: var(--ink); transform: rotate(180deg); }
+.qa button[aria-expanded="true"] .qa__plus::after { transform: rotate(0); }
+.qa__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+.qa__panel > div { overflow: hidden; }
+.qa__panel p { margin: 0 0 1.4rem; max-width: 60ch; color: var(--ink-2); }
+.qa button[aria-expanded="true"] + .qa__panel { grid-template-rows: 1fr; }
+@media (max-width: 900px) { .faq__grid { grid-template-columns: 1fr; } }
+
+.begin { padding: 0 0 clamp(60px, 8vw, 120px); text-align: center; overflow: hidden; }
+.begin blockquote { margin: 0 auto; max-width: 30ch; font: italic var(--dw) calc(var(--ds) * clamp(1.4rem, 1.1rem + .8vw, 1.9rem))/1.25 var(--serif); color: var(--ink-2); }
+.begin__big { font: var(--dw) calc(var(--ds) * clamp(3.6rem, 1rem + 11vw, 13rem))/.88 var(--serif); letter-spacing: -.035em; margin: 2.5rem 0 0; }
+.begin__big em { font-style: italic; color: var(--bronze); }
+.begin__row { display: flex; justify-content: center; margin-top: -1.2rem; }
+@media (max-width: 700px) { .begin__row { margin-top: 1.5rem; } }
+.magnet { position: relative; width: clamp(150px, 16vw, 200px); aspect-ratio: 1; border-radius: 50%; background: var(--ink); color: var(--canvas); display: grid; place-items: center; text-align: center; font-size: .95rem; font-weight: 500; line-height: 1.3; transition: background .4s; will-change: transform; }
+.magnet:hover { background: var(--bronze); }
+.magnet span { pointer-events: none; }
+.contacts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 2.6rem; }
+.contact { display: flex; align-items: center; gap: .7rem; padding: .75rem 1.2rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: .9rem; transition: border-color .3s, transform .5s var(--ease); }
+.contact:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.foot { border-radius: var(--r-lg) var(--r-lg) 0 0; padding: clamp(56px, 7vw, 100px) 0 90px; overflow: hidden; }
+.foot__grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 2.5rem; }
+.foot h5 { margin: 0 0 1rem; font: 600 .7rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--champagne); }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; color: var(--on-night-2); font-size: .94rem; }
+.foot a:hover { color: var(--on-night); }
+.foot__news { display: flex; margin-top: 1.4rem; max-width: 380px; padding: .35rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .18); }
+.foot__news input { flex: 1; min-width: 0; background: none; border: 0; color: var(--on-night); padding: 0 1rem; font: inherit; font-size: .92rem; }
+.foot__news input::placeholder { color: var(--on-night-2); }
+.foot__news input:focus { outline: none; }
+.foot__word { margin: clamp(48px, 7vw, 100px) 0 0; font: var(--dw) clamp(3.2rem, 13.5vw, 15rem)/.85 var(--serif); letter-spacing: -.045em; white-space: nowrap; text-align: center; background: linear-gradient(180deg, var(--on-night) 30%, rgb(247 243 236 / .05)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.foot__legal { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid var(--line-night); padding-top: 20px; margin-top: 24px; font-size: .8rem; color: var(--on-night-2); }
+@media (max-width: 900px) { .foot__grid { grid-template-columns: 1fr 1fr; } .foot__grid > :first-child { grid-column: 1 / -1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .rv, .mask > span, .inline-img { opacity: 1 !important; transform: none !important; }
+  .statement__text .w { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><span></span></div>
+
+<!-- Prototype-only: compare type pairings -->
+<div class="typesw" role="group" aria-label="Type pairing (prototype only)">
+  <span>Type</span>
+  <button data-set="a" aria-pressed="true" title="Instrument Serif + Manrope">A</button>
+  <button data-set="b" aria-pressed="false" title="Cormorant Garamond + Jost">B</button>
+  <button data-set="c" aria-pressed="false" title="Fraunces + Outfit">C</button>
+</div>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="nav">
+  <div class="nav__bar">
+    <a class="brand" href="#top" aria-label="Allure Passions UK, home"><img src="../public/assets/brand/ap-monogram.png" alt=""><b>Allure Passions</b></a>
+    <nav aria-label="Main">
+      <ul class="nav__links">
+        <li><a href="#concerns">What we treat</a></li>
+        <li><a href="#treatments">Technologies</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#trust">Why trust us</a></li>
+        <li><a href="#programmes">Programmes</a></li>
+        <li><a href="#skincare">Skincare</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--light nav__cta" href="#begin">Book consultation <span class="btn__icon" data-arrow></span></a>
+    <button class="nav__menu" aria-label="Open menu" aria-expanded="false" aria-controls="sheet"><svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.4"><path d="M2 6h14M2 12h14"/></svg></button>
+  </div>
+</header>
+<div class="sheet" id="sheet">
+  <ul>
+    <li><a href="#concerns">What we treat</a></li>
+    <li><a href="#treatments">Technologies</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#trust">Why trust us</a></li>
+    <li><a href="#programmes">Programmes</a></li>
+    <li><a href="#skincare">Skincare</a></li>
+  </ul>
+  <a class="btn btn--light" href="#begin" style="align-self:start">Book consultation <span class="btn__icon" data-arrow></span></a>
+</div>
+
+<!-- Chapter pill -->
+<div class="pill" id="pill" aria-hidden="true">
+  <div class="pill__ring"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="rgb(255 255 255 / .15)" stroke-width="2"/><circle id="pillArc" cx="20" cy="20" r="17" fill="none" stroke="#D6BD8A" stroke-width="2" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="106.8"/></svg><b id="pillNo">01</b></div>
+  <div class="pill__label"><small id="pillName">Discover</small><span id="pillText">Who we are</span></div>
+  <a class="btn btn--light" href="#begin" tabindex="-1">Book <span class="btn__icon" data-arrow></span></a>
+</div>
+
+<main id="top">
+
+<!-- ======================= HERO ======================= -->
+<section class="hero night" aria-labelledby="hero-title">
+  <div class="hero__shell" id="heroShell">
+    <video class="hero__video" autoplay muted loop playsinline poster="../public/assets/videos/hero-clinic-poster.webp" aria-hidden="true">
+      <source src="../public/assets/videos/hero-clinic.webm" type="video/webm">
+      <source src="../public/assets/videos/hero-clinic.mp4" type="video/mp4">
+    </video>
+    <div class="hero__scrim"></div>
+    <div class="seal" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><defs><path id="c1" d="M60 60m-48 0a48 48 0 1 1 96 0a48 48 0 1 1-96 0"/></defs><text font-size="10.5" letter-spacing="3.2" fill="currentColor" font-family="Manrope" font-weight="600"><textPath href="#c1">AWARD WINNING · GHP 2026 · FITZROVIA · </textPath></text></svg>
+      <b>AP</b>
+    </div>
+    <div class="wrap hero__inner">
+      <div class="hero__copy in">
+        <p class="eyebrow">Advanced aesthetic clinic · Fitzrovia, London</p>
+        <h1 class="display h-xl" id="hero-title">
+          <span class="mask"><span style="--d:.15s">Advanced care</span></span>
+          <span class="mask"><span style="--d:.28s">for <em>skin, body</em></span></span>
+          <span class="mask"><span style="--d:.41s">&amp; wellbeing.</span></span>
+        </h1>
+        <div class="hero__sub rv" style="--d:.7s">
+          <p>An award-winning, practitioner-led clinic offering non-invasive treatments planned around your concerns.</p>
+          <a class="btn btn--light" href="#begin">Begin your consultation <span class="btn__icon" data-arrow></span></a>
+        </div>
+      </div>
+      <div class="hero__bottom rv" style="--d:.9s">
+        <a class="path" href="#concerns"><div><small>Start with a concern</small><span>Pigmentation, laxity, acne, stubborn fat…</span></div><span class="path__arrow" data-arrow></span></a>
+        <a class="path" href="#treatments"><div><small>Start with a treatment</small><span>PicoWay, Morpheus8, Sofwave, Emsculpt Neo…</span></div><span class="path__arrow" data-arrow></span></a>
+        <div class="status" id="status"><i></i><span>Checking opening hours…</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Credentials">
+  <div class="ticker__track">
+    <div class="ticker__group">
+      <span class="ticker__item">JCCP registered</span><span class="ticker__item">Level 6 <em>qualified</em></span><span class="ticker__item">Global Excellence Awards <em>2026</em></span><span class="ticker__item">Manufacturer-trained on every device</span><span class="ticker__item">Consultation <em>first,</em> always</span>
+    </div>
+    <div class="ticker__group" aria-hidden="true">
+      <span class="ticker__item">JCCP registered</span><span class="ticker__item">Level 6 <em>qualified</em></span><span class="ticker__item">Global Excellence Awards <em>2026</em></span><span class="ticker__item">Manufacturer-trained on every device</span><span class="ticker__item">Consultation <em>first,</em> always</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= 01 DISCOVER ======================= -->
+<section class="statement" id="about" data-chapter="0" aria-labelledby="approach-title">
+  <div class="wrap">
+    <div class="chapter rv"><span class="chapter__no">01</span><div class="chapter__txt"><p class="chapter__name">Discover</p><p class="chapter__bridge">A clinic built around fewer technologies, used properly.</p></div><span class="chapter__line"></span></div>
+    <div class="statement__grid">
+      <p class="eyebrow" id="approach-title">Our approach</p>
+      <div>
+        <p class="statement__text" id="statement">We chose a small number of <span class="inline-img"><img src="../public/assets/images/site/treatment-sofwave.webp" alt=""></span> technologies and learned them <em>properly.</em> Every plan begins with a conversation <span class="inline-img"><img src="../public/assets/images/site/consultation-table.webp" alt=""></span> and an <em>honest</em> answer when a treatment will not do what you hope.</p>
+        <div class="statement__facts rv">
+          <div class="fact"><b>18</b><span>concerns assessed</span></div>
+          <div class="fact"><b>6</b><span>signature technologies</span></div>
+          <div class="fact"><b>1</b><span>plan, agreed with you</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 02 EXPLORE — WHAT WE TREAT ======================= -->
+<section id="concerns" data-chapter="1" aria-labelledby="treats-title">
+  <div class="wrap">
+    <div class="chapter rv"><span class="chapter__no">02</span><div class="chapter__txt"><p class="chapter__name">Explore</p><p class="chapter__bridge">So it starts with you: what you would like to change, then the technology that may help.</p></div><span class="chapter__line"></span></div>
+    <div class="treats__head">
+      <div class="rv">
+        <p class="eyebrow">What we treat</p>
+        <h2 class="display h-l" id="treats-title" style="margin-top:.9rem">Eighteen concerns across <em>skin, body &amp; wellness.</em></h2>
+      </div>
+      <div class="rv" style="--d:.1s">
+        <p class="lede">Select a concern to see what it is, the treatments that may help and why. Every plan is confirmed in person at consultation.</p>
+        <div class="filters" id="filters" role="group" aria-label="Filter concerns"><span class="filters__pill" aria-hidden="true"></span></div>
+      </div>
+    </div>
+    <div class="treats__body">
+      <div class="clist" id="clist"></div>
+      <div class="cpanel-home" id="cpanelHome"></div>
+    </div>
+    <div class="treats__bridge rv">
+      <p>Six technologies sit behind these plans.</p>
+      <a class="link-arrow" href="#treatments">Meet the technology <span data-arrow></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TECHNOLOGIES ======================= -->
+<section class="tech night" id="treatments" data-chapter="1" aria-labelledby="tech-title">
+  <div class="tech__sticky">
+    <div class="wrap tech__head">
+      <div>
+        <p class="eyebrow">Signature technologies</p>
+        <h2 class="display h-l" id="tech-title" style="margin-top:.8rem">Six technologies,<br><em>learned properly.</em></h2>
+      </div>
+      <div class="tech__count" aria-hidden="true"><b id="tIndex">01</b> / 06 <span class="tech__bar"><i id="tBar"></i></span></div>
+    </div>
+    <div class="tech__track" id="track"></div>
+  </div>
+</section>
+
+<!-- ======================= 03 EVIDENCE — RESULTS ======================= -->
+<section class="results night" id="results" data-chapter="2" aria-labelledby="results-title">
+  <div class="wrap">
+    <div class="chapter rv" style="padding-top:clamp(40px,6vw,80px)"><span class="chapter__no">03</span><div class="chapter__txt"><p class="chapter__name">Evidence</p><p class="chapter__bridge">What a course can look like, photographed honestly under the same light.</p></div><span class="chapter__line"></span></div>
+    <div class="results__grid">
+      <div class="rv">
+        <p class="eyebrow">Real results</p>
+        <h2 class="display h-l" id="results-title" style="margin-top:.8rem">See the <em>difference</em> for yourself.</h2>
+        <p class="lede" style="margin-top:1.2rem">Before and after a course, photographed in clinic. Drag to compare.</p>
+        <div class="cases" role="tablist" aria-label="Result cases" id="cases"></div>
+        <a class="btn btn--ghost" href="#trust">Who carries out the work <span class="btn__icon" data-arrow></span></a>
+      </div>
+      <div class="rv" style="--d:.15s">
+        <div class="ba" id="ba" data-cursor="Drag">
+          <img id="baBefore" src="" alt=""><img id="baAfter" class="ba__after" src="" alt="">
+          <span class="ba__tag ba__tag--l">Before</span><span class="ba__tag ba__tag--r">After</span>
+          <div class="ba__handle"><span class="ba__knob"><svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 1 1 6l5 5M16 1l5 5-5 5"/></svg></span></div>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+        </div>
+        <p class="note">Prototype imagery is illustrative. The live site uses genuine, consented clinic photography only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 04 TRUST ======================= -->
+<section id="trust" data-chapter="3" aria-labelledby="trust-title">
+  <div class="wrap">
+    <div class="chapter rv"><span class="chapter__no">04</span><div class="chapter__txt"><p class="chapter__name">Trust</p><p class="chapter__bridge">Before anyone treats your skin, you should know who they are, how they trained, and who vouches for them.</p></div><span class="chapter__line"></span></div>
+    <div class="trust__head">
+      <div class="rv">
+        <p class="eyebrow">Why trust this clinic?</p>
+        <h2 class="display h-l" id="trust-title" style="margin-top:.9rem">Qualified, registered and <em>accountable.</em></h2>
+      </div>
+      <p class="lede rv" style="--d:.1s">Six things worth checking before you book anywhere, including here.</p>
+    </div>
+    <div class="dossier rv">
+      <div class="creds" id="creds" role="tablist" aria-label="Credentials"></div>
+      <div class="stage" id="stage" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RECOGNITION ======================= -->
+<section class="recog" id="recognition" data-chapter="3" aria-labelledby="recog-title">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">Awards, accreditations &amp; recognition</p>
+      <h2 class="display h-l" id="recog-title" style="margin-top:.9rem;max-width:18ch">Recognised by <em>the people who check.</em></h2>
+    </div>
+    <div class="recog__grid">
+      <article class="award rv">
+        <div class="laurel" aria-hidden="true">
+          <svg class="laurel__ring" viewBox="0 0 200 200"><defs><path id="c3" d="M100 100m-86 0a86 86 0 1 1 172 0a86 86 0 1 1-172 0"/></defs><text font-size="11" letter-spacing="4" fill="currentColor" font-family="Manrope" font-weight="600"><textPath href="#c3">GLOBAL EXCELLENCE AWARDS · 2026 · LONDON · </textPath></text></svg>
+          <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" style="position:absolute;inset:0">
+            <path d="M62 150c-20-18-28-44-22-70M138 150c20-18 28-44 22-70"/>
+            <g fill="currentColor" stroke="none" opacity=".85">
+              <ellipse cx="44" cy="92" rx="4" ry="9" transform="rotate(-20 44 92)"/><ellipse cx="44" cy="112" rx="4" ry="9" transform="rotate(-40 44 112)"/><ellipse cx="50" cy="130" rx="4" ry="9" transform="rotate(-55 50 130)"/><ellipse cx="60" cy="146" rx="4" ry="9" transform="rotate(-70 60 146)"/>
+              <ellipse cx="156" cy="92" rx="4" ry="9" transform="rotate(20 156 92)"/><ellipse cx="156" cy="112" rx="4" ry="9" transform="rotate(40 156 112)"/><ellipse cx="150" cy="130" rx="4" ry="9" transform="rotate(55 150 130)"/><ellipse cx="140" cy="146" rx="4" ry="9" transform="rotate(70 140 146)"/>
+            </g>
+          </svg>
+          <b>Winner<small>2026</small></b>
+        </div>
+        <div>
+          <p class="eyebrow">Global Excellence Awards 2026</p>
+          <h3>Best Advanced Skin &amp; Body Aesthetics Clinic — London</h3>
+          <p>Global Health &amp; Pharma Global Excellence Awards.</p>
+          <p class="placeholder-note" style="margin-top:1.2rem;color:var(--on-night-2)">Official winner artwork to be supplied</p>
+        </div>
+      </article>
+      <article class="rtile rv" style="--d:.1s">
+        <img src="../public/assets/images/jccp_official_logo.png" alt="Joint Council for Cosmetic Practitioners">
+        <div>
+          <h4>JCCP registered</h4>
+          <p>On the public register of the Joint Council for Cosmetic Practitioners, which checks training, insurance and patient-safety standards.</p>
+          <a class="link-arrow" href="https://www.jccp.org.uk" style="margin-top:1rem">Check the register <span data-arrow></span></a>
+        </div>
+      </article>
+      <div class="members rv" style="--d:.15s">
+        <div class="members__intro"><p class="eyebrow">Accreditations &amp; memberships</p><h4>Professional bodies and standards we work to.</h4></div>
+        <div class="logo-slot"><div><span class="word">Level 6</span><small>Aesthetic practice qualification</small></div></div>
+        <div class="logo-slot"><div><span class="word">Manufacturer certified</span><small>On all six technologies</small></div></div>
+        <div class="logo-slot is-empty">Membership logo<br>client to supply</div>
+        <div class="logo-slot is-empty">Membership logo<br>client to supply</div>
+      </div>
+    </div>
+    <div class="press rv">
+      <div><p class="eyebrow">Press &amp; media</p><p class="placeholder-note" style="margin-top:.8rem">Shown only with a verified article link</p></div>
+      <div class="press__row">
+        <a class="press__item" href="#recognition"><span>Publication</span><em>Read the feature ↗</em></a>
+        <a class="press__item" href="#recognition"><span>Publication</span><em>Read the feature ↗</em></a>
+        <a class="press__item" href="#recognition"><span>Publication</span><em>Read the feature ↗</em></a>
+        <a class="press__item" href="#recognition"><span>Publication</span><em>Read the feature ↗</em></a>
+        <a class="press__item" href="#recognition"><span>Publication</span><em>Read the feature ↗</em></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= REVIEWS ======================= -->
+<section class="reviews" id="reviews" data-chapter="3" aria-labelledby="reviews-title">
+  <div class="wrap reviews__grid">
+    <div class="rv">
+      <p class="eyebrow">Patient reviews</p>
+      <h2 class="display h-l" id="reviews-title" style="margin-top:.9rem">In our patients’ <em>own words.</em></h2>
+      <p class="lede" style="margin-top:1.2rem">Unedited reviews from our Google Business Profile, updated automatically.</p>
+      <div class="rating" id="rating"></div>
+      <p class="placeholder-note" style="margin-top:1rem">Sample layout. Live Google reviews load here once connected</p>
+    </div>
+    <div class="walls rv" id="walls" style="--d:.1s"></div>
+  </div>
+</section>
+
+<!-- ======================= INSTAGRAM ======================= -->
+<section class="insta" id="instagram" data-chapter="3" aria-labelledby="insta-title">
+  <div class="wrap insta__head">
+    <div class="rv">
+      <p class="eyebrow">Inside the clinic</p>
+      <h2 class="display h-m" id="insta-title" style="margin-top:.9rem">Follow along <em>@allurepassionsuk</em></h2>
+    </div>
+    <div class="rv" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+      <span class="placeholder-note">Sample tiles. Posts load from Instagram once connected</span>
+      <a class="btn btn--ghost" href="https://www.instagram.com/allurepassionsuk/">Follow on Instagram <span class="btn__icon" data-arrow></span></a>
+    </div>
+  </div>
+  <div class="insta__strip" id="insta"></div>
+</section>
+
+<!-- ======================= 05 PLAN ======================= -->
+<section id="programmes" data-chapter="4" aria-labelledby="prog-title">
+  <div class="wrap">
+    <div class="chapter rv"><span class="chapter__no">05</span><div class="chapter__txt"><p class="chapter__name">Plan</p><p class="chapter__bridge">How a course is structured, what it costs, and how care continues at home.</p></div><span class="chapter__line"></span></div>
+    <div class="prog__grid">
+      <div class="prog__intro rv">
+        <p class="eyebrow">Signature programmes</p>
+        <h2 class="display h-l" id="prog-title" style="margin:.9rem 0 1.2rem">Structured courses, <em>clearly priced.</em></h2>
+        <p class="lede">Technologies combined into one course, with everything included set out before you start.</p>
+        <a class="link-arrow" href="#begin" style="margin-top:1.2rem">View full price list <span data-arrow></span></a>
+      </div>
+      <div class="prog__stack" id="progStack"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SKINCARE ======================= -->
+<section class="skin night" id="skincare" data-chapter="4" aria-labelledby="skin-title">
+  <div class="wrap">
+    <div class="skin__head">
+      <div class="rv">
+        <p class="eyebrow">Clinical skincare</p>
+        <h2 class="display h-l" id="skin-title" style="margin-top:.9rem">Care that continues at home, <em>prescribed with care.</em></h2>
+      </div>
+      <p class="lede rv" style="--d:.1s">No basket and no online checkout. Every product is supplied only after a suitability check, and prescription skincare only after a medical consultation.</p>
+    </div>
+
+    <div class="skin__cards">
+      <article class="prod prod--kojivit rv">
+        <div class="prod__visual">
+          <img src="../public/assets/images/kojivit-ultra.webp" alt="Kojivit Ultra cream">
+          <span class="orbit">Kojic acid dipalmitate</span><span class="orbit">Niacinamide</span><span class="orbit">Arbutin</span>
+        </div>
+        <div>
+          <span class="prod__type">Cosmetic cream</span>
+          <h3>Kojivit Ultra</h3>
+          <p>A brightening cream to help even the look of skin tone, used in the evening alongside daily sun protection.</p>
+          <div class="benefits"><span>Uneven tone &amp; dark patches</span><span>Brightening</span><span>Gentle exfoliation</span><span>Smoother-looking skin</span></div>
+          <div class="prod__foot">
+            <span class="prod__price">£85<small>to confirm</small></span>
+            <button class="btn btn--light" data-suit="kojivit">Check suitability <span class="btn__icon" data-arrow></span></button>
+          </div>
+          <small class="fine">Reserved after a short suitability check · paid for and collected in clinic</small>
+        </div>
+      </article>
+
+      <article class="prod prod--rx rv" style="--d:.1s">
+        <div class="lock"><span class="lock__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></span></div>
+        <div>
+          <span class="prod__type">Prescription only</span>
+          <h3>Prescription skincare</h3>
+          <p>Topical treatment for acne and sun-related skin changes, in more than one strength, supplied only where a prescriber confirms it is suitable for you.</p>
+        </div>
+        <div class="notice"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" style="flex:none;margin-top:2px"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5v4M8 11v.5"/></svg>Available only after a medical consultation. Nothing prescription-only is sold online.</div>
+        <button class="btn btn--light" data-suit="rx" style="align-self:start">Start medical consultation <span class="btn__icon" data-arrow></span></button>
+      </article>
+    </div>
+
+    <div class="route rv">
+      <div class="route__head"><h4>How supply works</h4><span class="placeholder-note" style="color:var(--on-night-2)">No step can be skipped</span></div>
+      <ol class="steps" id="steps">
+        <li><b>Suitability questionnaire</b><span>Your skin, medical history and anything you already use.</span></li>
+        <li><b>Clinical review</b><span>A practitioner or prescriber reviews your answers, and may ask to see you.</span></li>
+        <li><b>Written confirmation</b><span>What has been agreed, how to use it and what to watch for.</span></li>
+        <li><b>Payment &amp; collection</b><span>In clinic, at 76 Cleveland Street, with aftercare advice.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<dialog class="suit" id="suit" aria-labelledby="suitTitle">
+  <div class="suit__head"><strong id="suitTitle" style="font-weight:600">Suitability check</strong><button class="suit__close" aria-label="Close"><svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" stroke-width="1.4"><path d="M1 1l10 10M11 1 1 11"/></svg></button></div>
+  <div class="suit__bar"><i id="suitBar" style="width:0"></i></div>
+  <div class="suit__body" id="suitBody"></div>
+  <p class="suit__foot">Prototype: nothing you choose here is saved or sent.</p>
+</dialog>
+
+<!-- ======================= FAQ ======================= -->
+<section class="faq" data-chapter="4" aria-labelledby="faq-title">
+  <div class="wrap faq__grid">
+    <div class="rv">
+      <p class="eyebrow">Questions</p>
+      <h2 class="display h-l" id="faq-title" style="margin-top:.9rem">Before you <em>book.</em></h2>
+      <p class="lede" style="margin-top:1.2rem">Anything else? Message us on WhatsApp and a practitioner will reply.</p>
+    </div>
+    <div id="faqList" class="rv" style="--d:.1s"></div>
+  </div>
+</section>
+
+<!-- ======================= 06 BEGIN ======================= -->
+<section class="begin" id="begin" data-chapter="5" aria-labelledby="begin-title">
+  <div class="wrap">
+    <div class="chapter rv" style="text-align:left;padding-top:0"><span class="chapter__no">06</span><div class="chapter__txt"><p class="chapter__name">Begin</p><p class="chapter__bridge">You know what we treat, how, and who we are. The next step is a conversation.</p></div><span class="chapter__line"></span></div>
+    <blockquote class="rv">“Consultations are given the time they need, rather than a slot.”</blockquote>
+    <h2 class="begin__big" id="begin-title">
+      <span class="mask"><span>Your plan</span></span>
+      <span class="mask"><span style="--d:.12s">starts <em>here.</em></span></span>
+    </h2>
+    <div class="begin__row"><a class="magnet" href="https://wa.me/447342052249" id="magnet"><span>Book a<br>consultation</span></a></div>
+    <div class="contacts rv">
+      <a class="contact" href="https://wa.me/447342052249">WhatsApp · +44 7342 052249</a>
+      <a class="contact" href="mailto:info@allurepassionsuk.com">info@allurepassionsuk.com</a>
+      <a class="contact" href="https://maps.google.com/?q=76+Cleveland+Street+Fitzrovia+London+W1T+6NB">76 Cleveland Street, W1T 6NB</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot night">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <h5>Stay in the loop</h5>
+        <p style="margin:0;color:var(--on-night-2);max-width:34ch">Occasional notes on skin, new technologies and clinic news.</p>
+        <form class="foot__news" onsubmit="event.preventDefault()"><input type="email" placeholder="Your email" aria-label="Email address"><button class="btn btn--light" type="submit" style="padding-left:1rem">Join <span class="btn__icon" data-arrow style="width:2rem;height:2rem"></span></button></form>
+      </div>
+      <div><h5>Explore</h5><ul><li><a href="#concerns">What we treat</a></li><li><a href="#treatments">Technologies</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#skincare">Skincare</a></li><li><a href="#trust">About</a></li></ul></div>
+      <div><h5>Visit</h5><ul><li>76 Cleveland Street</li><li>Fitzrovia, London W1T 6NB</li><li>Warren Street · Great Portland Street</li></ul></div>
+      <div><h5>Hours</h5><ul><li>Mon – Sat · 09:30 – 19:30</li><li>Sunday · By appointment</li><li><a href="https://www.instagram.com/allurepassionsuk/">Instagram ↗</a></li></ul></div>
+    </div>
+    <p class="foot__word" aria-hidden="true">Allure Passions</p>
+    <div class="foot__legal"><span>© 2026 Allure Passions UK · JCCP registered · GHP Award 2026</span><span>Privacy · Terms · Complaints</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ARROW = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg>';
+  const img = (n) => `../public/assets/images/site/${n}.webp`;
+  const pad = (n) => String(n).padStart(2, '0');
+
+  /* ---------------- Content (mirrors src/content) ---------------- */
+  const SIGNATURE = ['PicoWay', 'ADVATx', 'Morpheus8', 'Sofwave', 'Emsculpt Neo', 'Emerald Laser'];
+  const GROUP_IMG = { Skin: 'treatment-morpheus8', Pigmentation: 'treatment-picoway', Laser: 'treatment-advatx', 'Skin tightening': 'treatment-sofwave', Body: 'treatment-emsculpt-neo', Wellness: 'why-detail-hands' };
+  const FAMILY = { Skin: 'Skin', Pigmentation: 'Skin', Laser: 'Skin', 'Skin tightening': 'Skin', Body: 'Body', Wellness: 'Wellness' };
+  const CONCERNS = [{"g":"Skin","c":[{"n":"Acne","d":"Blocked pores, inflammation and bacteria leave spots that come and go. Treatment aims to calm what is active now and reduce how often it returns.","t":[["ADVATx","Yellow light is absorbed by the inflammation behind active spots."],["BioRePeel","A biphasic peel that clears the pore lining and refines texture."],["Prescription skincare consultation","A practitioner reviews whether a prescription topical is suitable for you."]]},{"n":"Acne scarring","d":"Once spots settle they can leave pitting, uneven texture and marks that stay. This work happens in the collagen underneath, so results build over a course.","t":[["Morpheus8","Radiofrequency needling remodels the collagen under a depressed scar."],["PicoWay","Picosecond pulses break up the marks left behind, without heating the skin."],["Microneedling with exosomes","Micro-channelling with exosomes supports repair between sessions."]]},{"n":"Rosacea & redness","d":"Flushing, visible vessels and skin that reacts to heat, alcohol or stress, usually across the cheeks, nose and chin. Rosacea is managed rather than cured.","t":[["ADVATx","The 589 nm wavelength targets the vessels that carry the redness."],["LED light therapy","A calm, non-abrasive session often used alongside laser on reactive skin."]]},{"n":"Skin clarity","d":"Dullness, congestion and uneven texture: nothing is wrong exactly, but the skin has lost its brightness.","t":[["HydraFacial","Cleansing, extraction and hydration in one session, with no downtime."],["BioRePeel","Lifts dead surface cells and evens out texture over a course."]]}]},{"g":"Pigmentation","c":[{"n":"Hyperpigmentation","d":"Patches of darker skin left by sun exposure, inflammation or hormones. Plans pair in-clinic treatment with daily protection, because pigment returns without it.","t":[["PicoWay","Picosecond pulses break pigment into particles the body can clear."],["Cosmelan depigmentation protocol","An in-clinic depigmentation protocol with a months-long home regimen."],["Prescription skincare consultation","A practitioner reviews whether a prescription topical is suitable for you."]]},{"n":"Melasma","d":"Symmetrical brown patches, often across the cheeks, forehead and upper lip, which hormones and sunlight can drive. Melasma is managed rather than cured, so the plan is a long one.","t":[["Cosmelan depigmentation protocol","The depigmentation protocol most often used where melasma is stubborn."],["PicoWay","Low-energy picosecond settings target pigment without heating the skin."],["Prescription skincare consultation","A practitioner reviews whether a prescription topical is suitable for you."]]},{"n":"Lentigines","d":"Flat brown marks from years of sun, usually on the face, hands and décolleté. Often called sun spots or age spots.","t":[["PicoWay","Clears defined marks in a small number of sessions for most people."],["ADVATx","Suits sun spots on the face and the backs of the hands."]]}]},{"g":"Laser","c":[{"n":"Tattoo removal","d":"Full removal, or fading before a cover-up. How many sessions it takes depends on the ink, its depth and its colours, so we assess the tattoo before quoting.","t":[["PicoWay","Picosecond pulses fragment black, red, green and blue inks."]]},{"n":"Vascular lesions","d":"Thread veins, spider veins and small broken vessels on the face and body.","t":[["ADVATx","Absorbed by the blood in the vessel rather than the skin around it."]]},{"n":"Lip enhancement & plumping","d":"Fuller, better-defined lips without injections or filler. The effect is gradual and builds over a course.","t":[["ADVATx","Laser lip plumping and hydration, with no needles and nothing injected."]]}]},{"g":"Skin tightening","c":[{"n":"Skin laxity","d":"Skin that has lost its firmness along the jawline, under the chin, on the neck or on the body. Non-surgical lifting works on collagen, so it takes months to show.","t":[["Sofwave","Ultrasound energy lifts at a set depth in a single session."],["Morpheus8","Radiofrequency needling tightens and remodels over a course."]]},{"n":"Signs of ageing","d":"Texture, tone and firmness changing together, rather than one concern on its own. Plans usually combine a tightening treatment with something for the surface.","t":[["Sofwave","Lifts the brow, lower face and neck without surgery or downtime."],["Morpheus8","Remodels deeper layers where laxity and texture appear together."],["ADVATx","Evens tone and sun damage on the surface alongside the lifting work."]]},{"n":"Fine lines & wrinkles","d":"Lines around the eyes, mouth and forehead as collagen thins. We treat the skin itself; nothing here is injected.","t":[["Morpheus8","Fractional radiofrequency stimulates new collagen where lines set in."],["Sofwave","Suits the brow and eye area where the skin is thin."],["Microneedling with exosomes","Micro-channelling with exosomes supports the skin between sessions."]]}]},{"g":"Body","c":[{"n":"Stubborn fat","d":"Pockets of fat that stay put despite diet and training, typically the abdomen, flanks, thighs or under the chin. These are contouring treatments, not weight-loss ones.","t":[["Emsculpt Neo","Radiofrequency and muscle stimulation in one 30-minute session."],["Emerald Laser","Green laser used across larger areas, with nothing invasive."]]},{"n":"Body contouring","d":"Reshaping an area rather than changing the number on the scales. Results depend on where you start and on keeping the habits that got you there.","t":[["Emsculpt Neo","Builds muscle and reduces fat in the same session."],["Emerald Laser","Pairs with Emsculpt Neo in the clinic’s contour programmes."]]},{"n":"Muscle tone & definition","d":"Definition in the abdomen, buttocks, arms or legs, alongside training rather than instead of it.","t":[["Emsculpt Neo","Supramaximal contractions work the muscle beyond voluntary effort."]]},{"n":"Striae","d":"Stretch marks left after growth, pregnancy or a change in weight. Older, silver marks respond more slowly than new ones.","t":[["Morpheus8","Remodels the banded tissue under a stretch mark."],["Microneedling with exosomes","Micro-channelling with exosomes supports repair over a course."]]}]},{"g":"Wellness","c":[{"n":"Wellness & cellular health","d":"Care aimed at how the skin behaves over time rather than one visible concern, usually starting with an assessment of what your skin actually needs.","t":[["Advanced clinical skin analysis","A measured look at your skin before anything is planned."],["Microneedling with exosomes","Regenerative treatment for skin quality rather than a single concern."],["HydraFacial","Regular maintenance between longer courses."]]}]}];
+  const FLAT = CONCERNS.flatMap(g => g.c.map(c => ({ ...c, g: g.g })));
+
+  const TREATMENTS = [
+    { slug: 'picoway', name: 'PicoWay', type: 'Picosecond laser', summary: 'Advanced picosecond laser for pigmentation, skin revitalisation and tattoo removal.', sessions: 'Course of 6', downtime: 'Minimal', price: '£329' },
+    { slug: 'advatx', name: 'ADVATx', type: 'Dual-wavelength laser', summary: 'Laser treatment for acne, redness, pigmentation and overall skin rejuvenation.', sessions: 'Course of 6', downtime: 'Minimal', price: '£150' },
+    { slug: 'morpheus8', name: 'Morpheus8', type: 'RF microneedling', summary: 'Fractional radiofrequency microneedling for deep skin remodelling and tightening.', sessions: 'Course of 3', downtime: '24–48h redness', price: '£349' },
+    { slug: 'sofwave', name: 'Sofwave', type: 'Ultrasound lifting', summary: 'Non-invasive ultrasound that stimulates collagen to lift and tighten the skin.', sessions: 'Single session', downtime: 'Minimal', price: '£795' },
+    { slug: 'emsculpt-neo', name: 'Emsculpt Neo', type: 'Muscle & fat contouring', summary: 'Body contouring that combines muscle stimulation with radiofrequency in one session.', sessions: 'Course of 6', downtime: 'Some soreness', price: '£449' },
+    { slug: 'emerald-laser', name: 'Emerald Laser', type: 'Green laser contouring', summary: 'Low-level green laser supporting body contouring and circumference reduction.', sessions: 'Course of 10', downtime: 'Minimal', price: '£250' },
+  ];
+
+  const CASES = [
+    { id: 'pigmentation', name: 'Pigmentation', meta: 'PicoWay · course of 6' },
+    { id: 'scarring', name: 'Acne scarring', meta: 'Morpheus8 · course of 3' },
+    { id: 'laxity', name: 'Skin laxity', meta: 'Sofwave · single session' },
+  ];
+
+  // Qualification wording stays exact, with no implied medical title (plan D6).
+  const CREDENTIALS = [
+    { badge: 'logo', title: 'JCCP registered', img: 'consultation-table',
+      body: 'Registered with the Joint Council for Cosmetic Practitioners, the UK register for practitioners who meet its standards for training, insurance and patient safety.',
+      proof: [{ href: 'https://www.jccp.org.uk', label: 'Check the public register ↗' }] },
+    { badge: 'AP', title: 'Advanced Aesthetic Practitioner', img: 'treatment-sofwave',
+      body: 'Treatment here is practitioner-led: the person who assesses your skin plans your course and carries it out, through to aftercare.',
+      proof: [{ label: 'Practitioner-led' }, { label: 'Name & portrait: client to supply', dashed: true }] },
+    { badge: 'L6', title: 'Level 6 & current qualifications', img: 'why-detail-hands',
+      body: 'Level 6 is the advanced qualification for aesthetic practice, covering skin science, laser physics and dermal therapy, and it is kept current.',
+      proof: [{ label: 'Level 6 aesthetic practice' }, { label: 'Awarding body: to confirm', dashed: true }] },
+    { badge: '◎', title: 'Advanced technology training', img: 'treatment-emsculpt-neo',
+      body: 'Every device is used by a practitioner trained on it by its manufacturer, rather than on a general course.',
+      proof: SIGNATURE.map(label => ({ label })) },
+    { badge: 'CPD', title: 'Continuing professional education', img: 'treatment-morpheus8',
+      body: 'Aesthetic practice moves quickly. We keep pace through ongoing training in skin health, regenerative treatment and body contouring.',
+      proof: [{ label: 'Skin health' }, { label: 'Regenerative' }, { label: 'Body contouring' }] },
+    { badge: '✓', title: 'Memberships & professional standards', img: 'why-clinic-room',
+      body: 'Consultation before any treatment, sterile technique, written aftercare and someone to contact afterwards, backed by membership of professional bodies.',
+      proof: [{ label: 'Consultation first' }, { label: 'Written aftercare' }, { label: 'Membership names: to confirm', dashed: true }] },
+  ];
+
+  const PROGRAMMES = [
+    { name: 'Allure Contour Synergy', sub: 'Emsculpt Neo', sessions: '6 sessions', price: '£2,499', single: '£449 a session', inc: ['Six 30-minute Emsculpt Neo sessions', 'Muscle stimulation and radiofrequency together', 'One area treated through the course', 'Body composition measured as you go'] },
+    { name: 'Allure Contour Luxe', sub: 'Emsculpt Neo & Emerald Laser', sessions: '12 sessions', price: '£4,489', single: '£639 a session', inc: ['Six Emsculpt Neo sessions', 'Six Emerald Laser sessions', 'Muscle and fat addressed by two technologies', 'Waist and thighs targeted to your plan'] },
+    { name: 'Allure Contour Advanced', sub: 'Emsculpt Neo, Emerald Laser & mesotherapy', sessions: '18 sessions', price: '£4,499', single: '£899 a session', inc: ['Six Emsculpt Neo sessions', 'Six Emerald Laser sessions', 'Six contouring mesotherapy sessions', 'Guidance on lymphatic drainage at home'] },
+    { name: 'Cosmelan protocol', sub: 'Depigmentation, in clinic and at home', sessions: 'Two phases · six months', price: '£2,099', single: 'Complete protocol', inc: ['Skin preparation before the mask', 'Cosmelan 1 mask applied in clinic', 'Cosmelan 2, Melan Recovery and SPF for home', 'Clinical check-ups through the protocol'] },
+  ];
+
+  const FAQS = [
+    ['Is there a consultation fee?', 'Ask us when you get in touch and we will confirm the fee before you book, along with whether it comes off the cost of treatment.'],
+    ['What happens at my consultation?', 'We talk through what you would like to change and take a medical history, then assess your skin or the area concerned. You leave with a plan setting out what is suitable, how many sessions it typically takes and what it costs. Nothing is treated on the same day unless you are happy to go ahead.'],
+    ['Who will carry out my treatment?', 'A Level 6 qualified aesthetic practitioner, registered with the Joint Council for Cosmetic Practitioners and trained by the manufacturer on each device used.'],
+    ['How many sessions will I need?', 'It depends on the concern and on how your skin or body responds. Most courses run to between three and ten sessions. We set out a realistic number at consultation and review it as you go.'],
+    ['How does prescription skincare work?', 'Prescription skincare is only available after a medical consultation. You complete a medical questionnaire, a practitioner reviews whether treatment is suitable for you, we confirm in writing what has been agreed, and payment and collection happen in clinic.'],
+    ['Where is the clinic?', 'We are at 76 Cleveland Street, Fitzrovia, London W1T 6NB, a short walk from Warren Street and Great Portland Street stations.'],
+  ];
+
+  /* ---------------- Data adapters (swap for real providers) ---------------- */
+  // Google: the Places API returns at most 5 reviews, so a provider is chosen before launch (plan P2).
+  const ReviewsAdapter = {
+    async fetch() {
+      const sample = 'Sample review text. The live section shows genuine Google reviews, unedited, with the reviewer’s first name and date.';
+      return {
+        rating: 5.0, url: 'https://www.google.com/maps/search/?api=1&query=Allure+Passions+UK',
+        reviews: Array.from({ length: 12 }, (_, i) => ({ name: `Google reviewer ${i + 1}`, when: `${(i % 8) + 1} weeks ago`, stars: 5, text: i % 3 === 1 ? sample + ' Longer reviews wrap naturally, and the columns move at a calm pace.' : sample })),
+      };
+    },
+  };
+  // Instagram: needs a Business or Creator account, via Meta's API or a provider such as Behold.
+  const InstagramAdapter = {
+    async fetch() {
+      const pics = ['why-clinic-room', 'treatment-picoway', 'why-detail-hands', 'treatment-sofwave', 'consultation-table', 'treatment-emsculpt-neo', 'about-clinic-wide', 'treatment-morpheus8'];
+      return pics.map((p, i) => ({ src: img(p), href: 'https://www.instagram.com/allurepassionsuk/', caption: 'Post caption loads from Instagram', reel: i % 3 === 1 }));
+    },
+  };
+
+  /* ---------------- Live opening status (London time) ---------------- */
+  (() => {
+    const el = $('#status');
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date()).map(x => [x.type, x.value]));
+    const mins = (+p.hour) * 60 + (+p.minute);
+    const open = p.weekday !== 'Sun' && mins >= 570 && mins < 1170;
+    el.classList.toggle('is-closed', !open);
+    $('span', el).textContent = open ? 'Open now · until 19:30' : (p.weekday === 'Sun' ? 'Sunday · by appointment' : 'Closed · opens 09:30');
+  })();
+
+  /* ---------------- What we treat ---------------- */
+  const clist = $('#clist'), cpanelHome = $('#cpanelHome'), filters = $('#filters'), filterPill = $('.filters__pill');
+  const narrow = matchMedia('(max-width: 960px)');
+  const panel = document.createElement('div'); panel.className = 'cpanel';
+  let active = 0, family = 'All';
+
+  ['All', 'Skin', 'Body', 'Wellness'].forEach(f => {
+    const n = f === 'All' ? FLAT.length : FLAT.filter(c => FAMILY[c.g] === f).length;
+    const b = document.createElement('button');
+    b.dataset.family = f; b.innerHTML = `${f}<small>${n}</small>`; b.setAttribute('aria-pressed', f === family);
+    b.addEventListener('click', () => { family = f; applyFilter(); });
+    filters.appendChild(b);
+  });
+  function moveFilterPill() {
+    const a = $('[aria-pressed="true"]', filters); if (!a) return;
+    Object.assign(filterPill.style, { left: a.offsetLeft + 'px', top: a.offsetTop + 'px', width: a.offsetWidth + 'px', height: a.offsetHeight + 'px' });
+  }
+
+  // One collapsible group per heading; the concern rows live inside it.
+  let n = 0;
+  CONCERNS.forEach((g, gi) => {
+    const group = document.createElement('div');
+    group.className = 'cgroup'; group.dataset.g = g.g;
+    group.innerHTML = `
+      <button class="cgroup__head" type="button" aria-expanded="false" aria-controls="cg${gi}">
+        <span class="cgroup__title"><span class="cgroup__name">${g.g}</span><span class="cgroup__count">${g.c.length} ${g.c.length === 1 ? 'concern' : 'concerns'}</span></span>
+        <span class="cgroup__peek">${g.c.map(c => c.n).join(' · ')}</span>
+        <span class="cgroup__toggle" aria-hidden="true"></span>
+      </button>
+      <div class="cgroup__body" id="cg${gi}"><div class="cgroup__inner"></div></div>`;
+    const inner = $('.cgroup__inner', group);
+    g.c.forEach(c => {
+      const i = n++;
+      const b = document.createElement('button');
+      b.className = 'crow'; b.type = 'button'; b.setAttribute('aria-expanded', 'false'); b.dataset.i = i;
+      b.innerHTML = `<span class="crow__no">${pad(i + 1)}</span><span class="crow__name">${c.n}</span><span class="crow__go">${ARROW}</span>`;
+      b.addEventListener('click', () => select(i, true));
+      inner.appendChild(b);
+    });
+    $('.cgroup__head', group).addEventListener('click', () => setGroupOpen(group, !group.classList.contains('is-open')));
+    clist.appendChild(group);
+  });
+  const rows = $$('.crow', clist), groups = $$('.cgroup', clist);
+  const groupOf = (i) => rows[i].closest('.cgroup');
+  function setGroupOpen(group, open) {
+    group.classList.toggle('is-open', open);
+    $('.cgroup__head', group).setAttribute('aria-expanded', open);
+    $$('.crow', group).forEach(r => r.tabIndex = open ? 0 : -1);
+  }
+  groups.forEach(g => setGroupOpen(g, false));
+
+  function renderPanel() {
+    const c = FLAT[active];
+    panel.innerHTML = `
+      <div class="cpanel__media"><img src="${img(GROUP_IMG[c.g])}" alt=""><span class="cpanel__count">${pad(active + 1)} / ${FLAT.length}</span></div>
+      <div class="cpanel__body">
+        <p class="eyebrow">${c.g}</p>
+        <h3>${c.n}</h3>
+        <p>${c.d}</p>
+        <p class="cpanel__label">Treatments that may help</p>
+        <ol>${c.t.map((t, i) => `<li style="--i:${i}"><b>${t[0]}${SIGNATURE.includes(t[0]) ? '<i>Signature</i>' : ''}</b><span>${t[1]}</span></li>`).join('')}</ol>
+        <div class="cpanel__cta">
+          <a class="btn btn--light" href="#begin">Discuss at consultation <span class="btn__icon">${ARROW}</span></a>
+          <button class="cpanel__next" type="button">Next concern ${ARROW}</button>
+        </div>
+      </div>`;
+    $('.cpanel__next', panel).addEventListener('click', () => {
+      const visible = rows.filter(r => !r.closest('.cgroup').classList.contains('is-hidden')).map(r => +r.dataset.i);
+      select(visible[(visible.indexOf(active) + 1) % visible.length], true);
+    });
+  }
+  function placePanel(scroll) {
+    if (narrow.matches) {
+      rows[active].after(panel);
+      if (scroll) setTimeout(() => rows[active].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }), 60);
+    } else cpanelHome.appendChild(panel);
+  }
+  function select(i, fromUser) {
+    // On a phone, tapping the open concern again closes it.
+    if (narrow.matches && fromUser && i === active && rows[i].nextSibling === panel) { panel.remove(); rows[i].setAttribute('aria-expanded', 'false'); return; }
+    active = i;
+    rows.forEach((r, j) => r.setAttribute('aria-expanded', j === i));
+    setGroupOpen(groupOf(i), true);
+    renderPanel(); placePanel(fromUser);
+  }
+  function applyFilter() {
+    $$('button', filters).forEach(b => b.setAttribute('aria-pressed', b.dataset.family === family));
+    moveFilterPill();
+    groups.forEach(g => g.classList.toggle('is-hidden', family !== 'All' && FAMILY[g.dataset.g] !== family));
+    // A single-group filter (Body, Wellness) opens that group straight away.
+    const shown = groups.filter(g => !g.classList.contains('is-hidden'));
+    if (shown.length === 1) setGroupOpen(shown[0], true);
+    if (groupOf(active).classList.contains('is-hidden')) select(+$('.crow', shown[0]).dataset.i, false);
+  }
+  select(0, false);
+  // On a phone the details open only when a concern is tapped, so the groups stay scannable.
+  if (narrow.matches) { panel.remove(); rows[0].setAttribute('aria-expanded', 'false'); }
+  narrow.addEventListener('change', () => placePanel(false));
+
+  /* ---------------- Technologies ---------------- */
+  const track = $('#track');
+  track.innerHTML = TREATMENTS.map((t, i) => `
+    <article class="tcard" data-cursor="View" tabindex="0">
+      <img src="${img('treatment-' + t.slug)}" alt="" loading="lazy">
+      <span class="tcard__num">0${i + 1}</span><span class="tcard__price">from ${t.price}</span>
+      <div class="tcard__body"><span class="tcard__type">${t.type}</span><h3>${t.name}</h3>
+        <div class="tcard__more"><div><p>${t.summary}</p><div class="tcard__meta"><span>${t.sessions}</span><span>Downtime: ${t.downtime}</span></div></div></div>
+      </div>
+    </article>`).join('') + `
+    <article class="tcard tcard--end">
+      <p class="eyebrow" style="color:var(--bronze-text)">Up next</p>
+      <div><h3 class="display">What a course <em style="color:var(--ink)">can look like.</em></h3>
+      <a class="btn" href="#results" style="margin-top:1.4rem">See results <span class="btn__icon">${ARROW}</span></a></div>
+    </article>`;
+
+  /* ---------------- Results ---------------- */
+  const ba = $('#ba'), range = $('input', ba), cases = $('#cases');
+  const setCase = (i) => {
+    const c = CASES[i];
+    $('#baBefore').src = img(`results-${c.id}-before`); $('#baBefore').alt = `${c.name}, before treatment`;
+    $('#baAfter').src = img(`results-${c.id}-after`); $('#baAfter').alt = `${c.name}, after treatment`;
+    $$('.case', cases).forEach((b, j) => b.setAttribute('aria-selected', j === i));
+  };
+  cases.innerHTML = CASES.map(c => `<button class="case" role="tab"><b>${c.name}</b><small>${c.meta}</small></button>`).join('');
+  $$('.case', cases).forEach((b, i) => b.addEventListener('click', () => setCase(i)));
+  setCase(0);
+  range.addEventListener('input', () => ba.style.setProperty('--x', range.value + '%'));
+  if (!reduce) {
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect();
+      const t0 = performance.now();
+      const step = (t) => { const p = Math.min((t - t0) / 1600, 1); const v = 50 + Math.sin(p * Math.PI * 2) * 18 * (1 - p); ba.style.setProperty('--x', v + '%'); range.value = v; if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }, { threshold: .6 });
+    io.observe(ba);
+  }
+
+  /* ---------------- Trust dossier ---------------- */
+  const creds = $('#creds'), stage = $('#stage');
+  let credActive = -1, credInView = false, credHeld = false;
+  const JCCP = '../public/assets/images/jccp_official_logo.png';
+  stage.innerHTML = CREDENTIALS.map(c => `<img class="stage__img" src="${img(c.img)}" alt="" loading="lazy">`).join('') + '<div class="stage__card"></div>';
+  const stageImgs = $$('.stage__img', stage), stageCard = $('.stage__card', stage);
+  creds.innerHTML = CREDENTIALS.map(c => `
+    <button class="cred" role="tab" aria-selected="false">
+      <span class="cred__bar"></span>
+      <span class="cred__badge">${c.badge === 'logo' ? `<img src="${JCCP}" alt="">` : c.badge}</span>
+      <span><span class="cred__title">${c.title}</span><span class="cred__more"><span>${c.body}</span></span></span>
+    </button>`).join('');
+  const credBtns = $$('.cred', creds);
+  function setCred(i) {
+    if (i === credActive) return;
+    const prev = credActive; credActive = i;
+    credBtns.forEach((b, j) => b.setAttribute('aria-selected', j === i));
+    stageImgs.forEach((im, j) => { im.classList.remove('is-prev'); if (j !== i) im.classList.remove('is-active'); if (j === prev) im.classList.add('is-prev'); });
+    void stageImgs[i].offsetWidth;
+    stageImgs[i].classList.add('is-active');
+    const c = CREDENTIALS[i];
+    stageCard.innerHTML = `<div class="stage__card-inner">
+      <div class="stage__top">${c.badge === 'logo' ? `<span class="stage__logo"><img src="${JCCP}" alt="JCCP"></span>` : `<span class="stage__seal">${c.badge}</span>`}<span class="stage__step">${pad(i + 1)} / ${pad(CREDENTIALS.length)}</span></div>
+      <h3>${c.title}</h3><p>${c.body}</p>
+      <div class="stage__proof">${c.proof.map(p => p.href ? `<a href="${p.href}">${p.label}</a>` : `<span class="${p.dashed ? 'dashed' : ''}">${p.label}</span>`).join('')}</div></div>`;
+  }
+  credBtns.forEach((b, i) => {
+    b.addEventListener('click', () => setCred(i));
+    $('.cred__bar', b).addEventListener('animationend', () => { if (!reduce) setCred((i + 1) % CREDENTIALS.length); });
+  });
+  const syncPause = () => creds.classList.toggle('is-paused', reduce || credHeld || !credInView);
+  const dossier = $('.dossier');
+  dossier.addEventListener('pointerenter', () => { credHeld = true; syncPause(); });
+  dossier.addEventListener('pointerleave', () => { credHeld = false; syncPause(); });
+  creds.addEventListener('focusin', () => { credHeld = true; syncPause(); });
+  creds.addEventListener('focusout', () => { credHeld = false; syncPause(); });
+  new IntersectionObserver(([e]) => { credInView = e.isIntersecting; syncPause(); }, { threshold: .35 }).observe(dossier);
+  syncPause(); setCred(0);
+
+  /* ---------------- Reviews ---------------- */
+  const STAR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>';
+  ReviewsAdapter.fetch().then(({ rating, url, reviews }) => {
+    $('#rating').innerHTML = `<b>${rating.toFixed(1)}</b><div class="stars">${STAR.repeat(5)}</div><span>Google rating · review count loads live</span>
+      <div class="actions"><a class="link-arrow" href="${url}">Read all on Google ↗</a><a class="link-arrow" href="${url}">Leave a review ↗</a></div>`;
+    const cols = [[], [], []];
+    reviews.forEach((r, i) => cols[i % 3].push(r));
+    const card = (r) => `<article class="review"><div class="stars">${STAR.repeat(r.stars)}</div><p>${r.text}</p>
+      <footer><span class="review__av">${r.name[0]}</span><span>${r.name}<small>${r.when}</small></span><span class="review__src">Google</span></footer></article>`;
+    $('#walls').innerHTML = cols.map((c, i) => `<div class="wall"><div class="wall__track" style="--dur:${38 + i * 9}s">${c.map(card).join('')}${c.map(card).join('')}</div></div>`).join('');
+  });
+
+  /* ---------------- Instagram ---------------- */
+  InstagramAdapter.fetch().then(posts => {
+    const tile = (p) => `<a class="post" href="${p.href}" data-cursor="Open"><img src="${p.src}" alt="" loading="lazy">
+      ${p.reel ? '<span class="post__type" aria-label="Reel"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7.5-4.5z"/></svg></span>' : ''}
+      <span class="post__over">${p.caption}</span></a>`;
+    $('#insta').innerHTML = posts.map(tile).join('') + posts.map(tile).join('');
+  });
+
+  /* ---------------- Programmes + FAQ ---------------- */
+  $('#progStack').innerHTML = PROGRAMMES.map((p, i) => `
+    <article class="pcard" style="--i:${i}">
+      <div><span class="pcard__tag">${p.sessions}</span><h3>${p.name}</h3><div class="pcard__sub">${p.sub}</div></div>
+      <div class="pcard__price"><b>${p.price}</b><small>${p.single}</small></div>
+      <ul>${p.inc.map(x => `<li>${x}</li>`).join('')}</ul>
+    </article>`).join('');
+  $('#faqList').innerHTML = FAQS.map((f, i) => `
+    <div class="qa"><button aria-expanded="${i === 0}" aria-controls="qa${i}"><span>${f[0]}</span><span class="qa__plus" aria-hidden="true"></span></button>
+    <div class="qa__panel" id="qa${i}" role="region"><div><p>${f[1]}</p></div></div></div>`).join('');
+  $$('.qa button').forEach(b => b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') === 'true';
+    $$('.qa button').forEach(x => x.setAttribute('aria-expanded', 'false'));
+    b.setAttribute('aria-expanded', String(!open));
+  }));
+
+  /* ---------------- Suitability dialog (demo of the mandatory route) ---------------- */
+  const suit = $('#suit'), suitBody = $('#suitBody'), suitBar = $('#suitBar');
+  const FLOWS = {
+    kojivit: { title: 'Kojivit Ultra · suitability check', qs: ['Are you pregnant, breastfeeding or planning a pregnancy?', 'Do you have a known allergy to kojic acid, arbutin or niacinamide?', 'Is the skin you would use it on currently broken, irritated or sunburnt?'] },
+    rx: { title: 'Prescription skincare · medical questionnaire', qs: ['Are you pregnant, breastfeeding or planning a pregnancy?', 'Have you ever reacted to a retinoid or vitamin A product?', 'Are you currently taking any acne medicine or antibiotics?', 'Do you have eczema or broken skin in the area to be treated?'] },
+  };
+  let flow, step;
+  function renderSuit() {
+    const total = flow.qs.length;
+    suitBar.style.width = `${(step / total) * 100}%`;
+    if (step < total) {
+      suitBody.innerHTML = `<p class="eyebrow">Question ${step + 1} of ${total}</p><h3>${flow.qs[step]}</h3>
+        <div class="suit__opts"><button>Yes</button><button>No</button><button>I’m not sure</button></div>`;
+      $$('.suit__opts button', suitBody).forEach(b => b.addEventListener('click', () => { step++; renderSuit(); }));
+    } else {
+      suitBody.innerHTML = `<p class="eyebrow">Thank you</p><h3>A practitioner reviews your answers before anything is supplied.</h3>
+        <p style="color:var(--ink-2);margin:0 0 1.2rem">We will be in touch by WhatsApp or email to confirm suitability or arrange a consultation. Payment and collection happen in clinic.</p>
+        <button class="btn" type="button">Done <span class="btn__icon">${ARROW}</span></button>`;
+      $('.btn', suitBody).addEventListener('click', () => suit.close());
+    }
+  }
+  $$('[data-suit]').forEach(b => b.addEventListener('click', () => {
+    flow = FLOWS[b.dataset.suit]; step = 0; $('#suitTitle').textContent = flow.title; renderSuit(); suit.showModal();
+  }));
+  $('.suit__close').addEventListener('click', () => suit.close());
+  suit.addEventListener('click', (e) => { if (e.target === suit) suit.close(); });
+
+  /* ---------------- Statement words ---------------- */
+  const statement = $('#statement');
+  (function split(node) {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(w => {
+          if (!w) return;
+          if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+          const s = document.createElement('span'); s.className = 'w'; s.textContent = w; frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.tagName === 'EM') split(n);
+    });
+  })(statement);
+  const words = $$('.w, .inline-img', statement);
+
+  /* ---------------- Arrows + reveal ---------------- */
+  $$('[data-arrow]').forEach(el => { if (!el.innerHTML) el.innerHTML = ARROW; });
+  const revealIO = new IntersectionObserver((entries) => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in'); revealIO.unobserve(e.target);
+  }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+  $$('.rv, .mask, .steps').forEach(el => revealIO.observe(el));
+
+  /* ---------------- Scroll-driven effects ---------------- */
+  const nav = $('#nav'), progress = $('.progress'), heroShell = $('#heroShell'), heroVideo = $('.hero__video');
+  const tech = $('#treatments'), tIndex = $('#tIndex'), tBar = $('#tBar'), sheet = $('#sheet');
+  const pill = $('#pill'), pillArc = $('#pillArc'), pillNo = $('#pillNo'), pillName = $('#pillName'), pillText = $('#pillText');
+  const CHAPTERS = [['Discover', 'Who we are'], ['Explore', 'What we treat & how'], ['Evidence', 'Real results'], ['Trust', 'Why trust this clinic'], ['Plan', 'Courses, skincare & FAQs'], ['Begin', 'Book a consultation']];
+  const chapterEls = $$('[data-chapter]');
+  const desktop = matchMedia('(min-width: 901px)');
+  let lastY = scrollY, ticking = false, curChapter = -1;
+
+  function sizeTech() {
+    if (!desktop.matches) { tech.style.height = ''; return; }
+    tech.style.height = (innerHeight + Math.max(track.scrollWidth - innerWidth, 0)) + 'px';
+  }
+
+  function onScroll() {
+    ticking = false;
+    const y = scrollY, vh = innerHeight, max = document.documentElement.scrollHeight - vh;
+    progress.style.transform = `scaleX(${y / max})`;
+    const sheetOpen = sheet.classList.contains('is-open');
+    nav.classList.toggle('is-solid', sheetOpen || y > vh * .8);
+    nav.classList.toggle('is-hidden', y > lastY && y > vh && !sheetOpen);
+    lastY = y;
+
+    // chapter pill
+    let ch = 0;
+    chapterEls.forEach(el => { if (el.getBoundingClientRect().top < vh * .55) ch = +el.dataset.chapter; });
+    pill.classList.toggle('is-on', y > vh * .9 && $('#begin').getBoundingClientRect().top > vh * .6);
+    pillArc.style.strokeDashoffset = 106.8 * (1 - y / max);
+    if (ch !== curChapter) { curChapter = ch; pillNo.textContent = pad(ch + 1); pillName.textContent = CHAPTERS[ch][0]; pillText.textContent = CHAPTERS[ch][1]; }
+
+    if (reduce) { words.forEach(w => w.classList.add('on')); return; }
+
+    // hero pulls back into a rounded window. The whole shell scales, so nothing inside is clipped.
+    const hp = Math.min(Math.max(y / heroShell.offsetHeight, 0), 1);
+    heroShell.style.transform = `scale(${1 - hp * .06})`;
+    heroShell.style.borderRadius = `0 0 ${hp * 56}px ${hp * 56}px`;
+    heroVideo.style.transform = `scale(${1.06 + hp * .1}) translateY(${hp * 5}%)`;
+
+    // statement words
+    const r = statement.getBoundingClientRect();
+    const sp = Math.min(Math.max((vh * .85 - r.top) / (r.height + vh * .35), 0), 1);
+    const lit = Math.floor(sp * words.length * 1.05);
+    words.forEach((w, i) => w.classList.toggle('on', i < lit));
+
+    // technologies: vertical scroll drives the horizontal track
+    if (desktop.matches) {
+      const tr = tech.getBoundingClientRect();
+      const tp = Math.min(Math.max(-tr.top / (tech.offsetHeight - vh), 0), 1);
+      track.style.transform = `translate3d(${-tp * (track.scrollWidth - innerWidth)}px,0,0)`;
+      tBar.style.transform = `scaleX(${tp})`;
+      tIndex.textContent = pad(Math.min(TREATMENTS.length, Math.floor(tp * TREATMENTS.length) + 1));
+    }
+  }
+  const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } };
+  const relayout = () => { sizeTech(); moveFilterPill(); request(); };
+  addEventListener('scroll', request, { passive: true });
+  addEventListener('resize', relayout);
+  addEventListener('load', relayout);
+  document.fonts && document.fonts.ready.then(relayout);
+  track.addEventListener('scroll', () => {
+    if (desktop.matches) return;
+    const p = track.scrollLeft / (track.scrollWidth - track.clientWidth || 1);
+    tBar.style.transform = `scaleX(${p})`;
+    tIndex.textContent = pad(Math.min(TREATMENTS.length, Math.round(p * (TREATMENTS.length - 1)) + 1));
+  }, { passive: true });
+
+  /* ---------------- Type switcher (prototype only) ---------------- */
+  const setType = (t) => {
+    document.documentElement.dataset.type = t;
+    $$('.typesw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.set === t));
+    try { localStorage.setItem('ap-type', t); } catch {}
+    requestAnimationFrame(relayout);
+  };
+  $$('.typesw button').forEach(b => b.addEventListener('click', () => setType(b.dataset.set)));
+  try { const t = localStorage.getItem('ap-type'); if (t) setType(t); } catch {}
+  relayout(); onScroll();
+
+  /* ---------------- Mobile sheet ---------------- */
+  const menuBtn = $('.nav__menu');
+  const toggleSheet = (open) => {
+    sheet.classList.toggle('is-open', open); menuBtn.setAttribute('aria-expanded', open);
+    menuBtn.innerHTML = open ? '<svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.4"><path d="M4 4l10 10M14 4 4 14"/></svg>' : '<svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="1.4"><path d="M2 6h14M2 12h14"/></svg>';
+    request();
+  };
+  menuBtn.addEventListener('click', () => toggleSheet(!sheet.classList.contains('is-open')));
+  $$('a', sheet).forEach(a => a.addEventListener('click', () => toggleSheet(false)));
+
+  /* ---------------- Cursor + magnetic CTA ---------------- */
+  if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const cursor = $('.cursor'), label = $('span', cursor);
+    let mx = -100, my = -100, cx = -100, cy = -100;
+    addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; cursor.style.opacity = 1; });
+    document.addEventListener('pointerover', (e) => {
+      const t = e.target.closest('[data-cursor]');
+      cursor.classList.toggle('is-label', !!t); label.textContent = t ? t.dataset.cursor : '';
+    });
+    const loop = () => { cx += (mx - cx) * .18; cy += (my - cy) * .18; cursor.style.transform = `translate(${cx}px, ${cy}px)`; requestAnimationFrame(loop); };
+    loop();
+    const magnet = $('#magnet');
+    magnet.addEventListener('pointermove', (e) => {
+      const r = magnet.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      magnet.style.transform = `translate(${dx * .3}px, ${dy * .3}px)`;
+      magnet.firstElementChild.style.transform = `translate(${dx * .12}px, ${dy * .12}px)`;
+    });
+    magnet.addEventListener('pointerleave', () => {
+      magnet.style.transition = 'transform .8s cubic-bezier(.22,1,.36,1), background .4s';
+      magnet.style.transform = ''; magnet.firstElementChild.style.transform = '';
+      setTimeout(() => magnet.style.transition = '', 800);
+    });
+  }
+})();
+</script>
+</body>
+</html>

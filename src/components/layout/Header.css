@@ -1,46 +1,84 @@
+/* A floating glass pill: see-through over a dark hero, frosted cream once the
+   page scrolls. Tucks away going down and returns going up. */
 .ap-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 16px;
+  left: 50%;
   z-index: var(--z-header);
-  color: var(--fg);
-  transition: transform var(--dur-base) var(--ease-out);
+  width: min(calc(100% - 32px), 1180px);
+  color: var(--color-ink);
+  transform: translate(-50%, 0);
+  transition: transform 0.6s var(--ease-expo);
 }
 
 .ap-header.is-hidden {
-  transform: translateY(-100%);
+  transform: translate(-50%, -140%);
 }
 
 /* A keyboard user inside the header always keeps it on screen. */
 .ap-header:focus-within {
-  transform: none;
+  transform: translate(-50%, 0);
 }
 
 .ap-header__bar {
-  background: var(--bg);
-  border-bottom: 1px solid var(--rule);
+  position: relative;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: rgb(255 253 249 / 0.8);
+  box-shadow: 0 10px 40px -20px rgb(28 27 24 / 0.35);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   transition:
-    background-color var(--dur-base) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out);
+    background-color 0.5s,
+    color 0.5s,
+    border-color 0.5s,
+    box-shadow 0.5s;
+}
+
+.ap-header.is-transparent {
+  color: var(--color-on-night);
 }
 
 .ap-header.is-transparent .ap-header__bar {
-  background: transparent;
-  border-bottom-color: transparent;
+  border-color: rgb(255 255 255 / 0.16);
+  background: rgb(18 16 14 / 0.2);
+  box-shadow: none;
 }
 
-.ap-header__inner {
+.ap-header__inner.ap-container {
   display: flex;
   align-items: center;
-  gap: var(--space-24);
-  min-height: var(--header-height);
+  gap: var(--space-16);
+  max-width: none;
+  min-height: 3.6rem;
+  padding: 0.4rem 0.4rem 0.4rem 1rem;
 }
 
 .ap-header__brand {
   flex-shrink: 0;
   display: inline-flex;
+  border-radius: var(--radius-pill);
+  color: inherit;
   text-decoration: none;
+}
+
+.ap-header__brand .ap-brand {
+  color: inherit;
+}
+
+.ap-header.is-transparent .ap-brand__place {
+  color: var(--color-champagne);
+}
+
+/* The monogram sits on a small cream disc so it reads over the video. */
+.ap-header__brand .ap-brand__mark {
+  box-sizing: content-box;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0.3rem;
+  border-radius: 50%;
+  background: var(--color-on-night);
+  object-fit: contain;
 }
 
 /* Navigation --------------------------------------------------------------- */
@@ -48,7 +86,7 @@
 .ap-header__nav {
   display: flex;
   align-items: center;
-  gap: clamp(var(--space-16), 1.8vw, var(--space-32));
+  gap: 0.15rem;
   margin-inline: auto;
 }
 
@@ -57,36 +95,31 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-4);
-  padding-block: var(--space-8);
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-pill);
   color: inherit;
   font-family: var(--font-sans);
-  font-size: var(--text-button);
+  font-size: 0.86rem;
   font-weight: var(--weight-medium);
-  letter-spacing: 0.1em;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
   white-space: nowrap;
-  transition: color var(--dur-quick) var(--ease-out);
+  transition: background-color 0.3s;
 }
 
-.ap-header__link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--accent);
-  opacity: 0;
-  transition: opacity var(--dur-quick) var(--ease-out);
+.ap-header__link:hover,
+.ap-header__link[aria-expanded='true'] {
+  background: var(--color-stone);
 }
 
-.ap-header__link:hover::after,
-.ap-header__link[aria-current='page']::after,
-.ap-header__link[aria-expanded='true']::after,
-.ap-header__link.is-current::after {
-  opacity: 1;
+.ap-header.is-transparent .ap-header__link:hover,
+.ap-header.is-transparent .ap-header__link[aria-expanded='true'] {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.ap-header__link[aria-current='page'],
+.ap-header__link.is-current {
+  box-shadow: inset 0 0 0 1px currentColor;
 }
 
 .ap-header__trigger .ap-icon,
@@ -102,12 +135,31 @@
   transform: rotate(180deg);
 }
 
+/* Positions the Treatments dropdown against its own trigger. */
+.ap-header__menu-anchor {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* While the dropdown is open, an invisible bridge spans the gap between the
+   pill and the card, so the pointer never leaves the header on its way down. */
+.ap-header__menu-anchor:has(.ap-mega.is-open)::after {
+  content: '';
+  position: absolute;
+  /* From the pill's lower edge to the card's top, so it never covers the other links. */
+  top: calc(50% + 1.8rem - 4px);
+  left: calc(var(--space-24) * -1);
+  width: min(42rem, calc(100vw - var(--page-padding) * 2));
+  height: 18px;
+}
+
 /* Actions ------------------------------------------------------------------ */
 
 .ap-header__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
+  gap: var(--space-8);
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -121,18 +173,29 @@
   place-items: center;
   width: 2.75rem;
   height: 2.75rem;
-  margin-right: calc(var(--space-8) * -1);
-  color: inherit;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+.ap-header.is-transparent .ap-header__menu-button {
+  background: var(--color-on-night);
+  color: var(--color-ink);
 }
 
 /* Below 480px the monogram carries the brand on its own, so the header
    still fits a phone with the Enquire button and the menu. */
 @media (max-width: 29.99rem) {
+  .ap-header {
+    top: 12px;
+    width: calc(100% - 24px);
+  }
+
   .ap-header__brand .ap-brand__text {
     display: none;
   }
 
-  .ap-header__inner {
-    gap: var(--space-12);
+  .ap-header__inner.ap-container {
+    gap: var(--space-8);
   }
 }

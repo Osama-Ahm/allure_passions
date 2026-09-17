@@ -7,7 +7,8 @@ import cx from '../../lib/cx';
 import useHeaderScroll from '../../lib/useHeaderScroll';
 import useMediaQuery from '../../lib/useMediaQuery';
 import BrandLockup from '../brand/BrandLockup';
-import { Button, Container, Icon } from '../ui';
+import { Container, Icon } from '../ui';
+import PillButton from '../ui/PillButton';
 import MegaMenu from './MegaMenu';
 import MobileMenu from './MobileMenu';
 import './Header.css';
@@ -29,7 +30,7 @@ export default function Header({ overHero = false }) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   const canHover = useMediaQuery(HOVER_QUERY);
   const { pathname } = useLocation();
-  const { isScrolled, isHidden } = useHeaderScroll();
+  const { isScrolled, isHidden } = useHeaderScroll({ overHero });
 
   const [isMegaOpen, setMegaOpen] = useState(false);
   const [isMobileOpen, setMobileOpen] = useState(false);
@@ -94,6 +95,11 @@ export default function Header({ overHero = false }) {
     hoverTimer.current = window.setTimeout(() => setMegaOpen(true), HOVER_OPEN_DELAY);
   };
 
+  // Coming back into the header (or on into the open panel) cancels a close that is on its way.
+  const cancelHoverClose = () => {
+    if (usesHover && isMegaOpen) window.clearTimeout(hoverTimer.current);
+  };
+
   const closeOnHover = () => {
     if (!usesHover) return;
     window.clearTimeout(hoverTimer.current);
@@ -108,6 +114,7 @@ export default function Header({ overHero = false }) {
       ref={headerRef}
       className={cx('ap-header', isTransparent && 'is-transparent', isHidden && !isMenuOpen && 'is-hidden')}
       data-tone={isTransparent ? 'night' : 'canvas'}
+      onMouseEnter={cancelHoverClose}
       onMouseLeave={closeOnHover}
     >
       <div className="ap-header__bar" inert={isMobileOpen || undefined}>
@@ -118,21 +125,23 @@ export default function Header({ overHero = false }) {
 
           {isDesktop && (
             <nav className="ap-header__nav" aria-label="Primary">
-              <button
-                ref={megaButtonRef}
-                type="button"
-                className={cx('ap-header__link', 'ap-header__trigger', pathname.startsWith('/treatments') && 'is-current')}
-                aria-expanded={isMegaOpen}
-                aria-controls={MEGA_MENU_ID}
-                onClick={() => (isMegaOpen ? closeMega() : setMegaOpen(true))}
-                onMouseEnter={openOnHover}
-              >
-                Treatments
-                <Icon className="ap-header__chevron" icon={ChevronDown} size={16} />
-              </button>
+              <div className="ap-header__menu-anchor">
+                <button
+                  ref={megaButtonRef}
+                  type="button"
+                  className={cx('ap-header__link', 'ap-header__trigger', pathname.startsWith('/treatments') && 'is-current')}
+                  aria-expanded={isMegaOpen}
+                  aria-controls={MEGA_MENU_ID}
+                  onClick={() => (isMegaOpen ? closeMega() : setMegaOpen(true))}
+                  onMouseEnter={openOnHover}
+                >
+                  Treatments
+                  <Icon className="ap-header__chevron" icon={ChevronDown} size={16} />
+                </button>
 
-              {/* Directly after its trigger, so Tab moves straight into the panel. */}
-              <MegaMenu id={MEGA_MENU_ID} isOpen={isMegaOpen} onNavigate={closeMega} />
+                {/* Directly after its trigger, so Tab moves straight into the panel. */}
+                <MegaMenu id={MEGA_MENU_ID} isOpen={isMegaOpen} onNavigate={closeMega} />
+              </div>
 
               {primaryLinks.map((link) => (
                 <NavLink key={link.to} className="ap-header__link" to={link.to} onMouseEnter={closeMega} viewTransition>
@@ -143,9 +152,15 @@ export default function Header({ overHero = false }) {
           )}
 
           <div className="ap-header__actions">
-            <Button className="ap-header__cta" to={consultationCta.to} size="sm" onMouseEnter={closeMega}>
+            <PillButton
+              className="ap-header__cta"
+              to={consultationCta.to}
+              variant={isTransparent ? 'light' : 'dark'}
+              size="sm"
+              onMouseEnter={closeMega}
+            >
               {isDesktop ? consultationCta.label : consultationCta.shortLabel}
-            </Button>
+            </PillButton>
 
             {!isDesktop && (
               <button
