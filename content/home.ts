@@ -78,7 +78,25 @@ export const concernFamilies = {
  * Qualification wording stays exact, with no implied medical title (D6).
  * A proof chip is a link when it has `href`.
  */
-export const trustDossier = [
+export type TrustProof = {
+  label: string;
+  /** Where the claim can be checked, when it can be checked publicly. */
+  href?: string;
+  /** Development-only placeholder for something the clinic has yet to supply. */
+  pending?: boolean;
+};
+
+export type TrustEntry = {
+  id: string;
+  /** 'logo' renders the JCCP mark; anything else is set as a lettered seal. */
+  badge: string;
+  title: string;
+  image: string;
+  body: string;
+  proof: TrustProof[];
+};
+
+export const trustDossier: TrustEntry[] = [
   {
     id: 'jccp',
     badge: 'logo',

@@ -20,7 +20,10 @@ export function SanctuaryCanvas({
 
   return (
     <Canvas
-      shadows={!isMobile}
+      // "percentage" is PCFShadowMap. Plain `shadows` asks for PCFSoftShadowMap,
+      // which three 0.186 has removed — it falls back to this anyway, with a
+      // console warning.
+      shadows={isMobile ? false : 'percentage'}
       // Retina phones render four times the pixels for no visible gain here,
       // and it is the first thing that costs frames.
       dpr={isMobile ? [1, 1.2] : [1, 1.75]}

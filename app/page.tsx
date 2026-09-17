@@ -1,4 +1,4 @@
-import { ClinicalPhilosophy } from '@/components/sections/ClinicalPhilosophy';
+import { ExpertCare } from '@/components/sections/ExpertCare';
 import { SiteFooter } from '@/components/sections/SiteFooter';
 import { SiteHeader } from '@/components/sections/SiteHeader';
 import { TreatmentCollection } from '@/components/sections/TreatmentCollection';
@@ -24,7 +24,7 @@ export default function HomePage() {
         {/* The editorial sections rise over the pinned canvas. */}
         <div className="relative z-20 border-t border-sanctuary-stone bg-sanctuary-alabaster shadow-[0_-20px_50px_rgba(0,0,0,0.03)]">
           <TreatmentCollection />
-          <ClinicalPhilosophy />
+          <ExpertCare />
           <SiteFooter />
         </div>
       </main>

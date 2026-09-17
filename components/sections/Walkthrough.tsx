@@ -46,6 +46,12 @@ export function Walkthrough() {
           pin: true,
           scrub: 0.8,
           invalidateOnRefresh: true,
+          // Pinned triggers are measured in creation order unless told
+          // otherwise, and these two are created from effects that each wait on
+          // their own probes. This pin is first on the page, so it refreshes
+          // first; without that the credentials pin below measures its start
+          // against a page that has not yet grown by this pin's 400vh spacer.
+          refreshPriority: 2,
           onUpdate: (self) => {
             scrollProgress.current = self.progress;
           },
