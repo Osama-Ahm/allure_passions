@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| **Status** | Plan approved. **All fifteen modules built** and pushed to `origin/allure`; awaiting client content (§11) and review |
-| **Branch** | `allure`, pushed to `origin`; not merged into `main` |
+| **Status** | Plan approved. **All fifteen modules built**, verified and pushed to `origin/redesign`; awaiting client content (§11) and review |
+| **Branch** | `redesign`, pushed to `origin` (the project's own repo); not merged into `main` |
 | **Date** | 17 September 2026 (last updated 17 September 2026) |
 | **Supersedes** | `DESIGN_SPEC_AND_GUIDELINES.md`, retired in Module 15 (rules that still apply are carried over in §13; the file remains in `main`'s history) |
 | **Reference sites** | [yukiclinic.co.uk](https://www.yukiclinic.co.uk), [skinstation.co.uk](https://www.skinstation.co.uk) |
@@ -17,23 +17,25 @@
 | # | Module | Status |
 |---|---|---|
 | 0 | Plan (this document) | **Approved** 17 Sep 2026 |
-| 1 | Foundation | **Built**; committed and pushed to `origin/allure` 17 Sep 2026 |
-| 2 | Header & footer | **Built** and pushed to `origin/allure`. One decision to confirm at review: the mobile quick-contact bar |
-| 3 | Hero & credentials ribbon | **Built** and pushed to `origin/allure` |
-| 4 | Concern finder | **Built** and pushed to `origin/allure` |
-| 5 | Signature treatments | **Built** and pushed to `origin/allure` |
-| 6 | Why Allure | **Built** and pushed to `origin/allure`. Press row withheld; no usable GHP artwork |
-| 7 | Reviews & Instagram | **Built** and pushed to `origin/allure`. Both hidden until a provider is connected |
-| 8 | Programmes & skincare teaser | **Built** and pushed to `origin/allure` |
-| 9 | FAQ & Begin | **Built** and pushed to `origin/allure`. Homepage complete |
-| 10 | Treatments & treatment detail | **Built** and pushed to `origin/allure` |
-| 11 | Pricing | **Built** and pushed to `origin/allure` |
-| 12 | About | **Built** and pushed to `origin/allure`. No practitioner name or portrait; see below |
-| 13 | Clinical skincare | **Built** and pushed to `origin/allure` |
-| 14 | Contact, 404 & legal | **Built** and pushed to `origin/allure` |
-| 15 | QA & launch prep | **Built** and pushed to `origin/allure`. All fifteen modules complete |
+| 1 | Foundation | **Built**; committed and pushed to `origin/redesign` 17 Sep 2026 |
+| 2 | Header & footer | **Built** and pushed to `origin/redesign`. One decision to confirm at review: the mobile quick-contact bar |
+| 3 | Hero & credentials ribbon | **Built** and pushed to `origin/redesign` |
+| 4 | Concern finder | **Built** and pushed to `origin/redesign` |
+| 5 | Signature treatments | **Built** and pushed to `origin/redesign` |
+| 6 | Why Allure | **Built** and pushed to `origin/redesign`. Press row withheld; no usable GHP artwork |
+| 7 | Reviews & Instagram | **Built** and pushed to `origin/redesign`. Both hidden until a provider is connected |
+| 8 | Programmes & skincare teaser | **Built** and pushed to `origin/redesign` |
+| 9 | FAQ & Begin | **Built** and pushed to `origin/redesign`. Homepage complete |
+| 10 | Treatments & treatment detail | **Built** and pushed to `origin/redesign` |
+| 11 | Pricing | **Built** and pushed to `origin/redesign` |
+| 12 | About | **Built** and pushed to `origin/redesign`. No practitioner name or portrait; see below |
+| 13 | Clinical skincare | **Built** and pushed to `origin/redesign` |
+| 14 | Contact, 404 & legal | **Built** and pushed to `origin/redesign` |
+| 15 | QA & launch prep | **Built** and pushed to `origin/redesign`. All fifteen modules complete |
 
 **How to review:** run `npm run dev`, then open `http://localhost:5173/styleguide` for the design system and `http://localhost:5173/` for the homepage as it takes shape. Blocks that aren't built yet show as dashed placeholders in development only.
+
+**Provenance note (17 Sep 2026):** Modules 2–15 were built in a separate session and initially pushed to a different repository (`Osama-Ahm/Opus_Publishing`, branch `allure`) with commits authored as `Claude <noreply@anthropic.com>` carrying `Co-Authored-By` and `Claude-Session` trailers. Per the user's standing instruction (no Claude/AI co-author or attribution trailer on anything pushed, ever), that history was re-authored under the user's own git identity with the trailers removed before merging — file contents were not altered; only commit metadata changed. The result was verified (lint, production build, route and secret scan) and pushed to this project's own repository (`Osama-Ahm/allure_passions`, branch `redesign`).
 
 ### Module 1 build log: Foundation
 
