@@ -70,6 +70,31 @@ export function TextArea({ label, help, error, required, rows = 4, className, ..
   );
 }
 
+export function Select({ label, help, error, required, options, className, ...rest }) {
+  const id = useId();
+
+  return (
+    <FieldShell id={id} label={label} help={help} error={error} required={required} className={className}>
+      {({ helpId, errorId }) => (
+        <select
+          id={id}
+          className="ap-field__input ap-field__select"
+          required={required}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={cx(helpId, errorId) || undefined}
+          {...rest}
+        >
+          {options.map((option) => (
+            <option value={option.value} key={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )}
+    </FieldShell>
+  );
+}
+
 /** Radio group rendered as selectable cards (plan §8.6, RadioCards). */
 export function RadioCards({ label, help, error, required, name, options, value, onChange, className }) {
   const id = useId();

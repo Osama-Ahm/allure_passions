@@ -30,7 +30,7 @@
 | 11 | Pricing | **Built** and pushed to `origin/allure` |
 | 12 | About | **Built** and pushed to `origin/allure`. No practitioner name or portrait; see below |
 | 13 | Clinical skincare | **Built** and pushed to `origin/allure` |
-| 14 | Contact, 404 & legal | Not started |
+| 14 | Contact, 404 & legal | **Built** and pushed to `origin/allure` |
 | 15 | QA & launch prep | Not started |
 
 **How to review:** run `npm run dev`, then open `http://localhost:5173/styleguide` for the design system and `http://localhost:5173/` for the homepage as it takes shape. Blocks that aren't built yet show as dashed placeholders in development only.
@@ -378,6 +378,23 @@ The old header, footer and inner pages (About, Treatments, Treatment detail, Pri
 
 1. The footer's Skincare column and the homepage teaser now link to the Kojivit page, closing the two deferrals from Modules 2 and 8.
 2. A stop answer ends the flow the moment it is chosen rather than at the next step, so nobody fills in a medical history that cannot be used.
+
+---
+
+### Module 14 build log: Contact, 404 & legal
+
+**Built**
+
+- **Enquiry form** on `/contact` (§7.8): name, phone, email, what the enquiry is about (every concern and every treatment in one list), how you would like us to reply, and an optional message that asks you to leave out medical detail you would rather not send. Validation covers every required field and the format of the phone number and email; sending is blocked until consent is ticked. Like the questionnaire, it **posts nowhere** — it composes a WhatsApp message or an email, so the hand-off stays in the patient's hands and a secure backend can replace the submit step later (R2).
+- **404** (§7.9): now offers Treatments, Pricing and Contact alongside the homepage.
+- **Legal pages** (§7.9): a prose template that renders whatever sections the content gives it. While the clinic's copy is outstanding it shows the holding notice **and the outline of what the page will cover** — nine headings for the privacy notice, nine for the terms — so the clinic can see exactly what to write. Dropping the copy in means filling `sections` and deleting `pending`.
+- **`Select`** joins the form primitives.
+
+**Verified**
+
+- Empty submit raises six errors and does not navigate; a completed form composes a message carrying only the fields collected plus the consent line.
+- All 14 routes resolve; legal pages render the notice and outline; the 404 offers four ways on.
+- Lint clean; production build clean; no overflow at 1440, 768, 375 or 320 px; no console errors.
 
 ---
 

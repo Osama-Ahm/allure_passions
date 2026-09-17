@@ -3,11 +3,13 @@ import { addressLines, clinic } from '../../content/clinic';
 import { ArrowLink, Button, Container, Heading, Icon, Section, Text } from '../../components/ui';
 import { emailHref, telHref, whatsappHref } from '../../utils/contact';
 import usePageMeta from '../../lib/usePageMeta';
+import EnquiryForm from './EnquiryForm';
 import './ContactPage.css';
 
 /**
- * Contact and consultation requests. Module 14 adds the enquiry hand-off form;
- * the direct channels below are the routes the clinic uses today.
+ * Contact and consultation requests (plan §7.8): the direct channels and the
+ * clinic's details first, then an enquiry form that composes a message rather
+ * than posting anywhere.
  */
 export default function ContactPage() {
   usePageMeta({
@@ -76,6 +78,8 @@ export default function ContactPage() {
             </ArrowLink>
           </address>
         </div>
+
+        <EnquiryForm />
       </Container>
     </Section>
   );
