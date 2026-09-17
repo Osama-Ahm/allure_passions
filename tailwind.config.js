@@ -18,6 +18,23 @@ module.exports = {
           },
           charcoal: '#1A1817',    // Primary high-contrast text
           muted: '#6B665F',       // Secondary editorial body copy
+
+          // The accent family. Deep botanical green carries the treatment
+          // sections and gives the page one dark ground to break up the cream;
+          // 'deep' is dark enough to sit type on at AAA, 'light' reads as a
+          // muted sage against it.
+          verde: {
+            light: '#9CB6A7',
+            DEFAULT: '#3A5A4C',
+            deep: '#1C3229',
+          },
+
+          // A third tone, used only to tell the three treatment families apart.
+          clay: {
+            light: '#CBA595',
+            DEFAULT: '#A8766B',
+            deep: '#7B5348',
+          },
         },
       },
       fontFamily: {

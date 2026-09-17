@@ -93,3 +93,25 @@ export const treatmentOptions = {
   analysis: { name: 'Advanced clinical skin analysis', to: '/pricing' },
   prescription: { name: 'Prescription skincare consultation', to: '/skincare' },
 };
+
+/**
+ * The three families the six technologies group into, and the accent each one
+ * carries through the interface. The grouping is what the clinic already says
+ * about them — two lasers for the skin's surface, two devices that work in the
+ * deeper layers, two for the body — so the colour is carrying real information
+ * rather than decorating the cards.
+ */
+export type TreatmentFamily = {
+  id: 'skin' | 'lift' | 'body';
+  label: string;
+  slugs: string[];
+};
+
+export const treatmentFamilies: TreatmentFamily[] = [
+  { id: 'skin', label: 'Skin & pigmentation', slugs: ['picoway', 'advatx'] },
+  { id: 'lift', label: 'Lifting & tightening', slugs: ['morpheus8', 'sofwave'] },
+  { id: 'body', label: 'Body contouring', slugs: ['emsculpt-neo', 'emerald-laser'] },
+];
+
+export const familyForSlug = (slug: string) =>
+  treatmentFamilies.find((family) => family.slugs.includes(slug)) ?? treatmentFamilies[0];
