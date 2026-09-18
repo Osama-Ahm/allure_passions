@@ -4,10 +4,10 @@ import { ChapterFrame } from '@/components/story/ChapterFrame';
 import { ConsultationButton } from '@/components/ui/ConsultationButton';
 
 /**
- * Chapter 6 · Consultation. The camera rises to look straight down as the
- * bottle lies on its side, and the plan is drawn around it in hairlines. The
- * four steps here are the readable version of that drawing, on a hairline
- * timeline along the foot of the screen.
+ * Chapter 6 · Consultation. The archway lies down and four of its stones
+ * become the plan: soft stones on a gold circle, seen from above, each lighting
+ * as its step is read. The four steps here are the readable version of that
+ * drawing, on a hairline timeline along the foot of the screen.
  */
 export function ConsultationChapter() {
   return (

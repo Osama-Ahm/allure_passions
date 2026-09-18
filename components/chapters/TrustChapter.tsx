@@ -4,9 +4,10 @@ import { trust } from '@/content/story';
 import { ChapterFrame } from '@/components/story/ChapterFrame';
 
 /**
- * Chapter 8 · Trust, on stone. The bottle stands upright in the left third
- * while a narrow light sweeps its glass; the six credentials hold the right,
- * in a hairline grid with no photographs.
+ * Chapter 8 · Trust, on stone. The programme stack presses into one gold
+ * medallion, engraved with the monogram, which rises to face you in the left
+ * third and turns slowly in the light; the six credentials hold the right, in
+ * a hairline grid with no photographs.
  */
 export function TrustChapter() {
   return (

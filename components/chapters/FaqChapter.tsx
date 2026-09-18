@@ -9,9 +9,9 @@ const homeFaqs = homeFaqIds
   .filter((entry): entry is (typeof faqs)[number] => Boolean(entry));
 
 /**
- * Chapter 10 · FAQ. A solid, text-only chapter: the 3D stage rests here. One
- * answer open at a time, and the FAQPage structured data is built from the
- * same list, so the markup and the copy can never drift apart.
+ * Chapter 10 · FAQ. The jar and the bottle rest together in the margin below
+ * the heading. One answer open at a time, and the FAQPage structured data is
+ * built from the same list, so the markup and the copy can never drift apart.
  */
 export function FaqChapter() {
   const structuredData = {

@@ -5,12 +5,14 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { story } from '@/lib/story/store';
 import { ORDER, damp, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
+import { ARCH_ORIGIN, BESIDE_JAR, DROP_X, FLOOR_Y, JAR_BASE, MEDALLION_CENTRE, MERGED_CENTRE, PLAN_CENTRE } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
 import type { Quality } from './quality';
-import { BottleScene, DROP_X } from './scenes/BottleScene';
-import { ARCH_ORIGIN, ArchScene, PLAN_CENTRE } from './scenes/ArchScene';
+import { BottleScene } from './scenes/BottleScene';
+import { ArchScene } from './scenes/ArchScene';
 import { CrystalScene } from './scenes/CrystalScene';
-import { DropletScene, FLOOR_Y, MERGED_CENTRE, dropAt, dropletHome } from './scenes/DropletScene';
+import { DropletScene, dropAt, dropletHome } from './scenes/DropletScene';
+import { HomeScene } from './scenes/HomeScene';
 import { TokenScene } from './scenes/TokenScene';
 
 /**
@@ -57,7 +59,10 @@ const shot = (
 
 type Layout = 'desktop' | 'mobile';
 
-type ShotName = 'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal' | 'arch' | 'plan' | 'stack';
+/** Between the jar and the bottle, a little above the jar. */
+const HOME_TARGET = new THREE.Vector3((JAR_BASE.x + BESIDE_JAR.x) / 2, FLOOR_Y + 0.32, (JAR_BASE.z + BESIDE_JAR.z) / 2);
+
+type ShotName = 'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal' | 'arch' | 'plan' | 'stack' | 'medallion' | 'home' | 'rest' | 'night';
 
 const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
   desktop: {
@@ -77,6 +82,14 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
     plan: shot(PLAN_CENTRE.x, FLOOR_Y, PLAN_CENTRE.z, 6.2, 80, 0.4, 0.14),
     // Chapter 7: close on the programme's stack, on the right.
     stack: shot(PLAN_CENTRE.x, FLOOR_Y + 0.12, PLAN_CENTRE.z, 2.4, 16, 0.5, -0.02),
+    // Chapter 8: the medallion facing you in the left third, beside the credentials.
+    medallion: shot(MEDALLION_CENTRE.x, MEDALLION_CENTRE.y, MEDALLION_CENTRE.z, 3, 3, -0.52, 0.02),
+    // Chapter 9: the jar and the bottle together, on the right.
+    home: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 2.9, 9, 0.5, -0.04),
+    // Chapter 10: the pair small, at rest in the margin below the heading.
+    rest: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 4.4, 7, -0.6, -0.4),
+    // Chapter 11: the archway at night, on the right, its door lit.
+    night: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 5.8, 3, 0.46, -0.02),
   },
   mobile: {
     hero: shot(0, 0.48, 0, 7.4, 11, 0, 0.47),
@@ -87,6 +100,10 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
     arch: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 9, 4, 0, 0.5),
     plan: shot(PLAN_CENTRE.x, FLOOR_Y, PLAN_CENTRE.z, 7, 80, 0, 0.52),
     stack: shot(PLAN_CENTRE.x, FLOOR_Y + 0.12, PLAN_CENTRE.z, 4.2, 16, 0, 0.55),
+    medallion: shot(MEDALLION_CENTRE.x, MEDALLION_CENTRE.y, MEDALLION_CENTRE.z, 5.2, 3, 0, 0.62),
+    home: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 4.8, 9, 0, 0.56),
+    rest: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 6.4, 7, 0, 0.62),
+    night: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 12, 3, 0, 0.62),
   },
 };
 
@@ -145,6 +162,7 @@ export function Director({ quality, background }: { quality: Quality; background
     stage.focus = damp(stage.focus, story.focus, 6, dt);
     stage.focusChapter = story.focusChapter;
     stage.time = state.clock.elapsedTime;
+    stage.away = damp(stage.away, quality.mobile ? story.rx : 0, 6, dt);
 
     const still = quality.reducedMotion;
     stage.tiltX = damp(stage.tiltX, still ? 0 : pointer.current.y * 0.05, 2.5, dt);
@@ -186,6 +204,13 @@ export function Director({ quality, background }: { quality: Quality; background
     blend(current, shots.arch, span(u, T.toArch));
     blend(current, shots.plan, span(u, T.toPlan));
     blend(current, shots.stack, span(u, T.toStack));
+    blend(current, shots.medallion, span(u, T.toTrust));
+    blend(current, shots.home, span(u, T.toHome));
+    blend(current, shots.rest, span(u, T.toRest));
+    blend(current, shots.night, span(u, T.toNight));
+
+    // At night the studio dims, so the lit doorway carries the scene.
+    state.scene.environmentIntensity = lerp(1, 0.45, span(u, T.toNight));
 
     const elevation = THREE.MathUtils.degToRad(current.elevation);
     const azimuth = THREE.MathUtils.degToRad(current.azimuth);
@@ -216,6 +241,7 @@ export function Director({ quality, background }: { quality: Quality; background
       <CrystalScene quality={quality} background={background} />
       <ArchScene quality={quality} />
       <TokenScene />
+      <HomeScene quality={quality} />
     </>
   );
 }

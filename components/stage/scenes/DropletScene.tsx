@@ -8,18 +8,16 @@ import { MarchingCubes } from 'three/examples/jsm/objects/MarchingCubes.js';
 import { annotations } from '@/lib/scene/annotations';
 import { goldLight, pearl, serum as serumColour, clay, gold } from '@/lib/scene/palette';
 import { ORDER, clamp01, ease, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
+import { DROP_X, FLOOR_Y, MERGED_CENTRE } from '@/lib/scene/layout';
 import { DROPLETS, T } from '@/lib/scene/timeline';
 import type { Quality } from '../quality';
-import { DROP_X, REST_TIP } from './BottleScene';
+import { REST_TIP } from './BottleScene';
 
-/** The invisible surface the droplets rest on, well below the bottle. */
-export const FLOOR_Y = -1.9;
 /** Radius of each concern droplet. */
 const R = 0.105;
 /** The drop at the moment it lands, and the single drop they merge back into. */
 const LANDING_R = 0.14;
 const MERGED_R = 0.24;
-export const MERGED_CENTRE = new THREE.Vector3(DROP_X, FLOOR_Y + 0.75, -0.16);
 const LANDING = new THREE.Vector3(DROP_X, FLOOR_Y + LANDING_R, 0);
 const LIQUID_OPACITY = 0.66;
 

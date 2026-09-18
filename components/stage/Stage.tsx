@@ -3,7 +3,6 @@
 import { Canvas, advance, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { story } from '@/lib/story/store';
 import { onFrame } from '@/lib/useSmoothScroll';
 import { Annotations } from './Annotations';
 import { Director } from './Director';
@@ -16,23 +15,15 @@ import { readQuality } from './quality';
  *
  * It never runs its own animation loop. The page's single loop (GSAP's ticker,
  * lib/useSmoothScroll.ts) moves the scroll position first and then advances
- * the canvas, so the 3D can never be a frame behind the copy. Past the last
- * chapter that has a shot, the stage renders one last, empty frame and rests.
+ * the canvas, so the 3D can never be a frame behind the copy.
  */
 export function Stage() {
   const quality = useMemo(readQuality, []);
   const background = useMemo(() => new THREE.Color(), []);
   const [ready, setReady] = useState(false);
 
-  useEffect(() => {
-    let rendering = true;
-    return onFrame((time) => {
-      // Chapters after Programmes have no shot yet (M5).
-      const active = story.u < 7.05;
-      if (active || rendering) advance(time);
-      rendering = active;
-    });
-  }, []);
+  // Every chapter has 3D, so the stage advances on every frame of the loop.
+  useEffect(() => onFrame((time) => advance(time)), []);
 
   useEffect(() => {
     if (!ready) return;

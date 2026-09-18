@@ -31,6 +31,12 @@ export type StoryState = {
    */
   focus: number;
   focusChapter: string | null;
+  /**
+   * How much of the prescription-only block ([data-rx]) is on screen, 0 → 1.
+   * On a phone, where copy scrolls over the models, the models step away
+   * while it is, so nothing 3D is ever seen with it as if it were the medicine.
+   */
+  rx: number;
 };
 
 export const story: StoryState = {
@@ -44,6 +50,7 @@ export const story: StoryState = {
   bg: [249, 246, 240],
   focus: -1,
   focusChapter: null,
+  rx: 0,
 };
 
 const listeners = new Set<() => void>();

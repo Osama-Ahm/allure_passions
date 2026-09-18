@@ -3,11 +3,12 @@ import { welcome } from '@/content/story';
 import { ChapterFrame } from '@/components/story/ChapterFrame';
 
 /**
- * Chapter 5 · Clinic. Dawn after the technology chapter: the bottle comes back
- * down onto its plinth and turns slowly between two giant lines of type.
+ * Chapter 5 · Clinic. Dawn after the technology chapter: the crystal breaks,
+ * and its pieces fly out and build the clinic's archway, which stands between
+ * two giant lines of type.
  *
- * On a desktop screen the giant words sit in the back layer so the bottle can
- * pass in front of them. On a phone there is no room to layer them, so the
+ * On a desktop screen the giant words sit in the back layer so the arch can
+ * stand in front of them. On a phone there is no room to layer them, so the
  * same heading is set in the copy instead (only one version is ever displayed).
  */
 export function ClinicChapter() {

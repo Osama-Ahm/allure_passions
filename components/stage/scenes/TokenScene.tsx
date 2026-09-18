@@ -5,11 +5,13 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { annotations, placeLabel } from '@/lib/scene/annotations';
 import { withDissolve } from '@/lib/scene/dissolve';
-import { DISC, PEBBLE, createMorphLathe, lerpShape, type LatheShape } from '@/lib/scene/morphLathe';
+import { createEngraving } from '@/lib/scene/engraving';
+import { DISC, LID, MEDALLION, PEBBLE, createMorphLathe, lerpShape, type LatheShape } from '@/lib/scene/morphLathe';
 import { gold, travertine } from '@/lib/scene/palette';
 import { ORDER, clamp01, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
+import { JAR_BASE, JAR_HEIGHT, MEDALLION_CENTRE, PLAN_CENTRE } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
-import { PLAN_CENTRE } from './ArchScene';
+import { jarGrowth } from './HomeScene';
 
 /** The consultation circle's radius. */
 const CIRCLE_R = 0.5;
@@ -39,6 +41,7 @@ const stone = new THREE.Color('#E2D5C1');
 const roleColours = ROLES.map((role) => new THREE.Color(role.colour));
 const target = new THREE.Vector3();
 const from = new THREE.Vector3();
+const medallionAt = new THREE.Vector3();
 const shape: LatheShape = { a: 0, b: 0, p: 0 };
 
 /** Where plan stone `k` sits: 01 at the top of the circle as seen from above, then clockwise. */
@@ -48,10 +51,14 @@ function planSpot(k: number, out: THREE.Vector3) {
 }
 
 /**
- * Chapters 6–7 · Consultation and Programmes. Four of the arch's stones become
- * the plan: soft stones on a gold circle that draws itself, lighting in turn
- * as the four steps are read. Then they round into discs and stack, and each
- * programme shows its own stack: the technologies it combines, layer by layer.
+ * Chapters 6–10 · Consultation, Programmes, Trust, At home. Four of the arch's
+ * stones become the plan: soft stones on a gold circle that draws itself,
+ * lighting in turn as the four steps are read. Then they round into discs and
+ * stack, and each programme shows its own stack: the technologies it combines,
+ * layer by layer. For Trust the stack presses into one gold medallion, engraved
+ * with the monogram, which rises to face you; at home it lies back down and
+ * becomes the lid of the cream jar (HomeScene), until the pair dissolve on the
+ * way to the Visit chapter.
  */
 export function TokenScene() {
   const { camera, size } = useThree();
@@ -64,6 +71,14 @@ export function TokenScene() {
       ),
     [tokens]
   );
+
+  const engraving = useMemo(() => {
+    const { texture } = createEngraving();
+    const material = withDissolve(
+      new THREE.MeshStandardMaterial({ color: gold, metalness: 1, roughness: 0.26, bumpMap: texture, bumpScale: 3 })
+    );
+    return { texture, material, geometry: new THREE.CircleGeometry(1, 96) };
+  }, []);
 
   const circle = useMemo(() => {
     const points = Array.from({ length: 129 }, (_, i) => {
@@ -78,18 +93,22 @@ export function TokenScene() {
       tokens.forEach((token) => token.geometry.dispose());
       materials.forEach((material) => material.dispose());
       circle.dispose();
+      engraving.texture.dispose();
+      engraving.material.dispose();
+      engraving.geometry.dispose();
     },
-    [tokens, materials, circle]
+    [tokens, materials, circle, engraving]
   );
 
   const group = useRef<THREE.Group>(null);
   const meshes = useRef<(THREE.Mesh | null)[]>([]);
   const ring = useRef<THREE.Mesh>(null);
   const ringMaterial = useRef<THREE.MeshBasicMaterial>(null);
+  const face = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     const u = stage.u;
-    const visible = u >= T.planStones[0] && u < 7.05;
+    const visible = u >= T.planStones[0] && u < T.pairOut[1] + 0.02;
     if (group.current) group.current.visible = visible;
     if (!visible) {
       annotations.plan.forEach((label) => label && (label.style.opacity = '0'));
@@ -125,7 +144,13 @@ export function TokenScene() {
     const toDiscs = span(u, T.toDiscs);
     const toStack = span(u, T.toStack);
     const rise = span(u, T.planStones);
-    const layerLabels = span(u, [T.toStack[1], T.toStack[1] + 0.1]);
+    // Trust, at home, and away.
+    const merge = span(u, T.toMedallion);
+    const stand = span(u, T.medallionRise) * (1 - span(u, T.toLid));
+    const toLid = span(u, T.toLid);
+    const grow = jarGrowth(u);
+    const away = span(u, T.pairOut);
+    const layerLabels = span(u, [T.toStack[1], T.toStack[1] + 0.1]) * (1 - merge);
 
     let stackHeight = 0;
     tokens.forEach((token, k) => {
@@ -133,8 +158,14 @@ export function TokenScene() {
       if (!mesh) return;
       const material = materials[k];
 
-      // Shape: a soft stone, rounding into a disc.
-      token.setShape(lerpShape(PEBBLE, DISC, toDiscs, shape));
+      // Shape: a soft stone, rounding into a disc; the first becomes the
+      // medallion, then a lid.
+      lerpShape(PEBBLE, DISC, toDiscs, shape);
+      if (k === 0) {
+        lerpShape(shape, MEDALLION, merge, shape);
+        lerpShape(shape, LID, toLid, shape);
+      }
+      token.setShape(shape);
 
       // Place: up from where the arch lay, onto the circle, then into the stack.
       planSpot(k, target);
@@ -147,7 +178,21 @@ export function TokenScene() {
       const inStack = k === 3 ? 0 : stackHeight;
       mesh.position.lerp(target.set(PLAN_CENTRE.x, PLAN_CENTRE.y + inStack, PLAN_CENTRE.z), toStack);
       if (k < 3) stackHeight += shown[k] * (2 * shape.b + GAP);
-      mesh.rotation.y = stage.time * 0.1 + k;
+
+      mesh.rotation.order = 'YXZ';
+      if (k === 0) {
+        // Up to face you, then down onto the jar as its lid.
+        mesh.position.lerp(MEDALLION_CENTRE, span(u, T.medallionRise));
+        mesh.position.lerp(target.set(JAR_BASE.x, JAR_BASE.y + JAR_HEIGHT * grow, JAR_BASE.z), toLid);
+        medallionAt.copy(mesh.position);
+        // Facing you, it turns slowly so the light runs across the gold.
+        const swing = stage.reducedMotion ? 0 : Math.sin(stage.time * 0.35) * 0.45;
+        mesh.rotation.set(stand * (Math.PI / 2), lerp(stage.time * 0.1, swing, stand), 0);
+      } else {
+        // The others press into it.
+        mesh.position.lerp(medallionAt, merge);
+        mesh.rotation.set(0, stage.time * 0.1 + k, 0);
+      }
 
       // Surface: travertine, taking on its role's material as it becomes a disc.
       const role = ROLES[k];
@@ -159,8 +204,21 @@ export function TokenScene() {
       // Present: resolving as it rises from the arch; dissolving if the
       // programme being read does not use it.
       const forming = 1 - span(u, [T.planStones[0], T.planStones[0] + 0.12]);
-      material.dissolve.value = Math.max(forming, 1 - shown[k]);
+      const present = k === 0 ? lerp(shown[k], 1, merge) : shown[k];
+      const pressedIn = k === 0 ? 0 : span(u, [T.toMedallion[0] + 0.08, T.toMedallion[1]]);
+      material.dissolve.value = Math.max(forming, 1 - present, pressedIn, away, k === 0 ? stage.away * toLid : 0);
       mesh.visible = material.dissolve.value < 0.999;
+
+      // The medallion's engraved face, on its top, while it is a medallion.
+      if (k === 0 && face.current) {
+        face.current.position.set(0, 2 * shape.b + 0.0012, 0);
+        face.current.scale.setScalar(shape.a * 0.9);
+        engraving.material.dissolve.value = Math.max(
+          1 - span(u, [T.toMedallion[0] + 0.1, T.toMedallion[1] + 0.06]),
+          span(u, [T.toLid[0], T.toLid[0] + 0.1])
+        );
+        face.current.visible = engraving.material.dissolve.value < 0.999;
+      }
 
       // Labels: the step beside its stone, then the layer beside its disc.
       placeLabel(
@@ -190,7 +248,17 @@ export function TokenScene() {
           }}
           geometry={token.geometry}
           material={materials[k]}
-        />
+        >
+          {k === 0 ? (
+            <mesh
+              ref={face}
+              geometry={engraving.geometry}
+              material={engraving.material}
+              rotation-x={-Math.PI / 2}
+              visible={false}
+            />
+          ) : null}
+        </mesh>
       ))}
       <mesh ref={ring} geometry={circle} visible={false}>
         <meshBasicMaterial ref={ringMaterial} color={gold} transparent />

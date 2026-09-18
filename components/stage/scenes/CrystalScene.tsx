@@ -8,10 +8,10 @@ import { createCrystalGeometry } from '@/lib/scene/crystal';
 import { createGlowMaterial, setGlow } from '@/lib/scene/glow';
 import { serum as serumColour } from '@/lib/scene/palette';
 import { ORDER, clamp01, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
+import { MERGED_CENTRE } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
 import type { Quality } from '../quality';
 import { Energies, ENERGY_COLOURS, energy } from './Energies';
-import { MERGED_CENTRE } from './DropletScene';
 
 /** The merged drop's radius, and the crystal's girdle radius once frozen. */
 export const DROP_R = 0.24;

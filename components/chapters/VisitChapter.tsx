@@ -6,9 +6,10 @@ import { SiteFooter } from '@/components/sections/SiteFooter';
 import { ConsultationButton } from '@/components/ui/ConsultationButton';
 
 /**
- * Chapter 11 · Visit, on night. The bottle back on its plinth under a single
- * warm light on the right; how to get in touch and where to find the clinic on
- * the left. The footer closes the chapter, so the page ends in the same night.
+ * Chapter 11 · Visit, on night. The jar and bottle dissolve into light, and
+ * the light draws the clinic's archway again on the right, its doorway lit
+ * warm; how to get in touch and where to find the clinic on the left. The
+ * footer closes the chapter, so the page ends in the same night.
  */
 export function VisitChapter() {
   return (

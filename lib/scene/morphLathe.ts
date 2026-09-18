@@ -80,3 +80,5 @@ export const lerpShape = (from: LatheShape, to: LatheShape, t: number, out: Lath
 export const PEBBLE: LatheShape = { a: 0.11, b: 0.04, p: 2.2 };
 export const DISC: LatheShape = { a: 0.2, b: 0.026, p: 9 };
 export const MEDALLION: LatheShape = { a: 0.3, b: 0.028, p: 12 };
+/** A jar's lid: a short, straight-sided cap. */
+export const LID: LatheShape = { a: 0.19, b: 0.03, p: 7 };

@@ -34,6 +34,7 @@ let backdrop: HTMLElement | null = null;
 let veil: HTMLElement | null = null;
 let railThumb: HTMLElement | null = null;
 let navLinks: HTMLElement[] = [];
+let rxBlock: { top: number; bottom: number } | null = null;
 
 let lastIndex = -1;
 let lastP = -1;
@@ -79,6 +80,8 @@ export function measure() {
   veil = document.getElementById('chrome-veil');
   railThumb = document.getElementById('rail-thumb');
   navLinks = Array.from(document.querySelectorAll<HTMLElement>('[data-nav-link]'));
+  const rx = document.querySelector<HTMLElement>('[data-rx]')?.getBoundingClientRect();
+  rxBlock = rx ? { top: rx.top + scrollY, bottom: rx.bottom + scrollY } : null;
 
   // Force every chapter's --p to be rewritten against the new layout.
   lastIndex = -1;
@@ -176,6 +179,15 @@ export function update() {
     changed = true;
   }
   if (changed) notify();
+
+  // The prescription-only block: from just before it enters at the foot of
+  // the screen until just after it leaves at the top.
+  story.rx = rxBlock
+    ? Math.min(
+        clamp01((viewport * 1.05 - (rxBlock.top - y)) / (viewport * 0.25)),
+        clamp01((rxBlock.bottom - y + viewport * 0.05) / (viewport * 0.25))
+      )
+    : 0;
 
   // Focus: which list item (concern group, technology) sits at the middle of
   // the screen, interpolated between neighbours so the 3D can glide.

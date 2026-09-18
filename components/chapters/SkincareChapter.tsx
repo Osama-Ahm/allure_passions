@@ -6,14 +6,16 @@ import { ChapterFrame } from '@/components/story/ChapterFrame';
 import { ConsultationButton } from '@/components/ui/ConsultationButton';
 
 /**
- * Chapter 9 · At home. The bottle, close and warm, with one drop hanging from
- * the pipette. Two products, deliberately unequal in how they are presented.
+ * Chapter 9 · At home. The medallion lies back down and becomes the lid of a
+ * cream jar that grows beneath it, and the bottle returns beside it. Two
+ * products, deliberately unequal in how they are presented.
  *
  * Kojivit is a cosmetic and carries its price. Tretinoin is a prescription-only
  * medicine: it is named, as the clinic asked, but always with its notice and
  * never with a price, a basket or anything that reads as an offer to sell
- * (Human Medicines Regulations; decisions D5 and P5). The 3D bottle is never
- * presented as it.
+ * (Human Medicines Regulations; decisions D5 and P5). The 3D jar and bottle
+ * are never presented as it: Kojivit, the cream, sits in the column beside
+ * them, and the prescription route in the column furthest from them.
  */
 export function SkincareChapter() {
   return (
@@ -28,7 +30,28 @@ export function SkincareChapter() {
         </header>
 
         <div className="mt-14 grid gap-12 border-t border-line pt-8 md:grid-cols-2 md:gap-10">
-          <article aria-labelledby="kojivit-name">
+          {/* On a phone the copy scrolls over the jar and bottle, so this block is
+              opaque there, and the models step out of view while it is on
+              screen (data-rx): never seen through or beside it as if they were
+              the medicine. */}
+          <article aria-labelledby="tretinoin-name" data-rx className="max-md:order-2 max-md:bg-paper max-md:py-6">
+            <h3 id="tretinoin-name" className="font-serif text-display-sm font-light">
+              {tretinoin.name}
+            </h3>
+            <p className="mt-1.5 font-sans text-label uppercase text-accent">{tretinoin.type}</p>
+            <p className="mt-4 border-l-2 border-sanctuary-clay bg-sanctuary-clay/[0.07] px-4 py-3 font-sans text-sm leading-relaxed">
+              {tretinoin.notice}
+            </p>
+            <ConsultationButton
+              variant="outline"
+              treatment="Prescription skincare (consultation required)"
+              className="mt-6"
+            >
+              Start with a consultation
+            </ConsultationButton>
+          </article>
+
+          <article aria-labelledby="kojivit-name" className="max-md:order-1 md:border-l md:border-line md:pl-10">
             <div className="flex items-baseline justify-between gap-4">
               <h3 id="kojivit-name" className="font-serif text-display-sm font-light">
                 {kojivit.name}
@@ -54,23 +77,6 @@ export function SkincareChapter() {
             >
               Reserve via WhatsApp ↗
             </a>
-          </article>
-
-          <article aria-labelledby="tretinoin-name" className="md:border-l md:border-line md:pl-10">
-            <h3 id="tretinoin-name" className="font-serif text-display-sm font-light">
-              {tretinoin.name}
-            </h3>
-            <p className="mt-1.5 font-sans text-label uppercase text-accent">{tretinoin.type}</p>
-            <p className="mt-4 border-l-2 border-sanctuary-clay bg-sanctuary-clay/[0.07] px-4 py-3 font-sans text-sm leading-relaxed">
-              {tretinoin.notice}
-            </p>
-            <ConsultationButton
-              variant="outline"
-              treatment="Prescription skincare (consultation required)"
-              className="mt-6"
-            >
-              Start with a consultation
-            </ConsultationButton>
           </article>
         </div>
 

@@ -5,13 +5,11 @@ import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { pipette } from '@/lib/bottle/profile';
 import { ORDER, span, stage } from '@/lib/scene/stage';
+import { BESIDE_JAR, DROP_X } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
 import { Bottle, PIPETTE_TRAVEL, type BottleRefs } from '../bottle/Bottle';
 import { PLINTH_HEIGHT, Plinth } from '../Plinth';
 import type { Quality } from '../quality';
-
-/** How far to the side the dropper is carried before the drop falls, clear of the bottle. */
-export const DROP_X = 0.5;
 
 /** Where the pipette tip rests once the dropper is lifted and carried aside. */
 export const REST_TIP = new THREE.Vector3(DROP_X, PLINTH_HEIGHT + PIPETTE_TRAVEL + pipette.bottom, 0);
@@ -24,7 +22,7 @@ const yAxis = new THREE.Vector3(0, 1, 0);
 const tipLocal = new THREE.Vector3(0, pipette.bottom, 0);
 
 /**
- * Chapters 1–2: the bottle on its plinth. In the hero it floats and follows the
+ * Chapters 1–2, and 9–10: the bottle on its plinth. In the hero it floats and follows the
  * pointer. In the bridge it turns, the plinth sinks away, the dropper lifts out
  * and is carried to one side, and the drop (drawn by the droplet scene) forms
  * at its tip. As the camera follows the drop down, the bottle leaves the top of
@@ -41,11 +39,29 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
 
   useFrame(() => {
     const u = stage.u;
-    const visible = u < 1.95;
+    // At home it slides back in beside the jar, and later goes into light with it.
+    const atHome = u >= T.bottleBack[0] && u < T.pairOut[1];
+    const visible = u < 1.95 || atHome;
     if (rig.current) rig.current.visible = visible;
     // The glass's extra render passes stop the moment it is off screen.
     if (glass.current) glass.current.visible = visible;
-    if (!visible || !bottle.current || !dropper.current) return;
+    if (!visible || !bottle.current || !dropper.current || !rig.current) return;
+
+    if (atHome) {
+      const back = span(u, T.bottleBack);
+      const away = span(u, T.pairOut);
+      rig.current.position.set(BESIDE_JAR.x + (1 - back) * 1.6, BESIDE_JAR.y, BESIDE_JAR.z);
+      rig.current.scale.setScalar(Math.max(0.001, (1 - away) * (1 - stage.away)));
+      bottle.current.position.y = 0;
+      bottle.current.rotation.set(stage.tiltX * 0.5, BASE_TURN - (1 - back) * 1.4 + stage.time * 0.05, stage.tiltZ * 0.5);
+      dropper.current.position.set(0, 0, 0);
+      serum.current?.rotation.set(0, 0, 0);
+      if (plinth.current) plinth.current.visible = false;
+      return;
+    }
+    rig.current.position.x = 0;
+    rig.current.position.z = 0;
+    rig.current.scale.setScalar(1);
 
     const turn = span(u, T.turn);
     const lift = span(u, T.lift);
@@ -55,7 +71,7 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
 
     const rotationY = BASE_TURN + turn * ((Math.PI * 2) / 3);
     // As the drop falls, the bottle rises away out of the top of the frame.
-    if (rig.current) rig.current.position.y = span(u, T.bottleOut) * 2.6;
+    rig.current.position.y = span(u, T.bottleOut) * 2.6;
     bottle.current.position.y = PLINTH_HEIGHT + float;
     bottle.current.rotation.set(stage.tiltX, rotationY, stage.tiltZ);
 
@@ -73,7 +89,7 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
     }
 
     // Publish the pipette tip, where the drop forms.
-    rig.current?.updateMatrixWorld();
+    rig.current.updateMatrixWorld();
     stage.tip.copy(tipLocal);
     dropper.current.localToWorld(stage.tip);
   }, ORDER.bottle);

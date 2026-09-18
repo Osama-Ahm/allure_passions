@@ -48,6 +48,31 @@ export const T = {
   // Into Programmes (chapter 6): the stones round into discs and stack.
   toDiscs: [5.72, 6.0],
   toStack: [5.7, 6.02],
+
+  // Into Trust (chapter 7): the stack presses into one gold medallion, which
+  // rises and turns to face you.
+  toMedallion: [6.8, 7.0],
+  medallionRise: [6.86, 7.08],
+  toTrust: [6.84, 7.12],
+
+  // Into At home (chapter 8): the medallion lies back and becomes a jar's
+  // lid, the jar grows beneath it, and the bottle returns beside it.
+  // The camera is already on the right before the jar grows, so the jar is
+  // never seen beside the prescription-only copy.
+  toLid: [7.84, 8.04],
+  jarGrow: [7.96, 8.14],
+  bottleBack: [7.96, 8.2],
+  toHome: [7.8, 8.02],
+
+  // FAQ (chapter 9): the pair rests in the margin beside the questions.
+  toRest: [8.86, 9.1],
+
+  // Into Visit (chapter 10), at dusk: the pair dissolves into light while it
+  // is still in the FAQ's margin, and the light draws the archway again, at
+  // night, with its doorway lit.
+  pairOut: [9.42, 9.6],
+  nightArch: [9.82, 10.15],
+  toNight: [9.55, 9.95],
 } as const;
 
 /** How many droplets, one per concern group. */

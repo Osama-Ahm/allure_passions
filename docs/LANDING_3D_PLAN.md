@@ -267,8 +267,10 @@ These layers are listed from the back of the page to the front:
   marked as a draft awaiting clinical sign-off.
 - **Voice.** British English. "May help"; no superlatives or guarantees. *Request a consultation*, never
   "Book now". Practitioner-led, never "doctor" (D6).
-- **Tretinoin** appears only in chapter 9, always with the notice and never with a price, and the 3D
-  bottle is never presented as it.
+- **Tretinoin** appears only in chapter 9, always with the notice and never with a price, and no 3D
+  model is ever presented as it. The cream jar sits in the column beside Kojivit, not the Tretinoin
+  block; the camera reaches the jar before it grows; and on a phone, where copy scrolls over the
+  models, the jar and bottle step out of view while the prescription-only block is on screen.
 - **Images.** No before/after images, stock photos or AI-generated clinic photos on the homepage.
   `home.ts`'s `statement` loses its inline images. The only media are the clinic video (click to play)
   and the JCCP logo.
@@ -340,7 +342,7 @@ Nothing is pushed unless you ask.
 | M2 | The drop falls and splits into six droplets for Concerns, with lift-and-light per group and their annotations. The layer diagram is removed | Built |
 | M3 | The droplets merge and freeze into the crystal; the six technology energies; night | Built |
 | M4 | The crystal fractures into the archway (Clinic); the arch lies flat into the four plan stones (Consultation); stones to discs to programme stacks | Built |
-| M5 | Stack to medallion (Trust); medallion to jar with the bottle (At home); the pair at rest (FAQ); dissolve into the archway at night (Visit) | |
+| M5 | Stack to medallion (Trust); medallion to jar with the bottle (At home); the pair at rest (FAQ); dissolve into the archway at night (Visit) | Built |
 | M6 | Polish and hardening: dissolve edge, reveals, mobile shots, reduced motion, no-WebGL drawings, quality tiers, accessibility, performance, lint and build | |
 
 ## Verification (every milestone)

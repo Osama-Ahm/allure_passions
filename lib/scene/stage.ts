@@ -23,6 +23,11 @@ export const stage = {
   time: 0,
   reducedMotion: false,
   mobile: false,
+  /**
+   * On a phone, how far the jar, lid and bottle have stepped away because the
+   * prescription-only block is on screen (always 0 on larger screens).
+   */
+  away: 0,
   /** World position of the pipette's tip, written by the bottle scene. */
   tip: new THREE.Vector3(),
   /** Where the four plan stones lie as the arch goes down, written by the arch scene. */
@@ -33,7 +38,7 @@ export const stage = {
  * useFrame priorities: lower runs first. All are negative, because any
  * positive priority would stop React Three Fiber rendering automatically.
  */
-export const ORDER = { director: -7, bottle: -6, droplets: -5, crystal: -4, energies: -3, arch: -2, tokens: -1 } as const;
+export const ORDER = { director: -8, home: -7, bottle: -6, droplets: -5, crystal: -4, energies: -3, arch: -2, tokens: -1 } as const;
 
 export const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
