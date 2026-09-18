@@ -193,6 +193,23 @@ html.lenis body {
     transition: opacity 0.8s ease, visibility 0s linear 0.8s;
   }
 
+  /* On a phone the copy scrolls over the 3D models rather than beside them, so
+     it carries a soft halo in the page's own colour: legible over anything,
+     with no box drawn round it. */
+  @media (max-width: 767px) {
+    .layer-front {
+      text-shadow:
+        0 0 14px rgb(var(--paper)),
+        0 0 6px rgb(var(--paper)),
+        0 0 2px rgb(var(--paper));
+    }
+
+    /* Buttons carry their own ground; a halo there would only blur them. */
+    .layer-front .rounded-full {
+      text-shadow: none;
+    }
+  }
+
   /* The fixed chrome (header, progress rail) follows the chapter underneath it. */
   .chrome {
     --ink: 26 24 23;
@@ -211,6 +228,33 @@ html.lenis body {
     --line: 70 64 58;
     --accent: 229 201 146;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   The intro: the hero's bottle outline draws itself in under a second, then
+   its nodes appear. No curtain, and nothing waits for the canvas (D3).
+   --------------------------------------------------------------------------- */
+@keyframes outline-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes outline-node {
+  to {
+    opacity: 1;
+  }
+}
+
+.outline-draw .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: outline-draw 0.85s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.outline-draw .node {
+  opacity: 0;
+  animation: outline-node 0.3s ease-out 0.7s forwards;
 }
 
 /* ---------------------------------------------------------------------------

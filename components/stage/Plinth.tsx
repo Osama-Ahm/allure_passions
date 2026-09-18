@@ -14,8 +14,8 @@ export const PLINTH_HEIGHT = 0.055;
  * soft contact shadow falls straight onto the page, which is what makes the
  * page read as the surface the plinth stands on.
  */
-export const Plinth = forwardRef<THREE.Group, { shadowResolution: number }>(function Plinth(
-  { shadowResolution },
+export const Plinth = forwardRef<THREE.Group, { shadowResolution: number; live: boolean }>(function Plinth(
+  { shadowResolution, live },
   ref
 ) {
   const { map, geometry } = useMemo(() => {
@@ -50,6 +50,7 @@ export const Plinth = forwardRef<THREE.Group, { shadowResolution: number }>(func
         opacity={0.34}
         resolution={shadowResolution}
         color="#4A3B2C"
+        frames={live ? Infinity : 0}
       />
       {/* …and on the plinth, under the bottle. */}
       <ContactShadows
@@ -60,6 +61,7 @@ export const Plinth = forwardRef<THREE.Group, { shadowResolution: number }>(func
         opacity={0.42}
         resolution={shadowResolution / 2}
         color="#4A3B2C"
+        frames={live ? Infinity : 0}
       />
     </group>
   );

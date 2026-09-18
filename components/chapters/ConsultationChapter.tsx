@@ -15,7 +15,7 @@ export function ConsultationChapter() {
       <div className="flex h-full flex-col justify-between px-5 pb-12 pt-28 md:px-10 md:pb-14 md:pt-[18svh]">
         <div className="md:max-w-[30rem]">
           <p className="eyebrow">{consultation.eyebrow}</p>
-          <h2 id="consultation-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="consultation-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {consultation.title}
           </h2>
           <blockquote className="mt-8 border-l border-gild pl-5 font-serif text-display-sm font-light italic text-ink-muted">

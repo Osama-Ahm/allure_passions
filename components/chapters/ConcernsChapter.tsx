@@ -24,7 +24,7 @@ export function ConcernsChapter() {
       <div className="px-5 pb-[42svh] md:px-10">
         <header className="flex min-h-[70svh] flex-col justify-end pb-16 md:max-w-[34rem]">
           <p className="eyebrow">{concerns.eyebrow}</p>
-          <h2 id="concerns-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="concerns-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {concerns.title}
           </h2>
           <p className="mt-6 max-w-[28rem] font-sans text-[15px] leading-relaxed text-ink-muted">{concerns.lede}</p>

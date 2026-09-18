@@ -10,6 +10,7 @@ import { goldLight, pearl, serum as serumColour, clay, gold } from '@/lib/scene/
 import { ORDER, clamp01, ease, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
 import { DROP_X, FLOOR_Y, MERGED_CENTRE } from '@/lib/scene/layout';
 import { DROPLETS, T } from '@/lib/scene/timeline';
+import { useShadowGate } from '@/lib/scene/useShadowGate';
 import type { Quality } from '../quality';
 import { REST_TIP } from './BottleScene';
 
@@ -123,6 +124,7 @@ export function DropletScene({ quality }: { quality: Quality }) {
   const splash = useRef<THREE.Mesh>(null);
   const splashMaterial = useRef<THREE.MeshBasicMaterial>(null);
   const shadows = useRef<THREE.Group>(null);
+  const [shadowLive, setShadowLive] = useShadowGate();
 
   useFrame(() => {
     const u = stage.u;
@@ -232,7 +234,9 @@ export function DropletScene({ quality }: { quality: Quality }) {
       }
     }
 
-    if (shadows.current) shadows.current.visible = u >= T.land[0] - 0.05 && u < 3.2;
+    const grounded = u >= T.land[0] - 0.05 && u < 3.2;
+    if (shadows.current) shadows.current.visible = grounded;
+    setShadowLive(grounded);
   }, ORDER.droplets);
 
   return (
@@ -267,6 +271,7 @@ export function DropletScene({ quality }: { quality: Quality }) {
           opacity={0.3}
           resolution={quality.shadowResolution / 2}
           color="#4A3B2C"
+          frames={shadowLive ? Infinity : 0}
         />
       </group>
     </group>

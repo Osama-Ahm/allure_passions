@@ -30,7 +30,7 @@ export function FaqChapter() {
         <div>
           <div className="md:sticky md:top-32">
             <p className="eyebrow">{faq.eyebrow}</p>
-            <h2 id="faq-title" className="mt-5 font-serif text-display-lg font-light">
+            <h2 id="faq-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
               {faq.title}
             </h2>
             <a

@@ -20,8 +20,9 @@ const y = (value: number) => BASE_Y - value * SCALE;
 /**
  * The serum bottle drawn in gold hairlines, from the same profile the 3D model
  * is turned from. It is the static hero where there is no WebGL, and the shape
- * the canvas fades in over where there is. Every path has pathLength 1, so the
- * intro can draw it with a single stroke-dashoffset.
+ * the canvas fades in over where there is. It draws itself in under a second
+ * as the page opens (the intro, decision D3: no curtain, never waiting for
+ * the canvas); every drawn path has pathLength 1 for that.
  */
 export function BottleOutline({ className }: { className?: string }) {
   const serumHalf = BODY_R - 0.025;
@@ -31,10 +32,10 @@ export function BottleOutline({ className }: { className?: string }) {
       viewBox="0 0 260 470"
       fill="none"
       aria-hidden="true"
-      className={cx('stroke-gild', className)}
+      className={cx('outline-draw stroke-gild', className)}
     >
       {/* The ground and the centre axis, as on a technical drawing. */}
-      <line x1="10" x2="250" y1={BASE_Y} y2={BASE_Y} strokeWidth="1" vectorEffect="non-scaling-stroke" pathLength={1} />
+      <line className="draw" x1="10" x2="250" y1={BASE_Y} y2={BASE_Y} strokeWidth="1" vectorEffect="non-scaling-stroke" pathLength={1} />
       <line
         x1={CX}
         x2={CX}
@@ -46,9 +47,9 @@ export function BottleOutline({ className }: { className?: string }) {
         opacity="0.6"
       />
 
-      <path d={silhouettePath(glassProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
-      <path d={silhouettePath(collarProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
-      <path d={silhouettePath(bulbProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
+      <path className="draw" d={silhouettePath(glassProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
+      <path className="draw" d={silhouettePath(collarProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
+      <path className="draw" d={silhouettePath(bulbProfile, SCALE, CX, BASE_Y)} strokeWidth="1.25" vectorEffect="non-scaling-stroke" pathLength={1} />
 
       {/* The serum's surface. */}
       <line
@@ -68,7 +69,7 @@ export function BottleOutline({ className }: { className?: string }) {
         [CX + NECK_R * SCALE, y(NECK_Y)],
         [CX - NECK_R * SCALE, y(NECK_Y)],
       ].map(([nx, ny]) => (
-        <circle key={`${nx}-${ny}`} cx={nx} cy={ny} r="2.5" className="fill-gild" stroke="none" />
+        <circle key={`${nx}-${ny}`} cx={nx} cy={ny} r="2.5" className="node fill-gild" stroke="none" />
       ))}
     </svg>
   );

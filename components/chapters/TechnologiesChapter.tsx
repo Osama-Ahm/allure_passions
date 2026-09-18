@@ -47,7 +47,7 @@ export function TechnologiesChapter() {
 
         <header className="flex min-h-[80svh] flex-col justify-end pb-20 md:max-w-[34rem]">
           <p className="eyebrow">{technologies.eyebrow}</p>
-          <h2 id="treatments-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="treatments-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {technologies.title}
           </h2>
           <p className="mt-6 max-w-[28rem] font-sans text-[15px] leading-relaxed text-ink-muted">

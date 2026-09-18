@@ -23,7 +23,7 @@ export function SkincareChapter() {
       <div className="px-5 py-28 md:px-10 md:py-[18svh] lg:pr-[40%]">
         <header className="max-w-[34rem]">
           <p className="eyebrow">{skincare.eyebrow}</p>
-          <h2 id="skincare-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="skincare-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {skincare.title}
           </h2>
           <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{skincare.lede}</p>

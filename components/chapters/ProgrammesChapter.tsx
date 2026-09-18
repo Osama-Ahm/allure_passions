@@ -15,7 +15,7 @@ export function ProgrammesChapter() {
       <div className="px-5 py-28 md:px-10 md:py-[18svh]">
         <header className="md:max-w-[34rem]">
           <p className="eyebrow">{copy.eyebrow}</p>
-          <h2 id="programmes-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="programmes-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {copy.title}
           </h2>
           <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{copy.lede}</p>

@@ -107,6 +107,14 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
   },
 };
 
+/**
+ * With reduced motion the story does not animate with the scroll: each chapter
+ * has one composed still (a story position chosen for it), and moving between
+ * chapters fades the canvas out, cuts, and fades it back in.
+ */
+const STILLS = [0, 1.36, 2.5, 3.5, 4.3, 5.3, 6.5, 7.4, 8.5, 9.3, 10.6];
+const FADE_SECONDS = 0.22;
+
 const current: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const falling: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const orbiting: Shot = shot(0, 0, 0, 0, 0, 0, 0);
@@ -136,6 +144,7 @@ export function Director({ quality, background }: { quality: Quality; background
   const { camera, size } = useThree();
   const pointer = useRef({ x: 0, y: 0 });
   const started = useRef(false);
+  const chapterStill = useRef({ shown: -1, pending: -1 });
 
   useEffect(() => {
     stage.mobile = quality.mobile;
@@ -154,11 +163,27 @@ export function Director({ quality, background }: { quality: Quality; background
     // The one smoothed value everything is posed from. On the first frame it
     // starts where the page already is, so a restored scroll does not fly in.
     if (!started.current) {
-      stage.u = story.u;
+      stage.u = quality.reducedMotion ? STILLS[story.index] ?? story.u : story.u;
       stage.focus = story.focus;
+      chapterStill.current.shown = story.index;
       started.current = true;
     }
-    stage.u = damp(stage.u, story.u, quality.mobile ? 5 : 8, dt);
+    if (quality.reducedMotion) {
+      const s = chapterStill.current;
+      if (story.index !== s.shown && s.pending === -1) s.pending = story.index;
+      if (s.pending !== -1) {
+        stage.fade = Math.min(1, stage.fade + dt / FADE_SECONDS);
+        if (stage.fade >= 1) {
+          s.shown = s.pending;
+          s.pending = -1;
+          stage.u = STILLS[s.shown] ?? story.u;
+        }
+      } else {
+        stage.fade = Math.max(0, stage.fade - dt / FADE_SECONDS);
+      }
+    } else {
+      stage.u = damp(stage.u, story.u, quality.mobile ? 5 : 8, dt);
+    }
     stage.focus = damp(stage.focus, story.focus, 6, dt);
     stage.focusChapter = story.focusChapter;
     stage.time = state.clock.elapsedTime;

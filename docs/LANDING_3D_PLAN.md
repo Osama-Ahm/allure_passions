@@ -343,7 +343,7 @@ Nothing is pushed unless you ask.
 | M3 | The droplets merge and freeze into the crystal; the six technology energies; night | Built |
 | M4 | The crystal fractures into the archway (Clinic); the arch lies flat into the four plan stones (Consultation); stones to discs to programme stacks | Built |
 | M5 | Stack to medallion (Trust); medallion to jar with the bottle (At home); the pair at rest (FAQ); dissolve into the archway at night (Visit) | Built |
-| M6 | Polish and hardening: dissolve edge, reveals, mobile shots, reduced motion, no-WebGL drawings, quality tiers, accessibility, performance, lint and build | |
+| M6 | Polish and hardening: dissolve edge, reveals, mobile shots, reduced motion, no-WebGL drawings, quality tiers, accessibility, performance, lint and build | Built |
 
 ## Verification (every milestone)
 

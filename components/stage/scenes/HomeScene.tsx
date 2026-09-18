@@ -9,6 +9,7 @@ import { createGlowMaterial, setGlow } from '@/lib/scene/glow';
 import { BESIDE_JAR, FLOOR_Y, JAR_BASE, JAR_HEIGHT } from '@/lib/scene/layout';
 import { ORDER, span, spanLinear, stage } from '@/lib/scene/stage';
 import { T } from '@/lib/scene/timeline';
+import { useShadowGate } from '@/lib/scene/useShadowGate';
 import type { Quality } from '../quality';
 
 /** The jar's body, turned like the bottle: a soft foot, straight walls, a short neck. */
@@ -70,11 +71,13 @@ export function HomeScene({ quality }: { quality: Quality }) {
   const group = useRef<THREE.Group>(null);
   const jar = useRef<THREE.Mesh>(null);
   const flash = useRef<THREE.Mesh>(null);
+  const [shadowLive, setShadowLive] = useShadowGate();
 
   useFrame(() => {
     const u = stage.u;
     const visible = u >= T.jarGrow[0] && u < T.pairOut[1] + 0.04;
     if (group.current) group.current.visible = visible;
+    setShadowLive(visible);
     if (!visible || !jar.current) return;
 
     const grow = jarGrowth(u);
@@ -107,6 +110,7 @@ export function HomeScene({ quality }: { quality: Quality }) {
         opacity={0.3}
         resolution={quality.shadowResolution / 2}
         color="#4A3B2C"
+        frames={shadowLive ? Infinity : 0}
       />
     </group>
   );

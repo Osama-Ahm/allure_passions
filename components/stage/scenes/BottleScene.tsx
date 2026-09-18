@@ -7,6 +7,7 @@ import { pipette } from '@/lib/bottle/profile';
 import { ORDER, span, stage } from '@/lib/scene/stage';
 import { BESIDE_JAR, DROP_X } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
+import { useShadowGate } from '@/lib/scene/useShadowGate';
 import { Bottle, PIPETTE_TRAVEL, type BottleRefs } from '../bottle/Bottle';
 import { PLINTH_HEIGHT, Plinth } from '../Plinth';
 import type { Quality } from '../quality';
@@ -36,6 +37,7 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
   const serum = useRef<THREE.Mesh>(null);
   const glass = useRef<THREE.Material>(null);
   const refs = useMemo<BottleRefs>(() => ({ dropper, serum, glass }), []);
+  const [shadowLive, setShadowLive] = useShadowGate();
 
   useFrame(() => {
     const u = stage.u;
@@ -45,6 +47,8 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
     if (rig.current) rig.current.visible = visible;
     // The glass's extra render passes stop the moment it is off screen.
     if (glass.current) glass.current.visible = visible;
+    // The plinth's shadows only while the plinth is on screen.
+    setShadowLive(visible && !atHome && span(u, T.sink) < 0.98);
     if (!visible || !bottle.current || !dropper.current || !rig.current) return;
 
     if (atHome) {
@@ -96,7 +100,7 @@ export function BottleScene({ quality, background }: { quality: Quality; backgro
 
   return (
     <group ref={rig}>
-      <Plinth ref={plinth} shadowResolution={quality.shadowResolution} />
+      <Plinth ref={plinth} shadowResolution={quality.shadowResolution} live={shadowLive} />
       <group ref={bottle} position-y={PLINTH_HEIGHT}>
         <Bottle refs={refs} quality={quality} background={background} />
       </group>

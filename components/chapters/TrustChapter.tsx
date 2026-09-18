@@ -15,7 +15,7 @@ export function TrustChapter() {
       <div className="px-5 py-28 md:py-[18svh] md:pl-[38%] md:pr-16">
         <header className="max-w-[34rem]">
           <p className="eyebrow">{trust.eyebrow}</p>
-          <h2 id="trust-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="trust-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {trust.title}
           </h2>
           <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{trust.lede}</p>

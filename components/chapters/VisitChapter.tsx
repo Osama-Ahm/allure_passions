@@ -17,7 +17,7 @@ export function VisitChapter() {
       <div className="flex min-h-[100svh] flex-col px-5 pt-[36svh] md:px-10">
         <div className="lg:max-w-[56%]">
           <p className="eyebrow">{visit.eyebrow}</p>
-          <h2 id="visit-title" className="mt-5 font-serif text-display-lg font-light">
+          <h2 id="visit-title" data-reveal className="mt-5 font-serif text-display-lg font-light">
             {visit.title}
           </h2>
           <p className="mt-6 max-w-[30rem] font-sans text-[15px] leading-relaxed text-ink-muted">{visit.lede}</p>

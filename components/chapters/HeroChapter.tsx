@@ -25,7 +25,7 @@ export function HeroChapter() {
       <div className="flex min-h-[100svh] flex-col px-5 pb-6 pt-[44svh] md:px-10 md:pb-9 md:pt-[24svh]">
         <div className="max-w-[60rem]">
           <p className="eyebrow">{hero.eyebrow}</p>
-          <h1 id="hero-title" className="mt-6 font-serif text-display-xl font-light">
+          <h1 id="hero-title" data-reveal="load" className="mt-6 font-serif text-display-xl font-light">
             {hero.titleLead}
             <br />
             <em className="font-light">{hero.titleAccent}</em> {hero.titleTail}

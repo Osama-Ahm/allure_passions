@@ -11,6 +11,7 @@ import { TrustChapter } from '@/components/chapters/TrustChapter';
 import { VisitChapter } from '@/components/chapters/VisitChapter';
 import { SiteHeader } from '@/components/sections/SiteHeader';
 import { Backdrop, Grain, ScrollRail } from '@/components/story/PageChrome';
+import { Reveals } from '@/components/story/Reveals';
 import { StoryRuntime } from '@/components/story/StoryRuntime';
 import { StageMount } from '@/components/stage/StageMount';
 import { ConsultationProvider } from '@/components/ui/ConsultationProvider';
@@ -50,6 +51,7 @@ export default function HomePage() {
 
       <Grain />
       <StoryRuntime />
+      <Reveals />
     </ConsultationProvider>
   );
 }

@@ -11,6 +11,7 @@ import { goldLight, travertine } from '@/lib/scene/palette';
 import { ORDER, clamp01, ease, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
 import { ARCH_ORIGIN, FLOOR_Y, MERGED_CENTRE } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
+import { useShadowGate } from '@/lib/scene/useShadowGate';
 import { createMarbleTexture } from '@/lib/proceduralTextures';
 import type { Quality } from '../quality';
 
@@ -106,13 +107,16 @@ export function ArchScene({ quality }: { quality: Quality }) {
   const light = useRef<THREE.MeshBasicMaterial>(null);
   const shadow = useRef<THREE.Group>(null);
   const glow = useRef<THREE.Mesh>(null);
+  const [shadowLive, setShadowLive] = useShadowGate();
 
   useFrame(() => {
     const u = stage.u;
     const atNight = u >= T.nightArch[0];
     const visible = (u >= T.fracture[0] && u < T.planStones[1] + 0.02) || atNight;
     if (arch.current) arch.current.visible = visible;
-    if (shadow.current) shadow.current.visible = visible && u < T.lieDown[0] + 0.1;
+    const grounded = visible && !atNight && u < T.lieDown[0] + 0.1;
+    if (shadow.current) shadow.current.visible = grounded;
+    setShadowLive(grounded);
     if (glow.current) glow.current.visible = atNight;
     if (!visible || !arch.current) return;
 
@@ -130,7 +134,8 @@ export function ArchScene({ quality }: { quality: Quality }) {
         materials[i].dissolve.value = 1 - t;
         mesh.visible = t > 0.001;
       });
-      const lit = span(u, [T.nightArch[0] + 0.12, T.nightArch[1] + 0.05]);
+      // On a phone the Visit copy scrolls over the door, so it is lit softly.
+      const lit = span(u, [T.nightArch[0] + 0.12, T.nightArch[1] + 0.05]) * (stage.mobile ? 0.35 : 1);
       if (light.current) {
         light.current.color.set('#F2C98A');
         light.current.opacity = 0.92 * lit;
@@ -224,6 +229,7 @@ export function ArchScene({ quality }: { quality: Quality }) {
           opacity={0.28}
           resolution={quality.shadowResolution / 2}
           color="#4A3B2C"
+          frames={shadowLive ? Infinity : 0}
         />
       </group>
     </group>

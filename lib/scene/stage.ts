@@ -28,6 +28,8 @@ export const stage = {
    * prescription-only block is on screen (always 0 on larger screens).
    */
   away: 0,
+  /** How far the canvas is faded out (reduced motion crossfades between stills). */
+  fade: 0,
   /** World position of the pipette's tip, written by the bottle scene. */
   tip: new THREE.Vector3(),
   /** Where the four plan stones lie as the arch goes down, written by the arch scene. */
