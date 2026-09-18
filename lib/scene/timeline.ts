@@ -25,6 +25,10 @@ export const T = {
 
   // Out of Concerns: the six rise and flow back into one.
   merge: [2.9, 3.06],
+
+  // Technologies (chapter 3): the drop freezes into the crystal. The six
+  // energies then follow the technology being read, not fixed positions.
+  freeze: [3.05, 3.17],
 } as const;
 
 /** How many droplets, one per concern group. */

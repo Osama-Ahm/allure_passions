@@ -337,8 +337,8 @@ Nothing is pushed unless you ask.
 |---|---|---|
 | M0 | Every chapter as server-rendered HTML: copy, type, layout, page colours, header, rail, single loop, modal fix | Built |
 | M1 | The serum bottle on the page: hero shot, bridge turn and lift, glass, label, light rig | Built |
-| M2 | The drop falls and splits into six droplets for Concerns, with lift-and-light per group and their annotations. The layer diagram is removed | Next |
-| M3 | The droplets merge and freeze into the crystal; the six technology energies; night | |
+| M2 | The drop falls and splits into six droplets for Concerns, with lift-and-light per group and their annotations. The layer diagram is removed | Built |
+| M3 | The droplets merge and freeze into the crystal; the six technology energies; night | Built |
 | M4 | The crystal fractures into the archway (Clinic); the arch lies flat into the four plan stones (Consultation); stones to discs to programme stacks | |
 | M5 | Stack to medallion (Trust); medallion to jar with the bottle (At home); the pair at rest (FAQ); dissolve into the archway at night (Visit) | |
 | M6 | Polish and hardening: dissolve edge, reveals, mobile shots, reduced motion, no-WebGL drawings, quality tiers, accessibility, performance, lint and build | |

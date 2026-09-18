@@ -21,6 +21,7 @@ const LANDING_R = 0.14;
 const MERGED_R = 0.24;
 export const MERGED_CENTRE = new THREE.Vector3(DROP_X, FLOOR_Y + 0.75, -0.16);
 const LANDING = new THREE.Vector3(DROP_X, FLOOR_Y + LANDING_R, 0);
+const LIQUID_OPACITY = 0.66;
 
 /** Where droplet `i` rests: a shallow arc on a desktop screen, two rows of three on a phone. */
 export function dropletHome(i: number, mobile: boolean, target = new THREE.Vector3()) {
@@ -87,7 +88,7 @@ export function DropletScene({ quality }: { quality: Quality }) {
         clearcoat: 1,
         clearcoatRoughness: 0.03,
         transparent: true,
-        opacity: 0.66,
+        opacity: LIQUID_OPACITY,
         iridescence: 0.45,
         iridescenceIOR: 1.3,
         envMapIntensity: 1.8,
@@ -121,7 +122,6 @@ export function DropletScene({ quality }: { quality: Quality }) {
   const falling = useRef<THREE.Mesh>(null);
   const droplets = useRef<(THREE.Group | null)[]>([]);
   const glows = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
-  const merged = useRef<THREE.Mesh>(null);
   const splash = useRef<THREE.Mesh>(null);
   const splashMaterial = useRef<THREE.MeshBasicMaterial>(null);
   const shadows = useRef<THREE.Group>(null);
@@ -154,6 +154,9 @@ export function DropletScene({ quality }: { quality: Quality }) {
     const splitting = u >= T.land[0] && u < T.split[1];
     const merging = u >= T.merge[0] && u < T.merge[1];
     field.visible = splitting || merging;
+    // As the six finish flowing together, the crystal scene's drop forms
+    // inside them and the liquid thins away around it.
+    liquid.opacity = merging ? LIQUID_OPACITY * (1 - clamp01((spanLinear(u, T.merge) - 0.7) / 0.3)) : LIQUID_OPACITY;
     if (field.visible) {
       const iso = field.isolation;
       const subtract = 12;
@@ -231,17 +234,6 @@ export function DropletScene({ quality }: { quality: Quality }) {
       }
     }
 
-    // --- The single drop they merge into (the crystal replaces it in M3) --
-    if (merged.current) {
-      const on = u >= T.merge[1] && u < 4.05;
-      merged.current.visible = on;
-      if (on) {
-        merged.current.position.copy(MERGED_CENTRE);
-        merged.current.position.y += stage.reducedMotion ? 0 : Math.sin(stage.time * 0.7) * 0.02;
-        merged.current.scale.setScalar(MERGED_R);
-      }
-    }
-
     if (shadows.current) shadows.current.visible = u >= T.land[0] - 0.05 && u < 3.2;
   }, ORDER.droplets);
 
@@ -267,8 +259,6 @@ export function DropletScene({ quality }: { quality: Quality }) {
           />
         </group>
       ))}
-
-      <mesh ref={merged} geometry={sphere} material={liquid} visible={false} />
 
       <group ref={shadows}>
         <ContactShadows

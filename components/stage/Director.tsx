@@ -8,6 +8,7 @@ import { ORDER, damp, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
 import { T } from '@/lib/scene/timeline';
 import type { Quality } from './quality';
 import { BottleScene, DROP_X } from './scenes/BottleScene';
+import { CrystalScene } from './scenes/CrystalScene';
 import { DropletScene, FLOOR_Y, MERGED_CENTRE, dropAt, dropletHome } from './scenes/DropletScene';
 
 /**
@@ -30,19 +31,31 @@ type Shot = {
   /** Where the target sits on screen, -1 → 1 in each axis. */
   anchorX: number;
   anchorY: number;
+  /** Degrees round the target, 0 = from the front. */
+  azimuth: number;
 };
 
-const shot = (x: number, y: number, z: number, distance: number, elevation: number, anchorX: number, anchorY: number): Shot => ({
+const shot = (
+  x: number,
+  y: number,
+  z: number,
+  distance: number,
+  elevation: number,
+  anchorX: number,
+  anchorY: number,
+  azimuth = 0
+): Shot => ({
   target: new THREE.Vector3(x, y, z),
   distance,
   elevation,
   anchorX,
   anchorY,
+  azimuth,
 });
 
 type Layout = 'desktop' | 'mobile';
 
-const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'merged', Shot>> = {
+const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal', Shot>> = {
   desktop: {
     // Chapter 1: the bottle in the right third, beside the headline.
     hero: shot(0, 0.48, 0, 3.7, 11, 0.54, 0),
@@ -52,20 +65,21 @@ const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'me
     drop: shot(DROP_X, 0.62, 0, 3.4, 12, 0, 0.06),
     // Chapter 3: the arc of droplets on the right, beside the concern list.
     concerns: shot(DROP_X, FLOOR_Y + 0.18, -0.12, 4.6, 13, 0.44, -0.04),
-    // Chapter 4 (until the crystal): the merged drop on the right.
-    merged: shot(MERGED_CENTRE.x, MERGED_CENTRE.y, MERGED_CENTRE.z, 3.8, 10, 0.36, 0),
+    // Chapter 4: the crystal on the right, a little low, energies playing above it.
+    crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 3.1, 8, 0.36, -0.1, -20),
   },
   mobile: {
     hero: shot(0, 0.48, 0, 7.4, 11, 0, 0.47),
     bridge: shot(0.25, 0.84, 0, 7.2, 11, 0, 0.04),
     drop: shot(DROP_X, 0.62, 0, 5.6, 12, 0, 0.1),
     concerns: shot(DROP_X, FLOOR_Y + 0.2, -0.05, 7.4, 22, 0, 0.62),
-    merged: shot(MERGED_CENTRE.x, MERGED_CENTRE.y, MERGED_CENTRE.z, 6, 10, 0, 0.4),
+    crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 8, 8, 0, 0.6, -20),
   },
 };
 
 const current: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const falling: Shot = shot(0, 0, 0, 0, 0, 0, 0);
+const orbiting: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const drop = { position: new THREE.Vector3(), radius: 0, stretch: 1 };
 const focusPoint = new THREE.Vector3();
 
@@ -76,6 +90,7 @@ function blend(into: Shot, to: Shot, t: number) {
   into.elevation = lerp(into.elevation, to.elevation, t);
   into.anchorX = lerp(into.anchorX, to.anchorX, t);
   into.anchorY = lerp(into.anchorY, to.anchorY, t);
+  into.azimuth = lerp(into.azimuth, to.azimuth, t);
 }
 
 function copy(into: Shot, from: Shot) {
@@ -84,6 +99,7 @@ function copy(into: Shot, from: Shot) {
   into.elevation = from.elevation;
   into.anchorX = from.anchorX;
   into.anchorY = from.anchorY;
+  into.azimuth = from.azimuth;
 }
 
 export function Director({ quality, background }: { quality: Quality; background: THREE.Color }) {
@@ -148,13 +164,18 @@ export function Director({ quality, background }: { quality: Quality; background
       current.target.x += (focusPoint.x - DROP_X) * lean;
     }
 
-    blend(current, shots.merged, span(u, T.merge));
+    // Round the crystal: a few degrees further for each technology read, so
+    // the stone never sits still while its energies change.
+    copy(orbiting, shots.crystal);
+    if (stage.focusChapter === 'treatments') orbiting.azimuth += Math.max(-1, stage.focus) * 9;
+    blend(current, orbiting, span(u, T.merge));
 
     const elevation = THREE.MathUtils.degToRad(current.elevation);
+    const azimuth = THREE.MathUtils.degToRad(current.azimuth);
     camera.position.set(
-      current.target.x,
+      current.target.x + Math.cos(elevation) * Math.sin(azimuth) * current.distance,
       current.target.y + Math.sin(elevation) * current.distance,
-      current.target.z + Math.cos(elevation) * current.distance
+      current.target.z + Math.cos(elevation) * Math.cos(azimuth) * current.distance
     );
     camera.lookAt(current.target);
     (camera as THREE.PerspectiveCamera).setViewOffset(
@@ -175,6 +196,7 @@ export function Director({ quality, background }: { quality: Quality; background
     <>
       <BottleScene quality={quality} background={background} />
       <DropletScene quality={quality} />
+      <CrystalScene quality={quality} background={background} />
     </>
   );
 }

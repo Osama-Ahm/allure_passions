@@ -27,8 +27,11 @@ export const stage = {
   tip: new THREE.Vector3(),
 };
 
-/** useFrame priorities: lower runs first. */
-export const ORDER = { director: -3, bottle: -2, droplets: -1 } as const;
+/**
+ * useFrame priorities: lower runs first. All are negative, because any
+ * positive priority would stop React Three Fiber rendering automatically.
+ */
+export const ORDER = { director: -5, bottle: -4, droplets: -3, crystal: -2, energies: -1 } as const;
 
 export const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
