@@ -27,8 +27,8 @@ export function Stage() {
   useEffect(() => {
     let rendering = true;
     return onFrame((time) => {
-      // Chapters after Technologies have no shot yet (M4, M5).
-      const active = story.u < 4.05;
+      // Chapters after Programmes have no shot yet (M5).
+      const active = story.u < 7.05;
       if (active || rendering) advance(time);
       rendering = active;
     });

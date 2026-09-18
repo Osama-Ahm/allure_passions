@@ -5,7 +5,9 @@ import { ChapterFrame } from '@/components/story/ChapterFrame';
 
 /**
  * Chapter 7 · Programmes. Four structured courses as ruled rows: what each is,
- * what it includes, and what it costs. The bottle drifts to the edge and out.
+ * what it includes, and what it costs. Beside them, the stones of the plan
+ * have become discs, and each programme's row (data-focus) shows its own
+ * stack: the technologies it combines, layer by layer.
  */
 export function ProgrammesChapter() {
   return (
@@ -19,10 +21,11 @@ export function ProgrammesChapter() {
           <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{copy.lede}</p>
         </header>
 
-        <ol className="mt-16 border-b border-line lg:max-w-[76rem]">
+        <ol className="mt-16 border-b border-line lg:max-w-[58%]">
           {programmes.map((programme, index) => (
             <li
               key={programme.id}
+              data-focus
               className="grid gap-5 border-t border-line py-8 md:grid-cols-[3rem_minmax(0,1.2fr)_minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-8"
             >
               <span className="font-sans text-label uppercase text-ink-muted">0{index + 1}</span>

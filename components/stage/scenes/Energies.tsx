@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { createGlowMaterial, setGlow } from '@/lib/scene/glow';
-import { ORDER, clamp01, stage } from '@/lib/scene/stage';
+import { ORDER, clamp01, span, stage } from '@/lib/scene/stage';
 
 /**
  * The six technologies, each as its own light or energy passing through the
@@ -144,13 +144,14 @@ export function Energies() {
 
   useFrame((state) => {
     const time = stage.reducedMotion ? 1.2 : stage.time;
-    const focus = stage.focusChapter === 'treatments' ? stage.focus : -2;
+    const focus = stage.focusChapter === 'treatments' ? stage.focus : stage.u > 3.5 ? 5 : -2;
+    const dawn = 1 - span(stage.u, [3.84, 3.94]);
 
     // How much each technology is showing: full when its copy is centred,
     // crossfading into its neighbours in between.
     for (let i = 0; i < 6; i++) {
       const weight = clamp01(1 - Math.abs(focus - i) * 1.4);
-      energy.weights[i] = weight * weight * (3 - 2 * weight);
+      energy.weights[i] = weight * weight * (3 - 2 * weight) * dawn;
       const group = groups.current[i];
       if (group) group.visible = energy.weights[i] > 0.005;
     }

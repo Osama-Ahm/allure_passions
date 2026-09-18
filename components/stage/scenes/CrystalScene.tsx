@@ -62,9 +62,12 @@ export function CrystalScene({ quality, background }: { quality: Quality; backgr
     const merge = spanLinear(u, T.merge);
     // The drop takes over from the metaballs over the last third of the merge.
     const appear = clamp01((merge - 0.62) / 0.38);
-    const visible = appear > 0 && u < 4.05;
+    // Kept a moment past the break so its flash can finish.
+    const visible = appear > 0 && u < T.fracture[1] + 0.03;
+    const whole = u < T.fracture[1];
     if (rig.current) rig.current.visible = visible;
-    if (glass.current) glass.current.visible = visible;
+    if (glass.current) glass.current.visible = visible && whole;
+    if (crystal.current) crystal.current.visible = whole;
     if (!visible || !crystal.current || !glass.current) return;
 
     const freeze = span(u, T.freeze);
@@ -76,7 +79,10 @@ export function CrystalScene({ quality, background }: { quality: Quality; backgr
 
     // Sphere → cut stone, and a little larger as it sets.
     crystal.current.morphTargetInfluences![0] = freeze;
-    const size = lerp(DROP_R * lerp(0.7, 1, appear), CRYSTAL_R, freeze) * (1 - energy.squeeze);
+    // At dawn it swells a little, then breaks: the arch's stones fly out of it.
+    const fracture = spanLinear(u, T.fracture);
+    const breaking = (1 + 0.14 * clamp01(fracture / 0.5)) * (1 - clamp01((fracture - 0.5) / 0.5));
+    const size = lerp(DROP_R * lerp(0.7, 1, appear), CRYSTAL_R, freeze) * (1 - energy.squeeze) * breaking;
     crystal.current.scale.setScalar(size);
     crystal.current.rotation.set(0.08 * freeze, time * 0.12 + freeze * 0.6, 0.05 * freeze);
 
@@ -89,7 +95,10 @@ export function CrystalScene({ quality, background }: { quality: Quality; backgr
     material.chromaticAberration = lerp(0.02, 0.09, freeze);
 
     // The flash as it sets, facing the camera.
-    const flashT = Math.sin(Math.PI * spanLinear(u, [T.freeze[0] + 0.02, T.freeze[1] - 0.01]));
+    const flashT = Math.max(
+      Math.sin(Math.PI * spanLinear(u, [T.freeze[0] + 0.02, T.freeze[1] - 0.01])),
+      Math.sin(Math.PI * spanLinear(u, [T.fracture[0] + 0.03, T.fracture[1] + 0.03]))
+    );
     if (flash.current) {
       flash.current.visible = flashT > 0.001;
       flash.current.quaternion.copy(camera.quaternion);

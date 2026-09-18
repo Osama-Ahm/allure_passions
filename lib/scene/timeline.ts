@@ -29,6 +29,25 @@ export const T = {
   // Technologies (chapter 3): the drop freezes into the crystal. The six
   // energies then follow the technology being read, not fixed positions.
   freeze: [3.05, 3.17],
+
+  // Into the Clinic (chapter 4), at dawn: the crystal breaks, and its pieces
+  // fly out and build the archway, foundations first, keystone last.
+  fracture: [3.9, 3.99],
+  assemble: [3.94, 4.24],
+  toArch: [3.9, 4.12],
+
+  // Into Consultation (chapter 5): the arch lies down, the stones that are not
+  // part of the plan dissolve, and four become the plan's stones on a circle.
+  lieDown: [4.5, 4.8],
+  toPlan: [4.5, 4.92],
+  clearArch: [4.7, 4.86],
+  planStones: [4.78, 4.98],
+  circle: [4.9, 5.08],
+  steps: [5.02, 5.5],
+
+  // Into Programmes (chapter 6): the stones round into discs and stack.
+  toDiscs: [5.72, 6.0],
+  toStack: [5.7, 6.02],
 } as const;
 
 /** How many droplets, one per concern group. */

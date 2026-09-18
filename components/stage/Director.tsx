@@ -8,8 +8,10 @@ import { ORDER, damp, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
 import { T } from '@/lib/scene/timeline';
 import type { Quality } from './quality';
 import { BottleScene, DROP_X } from './scenes/BottleScene';
+import { ARCH_ORIGIN, ArchScene, PLAN_CENTRE } from './scenes/ArchScene';
 import { CrystalScene } from './scenes/CrystalScene';
 import { DropletScene, FLOOR_Y, MERGED_CENTRE, dropAt, dropletHome } from './scenes/DropletScene';
+import { TokenScene } from './scenes/TokenScene';
 
 /**
  * Conducts the stage. Once a frame, before any scene moves, it smooths the
@@ -55,7 +57,9 @@ const shot = (
 
 type Layout = 'desktop' | 'mobile';
 
-const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal', Shot>> = {
+type ShotName = 'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal' | 'arch' | 'plan' | 'stack';
+
+const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
   desktop: {
     // Chapter 1: the bottle in the right third, beside the headline.
     hero: shot(0, 0.48, 0, 3.7, 11, 0.54, 0),
@@ -67,6 +71,12 @@ const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'cr
     concerns: shot(DROP_X, FLOOR_Y + 0.18, -0.12, 4.6, 13, 0.44, -0.04),
     // Chapter 4: the crystal on the right, a little low, energies playing above it.
     crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 3.1, 8, 0.36, -0.1, -20),
+    // Chapter 5: the archway, square on and centred between the giant words.
+    arch: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 5.4, 4, 0, 0.02),
+    // Chapter 6: straight down on the plan, upper right, clear of the copy.
+    plan: shot(PLAN_CENTRE.x, FLOOR_Y, PLAN_CENTRE.z, 6.2, 80, 0.4, 0.14),
+    // Chapter 7: close on the programme's stack, on the right.
+    stack: shot(PLAN_CENTRE.x, FLOOR_Y + 0.12, PLAN_CENTRE.z, 2.4, 16, 0.5, -0.02),
   },
   mobile: {
     hero: shot(0, 0.48, 0, 7.4, 11, 0, 0.47),
@@ -74,6 +84,9 @@ const SHOTS: Record<Layout, Record<'hero' | 'bridge' | 'drop' | 'concerns' | 'cr
     drop: shot(DROP_X, 0.62, 0, 5.6, 12, 0, 0.1),
     concerns: shot(DROP_X, FLOOR_Y + 0.2, -0.05, 7.4, 22, 0, 0.62),
     crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 8, 8, 0, 0.6, -20),
+    arch: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 9, 4, 0, 0.5),
+    plan: shot(PLAN_CENTRE.x, FLOOR_Y, PLAN_CENTRE.z, 7, 80, 0, 0.52),
+    stack: shot(PLAN_CENTRE.x, FLOOR_Y + 0.12, PLAN_CENTRE.z, 4.2, 16, 0, 0.55),
   },
 };
 
@@ -170,6 +183,10 @@ export function Director({ quality, background }: { quality: Quality; background
     if (stage.focusChapter === 'treatments') orbiting.azimuth += Math.max(-1, stage.focus) * 9;
     blend(current, orbiting, span(u, T.merge));
 
+    blend(current, shots.arch, span(u, T.toArch));
+    blend(current, shots.plan, span(u, T.toPlan));
+    blend(current, shots.stack, span(u, T.toStack));
+
     const elevation = THREE.MathUtils.degToRad(current.elevation);
     const azimuth = THREE.MathUtils.degToRad(current.azimuth);
     camera.position.set(
@@ -197,6 +214,8 @@ export function Director({ quality, background }: { quality: Quality; background
       <BottleScene quality={quality} background={background} />
       <DropletScene quality={quality} />
       <CrystalScene quality={quality} background={background} />
+      <ArchScene quality={quality} />
+      <TokenScene />
     </>
   );
 }
