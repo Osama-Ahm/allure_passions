@@ -34,18 +34,14 @@ export const tickerItems = [
 ];
 
 /**
- * The approach statement, lit word by word as it scrolls past. A string is
- * plain text, `{ em }` is italic emphasis and `{ image }` drops a small rounded
- * photograph into the line.
+ * The approach statement. A string is plain text and `{ em }` is italic
+ * emphasis. It used to carry small photographs inline; the homepage no longer
+ * uses imagery inside copy (§8.7), so it is words only.
  */
 export const statement = [
-  'We chose a small number of',
-  { image: '/assets/images/site/treatment-sofwave.webp' },
-  'technologies and learned them',
+  'We chose a small number of technologies and learned them',
   { em: 'properly.' },
-  'Every plan begins with a conversation',
-  { image: '/assets/images/site/consultation-table.webp' },
-  'and an',
+  'Every plan begins with a conversation and an',
   { em: 'honest' },
   'answer when a treatment will not do what you hope.',
 ];

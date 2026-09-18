@@ -1,34 +1,55 @@
-import { ExpertCare } from '@/components/sections/ExpertCare';
-import { LandingExperience } from '@/components/sections/LandingExperience';
-import { SiteFooter } from '@/components/sections/SiteFooter';
+import { ClinicChapter } from '@/components/chapters/ClinicChapter';
+import { ConcernsChapter } from '@/components/chapters/ConcernsChapter';
+import { ConsultationChapter } from '@/components/chapters/ConsultationChapter';
+import { FaqChapter } from '@/components/chapters/FaqChapter';
+import { HeroChapter } from '@/components/chapters/HeroChapter';
+import { ProgrammesChapter } from '@/components/chapters/ProgrammesChapter';
+import { SkincareChapter } from '@/components/chapters/SkincareChapter';
+import { SurfaceChapter } from '@/components/chapters/SurfaceChapter';
+import { TechnologiesChapter } from '@/components/chapters/TechnologiesChapter';
+import { TrustChapter } from '@/components/chapters/TrustChapter';
+import { VisitChapter } from '@/components/chapters/VisitChapter';
 import { SiteHeader } from '@/components/sections/SiteHeader';
-import { TreatmentCollection } from '@/components/sections/TreatmentCollection';
-import { Walkthrough } from '@/components/sections/Walkthrough';
+import { Backdrop, Grain, ScrollRail } from '@/components/story/PageChrome';
+import { StoryRuntime } from '@/components/story/StoryRuntime';
+import { StageMount } from '@/components/stage/StageMount';
 import { ConsultationProvider } from '@/components/ui/ConsultationProvider';
 
 /**
- * The homepage.
+ * The homepage: one story in eleven chapters (docs/LANDING_3D_PLAN.md).
  *
- * On a capable browser this is a walk down a gallery hallway, with each
- * section of the site hung in a lit alcove on alternating walls. Everywhere
- * else — no WebGL, reduced motion, and every search engine — it is the flat
- * page below, which carries exactly the same content in ordinary HTML.
+ * Every word is here in ordinary server-rendered HTML, in reading order. The
+ * 3D stage is fixed behind the chapters and only adds to them, so without
+ * WebGL, with reduced motion, or for a search engine, the page is complete.
+ *
+ * Nothing wrapping the chapters may set a background, transform or z-index:
+ * the canvas has to be able to sit between each chapter's back and front
+ * layers (see "Chapters" in app/globals.css).
  */
 export default function HomePage() {
   return (
     <ConsultationProvider>
-      <main className="relative bg-sanctuary-alabaster">
-        <SiteHeader />
+      <Backdrop />
+      <SiteHeader />
+      <ScrollRail />
+      <StageMount />
 
-        <LandingExperience>
-          <Walkthrough />
-          <div className="relative z-20 border-t border-sanctuary-stone bg-sanctuary-alabaster shadow-[0_-20px_50px_rgba(0,0,0,0.03)]">
-            <TreatmentCollection />
-            <ExpertCare />
-            <SiteFooter />
-          </div>
-        </LandingExperience>
+      <main id="main">
+        <HeroChapter />
+        <SurfaceChapter />
+        <ConcernsChapter />
+        <TechnologiesChapter />
+        <ClinicChapter />
+        <ConsultationChapter />
+        <ProgrammesChapter />
+        <TrustChapter />
+        <SkincareChapter />
+        <FaqChapter />
+        <VisitChapter />
       </main>
+
+      <Grain />
+      <StoryRuntime />
     </ConsultationProvider>
   );
 }

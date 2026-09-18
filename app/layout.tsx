@@ -7,6 +7,8 @@ const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   variable: '--font-cormorant',
   weight: ['300', '400', '500', '600'],
+  // Italic carries the emphasis in the display type ("skin, body", "learned properly.").
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
@@ -64,10 +66,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-GB" className={`${cormorant.variable} ${jakarta.variable}`}>
       <body className="bg-sanctuary-alabaster text-sanctuary-charcoal antialiased selection:bg-sanctuary-gold selection:text-white">
         <a
-          href="#treatment-collection"
+          href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[100] focus:rounded-full focus:bg-sanctuary-charcoal focus:px-5 focus:py-3 focus:font-sans focus:text-xs focus:uppercase focus:tracking-widest focus:text-sanctuary-alabaster"
         >
-          Skip the walkthrough
+          Skip to content
         </a>
         {children}
       </body>

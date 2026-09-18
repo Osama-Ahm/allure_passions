@@ -199,3 +199,27 @@ export function createFlutedColumnGeometry(
 
   return geometry;
 }
+
+/**
+ * Fine vertical ridges for the bottle collar's bump map: the knurling on a
+ * dropper collar, which catches the light as a row of tiny highlights.
+ */
+export function createKnurlTexture(ridges = 96) {
+  const { canvas, ctx } = canvasOf(256);
+  const gradient = ctx.createLinearGradient(0, 0, 256 / ridges, 0);
+  gradient.addColorStop(0, '#000');
+  gradient.addColorStop(0.5, '#fff');
+  gradient.addColorStop(1, '#000');
+  for (let i = 0; i < ridges; i += 1) {
+    ctx.save();
+    ctx.translate((i * 256) / ridges, 0);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 256 / ridges, 256);
+    ctx.restore();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}

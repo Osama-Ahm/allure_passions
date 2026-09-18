@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { clinic } from '@/content/clinic';
 import { emailHref, whatsappHref } from '@/content/contact';
 import { signatureTreatments } from '@/content/treatments';
+import { story } from '@/lib/story/store';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])';
@@ -59,9 +60,11 @@ export function BookingModal({
     const firstField = dialogRef.current?.querySelector<HTMLElement>('input, select, textarea');
     (firstField ?? dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE))?.focus();
 
+    // Lenis has to be stopped itself: hiding the body's overflow does not stop
+    // it moving the page under the dialog.
+    story.lenis?.stop();
     const restoreOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    document.documentElement.classList.add('lenis-stopped');
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -92,7 +95,7 @@ export function BookingModal({
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = restoreOverflow;
-      document.documentElement.classList.remove('lenis-stopped');
+      story.lenis?.start();
       previouslyFocused.current?.focus();
     };
   }, [isOpen, onClose]);
@@ -123,6 +126,8 @@ export function BookingModal({
 
   return (
     <div
+      data-lenis-prevent
+      data-theme="light"
       className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-sanctuary-charcoal/60 p-4 backdrop-blur-sm"
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();

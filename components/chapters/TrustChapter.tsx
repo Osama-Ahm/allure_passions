@@ -1,0 +1,66 @@
+import Image from 'next/image';
+import { credentials } from '@/content/credentials';
+import { trust } from '@/content/story';
+import { ChapterFrame } from '@/components/story/ChapterFrame';
+
+/**
+ * Chapter 8 · Trust, on stone. The bottle stands upright in the left third
+ * while a narrow light sweeps its glass; the six credentials hold the right,
+ * in a hairline grid with no photographs.
+ */
+export function TrustChapter() {
+  return (
+    <ChapterFrame id="trust" labelledBy="trust-title">
+      <div className="px-5 py-28 md:py-[18svh] md:pl-[38%] md:pr-16">
+        <header className="max-w-[34rem]">
+          <p className="eyebrow">{trust.eyebrow}</p>
+          <h2 id="trust-title" className="mt-5 font-serif text-display-lg font-light">
+            {trust.title}
+          </h2>
+          <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{trust.lede}</p>
+        </header>
+
+        <ul className="mt-14 grid gap-x-12 sm:grid-cols-2">
+          {credentials.map((credential, index) => (
+            <li key={credential.id} className="border-t border-line py-7">
+              <span className="font-sans text-label uppercase text-ink-muted">0{index + 1}</span>
+              <h3 className="mt-2 font-serif text-2xl font-light">{credential.title}</h3>
+              <p className="mt-2 font-sans text-sm leading-relaxed text-ink-muted">{credential.body}</p>
+              {credential.logo ? (
+                <div className="mt-5 flex flex-wrap items-center gap-5">
+                  <Image
+                    src={credential.logo.src}
+                    alt={credential.logo.alt}
+                    width={credential.logo.width}
+                    height={credential.logo.height}
+                    className="h-9 w-auto"
+                  />
+                  <a
+                    href={trust.register.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-sans text-label uppercase text-ink underline decoration-line underline-offset-4 hover:decoration-current"
+                  >
+                    {trust.register.label} ↗
+                  </a>
+                </div>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-6 flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:gap-10">
+          <a
+            href={trust.reviews.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="self-start rounded-full border border-ink/30 px-6 py-3.5 font-sans text-label uppercase transition-colors duration-300 hover:bg-ink hover:text-paper"
+          >
+            {trust.reviews.label} ↗
+          </a>
+          <p className="max-w-[22rem] font-sans text-xs leading-relaxed text-ink-muted">{trust.reviews.detail}</p>
+        </div>
+      </div>
+    </ChapterFrame>
+  );
+}

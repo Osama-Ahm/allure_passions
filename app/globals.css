@@ -28,8 +28,31 @@ html.lenis body {
 }
 
 @layer base {
-  /* The walkthrough is a scroll-scrubbed pin, so the anchor jumps that the
-     wayfinding links make need to land without the browser animating too. */
+  /* Theme roles (see tailwind.config.js). Light is the default; a chapter, or
+     the header over a night chapter, flips to dark with data-theme. */
+  :root,
+  [data-theme='light'] {
+    --ink: 26 24 23;
+    --ink-muted: 107 102 95;
+    --paper: 249 246 240;
+    --line: 214 205 190;
+    --accent: 123 83 72;
+    --gild: 197 168 128;
+  }
+
+  [data-theme='dark'] {
+    --ink: 249 246 240;
+    --ink-muted: 184 176 165;
+    --paper: 26 24 23;
+    --line: 70 64 58;
+    --accent: 229 201 146;
+    --gild: 197 168 128;
+  }
+
+  [data-theme] {
+    color: rgb(var(--ink));
+  }
+
   html {
     scroll-behavior: auto;
   }
@@ -37,29 +60,175 @@ html.lenis body {
   body {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Giant words run to the edge by design; nothing may scroll sideways.
+       clip, not hidden: hidden would make body a scroll container and break
+       every sticky layer on the page. */
+    overflow-x: clip;
   }
 
   :focus-visible {
-    outline: 2px solid theme('colors.sanctuary.gold.deep');
+    outline: 2px solid rgb(var(--accent));
     outline-offset: 3px;
+  }
+
+  summary {
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
 
 @layer components {
   /* Editorial eyebrow: the small tracked caps that head every section. */
   .eyebrow {
-    @apply block font-sans text-xs uppercase tracking-[0.3em] text-sanctuary-gold-deep;
+    @apply block font-sans text-label uppercase text-accent;
   }
 
-  /* Visible only to screen readers, for the DOM mirror of the canvas narrative. */
-  .sr-only-narrative {
-    @apply sr-only;
+  /* -------------------------------------------------------------------------
+     Chapters.
+
+     The canvas is fixed at z-index 1 behind the header. Each chapter is a
+     one-cell grid holding two layers in the same cell: a back layer (z 0, the
+     giant words the bottle passes in front of) and a front layer (z 2, the
+     copy you read and the controls you use).
+
+     They have to be separate siblings. position: sticky creates a stacking
+     context, so a single sticky stage would carry both layers to one side of
+     the canvas. For the same reason nothing on a chapter, or on anything above
+     it, may create a stacking context: no transform, opacity, filter,
+     will-change, contain or isolation on those elements.
+     ------------------------------------------------------------------------- */
+  .chapter {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chapter > .layer {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .layer-back {
+    z-index: 0;
+  }
+
+  .layer-front {
+    z-index: 2;
+  }
+
+  .layer-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    align-self: start;
+    overflow: clip;
+  }
+
+  .layer-flow {
+    position: relative;
+  }
+
+  /* Sticky from tablet up; on a phone the copy is too long to hold on one
+     screen, so it scrolls with the page instead. */
+  @media (max-width: 767px) {
+    .layer-sticky-md {
+      position: relative;
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .layer-sticky-md {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      align-self: start;
+      overflow: clip;
+    }
+  }
+
+  /* Chapter lengths, in large-viewport units so the mobile address bar never
+     changes how far the story has to travel. A held chapter is an exact height
+     on a desktop screen and a minimum on a phone, where its copy may run
+     longer than the screen. */
+  .chapter-len,
+  .chapter-min {
+    min-height: calc(var(--len-m, var(--len)) * 1lvh);
+  }
+
+  @media (min-width: 768px) {
+    .chapter-len {
+      height: calc(var(--len) * 1lvh);
+    }
+
+    .chapter-min {
+      min-height: calc(var(--len) * 1lvh);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Scroll-linked copy. The story runtime writes --p (0 → 1 through the
+     chapter) onto the chapter element. Without JavaScript the class is never
+     added and every line simply shows.
+     ------------------------------------------------------------------------- */
+  .story-live .reveal-at {
+    opacity: clamp(0, calc((var(--p, 1) - var(--at, 0)) * 7), 1);
+    translate: 0 calc((1 - clamp(0, calc((var(--p, 1) - var(--at, 0)) * 7), 1)) * 1.25rem);
+  }
+
+  /* Drawings that stand in for the 3D stage (the bottle outline, the falling
+     drop). The stage adds stage-live to <html> once it is drawing, and they
+     fade out as the canvas fades in over them. */
+  .stage-fallback {
+    transition: opacity 0.8s ease;
+  }
+
+  html.stage-live .stage-fallback {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+  }
+
+  /* The fixed chrome (header, progress rail) follows the chapter underneath it. */
+  .chrome {
+    --ink: 26 24 23;
+    --ink-muted: 107 102 95;
+    --paper: 249 246 240;
+    --line: 214 205 190;
+    --accent: 123 83 72;
+    color: rgb(var(--ink));
+    transition: color 0.4s ease;
+  }
+
+  html[data-chrome='dark'] .chrome {
+    --ink: 249 246 240;
+    --ink-muted: 184 176 165;
+    --paper: 26 24 23;
+    --line: 70 64 58;
+    --accent: 229 201 146;
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Reduced motion. The 3D walkthrough is decorative; anyone who has asked for
-   less movement gets the static composition and the ordinary document scroll.
+   Film grain. A static noise tile over everything but the header and dialogs,
+   plain alpha rather than a blend mode, so it costs nothing per frame.
+   --------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion. The 3D stays as composed still shots; everything that moves
+   on its own stops, and scroll-linked copy is simply shown.
    --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -69,5 +238,10 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .story-live .reveal-at {
+    opacity: 1;
+    translate: none;
   }
 }
