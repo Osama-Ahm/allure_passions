@@ -3,7 +3,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Lenis drives the scroll position; ScrollTrigger reads it. Without this bridge
@@ -12,6 +12,10 @@ import { useEffect } from 'react';
  * updated from Lenis's scroll event.
  */
 export function useSmoothScroll(enabled: boolean) {
+  // Handed back so callers can drive a programmatic scroll through Lenis.
+  // Scrolling the window directly while Lenis is running makes the two fight.
+  const instance = useRef<Lenis | null>(null);
+
   useEffect(() => {
     if (!enabled) return;
 
@@ -21,6 +25,8 @@ export function useSmoothScroll(enabled: boolean) {
       // Touch devices keep their native momentum; overriding it feels wrong.
       syncTouch: false,
     });
+
+    instance.current = lenis;
 
     const update = () => ScrollTrigger.update();
     lenis.on('scroll', update);
@@ -36,6 +42,9 @@ export function useSmoothScroll(enabled: boolean) {
       gsap.ticker.remove(raf);
       gsap.ticker.lagSmoothing(500, 33);
       lenis.destroy();
+      instance.current = null;
     };
   }, [enabled]);
+
+  return instance;
 }
