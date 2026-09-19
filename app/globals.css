@@ -210,6 +210,16 @@ html.lenis body {
     }
   }
 
+  /* The same halo at every size, for copy that can land over a model on
+     larger screens too (the clinic's copy over the room through its door). On
+     the plain page it is invisible: it is the page's own colour. */
+  .halo {
+    text-shadow:
+      0 0 14px rgb(var(--paper)),
+      0 0 6px rgb(var(--paper)),
+      0 0 2px rgb(var(--paper));
+  }
+
   /* The fixed chrome (header, progress rail) follows the chapter underneath it. */
   .chrome {
     --ink: 26 24 23;
