@@ -8,6 +8,14 @@
 > treatment room seen through its door. Programmes keeps one stack for every course instead of changing
 > per course. The medallion's engraving is black. A few of the generated site images are used (see
 > "Content and compliance").
+>
+> **Revised 19 September 2026, second review.** The crystal and its six energies are gone: you felt the
+> model wasn't selling the treatments. Technologies now carries **photographs**, one per technology
+> (licensed from Pexels, see "Content and compliance"). The merged drop fills with light and draws in to
+> a point, and a 4:5 photograph opens out of that point on the right, changing as each technology's copy
+> reaches the middle of the screen. At dawn the Clinic arch is drawn from light in place, like the night
+> arch. In Visit the night arch is about 40% smaller and sits in the upper right, clear of a lower
+> footer. The crystal is recoverable at `9d2633f`.
 
 ## Context
 
@@ -60,14 +68,14 @@ chapter's model as you scroll. The camera travels one continuous path and never 
 | 1 | Hero | **Serum bottle** on a stone plinth (built in M1) | The bottle turns and the dropper lifts |
 | 2 | Surface | The dropper lifts clear; a drop swells at the pipette and falls | The camera follows the drop down |
 | 3 | Concerns | The drop lands and splits into **six droplets**, one per concern group, in a shallow arc. Each has its own interior (gold flecks for pigmentation, a warm core for wellness). The one for the group you are reading lifts and brightens. | The six rise and flow together into one |
-| 4 | Technologies (night) | The merged drop **freezes into a faceted crystal**. Each technology is a different light or energy through it: fine pulses, two coloured beams, a grid of gold points, converging rings, field loops, green sweeps. | The crystal fractures along its facets |
-| 5 | Clinic (dawn) | The facets fly out and assemble into a **pale stone archway**, the clinic's door, with a treatment room seen through it, standing behind the giant words | The arch's stones lower and roll out flat |
+| 4 | Technologies (night) | *(Revised)* The merged drop **fills with light and draws in to a point**, and a **photograph** opens out of it on the right: one per technology, each fading in as its copy reaches the middle of the screen | The photograph fades as dawn comes up |
+| 5 | Clinic (dawn) | *(Revised)* A **pale stone archway**, the clinic's door, is drawn from light stone by stone, with a treatment room seen through it, standing behind the giant words | The arch's stones lower and roll out flat |
 | 6 | Consultation | Seen from above: the stones settle as **four stones on a gold circle**, one per plan step, lighting in turn | The stones round into discs and stack |
 | 7 | Programmes | One **stack of discs** (gold, rose, sage, cream) for every programme; it lifts, parts and sways a little with the scroll | The stack presses into one gold disc |
 | 8 | Trust | A **gold medallion** engraved in black with the monogram and the clinic's name, a slow light sweeping it | It turns and settles as a lid |
 | 9 | At home | A **cream jar** grows beneath the lid; the bottle returns beside it | The pair moves to the margin |
 | 10 | FAQ | The jar and bottle at rest in the margin beside the questions, slowly turning | Both dissolve into light |
-| 11 | Visit (night) | The light draws the **archway again, at night**, with a warm lit doorway | End of page |
+| 11 | Visit (night) | The light draws the **archway again, at night**, with a warm lit doorway: small, in the upper right, clear of the footer | End of page |
 
 The bottle is never labelled as a product it is not, and the jar is never presented as Tretinoin.
 
@@ -78,8 +86,9 @@ The bottle is never labelled as a product it is not, and the jar is never presen
   so stone to disc, disc stack to medallion and medallion to lid are each a single morph.
 - **Liquid moments are metaballs.** The drop splitting into six, and the six flowing back into one, use
   marching-cubes metaballs, which merge and part like real liquid.
-- **The crystal is a lathe with few sides** (a faceted gem), and it fractures by flying its own faces
-  apart, which then settle into the arch's stones.
+- *(Revised)* **The drop becomes a photograph.** It fills with light and draws in to a point exactly
+  where the photograph's frame is centred (the frame sits behind the canvas), and the frame opens out
+  of that point as a widening circle, on the same smoothed story position as the light.
 - **A signature dissolve for everything else.** Where two shapes cannot morph, the outgoing one dissolves
   through noise with a thin champagne-gold edge while the incoming one resolves. That edge is part of the
   brand, not a cross-fade.
@@ -103,8 +112,8 @@ Desktop lengths total about 17 screens; mobile runs about 20% shorter. Every cha
 | 1 | Hero | 100vh | alabaster | Three-quarter product shot, ~24° lens | Bottle in the right third, idle float, pointer tilt |
 | 2 | Surface | 140vh sticky | alabaster → pearl | Pulls back to centre, then tilts down with the drop | Turn, dropper lifts, drop forms and falls |
 | 3 | Concerns | ~200vh | pearl | Low, then glides along the arc of droplets | Split into six; the active group's droplet lifts |
-| 4 | Technologies | 60 + 6×50vh | **night** | Slow orbit round the crystal | Merge and freeze; one energy per technology |
-| 5 | Clinic | 160vh | dawn → alabaster | Eye level, facing the arch | Fracture, then the arch assembles behind the giant words; a treatment room through its door |
+| 4 | Technologies | 60 + 6×50vh | **night** | Still, on the drop, where the photograph is framed | Merge; the drop turns to light; one photograph per technology |
+| 5 | Clinic | 160vh | dawn → alabaster | Eye level, facing the arch | The arch is drawn from light behind the giant words; a treatment room through its door |
 | 6 | Consultation | 130vh | alabaster | Rises to look straight down | Arch lies flat into four stones on a circle |
 | 7 | Programmes | ~110vh | pearl | Three-quarter, close | Stones to discs to one stack, moving with the scroll |
 | 8 | Trust | 140vh | stone | Eye level, slow orbit | Stack to gold medallion; light sweep |
@@ -249,7 +258,7 @@ These layers are listed from the back of the page to the front:
 
 - **Mobile.**
   - The bottle is anchored in the top ~45% of the screen, with copy below over a soft scrim.
-  - Giant words stack. In the technology chapter, the crystal takes the top half and the text the bottom.
+  - Giant words stack. In the technology chapter, each technology's photograph sits above its copy.
   - Chapters are ~20% shorter, with `svh`/`lvh` units and native touch scrolling.
 - **Reduced motion.** The canvas still renders, but `u` snaps from chapter to chapter with a 400 ms
   crossfade. The idle float, parallax and line-mask reveals are off; text fades in instead.
@@ -282,8 +291,14 @@ These layers are listed from the back of the page to the front:
   heading (`why-detail-hands`) and the reception in Visit (`about-clinic-wide`). They are placeholders,
   described in their alt text rather than claimed as the clinic's own rooms, and should be swapped for
   real photographs (docs/IMAGE_BRIEF.md). Still never used: the before/after `results-*` images, which
-  are generated and so would be fabricated results (CAP 3.1, 12.1), and the `treatment-*` images, which
-  show generated versions of branded devices and patients' faces, both ruled out by the brief.
+  are generated and so would be fabricated results (CAP 3.1, 12.1).
+- **Treatment photographs.** *(Revised 19 September 2026, second review.)* The generated `treatment-*`
+  images showed patients' faces and generated versions of branded devices, which the brief rules out, so
+  those six slots now hold licensed photographs from Pexels (free for commercial use, no attribution
+  required; each photographer is credited in `content/media.ts`). They follow the brief's ideas: light on
+  skin (PicoWay), two bands of warm yellow light (ADVATx), skin in raking light (Morpheus8), ripples
+  (Sofwave), a back in side light (Emsculpt Neo) and green light on satin (Emerald Laser). None shows a
+  face, a device or a result.
 - **Reviews** link to Google only; the press row stays hidden (`pressFeatures` is empty).
 - **Inner routes don't exist on `3d` yet.** Links open the booking modal or a pre-filled WhatsApp message
   until the planned route port.
@@ -304,7 +319,8 @@ These layers are listed from the back of the page to the front:
   - `Stage.tsx`, `Director.tsx`, `WarmUp.tsx`, `Lighting.tsx`, `Quality.tsx`, `LabelLayer.tsx`,
     `Backdrop.tsx`, `Plinth.tsx`.
   - `bottle/Bottle.tsx` (built), then one folder per model: `droplets/`, `crystal/` (with its six
-    energies), `arch/`, `stones/`, `medallion/`, `jar/`, plus `materials/dissolve.ts`.
+    energies; replaced by the photographs and `LensScene.tsx` on 19 September), `arch/`, `stones/`,
+    `medallion/`, `jar/`, plus `materials/dissolve.ts`.
 - `components/chapters/`: `ChapterFrame.tsx`, plus 11 chapter components (server components where
   possible).
 - `components/ui/{IntroMark,Reveal,ScrollRail,VideoCard}.tsx`.

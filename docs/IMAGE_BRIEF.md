@@ -90,6 +90,14 @@ Section: "Your treatment starts with a conversation". Sits to the left of the co
 
 ### Treatment images (six)
 
+> **Filled, 19 September 2026.** The first generated set for these slots showed patients' faces and
+> generated versions of the branded devices, which this brief rules out, so it was replaced with six
+> licensed photographs from Pexels that follow the ideas in the table below (free for commercial use,
+> no attribution required). Each photographer and source link is recorded with its slot in
+> `content/media.ts`. The files keep each photograph's own proportions (2000 px on the long edge);
+> every use crops them about the slot's focal point. On the `3d` homepage they fill a 4:5 frame
+> beside the technology chapter, and a 4:3 crop above each technology on phones and tablets.
+
 Each image does two jobs:
 1. **Homepage and /treatments list:** on desktop it follows the cursor as a small 3:2 card when that treatment's row is hovered.
 2. **Treatment page:** a wide band under the introduction, cropped to about **21:8** on desktop and **4:3** on phones.

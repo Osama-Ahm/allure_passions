@@ -25,9 +25,9 @@ sees it.
 
 Every word is ordinary server-rendered HTML, in eleven chapters. One transparent canvas is fixed
 behind them, and each chapter's 3D model transforms into the next as you scroll: a serum bottle,
-its drop, six concern droplets, a crystal for the technologies, the clinic's archway, the four
-stones of the consultation plan, programme stacks, a gold medallion, a cream jar, and the archway
-again at night. The plan, with every decision behind it, is `docs/LANDING_3D_PLAN.md`.
+its drop, six concern droplets, the drop turning to light (out of which the technology chapter's
+photographs open), the clinic's archway, the four stones of the consultation plan, programme
+stacks, a gold medallion, a cream jar, and the archway again at night. The plan, with every decision behind it, is `docs/LANDING_3D_PLAN.md`.
 
 | Path | What lives there |
 |---|---|
@@ -36,7 +36,7 @@ again at night. The plan, with every decision behind it, is `docs/LANDING_3D_PLA
 | `components/story/` | The frame, the page chrome (backdrop, progress rail), the scroll runtime and the heading reveals. |
 | `components/stage/` | The 3D stage: `Director.tsx` (camera and timing), one scene per model in `scenes/`, the bottle, lighting, labels and quality settings. |
 | `lib/story/` | The chapter list and the runtime that turns scroll into story position, page colour and focus. |
-| `lib/scene/` | Pure scene helpers: when each transformation happens (`timeline.ts`), where each model lives (`layout.ts`), the dissolve, the crystal, the arch, the morphing lathe. |
+| `lib/scene/` | Pure scene helpers: when each transformation happens (`timeline.ts`), where each model lives (`layout.ts`), the dissolve, the glow, the arch, the morphing lathe. |
 | `lib/useSmoothScroll.ts` | The page's single loop: GSAP's ticker steps Lenis, then the story, then the canvas. |
 
 ## Things worth knowing before you change anything
