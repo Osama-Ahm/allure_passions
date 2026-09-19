@@ -9,10 +9,10 @@ import { ConsultationButton } from '@/components/ui/ConsultationButton';
 
 /**
  * Chapter 11 · Visit, on night. The jar and bottle dissolve into light, and
- * the light draws the clinic's archway again on the right, its doorway lit
- * warm; how to get in touch, a reception in daylight, and where to find the
- * clinic on the left. The footer closes the chapter, so the page ends in the
- * same night.
+ * the light draws the clinic's archway again, small, in the upper right, its
+ * doorway lit warm; how to get in touch, a reception in daylight, and where to
+ * find the clinic on the left. The footer closes the chapter below the arch,
+ * so the page ends in the same night.
  */
 export function VisitChapter() {
   return (

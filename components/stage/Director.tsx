@@ -99,8 +99,9 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
     home: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 2.9, 9, 0.5, -0.04),
     // Chapter 10: the pair small, at rest in the margin below the heading.
     rest: shot(HOME_TARGET.x, HOME_TARGET.y, HOME_TARGET.z, 4.4, 7, -0.6, -0.4),
-    // Chapter 11: the archway at night, on the right, its door lit.
-    night: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 5.8, 3, 0.46, -0.02),
+    // Chapter 11: the archway at night, its door lit: small, in the upper
+    // right, beside the contact details and clear of the footer below them.
+    night: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 9.2, 3, 0.52, 0.16),
   },
   mobile: {
     hero: shot(0, 0.48, 0, 7.4, 11, 0, 0.47),

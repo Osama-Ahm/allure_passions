@@ -72,7 +72,7 @@ export const chapters: Chapter[] = [
   { id: 'trust', theme: 'light', bg: palette.stone, nav: 'trust', length: 140, flow: true },
   { id: 'skincare', theme: 'light', bg: palette.alabaster, length: 120, flow: true },
   { id: 'faq', theme: 'light', bg: palette.alabaster, length: 100, flow: true },
-  { id: 'visit', theme: 'dark', bg: palette.night, via: palette.dusk, nav: 'visit', length: 150, flow: true },
+  { id: 'visit', theme: 'dark', bg: palette.night, via: palette.dusk, nav: 'visit', length: 100, flow: true },
 ];
 
 export const chapter = Object.fromEntries(chapters.map((entry) => [entry.id, entry])) as Record<
