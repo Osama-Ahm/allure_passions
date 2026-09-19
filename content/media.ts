@@ -9,23 +9,32 @@
  *
  * `kind` says where an image may come from:
  *   'generated' — atmospheric or abstract imagery; AI generation is fine.
+ *   'licensed'  — a stock photograph used under its licence (see `credit`).
+ *                 Atmospheric only, like 'generated': no faces, no devices, no
+ *                 results.
  *   'real'      — must be a genuine, unretouched clinic photograph used with the
  *                 patient's written consent. Never generate these (§8.11,
  *                 CAP Code 3.1, 12.1): a fabricated result is a misleading claim.
+ *
+ * `position` is the photograph's focal point, as CSS object-position, so every
+ * crop of it (a tall frame on a desktop, a wide one on a phone) keeps its subject.
  */
 const base = '/assets/images/site';
+
+type Credit = { photographer: string; source: string };
 
 type MediaSlot = {
   ratio: string;
   alt: string;
   subject: string;
-  kind?: 'generated' | 'real';
+  kind?: 'generated' | 'licensed' | 'real';
   position?: string;
+  credit?: Credit;
 };
 
 const slot = (
   id: string,
-  { ratio, alt, subject, kind = 'generated', position = 'center' }: MediaSlot,
+  { ratio, alt, subject, kind = 'generated', position = 'center', credit }: MediaSlot,
 ) => ({
   id,
   src: `${base}/${id}.webp`,
@@ -34,7 +43,10 @@ const slot = (
   subject,
   kind,
   position,
+  credit,
 });
+
+export type Media = ReturnType<typeof slot>;
 
 export const media = {
   whyClinic: slot('why-clinic-room', {
@@ -61,38 +73,82 @@ export const media = {
   }),
 };
 
-/** One image per signature treatment: the index hover preview and the treatment page band. */
-export const treatmentMedia = {
+/**
+ * One photograph per signature treatment, shown with it in the homepage's
+ * technology chapter. They follow the brief for these slots
+ * (docs/IMAGE_BRIEF.md): abstract and sensory, suggesting what each
+ * technology does, with no device, no face and no result.
+ *
+ * All six are from Pexels, under the Pexels licence (free for commercial use,
+ * no attribution required); each photographer is credited here all the same.
+ * The files are the photographs resized, not cropped: every use crops them
+ * about `position`.
+ */
+export const treatmentMedia: Record<string, Media> = {
   picoway: slot('treatment-picoway', {
-    ratio: '3 / 2',
-    alt: 'Abstract close-up of pale skin catching a fine beam of light',
-    subject: 'PicoWay — light on skin, abstract',
+    ratio: '1587 / 2000',
+    alt: 'Warm window light falling across the skin at the collarbone',
+    subject: 'PicoWay — light on skin',
+    kind: 'licensed',
+    position: '50% 62%',
+    credit: {
+      photographer: 'Cesar Lalangui Eras',
+      source: 'https://www.pexels.com/photo/a-close-up-of-a-man-s-chest-in-a-mirror-27247318/',
+    },
   }),
   advatx: slot('treatment-advatx', {
-    ratio: '3 / 2',
-    alt: 'Soft amber and green light diffusing across a smooth surface',
-    subject: 'ADVATx — two wavelengths of light, abstract',
+    ratio: '1333 / 2000',
+    alt: 'Two bands of warm yellow light across soft, dark surfaces',
+    subject: 'ADVATx — two wavelengths of light',
+    kind: 'licensed',
+    position: '55% 55%',
+    credit: {
+      photographer: 'Sueda Dilli',
+      source: 'https://www.pexels.com/photo/sunlight-and-shadows-on-a-suede-surface-18104900/',
+    },
   }),
   morpheus8: slot('treatment-morpheus8', {
-    ratio: '3 / 2',
-    alt: 'Macro texture of healthy skin in raking light',
-    subject: 'Morpheus8 — skin texture macro',
+    ratio: '1333 / 2000',
+    alt: 'Close-up of smooth skin catching low, raking light',
+    subject: 'Morpheus8 — skin texture in raking light',
+    kind: 'licensed',
+    position: '50% 45%',
+    credit: {
+      photographer: 'Angela Roma',
+      source: 'https://www.pexels.com/photo/close-up-shot-of-a-person-s-skin-7479517/',
+    },
   }),
   sofwave: slot('treatment-sofwave', {
-    ratio: '3 / 2',
-    alt: 'Concentric ripples spreading across still, milky water',
-    subject: 'Sofwave — ultrasound as ripples, abstract',
+    ratio: '2000 / 1964',
+    alt: 'Concentric ripples spreading from a single drop on still water',
+    subject: 'Sofwave — ultrasound as ripples',
+    kind: 'licensed',
+    position: '52% 60%',
+    credit: {
+      photographer: 'Viktoria Emilia',
+      source: 'https://www.pexels.com/photo/water-drop-on-body-of-water-9456245/',
+    },
   }),
   'emsculpt-neo': slot('treatment-emsculpt-neo', {
-    ratio: '3 / 2',
-    alt: 'Sculptural study of a shoulder and back in soft side light',
+    ratio: '2000 / 1333',
+    alt: 'The muscles of a back and shoulder in low, warm side light',
     subject: 'Emsculpt Neo — body form study',
-    position: 'center 40%',
+    kind: 'licensed',
+    position: '36% 50%',
+    credit: {
+      photographer: 'Clayton de Araujo',
+      source: 'https://www.pexels.com/photo/woman-back-in-darkness-15115980/',
+    },
   }),
   'emerald-laser': slot('treatment-emerald-laser', {
-    ratio: '3 / 2',
-    alt: 'A soft green glow falling across draped linen',
-    subject: 'Emerald Laser — green light on linen, abstract',
+    ratio: '1333 / 2000',
+    alt: 'A line of light across folds of emerald-green satin',
+    subject: 'Emerald Laser — green light on satin',
+    kind: 'licensed',
+    credit: {
+      photographer: 'Eva Bronzini',
+      source: 'https://www.pexels.com/photo/green-textile-in-close-up-photography-7641221/',
+    },
   }),
 };
 

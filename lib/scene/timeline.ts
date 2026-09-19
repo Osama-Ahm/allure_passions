@@ -23,16 +23,19 @@ export const T = {
   split: [1.84, 2.1],
   arrive: [1.72, 2.08],
 
-  // Out of Concerns: the six rise and flow back into one.
-  merge: [2.9, 3.06],
+  // Out of Concerns: the six rise and flow back into one as night falls.
+  merge: [2.84, 2.98],
 
-  // Technologies (chapter 3): the drop freezes into the crystal. The six
-  // energies then follow the technology being read, not fixed positions.
-  freeze: [3.05, 3.17],
+  // Technologies (chapter 3): the drop fills with light and draws in to a
+  // point, and the chapter's photograph opens out of that point. It opens
+  // only once the chapter has reached the top of the screen (3.0), where its
+  // frame holds still, and is open as the first technology's copy reaches
+  // the middle.
+  toLight: [2.97, 3.03],
+  iris: [3.0, 3.1],
 
-  // Into the Clinic (chapter 4), at dawn: the crystal breaks, and its pieces
-  // fly out and build the archway, foundations first, keystone last.
-  fracture: [3.9, 3.99],
+  // Into the Clinic (chapter 4), at dawn: the archway is drawn from light,
+  // stone by stone, foundations first and keystone last.
   assemble: [3.94, 4.24],
   toArch: [3.9, 4.12],
 

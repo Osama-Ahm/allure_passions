@@ -220,6 +220,49 @@ html.lenis body {
       0 0 2px rgb(var(--paper));
   }
 
+  /* -------------------------------------------------------------------------
+     The technology chapter's photographs, from lg up (TechnologiesChapter).
+
+     One 4:5 frame in the chapter's back layer, behind the canvas, centred at
+     --frame-x / --frame-y (techFrame in lib/story/chapters.ts). The 3D stage
+     turns the concern drop into light at that point and writes --open as the
+     photograph opens out of it; without the stage it is simply open. Each
+     technology's photograph fades in over the one before as its copy reaches
+     the middle of the screen (--focus, from the story runtime), settling from
+     a slight scale as it does.
+     ------------------------------------------------------------------------- */
+  .tech-frame {
+    --frame-w: min(36vw, 57svh);
+    position: absolute;
+    left: calc(var(--frame-x) - var(--frame-w) / 2);
+    top: calc(var(--frame-y) - var(--frame-w) * 0.625);
+    width: var(--frame-w);
+    height: calc(var(--frame-w) * 1.25);
+    overflow: hidden;
+    /* From the centre, 0.81 of the width reaches the corners of a 4:5 frame. */
+    clip-path: circle(calc(var(--frame-w) * 0.81 * var(--open, 1)) at 50% 50%);
+    /* Fading as the chapter ends and dawn comes up, rather than leaving as a
+       dark block on the gold page (--p is the chapter's progress). */
+    opacity: clamp(0, calc((0.95 - var(--p, 0)) * 10), 1);
+  }
+
+  .tech-drift {
+    position: absolute;
+    inset: 0;
+    animation: tech-drift 22s ease-in-out infinite alternate;
+  }
+
+  .tech-photo {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tech-photo + .tech-photo {
+    --show: clamp(0, calc((var(--focus, 0) - var(--i) + 0.65) / 0.3), 1);
+    opacity: var(--show);
+    transform: scale(calc(1.06 - 0.06 * var(--show)));
+  }
+
   /* The fixed chrome (header, progress rail) follows the chapter underneath it. */
   .chrome {
     --ink: 26 24 23;
@@ -267,6 +310,16 @@ html.lenis body {
   animation: outline-node 0.3s ease-out 0.7s forwards;
 }
 
+/* The technology photographs' slow drift, so the frame is never quite still. */
+@keyframes tech-drift {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1%, -1.2%, 0);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Film grain. A static noise tile over everything but the header and dialogs,
    plain alpha rather than a blend mode, so it costs nothing per frame.
@@ -297,5 +350,10 @@ html.lenis body {
   .story-live .reveal-at {
     opacity: 1;
     translate: none;
+  }
+
+  /* The photograph does not open out of the light: it is simply there. */
+  .tech-frame {
+    clip-path: none;
   }
 }

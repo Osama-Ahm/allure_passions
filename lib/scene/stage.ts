@@ -40,7 +40,7 @@ export const stage = {
  * useFrame priorities: lower runs first. All are negative, because any
  * positive priority would stop React Three Fiber rendering automatically.
  */
-export const ORDER = { director: -8, home: -7, bottle: -6, droplets: -5, crystal: -4, energies: -3, arch: -2, tokens: -1 } as const;
+export const ORDER = { director: -8, home: -7, bottle: -6, droplets: -5, lens: -4, arch: -2, tokens: -1 } as const;
 
 export const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;

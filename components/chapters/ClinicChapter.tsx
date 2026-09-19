@@ -3,9 +3,9 @@ import { welcome } from '@/content/story';
 import { ChapterFrame } from '@/components/story/ChapterFrame';
 
 /**
- * Chapter 5 · Clinic. Dawn after the technology chapter: the crystal breaks,
- * and its pieces fly out and build the clinic's archway, with the treatment
- * room through its door, behind two giant lines of type.
+ * Chapter 5 · Clinic. Dawn after the technology chapter: the clinic's archway
+ * is drawn from light, stone by stone, with the treatment room through its
+ * door, behind two giant lines of type.
  *
  * Everything here is in the front layer, so the arch stands behind the words
  * as well as the copy. On a phone the lines cannot be spread across the

@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 
 /**
- * Light that adds to what is behind it: the beams, rings and fields of the
- * technology chapter.
+ * Light that adds to what is behind it: the flashes where a model turns to
+ * light, and the archway's lit door at night.
  *
  * The canvas is transparent. These materials add colour but leave the alpha
  * untouched (colour One/One, alpha Zero/One), and the browser composites the
  * canvas premultiplied, so the glow adds onto the night page behind the canvas
- * exactly as light would. On cream it would vanish, which is why the energies
- * only ever appear in the dark chapter.
+ * exactly as light would. On cream it all but vanishes, so it carries the
+ * moment only where the page is dark.
  */
 
 const VERTEX = /* glsl */ `

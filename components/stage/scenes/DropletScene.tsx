@@ -154,8 +154,8 @@ export function DropletScene({ quality }: { quality: Quality }) {
     const splitting = u >= T.land[0] && u < T.split[1];
     const merging = u >= T.merge[0] && u < T.merge[1];
     field.visible = splitting || merging;
-    // As the six finish flowing together, the crystal scene's drop forms
-    // inside them and the liquid thins away around it.
+    // As the six finish flowing together, the lens scene's drop forms inside
+    // them and the liquid thins away around it.
     liquid.opacity = merging ? LIQUID_OPACITY * (1 - clamp01((spanLinear(u, T.merge) - 0.7) / 0.3)) : LIQUID_OPACITY;
     if (field.visible) {
       const iso = field.isolation;

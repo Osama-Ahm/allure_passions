@@ -40,6 +40,8 @@ let lastIndex = -1;
 let lastP = -1;
 let lastColour = '';
 let lastRail = -1;
+let lastFocus = NaN;
+let lastFocusEl: HTMLElement | null = null;
 
 function hexToRgb(hex: string | undefined): Rgb | null {
   if (!hex) return null;
@@ -83,10 +85,11 @@ export function measure() {
   const rx = document.querySelector<HTMLElement>('[data-rx]')?.getBoundingClientRect();
   rxBlock = rx ? { top: rx.top + scrollY, bottom: rx.bottom + scrollY } : null;
 
-  // Force every chapter's --p to be rewritten against the new layout.
+  // Force every chapter's --p (and --focus) to be rewritten against the new layout.
   lastIndex = -1;
   lastP = -1;
   lastRail = -1;
+  lastFocus = NaN;
 }
 
 function chapterIndexAt(y: number) {
@@ -205,6 +208,13 @@ export function update() {
     }
     story.focus = focus;
     story.focusChapter = focusChapter.el.dataset.chapter ?? null;
+    // The same value as --focus on the chapter, for CSS that follows the item
+    // being read (the technology chapter's photographs).
+    if (focusChapter.el !== lastFocusEl || Math.abs(focus - lastFocus) > 0.0005) {
+      focusChapter.el.style.setProperty('--focus', focus.toFixed(4));
+      lastFocus = focus;
+      lastFocusEl = focusChapter.el;
+    }
   } else {
     story.focus = -1;
     story.focusChapter = null;

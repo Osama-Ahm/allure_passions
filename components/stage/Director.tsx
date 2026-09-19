@@ -3,6 +3,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { techFrame } from '@/lib/story/chapters';
 import { story } from '@/lib/story/store';
 import { ORDER, damp, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
 import { ARCH_ORIGIN, BESIDE_JAR, DROP_X, FLOOR_Y, JAR_BASE, MEDALLION_CENTRE, MERGED_CENTRE, PLAN_CENTRE } from '@/lib/scene/layout';
@@ -10,9 +11,9 @@ import { T } from '@/lib/scene/timeline';
 import type { Quality } from './quality';
 import { BottleScene } from './scenes/BottleScene';
 import { ArchScene } from './scenes/ArchScene';
-import { CrystalScene } from './scenes/CrystalScene';
 import { DropletScene, dropAt, dropletHome } from './scenes/DropletScene';
 import { HomeScene } from './scenes/HomeScene';
+import { LensScene } from './scenes/LensScene';
 import { TokenScene } from './scenes/TokenScene';
 
 /**
@@ -62,7 +63,7 @@ type Layout = 'desktop' | 'mobile';
 /** Between the jar and the bottle, a little above the jar. */
 const HOME_TARGET = new THREE.Vector3((JAR_BASE.x + BESIDE_JAR.x) / 2, FLOOR_Y + 0.32, (JAR_BASE.z + BESIDE_JAR.z) / 2);
 
-type ShotName = 'hero' | 'bridge' | 'drop' | 'concerns' | 'crystal' | 'arch' | 'plan' | 'stack' | 'medallion' | 'home' | 'rest' | 'night';
+type ShotName = 'hero' | 'bridge' | 'drop' | 'concerns' | 'lens' | 'arch' | 'plan' | 'stack' | 'medallion' | 'home' | 'rest' | 'night';
 
 const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
   desktop: {
@@ -74,8 +75,18 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
     drop: shot(DROP_X, 0.62, 0, 3.4, 12, 0, 0.06),
     // Chapter 3: the arc of droplets on the right, beside the concern list.
     concerns: shot(DROP_X, FLOOR_Y + 0.18, -0.12, 4.6, 13, 0.44, -0.04),
-    // Chapter 4: the crystal on the right, a little low, energies playing above it.
-    crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 3.1, 8, 0.36, -0.1, -20),
+    // Chapter 4: the merged drop exactly where the photograph's frame is
+    // centred (techFrame), so the photograph can open out of its light.
+    lens: shot(
+      MERGED_CENTRE.x,
+      MERGED_CENTRE.y,
+      MERGED_CENTRE.z,
+      3.4,
+      8,
+      (techFrame.x - 0.5) * 2,
+      (0.5 - techFrame.y) * 2,
+      -20
+    ),
     // Chapter 5: the archway, square on and centred between the giant words.
     arch: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 5.4, 4, 0, 0.02),
     // Chapter 6: straight down on the plan, upper right, clear of the copy.
@@ -96,7 +107,7 @@ const SHOTS: Record<Layout, Record<ShotName, Shot>> = {
     bridge: shot(0.25, 0.84, 0, 7.2, 11, 0, 0.04),
     drop: shot(DROP_X, 0.62, 0, 5.6, 12, 0, 0.1),
     concerns: shot(DROP_X, FLOOR_Y + 0.2, -0.05, 7.4, 22, 0, 0.62),
-    crystal: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 8, 8, 0, 0.6, -20),
+    lens: shot(MERGED_CENTRE.x, MERGED_CENTRE.y + 0.1, MERGED_CENTRE.z, 8, 8, 0, 0.6, -20),
     arch: shot(ARCH_ORIGIN.x, FLOOR_Y + 0.78, ARCH_ORIGIN.z, 9, 4, 0, 0.5),
     plan: shot(PLAN_CENTRE.x, FLOOR_Y, PLAN_CENTRE.z, 7, 80, 0, 0.52),
     stack: shot(PLAN_CENTRE.x, FLOOR_Y + 0.12, PLAN_CENTRE.z, 4.2, 16, 0, 0.55),
@@ -117,7 +128,6 @@ const FADE_SECONDS = 0.22;
 
 const current: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const falling: Shot = shot(0, 0, 0, 0, 0, 0, 0);
-const orbiting: Shot = shot(0, 0, 0, 0, 0, 0, 0);
 const drop = { position: new THREE.Vector3(), radius: 0, stretch: 1 };
 const focusPoint = new THREE.Vector3();
 
@@ -220,11 +230,7 @@ export function Director({ quality, background }: { quality: Quality; background
       current.target.x += (focusPoint.x - DROP_X) * lean;
     }
 
-    // Round the crystal: a few degrees further for each technology read, so
-    // the stone never sits still while its energies change.
-    copy(orbiting, shots.crystal);
-    if (stage.focusChapter === 'treatments') orbiting.azimuth += Math.max(-1, stage.focus) * 9;
-    blend(current, orbiting, span(u, T.merge));
+    blend(current, shots.lens, span(u, T.merge));
 
     blend(current, shots.arch, span(u, T.toArch));
     blend(current, shots.plan, span(u, T.toPlan));
@@ -263,7 +269,7 @@ export function Director({ quality, background }: { quality: Quality; background
     <>
       <BottleScene quality={quality} background={background} />
       <DropletScene quality={quality} />
-      <CrystalScene quality={quality} background={background} />
+      <LensScene />
       <ArchScene quality={quality} />
       <TokenScene />
       <HomeScene quality={quality} />

@@ -8,27 +8,18 @@ import { ARCH, ARCH_HEIGHT, PLAN_STONES, createArchStones } from '@/lib/scene/ar
 import { withDissolve } from '@/lib/scene/dissolve';
 import { createGlowMaterial, setGlow } from '@/lib/scene/glow';
 import { travertine } from '@/lib/scene/palette';
-import { ORDER, clamp01, ease, lerp, span, spanLinear, stage } from '@/lib/scene/stage';
-import { ARCH_ORIGIN, FLOOR_Y, MERGED_CENTRE } from '@/lib/scene/layout';
+import { ORDER, clamp01, ease, span, spanLinear, stage } from '@/lib/scene/stage';
+import { ARCH_ORIGIN, FLOOR_Y } from '@/lib/scene/layout';
 import { T } from '@/lib/scene/timeline';
 import { useShadowGate } from '@/lib/scene/useShadowGate';
 import { createMarbleTexture } from '@/lib/proceduralTextures';
 import { media } from '@/content/media';
 import type { Quality } from '../quality';
 
-const tmp = new THREE.Vector3();
-const control = new THREE.Vector3();
-const settled = new THREE.Quaternion();
 const zAxis = new THREE.Vector3(0, 0, 1);
 
-/** Seeded, so the stones fly the same way on every visit. */
-function seeded(seed: number) {
-  let a = seed;
-  return () => {
-    a = (a * 16807) % 2147483647;
-    return a / 2147483647;
-  };
-}
+/** How far each stone settles into its place as it forms from light. */
+const SETTLE = 0.07;
 
 /** How far the doorway's picture runs into the stones round the opening, so no edge of it shows. */
 const DOOR_OVERLAP = 0.012;
@@ -104,12 +95,12 @@ function createDoorwayView(src: string) {
 }
 
 /**
- * Chapters 5–6 and 11 · Clinic, Consultation and Visit. The crystal breaks at dawn and its
- * pieces fly out and build the clinic's archway, stone by stone, foundations
- * first and keystone last, resolving from light as they go. Through the
- * doorway, a treatment room in morning light. Then the arch lies down; the
- * stones that are not part of the plan dissolve, and four of them become the
- * consultation plan (TokenScene).
+ * Chapters 5–6 and 11 · Clinic, Consultation and Visit. At dawn the clinic's
+ * archway is drawn from light, stone by stone, foundations first and keystone
+ * last, each stone settling into its place as it forms. Through the doorway, a
+ * treatment room in morning light. Then the arch lies down; the stones that
+ * are not part of the plan dissolve, and four of them become the consultation
+ * plan (TokenScene).
  *
  * At the end, on night, the arch is drawn again from light where the jar and
  * bottle dissolved, stone by stone from the ground up, and its doorway is lit
@@ -131,22 +122,10 @@ export function ArchScene({ quality }: { quality: Quality }) {
     [stones, map]
   );
 
-  // Each stone's flight: from inside the crystal, out along its own arc, home.
-  const flights = useMemo(() => {
-    const random = seeded(4404);
+  // When each stone starts to form, from the foundations up to the keystone.
+  const delays = useMemo(() => {
     const maxOrder = Math.max(...stones.map((stone) => stone.order));
-    return stones.map((stone) => {
-      const start = new THREE.Vector3(
-        MERGED_CENTRE.x - ARCH_ORIGIN.x + (random() - 0.5) * 0.16,
-        MERGED_CENTRE.y - ARCH_ORIGIN.y + (random() - 0.5) * 0.16,
-        MERGED_CENTRE.z - ARCH_ORIGIN.z + (random() - 0.5) * 0.16
-      );
-      const spin = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler((random() - 0.5) * 5, (random() - 0.5) * 5, (random() - 0.5) * 5)
-      );
-      const outward = stone.position.clone().sub(start).normalize();
-      return { start, spin, outward, delay: (stone.order / maxOrder) * 0.38 };
-    });
+    return stones.map((stone) => (stone.order / maxOrder) * 0.38);
   }, [stones]);
 
   // The lit doorway at night: a soft warm glow, brightest low in the opening.
@@ -192,7 +171,7 @@ export function ArchScene({ quality }: { quality: Quality }) {
   useFrame(() => {
     const u = stage.u;
     const atNight = u >= T.nightArch[0];
-    const visible = (u >= T.fracture[0] && u < T.planStones[1] + 0.02) || atNight;
+    const visible = (u >= T.assemble[0] && u < T.planStones[1] + 0.02) || atNight;
     if (arch.current) arch.current.visible = visible;
     const grounded = visible && !atNight && u < T.lieDown[0] + 0.1;
     if (shadow.current) shadow.current.visible = grounded;
@@ -211,7 +190,7 @@ export function ArchScene({ quality }: { quality: Quality }) {
         mesh.position.copy(stone.position);
         mesh.quaternion.setFromAxisAngle(zAxis, stone.rotation);
         mesh.scale.setScalar(1);
-        const t = clamp01((night - flights[i].delay) / (1 - 0.38));
+        const t = clamp01((night - delays[i]) / (1 - 0.38));
         materials[i].dissolve.value = 1 - t;
         mesh.visible = t > 0.001;
       });
@@ -234,28 +213,19 @@ export function ArchScene({ quality }: { quality: Quality }) {
     stones.forEach((stone, i) => {
       const mesh = meshes.current[i];
       if (!mesh) return;
-      const flight = flights[i];
-      const t = clamp01((assemble - flight.delay) / (1 - 0.38));
-      const eased = ease(t);
+      const t = clamp01((assemble - delays[i]) / (1 - 0.38));
 
-      // A quadratic path: out past its own place, then back in to it.
-      control.copy(flight.start).addScaledVector(flight.outward, 0.9);
-      control.y += 0.3;
-      tmp.copy(flight.start).multiplyScalar((1 - t) * (1 - t));
-      tmp.addScaledVector(control, 2 * (1 - t) * t);
-      tmp.addScaledVector(stone.position, t * t);
-      mesh.position.copy(tmp);
+      // Settling down into its place as it forms.
+      mesh.position.copy(stone.position);
+      mesh.position.y += (1 - ease(t)) * SETTLE;
+      mesh.quaternion.setFromAxisAngle(zAxis, stone.rotation);
+      mesh.scale.setScalar(1);
 
-      settled.setFromAxisAngle(zAxis, stone.rotation);
-      mesh.quaternion.copy(flight.spin).slerp(settled, eased);
-      mesh.scale.setScalar(lerp(0.16, 1, eased));
-
-      // Resolving from light while it flies; later, gone unless it is one of
-      // the four that become the plan.
+      // Resolving from light; later, gone unless it is one of the four that
+      // become the plan.
       const isPlan = PLAN_STONES.includes(i);
-      const forming = 1 - clamp01(t / 0.55);
       const leaving = isPlan ? planClear : clear;
-      materials[i].dissolve.value = Math.max(forming, leaving);
+      materials[i].dissolve.value = Math.max(1 - t, leaving);
       mesh.visible = materials[i].dissolve.value < 0.999;
     });
 

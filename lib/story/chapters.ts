@@ -79,3 +79,11 @@ export const chapter = Object.fromEntries(chapters.map((entry) => [entry.id, ent
   ChapterId,
   Chapter
 >;
+
+/**
+ * Where the technology chapter's photograph is centred, as fractions of the
+ * screen, from lg up (.tech-frame in app/globals.css). The 3D stage turns the
+ * concern drop into light at exactly this point, so the photograph can open
+ * out of it.
+ */
+export const techFrame = { x: 0.65, y: 0.54 } as const;
