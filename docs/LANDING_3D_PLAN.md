@@ -3,6 +3,11 @@
 > **Revised 18 September 2026, after M1.** The single-object concept became a *transformation chain*:
 > every chapter has its own 3D model, and each model transforms into the next. The skin-layer slab and
 > its diagram are dropped. Sections marked (revised) replace the first version of this plan.
+>
+> **Revised 19 September 2026, after review.** The Clinic arch now stands behind its giant words, with a
+> treatment room seen through its door. Programmes keeps one stack for every course instead of changing
+> per course. The medallion's engraving is black. A few of the generated site images are used (see
+> "Content and compliance").
 
 ## Context
 
@@ -56,10 +61,10 @@ chapter's model as you scroll. The camera travels one continuous path and never 
 | 2 | Surface | The dropper lifts clear; a drop swells at the pipette and falls | The camera follows the drop down |
 | 3 | Concerns | The drop lands and splits into **six droplets**, one per concern group, in a shallow arc. Each has its own interior (gold flecks for pigmentation, a warm core for wellness). The one for the group you are reading lifts and brightens. | The six rise and flow together into one |
 | 4 | Technologies (night) | The merged drop **freezes into a faceted crystal**. Each technology is a different light or energy through it: fine pulses, two coloured beams, a grid of gold points, converging rings, field loops, green sweeps. | The crystal fractures along its facets |
-| 5 | Clinic (dawn) | The facets fly out and assemble into a **pale stone archway**, the clinic's door, with sunlight through it and the giant words either side | The arch's stones lower and roll out flat |
+| 5 | Clinic (dawn) | The facets fly out and assemble into a **pale stone archway**, the clinic's door, with a treatment room seen through it, standing behind the giant words | The arch's stones lower and roll out flat |
 | 6 | Consultation | Seen from above: the stones settle as **four stones on a gold circle**, one per plan step, lighting in turn | The stones round into discs and stack |
-| 7 | Programmes | A **stack of discs** (stone, glass, gold); each programme shows its own stack | The stack presses into one gold disc |
-| 8 | Trust | A **gold medallion** with the monogram, a slow light sweeping it | It turns and settles as a lid |
+| 7 | Programmes | One **stack of discs** (gold, rose, sage, cream) for every programme; it lifts, parts and sways a little with the scroll | The stack presses into one gold disc |
+| 8 | Trust | A **gold medallion** engraved in black with the monogram and the clinic's name, a slow light sweeping it | It turns and settles as a lid |
 | 9 | At home | A **cream jar** grows beneath the lid; the bottle returns beside it | The pair moves to the margin |
 | 10 | FAQ | The jar and bottle at rest in the margin beside the questions, slowly turning | Both dissolve into light |
 | 11 | Visit (night) | The light draws the **archway again, at night**, with a warm lit doorway | End of page |
@@ -99,9 +104,9 @@ Desktop lengths total about 17 screens; mobile runs about 20% shorter. Every cha
 | 2 | Surface | 140vh sticky | alabaster → pearl | Pulls back to centre, then tilts down with the drop | Turn, dropper lifts, drop forms and falls |
 | 3 | Concerns | ~200vh | pearl | Low, then glides along the arc of droplets | Split into six; the active group's droplet lifts |
 | 4 | Technologies | 60 + 6×50vh | **night** | Slow orbit round the crystal | Merge and freeze; one energy per technology |
-| 5 | Clinic | 160vh | dawn → alabaster | Eye level, facing the arch | Fracture, then the arch assembles; sunlight through it |
+| 5 | Clinic | 160vh | dawn → alabaster | Eye level, facing the arch | Fracture, then the arch assembles behind the giant words; a treatment room through its door |
 | 6 | Consultation | 130vh | alabaster | Rises to look straight down | Arch lies flat into four stones on a circle |
-| 7 | Programmes | ~110vh | pearl | Three-quarter, close | Stones to discs to per-programme stacks |
+| 7 | Programmes | ~110vh | pearl | Three-quarter, close | Stones to discs to one stack, moving with the scroll |
 | 8 | Trust | 140vh | stone | Eye level, slow orbit | Stack to gold medallion; light sweep |
 | 9 | At home | 120vh | alabaster | Three-quarter, warm | Medallion to jar lid, jar grows; bottle returns |
 | 10 | FAQ | flow | alabaster | Still, from the side | The pair at rest in the left margin |
@@ -271,9 +276,14 @@ These layers are listed from the back of the page to the front:
   model is ever presented as it. The cream jar sits in the column beside Kojivit, not the Tretinoin
   block; the camera reaches the jar before it grows; and on a phone, where copy scrolls over the
   models, the jar and bottle step out of view while the prescription-only block is on screen.
-- **Images.** No before/after images, stock photos or AI-generated clinic photos on the homepage.
-  `home.ts`'s `statement` loses its inline images. The only media are the clinic video (click to play)
-  and the JCCP logo.
+- **Images.** *(Revised 19 September 2026, at your request.)* Besides the clinic video (click to play)
+  and the JCCP logo, three of the generated mood images in `public/assets/images/site/` are used: the
+  treatment room through the Clinic arch's door (`why-clinic-room`), the gloved hands beside the Trust
+  heading (`why-detail-hands`) and the reception in Visit (`about-clinic-wide`). They are placeholders,
+  described in their alt text rather than claimed as the clinic's own rooms, and should be swapped for
+  real photographs (docs/IMAGE_BRIEF.md). Still never used: the before/after `results-*` images, which
+  are generated and so would be fabricated results (CAP 3.1, 12.1), and the `treatment-*` images, which
+  show generated versions of branded devices and patients' faces, both ruled out by the brief.
 - **Reviews** link to Google only; the press row stays hidden (`pressFeatures` is empty).
 - **Inner routes don't exist on `3d` yet.** Links open the booking modal or a pre-filled WhatsApp message
   until the planned route port.
