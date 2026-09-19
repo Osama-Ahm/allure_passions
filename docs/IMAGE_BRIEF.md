@@ -90,6 +90,11 @@ Section: "Your treatment starts with a conversation". Sits to the left of the co
 
 ### Treatment images (six)
 
+> **Replaced the same day, at the client's request:** the technology chapter now uses the clinic's
+> own treatment photographs, which show each device in use, from `public/assets/images/site/technologies/`
+> (see `treatmentMedia` in `content/media.ts`). The Pexels set described below was removed; it is in git
+> history at `e9f22bf`.
+>
 > **Filled, 19 September 2026.** The first generated set for these slots showed patients' faces and
 > generated versions of the branded devices, which this brief rules out, so it was replaced with six
 > licensed photographs from Pexels that follow the ideas in the table below (free for commercial use,

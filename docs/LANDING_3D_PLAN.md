@@ -299,6 +299,9 @@ These layers are listed from the back of the page to the front:
   skin (PicoWay), two bands of warm yellow light (ADVATx), skin in raking light (Morpheus8), ripples
   (Sofwave), a back in side light (Emsculpt Neo) and green light on satin (Emerald Laser). None shows a
   face, a device or a result.
+  *Later the same day* you supplied the clinic's own photographs of each device in use
+  (`public/assets/images/site/technologies/`), and they replaced the Pexels set. They are landscape, so
+  the desktop frame is now 3:2 rather than 4:5.
 - **Reviews** link to Google only; the press row stays hidden (`pressFeatures` is empty).
 - **Inner routes don't exist on `3d` yet.** Links open the booking modal or a pre-filled WhatsApp message
   until the planned route port.

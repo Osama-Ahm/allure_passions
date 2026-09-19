@@ -54,11 +54,11 @@ export const statementFacts = [
 
 /** Which concern-group photograph heads the concern panel. */
 export const concernGroupImages = {
-  skin: '/assets/images/site/treatment-morpheus8.webp',
-  pigmentation: '/assets/images/site/treatment-picoway.webp',
-  laser: '/assets/images/site/treatment-advatx.webp',
-  'skin-tightening': '/assets/images/site/treatment-sofwave.webp',
-  body: '/assets/images/site/treatment-emsculpt-neo.webp',
+  skin: '/assets/images/site/technologies/Morpheus8.jpg',
+  pigmentation: '/assets/images/site/technologies/picoway.jpg',
+  laser: '/assets/images/site/technologies/advantx.jpg',
+  'skin-tightening': '/assets/images/site/technologies/Sofwave.jpg',
+  body: '/assets/images/site/technologies/EmsculptNeo.jpg',
   wellness: '/assets/images/site/why-detail-hands.webp',
 };
 
@@ -105,7 +105,7 @@ export const trustDossier: TrustEntry[] = [
     id: 'practitioner',
     badge: 'AP',
     title: 'Advanced Aesthetic Practitioner',
-    image: '/assets/images/site/treatment-sofwave.webp',
+    image: '/assets/images/site/technologies/Sofwave.jpg',
     body: 'Treatment here is practitioner-led: the person who assesses your skin plans your course and carries it out, through to aftercare.',
     proof: [{ label: 'Practitioner-led' }, ...(process.env.NODE_ENV !== 'production' ? [{ label: 'Name & portrait: client to supply', pending: true }] : [])],
   },
@@ -121,7 +121,7 @@ export const trustDossier: TrustEntry[] = [
     id: 'technology',
     badge: '◎',
     title: 'Advanced technology training',
-    image: '/assets/images/site/treatment-emsculpt-neo.webp',
+    image: '/assets/images/site/technologies/EmsculptNeo.jpg',
     body: 'Every device is used by a practitioner trained on it by its manufacturer, rather than on a general course.',
     proof: signatureTreatments.map((treatment) => ({ label: treatment.name })),
   },
@@ -129,7 +129,7 @@ export const trustDossier: TrustEntry[] = [
     id: 'cpd',
     badge: 'CPD',
     title: 'Continuing professional education',
-    image: '/assets/images/site/treatment-morpheus8.webp',
+    image: '/assets/images/site/technologies/Morpheus8.jpg',
     body: 'Aesthetic practice moves quickly. We keep pace through ongoing training in skin health, regenerative treatment and body contouring.',
     proof: [{ label: 'Skin health' }, { label: 'Regenerative' }, { label: 'Body contouring' }],
   },

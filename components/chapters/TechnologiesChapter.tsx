@@ -168,7 +168,7 @@ function Photographs() {
                 src={photo.src}
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 36vw, 100vw"
+                sizes="(min-width: 1024px) 38vw, 100vw"
                 className="object-cover"
                 style={{ objectPosition: photo.position }}
               />

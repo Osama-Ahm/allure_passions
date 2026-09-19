@@ -12,6 +12,8 @@
  *   'licensed'  — a stock photograph used under its licence (see `credit`).
  *                 Atmospheric only, like 'generated': no faces, no devices, no
  *                 results.
+ *   'supplied'  — provided by the clinic (for example a manufacturer's treatment
+ *                 photograph). May show the real device in use; never a result.
  *   'real'      — must be a genuine, unretouched clinic photograph used with the
  *                 patient's written consent. Never generate these (§8.11,
  *                 CAP Code 3.1, 12.1): a fabricated result is a misleading claim.
@@ -27,17 +29,19 @@ type MediaSlot = {
   ratio: string;
   alt: string;
   subject: string;
-  kind?: 'generated' | 'licensed' | 'real';
+  kind?: 'generated' | 'licensed' | 'supplied' | 'real';
   position?: string;
   credit?: Credit;
+  /** The file, when it is not `<id>.webp` in the site folder. */
+  file?: string;
 };
 
 const slot = (
   id: string,
-  { ratio, alt, subject, kind = 'generated', position = 'center', credit }: MediaSlot,
+  { ratio, alt, subject, kind = 'generated', position = 'center', credit, file }: MediaSlot,
 ) => ({
   id,
-  src: `${base}/${id}.webp`,
+  src: `${base}/${file ?? `${id}.webp`}`,
   ratio,
   alt,
   subject,
@@ -75,80 +79,55 @@ export const media = {
 
 /**
  * One photograph per signature treatment, shown with it in the homepage's
- * technology chapter. They follow the brief for these slots
- * (docs/IMAGE_BRIEF.md): abstract and sensory, suggesting what each
- * technology does, with no device, no face and no result.
- *
- * All six are from Pexels, under the Pexels licence (free for commercial use,
- * no attribution required); each photographer is credited here all the same.
- * The files are the photographs resized, not cropped: every use crops them
- * about `position`.
+ * technology chapter: a 3:2 frame beside the copy on a desktop, 4:3 above it
+ * on a phone. Supplied by the clinic (public/assets/images/site/technologies/),
+ * showing each device in use. Every crop is taken about `position`.
  */
 export const treatmentMedia: Record<string, Media> = {
   picoway: slot('treatment-picoway', {
-    ratio: '1587 / 2000',
-    alt: 'Warm window light falling across the skin at the collarbone',
-    subject: 'PicoWay — light on skin',
-    kind: 'licensed',
-    position: '50% 62%',
-    credit: {
-      photographer: 'Cesar Lalangui Eras',
-      source: 'https://www.pexels.com/photo/a-close-up-of-a-man-s-chest-in-a-mirror-27247318/',
-    },
+    ratio: '672 / 456',
+    alt: 'A practitioner holding a PicoWay laser handpiece to a patient’s cheek, her eyes shielded',
+    subject: 'PicoWay in use',
+    kind: 'supplied',
+    file: 'technologies/picoway.jpg',
   }),
   advatx: slot('treatment-advatx', {
-    ratio: '1333 / 2000',
-    alt: 'Two bands of warm yellow light across soft, dark surfaces',
-    subject: 'ADVATx — two wavelengths of light',
-    kind: 'licensed',
-    position: '55% 55%',
-    credit: {
-      photographer: 'Sueda Dilli',
-      source: 'https://www.pexels.com/photo/sunlight-and-shadows-on-a-suede-surface-18104900/',
-    },
+    ratio: '665 / 461',
+    alt: 'An ADVATx handpiece directing yellow laser light at a patient’s upper lip',
+    subject: 'ADVATx in use',
+    kind: 'supplied',
+    file: 'technologies/advantx.jpg',
   }),
   morpheus8: slot('treatment-morpheus8', {
-    ratio: '1333 / 2000',
-    alt: 'Close-up of smooth skin catching low, raking light',
-    subject: 'Morpheus8 — skin texture in raking light',
-    kind: 'licensed',
-    position: '50% 45%',
-    credit: {
-      photographer: 'Angela Roma',
-      source: 'https://www.pexels.com/photo/close-up-shot-of-a-person-s-skin-7479517/',
-    },
+    ratio: '678 / 452',
+    alt: 'The fine gold pins of a Morpheus8 tip just above a patient’s forehead',
+    subject: 'Morpheus8 in use',
+    kind: 'supplied',
+    position: '60% 50%',
+    file: 'technologies/Morpheus8.jpg',
   }),
   sofwave: slot('treatment-sofwave', {
-    ratio: '2000 / 1964',
-    alt: 'Concentric ripples spreading from a single drop on still water',
-    subject: 'Sofwave — ultrasound as ripples',
-    kind: 'licensed',
-    position: '52% 60%',
-    credit: {
-      photographer: 'Viktoria Emilia',
-      source: 'https://www.pexels.com/photo/water-drop-on-body-of-water-9456245/',
-    },
+    ratio: '547 / 365',
+    alt: 'A Sofwave applicator held along a relaxed patient’s jawline',
+    subject: 'Sofwave in use',
+    kind: 'supplied',
+    file: 'technologies/Sofwave.jpg',
   }),
   'emsculpt-neo': slot('treatment-emsculpt-neo', {
-    ratio: '2000 / 1333',
-    alt: 'The muscles of a back and shoulder in low, warm side light',
-    subject: 'Emsculpt Neo — body form study',
-    kind: 'licensed',
-    position: '36% 50%',
-    credit: {
-      photographer: 'Clayton de Araujo',
-      source: 'https://www.pexels.com/photo/woman-back-in-darkness-15115980/',
-    },
+    ratio: '763 / 402',
+    alt: 'Emsculpt Neo applicators strapped around a patient’s thighs as she lies on a treatment bed',
+    subject: 'Emsculpt Neo in use',
+    kind: 'supplied',
+    position: '55% 50%',
+    file: 'technologies/EmsculptNeo.jpg',
   }),
   'emerald-laser': slot('treatment-emerald-laser', {
-    ratio: '1333 / 2000',
-    alt: 'A line of light across folds of emerald-green satin',
-    subject: 'Emerald Laser — green light on satin',
-    kind: 'licensed',
-    credit: {
-      photographer: 'Eva Bronzini',
-      source: 'https://www.pexels.com/photo/green-textile-in-close-up-photography-7641221/',
-    },
+    ratio: '1140 / 641',
+    alt: 'Lines of green light from the Emerald laser falling across a patient’s body',
+    subject: 'Emerald Laser in use',
+    kind: 'supplied',
+    position: '65% 50%',
+    file: 'technologies/Emeraldlaser.webp',
   }),
 };
 

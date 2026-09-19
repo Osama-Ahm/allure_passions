@@ -223,7 +223,7 @@ html.lenis body {
   /* -------------------------------------------------------------------------
      The technology chapter's photographs, from lg up (TechnologiesChapter).
 
-     One 4:5 frame in the chapter's back layer, behind the canvas, centred at
+     One 3:2 frame in the chapter's back layer, behind the canvas, centred at
      --frame-x / --frame-y (techFrame in lib/story/chapters.ts). The 3D stage
      turns the concern drop into light at that point and writes --open as the
      photograph opens out of it; without the stage it is simply open. Each
@@ -232,15 +232,15 @@ html.lenis body {
      a slight scale as it does.
      ------------------------------------------------------------------------- */
   .tech-frame {
-    --frame-w: min(36vw, 57svh);
+    --frame-w: min(38vw, 90svh);
     position: absolute;
     left: calc(var(--frame-x) - var(--frame-w) / 2);
-    top: calc(var(--frame-y) - var(--frame-w) * 0.625);
+    top: calc(var(--frame-y) - var(--frame-w) / 3);
     width: var(--frame-w);
-    height: calc(var(--frame-w) * 1.25);
+    height: calc(var(--frame-w) * 2 / 3);
     overflow: hidden;
-    /* From the centre, 0.81 of the width reaches the corners of a 4:5 frame. */
-    clip-path: circle(calc(var(--frame-w) * 0.81 * var(--open, 1)) at 50% 50%);
+    /* From the centre, 0.61 of the width reaches the corners of a 3:2 frame. */
+    clip-path: circle(calc(var(--frame-w) * 0.61 * var(--open, 1)) at 50% 50%);
     /* Fading as the chapter ends and dawn comes up, rather than leaving as a
        dark block on the gold page (--p is the chapter's progress). */
     opacity: clamp(0, calc((0.95 - var(--p, 0)) * 10), 1);
