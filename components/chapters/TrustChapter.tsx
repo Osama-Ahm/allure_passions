@@ -24,12 +24,12 @@ export function TrustChapter() {
             <p className="mt-6 font-sans text-[15px] leading-relaxed text-ink-muted">{trust.lede}</p>
           </header>
 
-          {/* It fades in once the chapter has reached the top, by which time
-              the medallion has crossed behind this column to the left; an
-              opaque photograph must never cut across it on the way. */}
+          {/* It fades in quickly as soon as the chapter reaches the top, by
+              which time the medallion has crossed behind this column to the
+              left; an opaque photograph must never cut across it on the way. */}
           <div
             className="reveal-at relative mt-10 aspect-[4/3] w-full overflow-hidden bg-sanctuary-pearl md:ml-auto md:aspect-square md:max-w-[18rem] lg:mt-0 lg:w-[clamp(11rem,15vw,16rem)]"
-            style={{ '--at': 0 } as CSSProperties}
+            style={{ '--at': 0, '--rate': 30 } as CSSProperties}
           >
             <Image
               src={media.whyDetail.src}

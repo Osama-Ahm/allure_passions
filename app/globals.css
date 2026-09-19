@@ -176,8 +176,8 @@ html.lenis body {
      added and every line simply shows.
      ------------------------------------------------------------------------- */
   .story-live .reveal-at {
-    opacity: clamp(0, calc((var(--p, 1) - var(--at, 0)) * 7), 1);
-    translate: 0 calc((1 - clamp(0, calc((var(--p, 1) - var(--at, 0)) * 7), 1)) * 1.25rem);
+    opacity: clamp(0, calc((var(--p, 1) - var(--at, 0)) * var(--rate, 7)), 1);
+    translate: 0 calc((1 - clamp(0, calc((var(--p, 1) - var(--at, 0)) * var(--rate, 7)), 1)) * 1.25rem);
   }
 
   /* Drawings that stand in for the 3D stage (the bottle outline, the falling
