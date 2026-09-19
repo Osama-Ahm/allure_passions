@@ -54,7 +54,9 @@ export const media = {
   }),
   aboutClinic: slot('about-clinic-wide', {
     ratio: '21 / 9',
-    alt: 'The clinic’s reception and treatment corridor in warm, natural light',
+    // A generated image (see `kind`), so it is described, not claimed as the
+    // clinic's own reception. Say so once real photographs replace it.
+    alt: 'A calm reception with a curved armchair and an oak desk in warm, natural light',
     subject: 'Clinic interior, wide',
   }),
 };

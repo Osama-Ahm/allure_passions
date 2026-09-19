@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import { addressLines, clinic } from '@/content/clinic';
 import { emailHref, telHref, whatsappHref } from '@/content/contact';
+import { media } from '@/content/media';
 import { visit } from '@/content/story';
 import { ChapterFrame } from '@/components/story/ChapterFrame';
 import { SiteFooter } from '@/components/sections/SiteFooter';
@@ -8,8 +10,9 @@ import { ConsultationButton } from '@/components/ui/ConsultationButton';
 /**
  * Chapter 11 · Visit, on night. The jar and bottle dissolve into light, and
  * the light draws the clinic's archway again on the right, its doorway lit
- * warm; how to get in touch and where to find the clinic on the left. The
- * footer closes the chapter, so the page ends in the same night.
+ * warm; how to get in touch, a reception in daylight, and where to find the
+ * clinic on the left. The footer closes the chapter, so the page ends in the
+ * same night.
  */
 export function VisitChapter() {
   return (
@@ -46,7 +49,19 @@ export function VisitChapter() {
             <ConsultationButton variant="outline">Request a consultation</ConsultationButton>
           </div>
 
-          <div className="mt-16 grid gap-10 border-t border-line pt-8 sm:grid-cols-2">
+          {/* On a tablet the copy runs the full width, over the arch; the
+              photograph keeps to the left of it. */}
+          <div className="relative mt-16 aspect-[21/9] overflow-hidden bg-sanctuary-charcoal md:max-w-[52%] lg:max-w-none">
+            <Image
+              src={media.aboutClinic.src}
+              alt={media.aboutClinic.alt}
+              fill
+              sizes="(min-width: 1024px) 56vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+
+          <div className="mt-12 grid gap-10 border-t border-line pt-8 sm:grid-cols-2">
             <div>
               <h3 className="font-sans text-label uppercase text-accent">Find us</h3>
               <address className="mt-3 font-serif text-2xl font-light not-italic leading-snug">
