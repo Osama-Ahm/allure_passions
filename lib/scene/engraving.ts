@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 
 /**
- * The medallion's face, as a bump map: the monogram at the centre, the
- * clinic's name round the rim between two fine rings. White is raised. Drawn
- * on a canvas in the site's own Cormorant; the texture exists from the first
- * frame and is redrawn once the font and the monogram have loaded, so its
- * material never recompiles.
+ * The medallion's face: the monogram at the centre, the clinic's name round
+ * the rim between two fine rings. White is the gold ground and black is the
+ * engraving, so the one map sets the face's colour (black enamel in the cuts),
+ * its metal (none in the cuts) and its relief (the cuts sit lower). Drawn on a
+ * canvas in the site's own Cormorant; the texture exists from the first frame,
+ * as plain gold, and is redrawn once the font and the monogram have loaded, so
+ * its material never recompiles.
  *
  * It carries the clinic's name only, never an award's: there is no genuine
  * award artwork to reproduce (see content/credentials.ts).
@@ -14,7 +16,13 @@ export function createEngraving() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 1024;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
   const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 8;
 
   const ready = drawEngraving(canvas).then(() => {
@@ -27,7 +35,7 @@ export function createEngraving() {
 async function drawEngraving(canvas: HTMLCanvasElement) {
   const family =
     getComputedStyle(document.documentElement).getPropertyValue('--font-cormorant').trim() || 'Georgia, serif';
-  await document.fonts.load(`500 52px ${family}`).catch(() => undefined);
+  await document.fonts.load(`600 54px ${family}`).catch(() => undefined);
   const monogram = await new Promise<HTMLImageElement | null>((resolve) => {
     const image = new Image();
     image.onload = () => resolve(image);
@@ -39,12 +47,12 @@ async function drawEngraving(canvas: HTMLCanvasElement) {
   if (!ctx) return;
   const size = canvas.width;
   const centre = size / 2;
-  ctx.fillStyle = '#000000';
+  ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, size, size);
 
   // Two fine rings.
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 6;
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 7;
   for (const radius of [size * 0.46, size * 0.36]) {
     ctx.beginPath();
     ctx.arc(centre, centre, radius, 0, Math.PI * 2);
@@ -53,8 +61,8 @@ async function drawEngraving(canvas: HTMLCanvasElement) {
 
   // The name, set round between them.
   const text = 'ALLURE PASSIONS UK  ·  FITZROVIA  ·  LONDON  ·  ';
-  ctx.font = `500 52px ${family}`;
-  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `600 54px ${family}`;
+  ctx.fillStyle = '#000000';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   const radius = size * 0.41;
@@ -68,7 +76,7 @@ async function drawEngraving(canvas: HTMLCanvasElement) {
     ctx.restore();
   });
 
-  // The monogram, as a white silhouette.
+  // The monogram, as a black silhouette.
   if (monogram) {
     const mark = document.createElement('canvas');
     const height = size * 0.44;
@@ -79,7 +87,7 @@ async function drawEngraving(canvas: HTMLCanvasElement) {
     markCtx.imageSmoothingQuality = 'high';
     markCtx.drawImage(monogram, 0, 0, mark.width, mark.height);
     markCtx.globalCompositeOperation = 'source-in';
-    markCtx.fillStyle = '#FFFFFF';
+    markCtx.fillStyle = '#000000';
     markCtx.fillRect(0, 0, mark.width, mark.height);
     ctx.drawImage(mark, centre - width / 2, centre - height / 2);
   }

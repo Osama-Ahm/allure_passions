@@ -72,10 +72,21 @@ export function TokenScene() {
     [tokens]
   );
 
+  // One map drives the face's colour, metal and relief: gold where it is
+  // white, and where it is black, the engraving, cut in and filled with black
+  // enamel so the name and monogram read from across the room.
   const engraving = useMemo(() => {
     const { texture } = createEngraving();
     const material = withDissolve(
-      new THREE.MeshStandardMaterial({ color: gold, metalness: 1, roughness: 0.26, bumpMap: texture, bumpScale: 3 })
+      new THREE.MeshStandardMaterial({
+        color: gold,
+        map: texture,
+        metalness: 1,
+        metalnessMap: texture,
+        roughness: 0.26,
+        bumpMap: texture,
+        bumpScale: 1.5,
+      })
     );
     return { texture, material, geometry: new THREE.CircleGeometry(1, 96) };
   }, []);
