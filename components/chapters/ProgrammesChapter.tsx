@@ -6,8 +6,8 @@ import { ChapterFrame } from '@/components/story/ChapterFrame';
 /**
  * Chapter 7 · Programmes. Four structured courses as ruled rows: what each is,
  * what it includes, and what it costs. Beside them, the stones of the plan
- * have become discs, and each programme's row (data-focus) shows its own
- * stack: the technologies it combines, layer by layer.
+ * have become one stack of discs, which lifts, parts and sways a little as the
+ * courses scroll past, the same for every course.
  */
 export function ProgrammesChapter() {
   return (
@@ -25,7 +25,6 @@ export function ProgrammesChapter() {
           {programmes.map((programme, index) => (
             <li
               key={programme.id}
-              data-focus
               className="grid gap-5 border-t border-line py-8 md:grid-cols-[3rem_minmax(0,1.2fr)_minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-8"
             >
               <span className="font-sans text-label uppercase text-ink-muted">0{index + 1}</span>

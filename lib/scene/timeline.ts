@@ -45,9 +45,12 @@ export const T = {
   circle: [4.9, 5.08],
   steps: [5.02, 5.5],
 
-  // Into Programmes (chapter 6): the stones round into discs and stack.
+  // Into Programmes (chapter 6): the stones round into discs and stack. The
+  // stack is one model for the whole chapter, moving with the scroll between
+  // forming and pressing into the medallion.
   toDiscs: [5.72, 6.0],
   toStack: [5.7, 6.02],
+  programmes: [6.02, 6.8],
 
   // Into Trust (chapter 7): the stack presses into one gold medallion, which
   // rises and turns to face you.

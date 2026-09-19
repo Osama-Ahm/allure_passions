@@ -18,30 +18,40 @@ const CIRCLE_R = 0.5;
 const GAP = 0.012;
 
 /**
- * The four roles a disc can play in a programme, bottom of the stack to top,
- * and the programmes (content/programmes.ts, in order) as which roles they
- * combine: Contour Synergy is Emsculpt Neo alone; Luxe adds Emerald Laser;
- * Advanced adds mesotherapy; Cosmelan is its own protocol.
+ * What each stone becomes as a disc: gold (the one that becomes the
+ * medallion), sage, cream and rose. The programme stack is one model through
+ * the whole chapter, whichever course is being read.
  */
-const ROLES = [
+const FINISHES = [
   { colour: gold, metalness: 1, roughness: 0.3 },
   { colour: '#9CB6A7', metalness: 0.15, roughness: 0.25 },
   { colour: '#EDE6DA', metalness: 0, roughness: 0.5 },
   { colour: '#CBA595', metalness: 0.05, roughness: 0.42 },
 ];
-const PROGRAMMES = [
-  [1, 0, 0, 0],
-  [1, 1, 0, 0],
-  [1, 1, 1, 0],
-  [0, 0, 0, 1],
-];
+/** Where each disc sits in the stack, from the bottom: gold, rose, sage, cream. */
+const LEVEL = [0, 2, 3, 1];
+
+/**
+ * How the stack moves as the programmes scroll past: over the chapter it lifts
+ * a little, its discs part, and it leans towards you and sways from one side
+ * to the other; it is closed and upright at both ends, where it forms and
+ * where it presses into the medallion.
+ */
+const LIFT = 0.025;
+const SPREAD = 0.02;
+const LEAN = 0.1;
+const SWAY = 0.4;
 
 // A warmer stone than the arch's, so the plan reads against the cream page.
 const stone = new THREE.Color('#E2D5C1');
-const roleColours = ROLES.map((role) => new THREE.Color(role.colour));
+const finishColours = FINISHES.map((finish) => new THREE.Color(finish.colour));
 const target = new THREE.Vector3();
 const from = new THREE.Vector3();
 const medallionAt = new THREE.Vector3();
+const stackUp = new THREE.Vector3();
+const leanAxis = new THREE.Vector3();
+const lean = new THREE.Quaternion();
+const discLean = new THREE.Quaternion();
 const shape: LatheShape = { a: 0, b: 0, p: 0 };
 
 /** Where plan stone `k` sits: 01 at the top of the circle as seen from above, then clockwise. */
@@ -54,11 +64,11 @@ function planSpot(k: number, out: THREE.Vector3) {
  * Chapters 6–10 · Consultation, Programmes, Trust, At home. Four of the arch's
  * stones become the plan: soft stones on a gold circle that draws itself,
  * lighting in turn as the four steps are read. Then they round into discs and
- * stack, and each programme shows its own stack: the technologies it combines,
- * layer by layer. For Trust the stack presses into one gold medallion, engraved
- * with the monogram, which rises to face you; at home it lies back down and
- * becomes the lid of the cream jar (HomeScene), until the pair dissolve on the
- * way to the Visit chapter.
+ * stack, one stack for the whole programmes chapter, which rises, parts and
+ * sways a little as the courses scroll by. For Trust the stack presses into
+ * one gold medallion, engraved in black with the monogram, which rises to face
+ * you; at home it lies back down and becomes the lid of the cream jar
+ * (HomeScene), until the pair dissolve on the way to the Visit chapter.
  */
 export function TokenScene() {
   const { camera, size } = useThree();
@@ -123,7 +133,6 @@ export function TokenScene() {
     if (group.current) group.current.visible = visible;
     if (!visible) {
       annotations.plan.forEach((label) => label && (label.style.opacity = '0'));
-      annotations.layers.forEach((label) => label && (label.style.opacity = '0'));
       return;
     }
 
@@ -137,20 +146,9 @@ export function TokenScene() {
       ring.current.visible = drawn > 0 && ringMaterial.current.opacity > 0;
     }
 
-    // --- Which step, and which programme ----------------------------------
+    // --- Which step ----------------------------------------------------------
     const step = spanLinear(u, T.steps) * 3;
     const planLabels = span(u, [T.circle[0], T.circle[1]]) * (1 - span(u, [T.toDiscs[0] - 0.1, T.toDiscs[0]]));
-
-    const focus = stage.focusChapter === 'programmes' ? stage.focus : u < 6.5 ? 0 : 3;
-    const programme = Math.min(3, Math.max(0, focus));
-    const roleWeight = [0, 0, 0, 0];
-    PROGRAMMES.forEach((roles, p) => {
-      const w = clamp01(1 - Math.abs(programme - p) * 1.4);
-      roles.forEach((member, r) => (roleWeight[r] += member * w));
-    });
-    // Until they have gathered, all four stay; then the stack is the programme's.
-    const composing = span(u, [T.toStack[1] - 0.06, T.toStack[1] + 0.08]);
-    const shown = roleWeight.map((w) => lerp(1, Math.min(1, w), composing));
 
     const toDiscs = span(u, T.toDiscs);
     const toStack = span(u, T.toStack);
@@ -161,9 +159,21 @@ export function TokenScene() {
     const toLid = span(u, T.toLid);
     const grow = jarGrowth(u);
     const away = span(u, T.pairOut);
-    const layerLabels = span(u, [T.toStack[1], T.toStack[1] + 0.1]) * (1 - merge);
 
-    let stackHeight = 0;
+    // --- The programme stack, moving with the scroll ------------------------
+    // `open` rises from nothing where the stack forms to its fullest halfway
+    // through the chapter and back to nothing where it presses into the
+    // medallion, easing in and out at both ends; scrolling back plays it in
+    // reverse.
+    const reading = spanLinear(u, T.programmes);
+    const open = Math.sin(Math.PI * reading) ** 2;
+    const bob = stage.reducedMotion ? 0 : 0.004 * Math.sin(stage.time * 0.9) * open;
+    const discB = lerp(PEBBLE.b, DISC.b, toDiscs);
+    const pitch = 2 * discB + GAP + SPREAD * open;
+    const sway = SWAY * (2 * reading - 1);
+    leanAxis.set(Math.cos(sway), 0, -Math.sin(sway));
+    stackUp.set(0, 1, 0).applyQuaternion(lean.setFromAxisAngle(leanAxis, LEAN * open));
+
     tokens.forEach((token, k) => {
       const mesh = meshes.current[k];
       if (!mesh) return;
@@ -186,9 +196,10 @@ export function TokenScene() {
       const lit = clamp01(1 - Math.abs(step - k) * 1.3) * (1 - toDiscs);
       mesh.position.y += 0.05 * lit;
 
-      const inStack = k === 3 ? 0 : stackHeight;
-      mesh.position.lerp(target.set(PLAN_CENTRE.x, PLAN_CENTRE.y + inStack, PLAN_CENTRE.z), toStack);
-      if (k < 3) stackHeight += shown[k] * (2 * shape.b + GAP);
+      const level = LEVEL[k];
+      target.copy(PLAN_CENTRE).addScaledVector(stackUp, level * pitch);
+      target.y += LIFT * open + bob;
+      mesh.position.lerp(target, toStack);
 
       mesh.rotation.order = 'YXZ';
       if (k === 0) {
@@ -204,20 +215,22 @@ export function TokenScene() {
         mesh.position.lerp(medallionAt, merge);
         mesh.rotation.set(0, stage.time * 0.1 + k, 0);
       }
+      // In the stack, each disc leans with it, the upper ones a touch more,
+      // so the layers read as parting rather than as one block tipping.
+      if (open > 0) mesh.quaternion.premultiply(discLean.setFromAxisAngle(leanAxis, LEAN * open * (0.85 + 0.1 * level)));
 
-      // Surface: travertine, taking on its role's material as it becomes a disc.
-      const role = ROLES[k];
-      material.color.copy(stone).lerp(roleColours[k], toDiscs);
-      material.metalness = lerp(0, role.metalness, toDiscs);
-      material.roughness = lerp(0.7, role.roughness, toDiscs);
+      // Surface: travertine, taking on its finish as it becomes a disc.
+      const finish = FINISHES[k];
+      material.color.copy(stone).lerp(finishColours[k], toDiscs);
+      material.metalness = lerp(0, finish.metalness, toDiscs);
+      material.roughness = lerp(0.7, finish.roughness, toDiscs);
       material.emissiveIntensity = 0.55 * lit;
 
-      // Present: resolving as it rises from the arch; dissolving if the
-      // programme being read does not use it.
+      // Present: resolving as it rises from the arch, and pressed into the
+      // medallion on the way to Trust.
       const forming = 1 - span(u, [T.planStones[0], T.planStones[0] + 0.12]);
-      const present = k === 0 ? lerp(shown[k], 1, merge) : shown[k];
       const pressedIn = k === 0 ? 0 : span(u, [T.toMedallion[0] + 0.08, T.toMedallion[1]]);
-      material.dissolve.value = Math.max(forming, 1 - present, pressedIn, away, k === 0 ? stage.away * toLid : 0);
+      material.dissolve.value = Math.max(forming, pressedIn, away, k === 0 ? stage.away * toLid : 0);
       mesh.visible = material.dissolve.value < 0.999;
 
       // The medallion's engraved face, on its top, while it is a medallion.
@@ -231,20 +244,13 @@ export function TokenScene() {
         face.current.visible = engraving.material.dissolve.value < 0.999;
       }
 
-      // Labels: the step beside its stone, then the layer beside its disc.
+      // Label: the step beside its stone.
       placeLabel(
         annotations.plan[k],
         from.copy(PLAN_CENTRE).addScaledVector(target.set(Math.sin((k * Math.PI) / 2), 0, -Math.cos((k * Math.PI) / 2)), k % 2 ? 1 : 0.74),
         camera,
         size,
         planLabels * (0.5 + 0.5 * clamp01(1 - Math.abs(step - k) * 1.3))
-      );
-      placeLabel(
-        annotations.layers[k],
-        from.copy(mesh.position).add(target.set(shape.a + 0.05, shape.b, 0)),
-        camera,
-        size,
-        layerLabels * shown[k]
       );
     });
   }, ORDER.tokens);

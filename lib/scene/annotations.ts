@@ -11,8 +11,6 @@ export const annotations = {
   droplets: [] as (HTMLElement | null)[],
   /** The four consultation steps, beside their stones. */
   plan: [] as (HTMLElement | null)[],
-  /** The layers of a programme, beside their discs. */
-  layers: [] as (HTMLElement | null)[],
 };
 
 /**
