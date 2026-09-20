@@ -30,8 +30,12 @@ export function ChapterPill({ rootRef }) {
       if (element.getBoundingClientRect().top < viewport * 0.55) current = chapterIndex[element.dataset.chapter];
     });
     const begin = root.querySelector('#begin');
+    // Measured from the hero itself, which pins for several screens: the pill
+    // waits until that whole sequence has gone by rather than a fixed screenful.
+    const hero = root.querySelector('.ap-hero');
+    const heroGone = hero ? hero.getBoundingClientRect().bottom < viewport * 0.1 : window.scrollY > viewport * 0.9;
     setChapter(current);
-    setOn(window.scrollY > viewport * 0.9 && (!begin || begin.getBoundingClientRect().top > viewport * 0.6));
+    setOn(heroGone && (!begin || begin.getBoundingClientRect().top > viewport * 0.6));
     if (arcRef.current) arcRef.current.style.strokeDashoffset = RING * (1 - clamp01(window.scrollY / (max || 1)));
   }, [rootRef]);
   useScrollFrame(onScroll);

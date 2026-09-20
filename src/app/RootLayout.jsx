@@ -8,8 +8,11 @@ import ScrollProgress from '../components/motion/ScrollProgress';
 import cx from '../lib/cx';
 import './RootLayout.css';
 
-/** Pages whose first block runs underneath a transparent header. */
+/** Pages whose first block runs underneath the floating header, with no top offset. */
 const HERO_ROUTES = new Set(['/']);
+
+/** …and of those, the ones whose hero is dark enough for the header to start glassy. */
+const DARK_HERO_ROUTES = new Set();
 
 export default function RootLayout() {
   const mainRef = useRef(null);
@@ -31,7 +34,7 @@ export default function RootLayout() {
         Skip to content
       </a>
       <ScrollProgress />
-      <Header overHero={hasHero} />
+      <Header overHero={DARK_HERO_ROUTES.has(pathname)} />
       <main id="main" ref={mainRef} tabIndex={-1} className={cx('ap-main', !hasHero && 'ap-main--offset')}>
         <Outlet />
       </main>

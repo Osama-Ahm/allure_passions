@@ -1,307 +1,288 @@
+/* ==========================================================================
+   The opening sequence: four screens of scroll, one pinned screen of clinic tour.
+   The section is `--slides` screens tall; the background video pins to the viewport
+   and scrubs smoothly with scroll depth while frosted cards float over it.
+   ========================================================================== */
+
 .ap-hero {
   position: relative;
+  height: calc(100svh * var(--slides, 4));
   background: var(--color-canvas);
 }
 
-.ap-hero__shell {
-  position: relative;
-  overflow: hidden;
-  background: var(--color-night);
-  transform-origin: 50% 0;
-  will-change: transform;
+.ap-hero__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
 }
+
+/* Video & Media ------------------------------------------------------------ */
 
 .ap-hero__video {
   position: absolute;
   inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   max-width: none;
   object-fit: cover;
-  transform: scale(1.06);
+  object-position: center;
+  pointer-events: none;
+  background-color: var(--color-canvas);
 }
 
+.ap-hero__video--static {
+  display: block;
+}
+
+/* Slides ------------------------------------------------------------------ */
+
+.ap-hero__slide {
+  position: absolute;
+  inset: 0;
+}
+
+.ap-hero__img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+}
+
+/* Scrim over the clinic tour video: ensures clean contrast for header, cards, and text */
 .ap-hero__scrim {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background:
-    radial-gradient(120% 80% at 10% 100%, rgb(18 16 14 / 0.88), transparent 62%),
-    linear-gradient(180deg, rgb(18 16 14 / 0.5), rgb(18 16 14 / 0.1) 35%, rgb(18 16 14 / 0.6));
+    linear-gradient(180deg, rgb(246 241 234 / 0.55), rgb(246 241 234 / 0.1) 26%),
+    linear-gradient(0deg, rgb(20 19 18 / 0.42), rgb(20 19 18 / 0) 48%);
 }
 
-.ap-hero__inner {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: clamp(24px, 4svh, 48px);
-  min-height: 100svh;
-  padding-top: 110px;
-  padding-bottom: clamp(20px, 3vw, 36px);
-  color: var(--color-on-night);
-}
+/* Cards ------------------------------------------------------------------- */
 
-.ap-hero__copy {
-  align-self: end;
-}
-
-.ap-hero__copy .ap-dot-eyebrow {
-  margin-bottom: 1.2rem;
-}
-
-.ap-hero h1 {
-  max-width: 13ch;
-  color: var(--color-on-night);
-}
-
-.ap-hero__sub {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.2rem 3rem;
-  margin-top: clamp(1rem, 2.5svh, 2rem);
-}
-
-.ap-hero__sub p {
-  max-width: 40ch;
-  color: var(--color-on-night-2);
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
-}
-
-.ap-hero__bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto auto;
-  gap: 10px;
-}
-
-.ap-hero__path {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1rem 0.9rem 1.2rem;
-  border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 0.08);
-  color: inherit;
-  text-decoration: none;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition:
-    background-color 0.4s,
-    transform 0.5s var(--ease-expo);
-}
-
-.ap-hero__path:hover {
-  background: rgb(255 255 255 / 0.16);
-  transform: translateY(-3px);
-}
-
-.ap-hero__path small {
-  display: block;
-  color: var(--color-champagne);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.6;
-  text-transform: uppercase;
-}
-
-.ap-hero__path > span > span {
-  font-size: 0.92rem;
-}
-
-.ap-hero__path-arrow {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--color-on-night);
-  color: var(--color-ink);
-  transition: transform 0.5s var(--ease-expo);
-}
-
-.ap-hero__path:hover .ap-hero__path-arrow {
-  transform: rotate(-45deg);
-}
-
-.ap-hero__status {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  margin: 0;
-  padding: 0.9rem 1.2rem;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: var(--radius-md);
-  background: rgb(18 16 14 / 0.35);
-  font-size: 0.85rem;
-  white-space: nowrap;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.ap-hero__status i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #7FC29B;
-  animation: ap-hero-ping 2s infinite;
-}
-
-.ap-hero__status.is-closed i {
-  background: var(--color-champagne);
-  animation: none;
-}
-
-@keyframes ap-hero-ping {
-  0% {
-    box-shadow: 0 0 0 0 rgb(127 194 155 / 0.6);
-  }
-
-  70%,
-  100% {
-    box-shadow: 0 0 0 10px rgb(127 194 155 / 0);
-  }
-}
-
-.ap-hero__pause {
-  display: grid;
-  place-items: center;
-  align-self: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: 50%;
-  background: rgb(18 16 14 / 0.35);
-  color: var(--color-on-night);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: background-color 0.3s;
-}
-
-.ap-hero__pause:hover {
-  background: rgb(255 255 255 / 0.16);
-}
-
-.ap-hero__seal {
-  position: absolute;
-  z-index: 2;
-  top: 130px;
-  right: var(--gutter);
-  width: 124px;
-  height: 124px;
-  color: var(--color-on-night);
-}
-
-.ap-hero__seal svg {
-  width: 100%;
-  height: 100%;
-  animation: ap-spin 22s linear infinite;
-}
-
-.ap-hero__seal b {
+/* Holds the cards to the same measure as the rest of the page. */
+.ap-hero__stage {
   position: absolute;
   inset: 0;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  pointer-events: none;
+}
+
+.ap-hero__card {
+  position: absolute;
+  bottom: clamp(5.5rem, 12svh, 7.5rem);
+  width: min(30rem, calc(100% - var(--gutter) * 2));
+  padding: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: var(--radius-md);
+  background: rgb(255 253 249 / 0.72);
+  box-shadow: var(--shadow-lift);
+  pointer-events: auto;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  will-change: opacity, transform;
+}
+
+.ap-hero__card[data-side='left'] {
+  left: var(--gutter);
+}
+
+.ap-hero__card[data-side='right'] {
+  right: var(--gutter);
+}
+
+.ap-hero__title {
+  margin: 0.8rem 0 0;
+  color: var(--color-ink);
+}
+
+.ap-hero__text {
+  margin: 0.75rem 0 1.5rem;
+  color: var(--color-ink-2);
+  font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+  text-wrap: pretty;
+}
+
+/* A card that has faded out must not be clickable on the way past. */
+.ap-hero__card[inert] {
+  pointer-events: none;
+}
+
+/* Clinic Tour Scroll Cue --------------------------------------------------- */
+
+.ap-hero__tour-cue {
+  position: absolute;
+  top: clamp(5.2rem, 10svh, 6.5rem);
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  background: rgb(255 253 249 / 0.86);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow: var(--shadow-lift);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  color: var(--color-ink-2);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  will-change: opacity, transform;
+}
+
+.ap-hero__tour-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-bronze);
+  box-shadow: 0 0 0 3px rgb(184 146 106 / 0.22);
+  animation: ap-tour-pulse 2.2s infinite ease-in-out;
+}
+
+.ap-hero__tour-label {
+  font: 500 var(--text-label) / 1 var(--font-sans);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+@keyframes ap-tour-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+    box-shadow: 0 0 0 5px rgb(184 146 106 / 0.35);
+  }
+}
+
+/* Slide rail --------------------------------------------------------------- */
+
+.ap-hero__rail {
+  position: absolute;
+  bottom: clamp(1.5rem, 4svh, 2.5rem);
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  transform: translateX(-50%);
+}
+
+.ap-hero__rail button {
   display: grid;
-  place-items: center;
-  color: var(--color-champagne);
-  font: italic 300 1.7rem/1 var(--font-display);
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-3);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out);
 }
 
+.ap-hero__rail button[data-active='true'] {
+  color: var(--color-ink);
+}
 
-@media (max-width: 860px) {
-  .ap-hero__bottom {
-    grid-template-columns: 1fr auto;
+.ap-hero__rail button:hover {
+  color: var(--color-ink);
+}
+
+.ap-hero__rail-no {
+  font: 600 var(--text-label) / 1 var(--font-sans);
+  letter-spacing: var(--tracking-label);
+  text-shadow: 0 1px 10px rgb(246 241 234 / 0.85);
+}
+
+.ap-hero__rail-bar {
+  display: block;
+  width: clamp(28px, 6vw, 48px);
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(28 27 24 / 0.22);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.ap-hero__rail button[data-active='true'] .ap-hero__rail-bar {
+  background: var(--color-bronze);
+}
+
+/* Narrow screens ----------------------------------------------------------- */
+
+@media (max-width: 47.9375rem) {
+  .ap-hero__tour-cue {
+    top: clamp(4.8rem, 9svh, 5.5rem);
+    padding: 0.3rem 0.75rem;
   }
 
-  .ap-hero__path {
-    grid-column: 1 / -1;
+  .ap-hero__card,
+  .ap-hero__card[data-side='left'],
+  .ap-hero__card[data-side='right'] {
+    right: var(--gutter);
+    left: var(--gutter);
+    width: auto;
   }
+}
 
-  .ap-hero__status {
-    order: -1;
-    justify-self: start;
-    padding: 0.55rem 1rem;
-  }
-
-  .ap-hero__pause {
-    order: -1;
-  }
-
-  .ap-hero__seal {
+/* Phones held sideways: the pinned screen is too short for a card this tall,
+   so the sequence gives up its pin and reads as four ordinary panels. */
+@media (max-height: 32.5rem) and (orientation: landscape) {
+  .ap-hero__tour-cue {
     display: none;
   }
-}
 
-/* Phones held sideways: the hero keeps to the screen. The two shortcut cards
-   step aside (the concern and treatment sections follow directly below). */
-@media (max-height: 520px) and (orientation: landscape) {
-  .ap-hero__inner {
-    padding-top: 84px;
-    gap: 16px;
+  .ap-hero__card {
+    bottom: clamp(3.5rem, 9svh, 5rem);
+    padding: 1.1rem 1.25rem;
   }
 
-  .ap-hero__copy .ap-dot-eyebrow {
-    margin-bottom: 0.6rem;
-  }
-
-  .ap-hero__path {
-    display: none;
-  }
-
-  .ap-hero__bottom {
-    grid-template-columns: auto auto;
-    justify-content: start;
+  .ap-hero__text {
+    margin-bottom: 1rem;
   }
 }
 
-/* Ticker ------------------------------------------------------------------ */
+/* Reduced motion ----------------------------------------------------------- */
 
-.ap-ticker {
-  padding: 20px 0;
-  overflow: hidden;
-  border-bottom: 1px solid var(--color-line);
-  background: var(--color-canvas);
+/* Nothing pins and nothing fades: the four slides become four panels, each a
+   screen tall, read one after another. */
+.ap-hero[data-static] {
+  height: auto;
 }
 
-.ap-ticker__track {
-  display: flex;
-  width: max-content;
-  animation: ap-marquee 40s linear infinite;
+.ap-hero[data-static] .ap-hero__pin {
+  position: static;
+  height: auto;
+  overflow: visible;
 }
 
-.ap-ticker:hover .ap-ticker__track,
-.ap-ticker:focus-within .ap-ticker__track {
-  animation-play-state: paused;
+.ap-hero[data-static] .ap-hero__slide {
+  position: relative;
+  height: 100svh;
 }
 
-.ap-ticker__group {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
+.ap-hero[data-static] .ap-hero__img {
+  transform: none;
 }
 
-.ap-ticker__item {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-  font-size: calc(var(--ds) * clamp(1.35rem, 1rem + 1vw, 2rem));
-  line-height: 1;
-  white-space: nowrap;
+.ap-hero[data-static] .ap-hero__scrim {
+  display: none;
 }
 
-.ap-ticker__item::after {
-  content: '✦';
-  margin-left: 2.2rem;
-  color: var(--color-bronze);
-  font-size: 0.8rem;
+.ap-hero[data-static] .ap-hero__card {
+  box-shadow: var(--shadow-soft);
 }
-
-.ap-ticker__item em {
-  color: var(--color-bronze);
-}
-

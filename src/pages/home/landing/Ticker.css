@@ -1,0 +1,46 @@
+/* The credentials marquee that runs directly under the hero. */
+
+.ap-ticker {
+  padding: 20px 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-canvas);
+}
+
+.ap-ticker__track {
+  display: flex;
+  width: max-content;
+  animation: ap-marquee 40s linear infinite;
+}
+
+.ap-ticker:hover .ap-ticker__track,
+.ap-ticker:focus-within .ap-ticker__track {
+  animation-play-state: paused;
+}
+
+.ap-ticker__group {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.ap-ticker__item {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: calc(var(--ds) * clamp(1.35rem, 1rem + 1vw, 2rem));
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ap-ticker__item::after {
+  content: '✦';
+  margin-left: 2.2rem;
+  color: var(--color-bronze);
+  font-size: 0.8rem;
+}
+
+.ap-ticker__item em {
+  color: var(--color-bronze);
+}

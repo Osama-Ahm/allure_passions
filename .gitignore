@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build and framework artifacts
+.next/
+*.tsbuildinfo
+next-env.d.ts

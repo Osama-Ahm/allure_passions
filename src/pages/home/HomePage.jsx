@@ -9,6 +9,7 @@ import Results from './landing/Results';
 import { Instagram, Reviews } from './landing/Social';
 import Statement from './landing/Statement';
 import Technologies from './landing/Technologies';
+import Ticker from './landing/Ticker';
 import Trust from './landing/Trust';
 import { useRevealOnScroll } from './landing/useLandingMotion';
 import { ChapterPill, Cursor } from './landing/Wayfinding';
@@ -28,6 +29,7 @@ export default function HomePage() {
   return (
     <div className="ap-landing" ref={rootRef}>
       <Hero />
+      <Ticker />
       <Statement />
       <Concerns />
       <Technologies />

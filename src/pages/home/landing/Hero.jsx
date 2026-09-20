@@ -1,194 +1,230 @@
-import { Pause, Play } from 'lucide-react';
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { clinic } from '../../../content/clinic';
-import { consultationCta } from '../../../content/navigation';
-import { tickerItems } from '../../../content/home';
+import { useCallback, useRef, useState } from 'react';
+import PillButton from '../../../components/ui/PillButton';
+import { heroSlides } from '../../../content/heroSlides';
 import { prefersReducedMotion } from '../../../lib/motion';
-import cx from '../../../lib/cx';
-import PillButton, { ArrowGlyph } from '../../../components/ui/PillButton';
-import { clamp01, useScrollFrame } from './useLandingMotion';
+import { clamp01, pad2, useScrollFrame } from './useLandingMotion';
 import './Hero.css';
 
-const POSTER = '/assets/videos/hero-clinic-poster.webp';
+const LAST = heroSlides.length - 1;
 
-/** Opening status in London time: Monday to Saturday, 09:30 to 19:30 (content/clinic.js). */
-function openingStatus(now = new Date()) {
-  const parts = Object.fromEntries(
-    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false })
-      .formatToParts(now)
-      .map((part) => [part.type, part.value]),
-  );
-  const minutes = Number(parts.hour) * 60 + Number(parts.minute);
-  const isOpen = parts.weekday !== 'Sun' && minutes >= 570 && minutes < 1170;
-  if (isOpen) return { isOpen, text: 'Open now · until 19:30' };
-  return { isOpen, text: parts.weekday === 'Sun' ? 'Sunday · by appointment' : 'Closed · opens 09:30' };
-}
+/** A card holds full strength within this much of its own slide. */
+const CARD_HOLD = 0.22;
 
-function useOpeningStatus() {
-  const [status, setStatus] = useState(openingStatus);
-  useEffect(() => {
-    const timer = window.setInterval(() => setStatus(openingStatus()), 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
-  return status;
-}
+/** How far a card drifts upward, in pixels, over one slide of scrolling. */
+const CARD_DRIFT = 56;
 
+/**
+ * The clinic tour opening sequence. The section is four screens tall and its
+ * contents pin to the viewport, so scrolling scrubs forward and backward
+ * through the clinic walkthrough video rather than just jumping down the page:
+ * the video advances smoothly with scroll depth and the narrative cards float
+ * above it, alternating sides.
+ *
+ * Everything scroll-linked is written straight to the DOM from one animation
+ * frame (`useScrollFrame`) rather than through React state, so scrolling never
+ * costs a re-render. Visitors who ask for reduced motion get the slides laid out
+ * one under another with static clinic imagery, with nothing pinned or moving.
+ */
 export default function Hero() {
-  const shellRef = useRef(null);
+  const sectionRef = useRef(null);
   const videoRef = useRef(null);
-  const sealPathId = useId();
-  const status = useOpeningStatus();
+  const cardRefs = useRef([]);
+  const railRefs = useRef([]);
+  const cueRef = useRef(null);
+  const isSeekingRef = useRef(false);
+  const targetTimeRef = useRef(0);
   const [reduceMotion] = useState(prefersReducedMotion);
-  const [isPlaying, setPlaying] = useState(!reduceMotion);
 
-  // The hero draws back into a rounded window as the page scrolls. The whole
-  // shell scales, so nothing inside it is ever cropped.
-  const onScroll = useCallback(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    const progress = clamp01(window.scrollY / shell.offsetHeight);
-    shell.style.transform = `scale(${1 - progress * 0.06})`;
-    shell.style.borderRadius = `0 0 ${progress * 56}px ${progress * 56}px`;
-    if (videoRef.current) videoRef.current.style.transform = `scale(${1.06 + progress * 0.1}) translateY(${progress * 5}%)`;
+  const performSeek = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || !video.duration || Number.isNaN(video.duration)) return;
+
+    const diff = Math.abs(video.currentTime - targetTimeRef.current);
+    if (diff < 0.02) return;
+
+    if (isSeekingRef.current) return;
+    isSeekingRef.current = true;
+
+    if ('fastSeek' in video) {
+      video.fastSeek(targetTimeRef.current);
+    } else {
+      video.currentTime = targetTimeRef.current;
+    }
   }, []);
+
+  const handleSeeked = useCallback(() => {
+    isSeekingRef.current = false;
+    performSeek();
+  }, [performSeek]);
+
+  const onScroll = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const travel = section.offsetHeight - window.innerHeight;
+    // Normalized position through the sequence (0 to 1)
+    const progress = travel > 0 ? clamp01(-section.getBoundingClientRect().top / travel) : 0;
+    // Where the sequence has got to, as a slide number with a fraction.
+    const position = progress * LAST;
+    const active = Math.round(position);
+
+    // Sync video playback to scroll position
+    const video = videoRef.current;
+    if (video && video.duration) {
+      const maxPlayable = Math.max(video.duration - 0.04, 0);
+      targetTimeRef.current = progress * maxPlayable;
+      performSeek();
+    }
+
+    // Fade the introductory tour cue as user starts scrolling
+    if (cueRef.current) {
+      const cueOpacity = clamp01(1 - progress * 4.5);
+      cueRef.current.style.opacity = cueOpacity.toFixed(3);
+      cueRef.current.style.transform = `translate3d(-50%, -${(progress * 24).toFixed(1)}px, 0)`;
+      cueRef.current.style.pointerEvents = cueOpacity < 0.1 ? 'none' : 'auto';
+    }
+
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return;
+      const distance = Math.abs(position - index);
+      card.style.opacity = clamp01((0.5 - distance) / (0.5 - CARD_HOLD)).toFixed(4);
+      card.style.transform = `translate3d(0, ${((index - position) * CARD_DRIFT).toFixed(1)}px, 0)`;
+      // Only the card you are on takes part: the rest leave the tab order and
+      // the accessibility tree rather than lurking invisibly on top of it.
+      card.inert = index !== active;
+    });
+
+    railRefs.current.forEach((button, index) => {
+      if (!button) return;
+      button.dataset.active = String(index === active);
+      if (index === active) button.setAttribute('aria-current', 'true');
+      else button.removeAttribute('aria-current');
+    });
+  }, [performSeek]);
+
   useScrollFrame(onScroll, !reduceMotion);
 
-  const toggleVideo = () => {
+  const handleLoadedMetadata = useCallback(() => {
+    const section = sectionRef.current;
     const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      video.play().catch(() => {});
-      setPlaying(true);
-    } else {
-      video.pause();
-      setPlaying(false);
-    }
+    if (!section || !video || !video.duration) return;
+    const travel = section.offsetHeight - window.innerHeight;
+    const progress = travel > 0 ? clamp01(-section.getBoundingClientRect().top / travel) : 0;
+    const maxPlayable = Math.max(video.duration - 0.04, 0);
+    targetTimeRef.current = progress * maxPlayable;
+    performSeek();
+  }, [performSeek]);
+
+  /** Jump the page to a slide's resting point. */
+  const goTo = (index) => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const travel = Math.max(section.offsetHeight - window.innerHeight, 0);
+    const top = window.scrollY + section.getBoundingClientRect().top + (travel * index) / LAST;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
 
   return (
-    <>
-      <section className="ap-hero" data-tone="night" aria-labelledby="ap-hero-title">
-        <div className="ap-hero__shell" ref={shellRef}>
+    <section
+      className="ap-hero"
+      ref={sectionRef}
+      aria-labelledby="ap-hero-title"
+      data-static={reduceMotion || undefined}
+      style={{ '--slides': heroSlides.length }}
+    >
+      <div className="ap-hero__pin">
+        {/* Play-on-scroll clinic walkthrough video */}
+        {!reduceMotion ? (
           <video
             ref={videoRef}
             className="ap-hero__video"
-            autoPlay={!reduceMotion}
-            muted
-            loop
             playsInline
-            poster={POSTER}
+            muted
+            preload="auto"
+            poster="/assets/videos/clinic_tour_poster.webp"
+            onSeeked={handleSeeked}
+            onLoadedMetadata={handleLoadedMetadata}
             aria-hidden="true"
             tabIndex={-1}
           >
-            <source src="/assets/videos/hero-clinic.webm" type="video/webm" />
-            <source src="/assets/videos/hero-clinic.mp4" type="video/mp4" />
+            <source src="/assets/videos/clinic_tour_scrub.mp4" type="video/mp4" />
+            <source src="/assets/videos/clinic_tour.mp4" type="video/mp4" />
           </video>
-          <div className="ap-hero__scrim" aria-hidden="true" />
+        ) : (
+          <img
+            className="ap-hero__video ap-hero__video--static"
+            src="/assets/videos/clinic_tour_poster.webp"
+            alt="Allure Passions UK Clinic"
+          />
+        )}
 
-          <div className="ap-hero__seal" aria-hidden="true">
-            <svg viewBox="0 0 120 120">
-              <defs>
-                <path id={sealPathId} d="M60 60m-48 0a48 48 0 1 1 96 0a48 48 0 1 1-96 0" />
-              </defs>
-              <text fontSize="10.5" letterSpacing="3.2" fill="currentColor" fontWeight="600" style={{ fontFamily: 'var(--font-sans)' }}>
-                <textPath href={`#${sealPathId}`}>AWARD WINNING · GHP 2026 · FITZROVIA · </textPath>
-              </text>
-            </svg>
-            <b>AP</b>
-          </div>
+        <div className="ap-hero__scrim" aria-hidden="true" />
 
-          <div className="ap-wrap ap-hero__inner">
-            <div className="ap-hero__copy">
-              <p className="ap-dot-eyebrow">Advanced aesthetic clinic · {clinic.address.area}, {clinic.address.city}</p>
-              <h1 className="ap-display ap-display--xl" id="ap-hero-title">
-                <span className="ap-mask">
-                  <span style={{ '--d': '.15s' }}>Advanced care</span>
-                </span>{' '}
-                <span className="ap-mask">
-                  <span style={{ '--d': '.28s' }}>
-                    for <em>skin, body</em>
-                  </span>
-                </span>{' '}
-                <span className="ap-mask">
-                  <span style={{ '--d': '.41s' }}>&amp; wellbeing.</span>
-                </span>
-              </h1>
-              <div className="ap-hero__sub" data-reveal style={{ '--d': '.7s' }}>
-                <p>An award-winning, practitioner-led clinic offering non-invasive treatments planned around your concerns.</p>
-                <PillButton to={consultationCta.to} variant="light">
-                  Begin your consultation
-                </PillButton>
-              </div>
+        {/* Narrative chapter cards floating over the video tour */}
+        {heroSlides.map((slide, index) => (
+          <div className="ap-hero__slide" key={slide.id}>
+            {reduceMotion && (
+              <img
+                className="ap-hero__img"
+                src="/assets/videos/clinic_tour_poster.webp"
+                alt=""
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            )}
+
+            <div className="ap-hero__stage">
+              <article
+                className="ap-hero__card"
+                data-side={slide.side}
+                ref={(node) => {
+                  cardRefs.current[index] = node;
+                }}
+                inert={!reduceMotion && index !== 0}
+                style={reduceMotion ? undefined : { opacity: index === 0 ? 1 : 0 }}
+              >
+                <p className="ap-dot-eyebrow">{slide.tagline}</p>
+                {index === 0 ? (
+                  <h1 className="ap-display ap-display--m ap-hero__title" id="ap-hero-title">
+                    {slide.title}
+                  </h1>
+                ) : (
+                  <h2 className="ap-display ap-display--m ap-hero__title">{slide.title}</h2>
+                )}
+                <p className="ap-hero__text">{slide.text}</p>
+                <PillButton to={slide.cta.to}>{slide.cta.label}</PillButton>
+              </article>
             </div>
+          </div>
+        ))}
 
-            <div className="ap-hero__bottom" data-reveal style={{ '--d': '.9s' }}>
-              <a className="ap-hero__path" href="#concerns">
-                <span>
-                  <small>Start with a concern</small>
-                  <span>Pigmentation, laxity, acne, stubborn fat…</span>
-                </span>
-                <span className="ap-hero__path-arrow">
-                  <ArrowGlyph />
-                </span>
-              </a>
-              <a className="ap-hero__path" href="#treatments">
-                <span>
-                  <small>Start with a treatment</small>
-                  <span>PicoWay, Morpheus8, Sofwave, Emsculpt Neo…</span>
-                </span>
-                <span className="ap-hero__path-arrow">
-                  <ArrowGlyph />
-                </span>
-              </a>
-              <p className={cx('ap-hero__status', !status.isOpen && 'is-closed')}>
-                <i aria-hidden="true" />
-                <span>{status.text}</span>
-              </p>
+        {!reduceMotion && (
+          <div className="ap-hero__tour-cue" ref={cueRef} aria-hidden="true">
+            <span className="ap-hero__tour-dot" />
+            <span className="ap-hero__tour-label">Clinic Tour • Scroll to explore</span>
+          </div>
+        )}
+
+        {!reduceMotion && (
+          <nav className="ap-hero__rail" aria-label="Opening sequence">
+            {heroSlides.map((slide, index) => (
               <button
                 type="button"
-                className="ap-hero__pause"
-                onClick={toggleVideo}
-                aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
+                key={slide.id}
+                ref={(node) => {
+                  railRefs.current[index] = node;
+                }}
+                data-active={index === 0 ? 'true' : 'false'}
+                aria-current={index === 0 ? 'true' : undefined}
+                onClick={() => goTo(index)}
               >
-                {isPlaying ? <Pause size={16} strokeWidth={1.5} aria-hidden="true" /> : <Play size={16} strokeWidth={1.5} aria-hidden="true" />}
+                <span className="ap-hero__rail-no">{pad2(index + 1)}</span>
+                <span className="ap-hero__rail-bar" aria-hidden="true" />
+                <span className="ap-visually-hidden">{slide.title}</span>
               </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <Ticker />
-    </>
-  );
-}
-
-function TickerGroup({ hidden = false }) {
-  return (
-    <div className="ap-ticker__group" aria-hidden={hidden || undefined}>
-      {tickerItems.map((item) => (
-        <span className="ap-ticker__item ap-serif" key={item.text}>
-          {item.text}
-          {item.accent && (
-            <>
-              {' '}
-              <em>{item.accent}</em>
-            </>
-          )}
-          {item.after && ` ${item.after}`}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/** The credentials, drifting past under the hero. Pauses on hover and focus. */
-function Ticker() {
-  return (
-    <div className="ap-ticker" role="region" aria-label="Credentials">
-      <div className="ap-ticker__track">
-        <TickerGroup />
-        <TickerGroup hidden />
+            ))}
+          </nav>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
