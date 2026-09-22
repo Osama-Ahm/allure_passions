@@ -19,6 +19,7 @@ import BodyContouringSection from './components/BodyContouringSection';
 import SkincareShowcaseSection from './components/SkincareShowcaseSection';
 import PreFooterCtaSection from './components/PreFooterCtaSection';
 import Footer from './components/Footer';
+import { scrollWhenReady } from './utils/navigation';
 
 // Dedicated Legitimate Inner Pages
 import AboutPage from './components/pages/AboutPage';
@@ -26,6 +27,9 @@ import TreatmentDetailPage from './components/pages/TreatmentDetailPage';
 import TreatmentsIndexPage from './components/pages/TreatmentsIndexPage';
 import PricingPage from './components/pages/PricingPage';
 import PrescriptionConsultationPage from './components/pages/PrescriptionConsultationPage';
+import { POPULAR_TREATMENTS } from './data/treatmentData';
+
+const TREATMENT_IDS = new Set(POPULAR_TREATMENTS.map((t) => t.id));
 
 // Route parser for HTML5 History API URL synchronisation
 function getRouteFromPath(pathname) {
@@ -34,8 +38,10 @@ function getRouteFromPath(pathname) {
   if (clean === '/about') return { route: 'about', treatmentId: 'picoway' };
   if (clean === '/treatments') return { route: 'treatments', treatmentId: 'picoway' };
   if (clean.startsWith('/treatments/')) {
+    // Unknown treatment slugs fall back to the treatments index rather than a mislabelled page
     const id = clean.replace('/treatments/', '');
-    return { route: 'treatment-detail', treatmentId: id || 'picoway' };
+    if (!TREATMENT_IDS.has(id)) return { route: 'treatments', treatmentId: 'picoway' };
+    return { route: 'treatment-detail', treatmentId: id };
   }
   if (clean === '/pricing') return { route: 'pricing', treatmentId: 'picoway' };
   if (clean === '/prescription-skincare' || clean === '/skincare') return { route: 'prescription-skincare', treatmentId: 'picoway' };
@@ -64,6 +70,23 @@ export default function App() {
   const [selectedTreatmentId, setSelectedTreatmentId] = useState(initial.treatmentId);
   const [curtainPhase, setCurtainPhase] = useState('idle');
   const isTransitioning = useRef(false);
+
+  // Unknown or aliased paths (/skincare, /nope, trailing slashes) show the fallback page; keep the address bar in step with it.
+  // A page opened with a #section (e.g. /#concerns, /about#ghp-feature) scrolls to it once the page has settled.
+  useEffect(() => {
+    const { route, treatmentId } = getRouteFromPath(window.location.pathname);
+    const canonical = getPathFromRoute(route, treatmentId);
+    if (window.location.pathname !== canonical) {
+      window.history.replaceState(null, '', canonical + window.location.search + window.location.hash);
+    }
+    if (window.location.hash.length > 1) {
+      try {
+        scrollWhenReady(`#${CSS.escape(decodeURIComponent(window.location.hash.slice(1)))}`);
+      } catch {
+        // Malformed hash: stay at the top of the page
+      }
+    }
+  }, []);
 
   useMotionSystem();
 

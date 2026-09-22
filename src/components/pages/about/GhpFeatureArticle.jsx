@@ -1,24 +1,17 @@
-import { useEffect } from 'react';
 import { Download } from 'lucide-react';
 import TextReveal from '../../../motion/TextReveal';
 import RevealImage from '../../../motion/RevealImage';
 import { Reveal } from '../../../motion/Reveal';
 import { GHP_FEATURE } from '../../../data/ghpFeature';
-import { scrollWhenReady } from '../../../utils/navigation';
 import './GhpFeatureArticle.css';
 
 const { founder, pullQuote } = GHP_FEATURE;
 
 /**
  * About page: the full Global Health & Pharma (Q3 2026, p.55) feature on the clinic
- * and its founder, set as an editorial article. Reachable at /about#ghp-feature.
+ * and its founder, set as an editorial article. Reachable at /about#ghp-feature (App scrolls to it on load).
  */
 export default function GhpFeatureArticle() {
-  // Opened as /about#ghp-feature (e.g. from the homepage): bring the article into view.
-  useEffect(() => {
-    if (window.location.hash === '#ghp-feature') scrollWhenReady('#ghp-feature');
-  }, []);
-
   return (
     <section id="ghp-feature" className="ap-ghp" aria-labelledby="ap-ghp-title">
       <header className="ap-ghp__head">
