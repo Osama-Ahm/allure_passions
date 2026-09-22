@@ -1,276 +1,245 @@
-.signature {
-  --signature-gutter: clamp(1.25rem, 5vw, 2rem);
+/* Section 5 — "Advanced Treatments. Personalised to You." (Figma 05-advanced-treatments) */
+
+.ap-treatments {
   position: relative;
-  background:
-    radial-gradient(80% 55% at 100% 0%, rgba(214, 189, 138, 0.06), rgba(214, 189, 138, 0) 70%),
-    var(--ap-night);
-  color: var(--ap-ivory);
-  padding-block: clamp(5rem, 9vw, 8.5rem);
+  background: var(--ap-charcoal);
+  color: var(--ap-white);
+  font-family: var(--ap-font-sans);
+  padding-block: clamp(3.75rem, 1.9rem + 4.4vw, 5.4rem) clamp(4.25rem, 2.3rem + 4.4vw, 6.25rem);
 }
 
-/* Grid: two columns on tablet, staggered three-column gallery on desktop */
-.signature__grid {
+/* Heading block: Figma wraps the intro to ~800px with a 27px line pitch */
+.ap-treatments__head .ap-heading__intro,
+.ap-treatments__head .ap-heading__note {
+  max-width: 51rem;
+  line-height: 1.42;
+}
+
+.ap-treatments__head .ap-heading__title {
+  margin-bottom: 0.2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Grid: 3 x 2 (desktop) → 2-up (tablet) → snap rail (phone)
+   -------------------------------------------------------------------------- */
+.ap-treatments__grid {
   display: grid;
-  gap: clamp(1.25rem, 2vw, 1.75rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.875rem;
+  margin: clamp(2.5rem, 1.6rem + 2vw, 3.25rem) 0 0;
+  padding: 0;
   list-style: none;
 }
 
-@media (min-width: 720px) {
-  .signature__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.ap-treatments__item {
+  display: flex;
+  min-width: 0;
 }
 
-@media (min-width: 1100px) {
-  .signature__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding-bottom: 3.5rem;
-  }
-
-  .signature__cell:nth-child(3n + 2) {
-    translate: 0 3.5rem;
-  }
-}
-
-.signature__reveal {
-  height: 100%;
-}
-
-/* Card */
-.signature__card {
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+.ap-treatments__card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 0.6rem;
-  border: 1px solid rgba(247, 243, 236, 0.08);
-  border-radius: var(--ap-radius-card);
-  background: rgba(247, 243, 236, 0.03);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 0.5s var(--ease-editorial), background-color 0.5s var(--ease-editorial);
-}
-
-.signature__card:hover {
-  border-color: rgba(214, 189, 138, 0.32);
-  background: rgba(247, 243, 236, 0.05);
-}
-
-.signature__card:focus-visible {
-  outline: 2px solid var(--ap-champagne);
-  outline-offset: 4px;
-}
-
-.signature__media {
-  position: relative;
-  aspect-ratio: 16 / 11;
-  overflow: hidden;
-  border-radius: var(--ap-radius-media);
-  background: #2A2723;
-}
-
-.signature__media img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.88);
-  transition: transform 1.4s var(--ease-editorial), filter 0.8s var(--ease-editorial);
+  padding: 10px;
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-white);
+  color: var(--ap-text);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 18px 40px -26px rgba(0, 0, 0, 0.55);
+  will-change: transform;
 }
 
-.signature__media::after {
+/* Deeper lift shadow, faded in on hover (opacity only) */
+.ap-treatments__card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15, 13, 11, 0.4) 0%, rgba(15, 13, 11, 0) 40%);
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.18),
+    0 42px 70px -30px rgba(0, 0, 0, 0.8),
+    0 24px 60px -34px rgba(221, 196, 140, 0.35);
+  opacity: 0;
+  transition: opacity 0.7s var(--ap-ease-out);
   pointer-events: none;
 }
 
-.signature__card:hover .signature__media img {
-  transform: scale(1.05);
-  filter: saturate(1);
-}
-
-.signature__category {
-  position: absolute;
-  top: 0.85rem;
-  left: 0.85rem;
-  z-index: 1;
-  max-width: calc(100% - 5rem);
-  padding: 0.42rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(18, 16, 13, 0.66);
-  font-size: 0.64rem;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #F1EADF;
-}
-
-.signature__arrow {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 50%;
-  background: var(--ap-ivory);
-  color: var(--ap-ink);
-  opacity: 0;
-  transform: scale(0.8) rotate(-45deg);
-  transition: opacity 0.4s var(--ease-editorial), transform 0.6s var(--ease-editorial);
-}
-
-.signature__card:hover .signature__arrow,
-.signature__card:focus-visible .signature__arrow {
+.ap-treatments__card:hover::before,
+.ap-treatments__card:focus-within::before {
   opacity: 1;
-  transform: none;
 }
 
-.signature__body {
+.ap-treatments__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 390 / 336;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 12px;
+  background: #ece9e3;
+}
+
+/* Hairline so pale photos keep a crisp edge on the white card */
+.ap-treatments__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(11, 10, 9, 0.07);
+  pointer-events: none;
+}
+
+.ap-treatments__zoom {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 1.3s var(--ap-ease-out);
+}
+
+.ap-treatments__zoom img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ap-treatments__card:hover .ap-treatments__zoom,
+.ap-treatments__card:focus-within .ap-treatments__zoom {
+  transform: scale(1.06);
+}
+
+.ap-treatments__body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 1.4rem 0.9rem 0.8rem;
+  padding: 1.25rem 0.625rem 0.625rem;
 }
 
-.signature__name {
-  font-family: var(--font-serif);
-  font-size: clamp(1.7rem, 1.3rem + 0.8vw, 2.05rem);
+.ap-treatments__title {
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
   font-weight: 400;
-  line-height: 1.1;
-  color: var(--ap-ivory);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--ap-black);
+  text-wrap: balance;
 }
 
-.signature__summary {
-  margin: 0.7rem 0 1.5rem;
-  font-size: 0.925rem;
-  line-height: 1.7;
-  color: #ADA9A2;
-}
-
-.signature__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: auto;
-  padding-top: 1.1rem;
-  border-top: 1px solid rgba(247, 243, 236, 0.09);
-}
-
-.signature__price {
-  font-size: 0.8rem;
-  color: #9C978E;
-}
-
-.signature__price strong {
-  margin-left: 0.3rem;
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  font-weight: 500;
-  font-variant-numeric: lining-nums;
-  color: var(--ap-champagne);
-}
-
-.signature__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-left: auto;
+.ap-treatments__subtitle {
+  margin-top: 1.05rem;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--ap-ivory);
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--ap-gold-ink);
 }
 
-.signature__cta svg {
-  transition: transform 0.4s var(--ease-editorial);
+.ap-treatments__desc {
+  margin: 0.8rem 0 1.9rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  letter-spacing: 0;
+  color: #3f3e3b;
 }
 
-.signature__card:hover .signature__cta svg {
-  transform: translateX(4px);
+.ap-treatments__cta {
+  margin-top: auto;
 }
 
-.signature__progress {
+/* --------------------------------------------------------------------------
+   Footer link + phone rail progress
+   -------------------------------------------------------------------------- */
+.ap-treatments__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.5rem, 1.8rem + 1.6vw, 3.125rem);
+}
+
+.ap-treatments__progress {
   display: none;
 }
 
-@media (max-width: 480px) {
-  h3.signature__name {
-    font-size: 1.6rem !important;
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 999.98px) {
+  .ap-treatments__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 639.98px) {
+  /* Swipeable rail that bleeds to the screen edges */
+  .ap-treatments__grid {
+    display: flex;
+    gap: 0.875rem;
+    margin-inline: calc(var(--ap-gutter) * -1);
+    padding: 0.5rem var(--ap-gutter) 1.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--ap-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ap-treatments__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ap-treatments__item {
+    flex: 0 0 min(84%, 22rem);
+    scroll-snap-align: start;
+  }
+
+  .ap-treatments__progress {
+    display: block;
+    position: relative;
+    height: 2px;
+    margin: 0.25rem auto 0;
+    width: min(9rem, 40%);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+  }
+
+  .ap-treatments__progress span {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--ap-gold);
+    transform-origin: 0 50%;
+  }
+
+  .ap-treatments__foot {
+    margin-top: 2.25rem;
+  }
+}
+
+/* index.css caps h2/h3 sizes on small phones with !important */
+@media screen and (max-width: 480px) {
+  .ap-treatments .ap-heading__title {
+    font-size: var(--ap-fs-h2) !important;
+    line-height: 1.04 !important;
+  }
+
+  .ap-treatments__title {
+    font-size: 1.875rem !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .signature__media img,
-  .signature__arrow,
-  .signature__cta svg {
+  .ap-treatments__zoom,
+  .ap-treatments__card::before {
     transition: none;
-  }
-
-  .signature__card:hover .signature__media img {
-    transform: none;
-  }
-}
-
-/* Touch devices: arrows always visible, no hover-only affordances */
-@media (hover: none) {
-  .signature__arrow {
-    opacity: 1;
-    transform: none;
-  }
-
-  .signature__media img {
-    filter: none;
-  }
-}
-
-/* Phones: swipeable rail */
-@media (max-width: 719px) {
-  .signature__grid {
-    grid-auto-flow: column;
-    grid-auto-columns: min(84%, 22rem);
-    gap: 1rem;
-    margin-inline: calc(-1 * var(--signature-gutter));
-    padding-inline: var(--signature-gutter);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--signature-gutter);
-    scrollbar-width: none;
-  }
-
-  .signature__grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .signature__cell {
-    scroll-snap-align: start;
-  }
-
-  /* Cards in the rail are already on stage; don't fade them as they swipe in */
-  html[data-motion="on"] .signature__reveal[data-reveal] {
-    opacity: 1;
-    animation: none;
-  }
-
-  .signature__progress {
-    display: block;
-    position: relative;
-    height: 2px;
-    margin-top: 1.75rem;
-    overflow: hidden;
-    border-radius: 2px;
-    background: rgba(247, 243, 236, 0.12);
-  }
-
-  .signature__progress span {
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: calc(var(--rail-size, 0.3) * 100%);
-    background: var(--ap-champagne);
-    transform: translateX(calc(var(--rail-progress, 0) * (1 / var(--rail-size, 0.3) - 1) * 100%));
   }
 }

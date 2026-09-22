@@ -1,0 +1,294 @@
+/* Section 11 — Shared Transformations @ALLUREPASSIONSUK: drifting row of Instagram tiles */
+
+.ap-social {
+  --ap-social-tile: clamp(12.5rem, 6.5rem + 16.5vw, 20.1875rem); /* 323px @1440 */
+  --ap-social-tall: calc(var(--ap-social-tile) * 1.3375); /* 432px @1440 */
+  --ap-social-gap: clamp(0.875rem, 0.6rem + 0.8vw, 1.4375rem); /* 23px @1440 */
+  --ap-social-pitch: calc(var(--ap-social-tile) + var(--ap-social-gap));
+  position: relative;
+  padding-block: clamp(4rem, 2.8rem + 3.2vw, 5.35rem) clamp(4rem, 2.6rem + 3.6vw, 6.25rem);
+  background: linear-gradient(180deg, var(--ap-cream) 0%, #fbf9f0 55%, #fffdf8 100%);
+  font-family: var(--ap-font-sans);
+  color: var(--ap-text);
+}
+
+/* ---- Heading ---- */
+.ap-social__head {
+  display: grid;
+  justify-items: center;
+  gap: 1.15rem;
+  text-align: center;
+}
+
+.ap-social__title {
+  margin: 0;
+  font-size: clamp(2.3rem, 1.1rem + 3.55vw, 3.95rem); /* this Figma title is set at 63px */
+}
+
+/* Upright gold handle with a soft metallic gradient; doubles as the Instagram link */
+.ap-social__handle {
+  position: relative;
+  color: #c29d6c;
+  font-style: normal;
+  text-decoration: none;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.ap-social__handle-text:not(:has(.ap-tr-word)),
+.ap-social__handle .ap-tr-word > span {
+  background-image: linear-gradient(100deg, #b98f58 0%, #d4b27c 38%, #e2c795 50%, #c9a26a 64%, #b48a54 100%);
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ap-social__handle::after {
+  content: '';
+  position: absolute;
+  left: 0.05em;
+  right: 0.02em;
+  bottom: 0.02em;
+  height: 1px;
+  background: linear-gradient(90deg, #c29d6c, #dcc08c);
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+  transition: transform 0.7s var(--ap-ease-out);
+}
+
+.ap-social__handle:hover::after,
+.ap-social__handle:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+}
+
+.ap-social__handle:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.ap-social__intro {
+  max-width: 47rem;
+  margin: 0;
+  line-height: 1.45;
+  color: var(--ap-ink);
+}
+
+/* ---- Tile row ---- */
+.ap-social__rail {
+  position: relative;
+  margin-top: clamp(2.5rem, 1.7rem + 2.3vw, 3.4rem);
+  overflow-x: clip;
+}
+
+.ap-social__row {
+  position: relative;
+  left: 50%;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ap-social-gap);
+  width: max-content;
+  height: var(--ap-social-tall);
+  /* Lines the fourth tile up with the Figma's first full square (x = 40 @1440). */
+  margin-left: calc(var(--ap-social-pitch) * -4.965);
+  will-change: transform;
+}
+
+.ap-social__tile {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  flex: none;
+  width: var(--ap-social-tile);
+  height: var(--ap-social-tile);
+  overflow: hidden;
+  border-radius: var(--ap-radius-md);
+  background: #e9e3d3;
+  color: var(--ap-white);
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(20, 16, 8, 0.04);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ap-social__tile--tall {
+  height: var(--ap-social-tall);
+}
+
+.ap-social__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ap-social__media img,
+.ap-social__media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transition: transform 1.1s var(--ap-ease-out);
+}
+
+.ap-social__tile:hover .ap-social__media img,
+.ap-social__tile:hover .ap-social__media video {
+  transform: scale(1.05);
+}
+
+/* Small "reel" marker on the film tiles */
+.ap-social__reel {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(20, 16, 10, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--ap-white);
+}
+
+/* Hover veil: dark wash, Instagram glyph and a short caption */
+.ap-social__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(11, 10, 9, 0.28), rgba(11, 10, 9, 0.5) 80%),
+    linear-gradient(180deg, rgba(11, 10, 9, 0) 45%, rgba(11, 10, 9, 0.35) 100%);
+  opacity: 0;
+  transition: opacity 0.55s var(--ap-ease-out);
+}
+
+.ap-social__glyph {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transform: scale(0.7);
+  opacity: 0;
+  transition:
+    transform 0.6s var(--ap-ease-out),
+    opacity 0.45s var(--ap-ease-out);
+}
+
+.ap-social__caption {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1.15rem;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: left;
+  color: var(--ap-white);
+  transform: translateY(10px);
+  opacity: 0;
+  transition:
+    transform 0.6s var(--ap-ease-out) 0.05s,
+    opacity 0.5s var(--ap-ease-out) 0.05s;
+}
+
+.ap-social__label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-gold);
+}
+
+.ap-social__tile:hover .ap-social__veil,
+.ap-social__tile:focus-visible .ap-social__veil {
+  opacity: 1;
+}
+
+.ap-social__tile:hover .ap-social__glyph,
+.ap-social__tile:focus-visible .ap-social__glyph {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.ap-social__tile:hover .ap-social__caption,
+.ap-social__tile:focus-visible .ap-social__caption {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.ap-social__tile:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 3px;
+}
+
+/* ---- Reduced motion: still row, scrolled sideways by hand ---- */
+.ap-social--static .ap-social__rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+
+.ap-social--static .ap-social__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.ap-social--static .ap-social__row {
+  left: auto;
+  height: auto;
+  margin-left: 0;
+  padding-inline: var(--ap-gutter);
+}
+
+.ap-social--static .ap-social__tile {
+  scroll-snap-align: start;
+  scroll-margin-inline: var(--ap-gutter);
+}
+
+/* ---- Phones: centre the film tile in the row ---- */
+@media (max-width: 699px) {
+  .ap-social__row {
+    margin-left: calc(var(--ap-social-pitch) * -5 - var(--ap-social-tile) / 2);
+  }
+
+  .ap-social__caption {
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.9rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* The global phone rule caps every h2; keep this heading on the shared scale. */
+@media screen and (max-width: 480px) {
+  .ap-social .ap-social__title {
+    font-size: var(--ap-fs-h2) !important;
+    line-height: 1.04 !important;
+  }
+}
+
+/* Touch screens have no hover: keep the caption hidden and the tiles clean. */
+@media (hover: none) {
+  .ap-social__tile:hover .ap-social__media img,
+  .ap-social__tile:hover .ap-social__media video {
+    transform: none;
+  }
+}

@@ -1,0 +1,197 @@
+/* Section 9 — As Featured In: charcoal band with an endless ribbon of press wordmarks */
+
+.ap-press {
+  --ap-press-gap: clamp(2.75rem, 1.6rem + 3.2vw, 4.5rem);
+  position: relative;
+  padding-block: clamp(2.25rem, 1.6rem + 1.6vw, 2.6rem) clamp(2.4rem, 1.7rem + 1.8vw, 2.9rem);
+  background: var(--ap-charcoal);
+  color: var(--ap-white);
+  font-family: var(--ap-font-sans);
+  overflow: hidden;
+}
+
+/* Hairline gold rules top and bottom, fading out towards the edges */
+.ap-press::before,
+.ap-press::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(221, 196, 140, 0.22) 30%, rgba(221, 196, 140, 0.22) 70%, transparent);
+  pointer-events: none;
+}
+.ap-press::before {
+  top: 0;
+}
+.ap-press::after {
+  bottom: 0;
+}
+
+.ap-press__title {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(2.1rem, 1.25rem + 2.2vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: var(--ap-tracking-display);
+  text-align: center;
+  color: var(--ap-white);
+}
+
+/* ---- Ribbon ---- */
+.ap-press__marquee {
+  position: relative;
+  margin-top: clamp(1.9rem, 1.2rem + 1.8vw, 2.6rem);
+  overflow: hidden;
+  outline: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+
+.ap-press__marquee:focus-visible {
+  -webkit-mask-image: none;
+  mask-image: none;
+  box-shadow: inset 0 0 0 2px rgba(221, 196, 140, 0.7);
+  border-radius: var(--ap-radius-xs);
+}
+
+.ap-press__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.ap-press__group,
+.ap-press__static {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-press__group {
+  flex: none;
+}
+
+.ap-press__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  padding-inline: calc(var(--ap-press-gap) / 2);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.ap-press__mark {
+  display: inline-block;
+  color: var(--ap-white);
+  line-height: 1;
+  opacity: 0.84;
+  transition:
+    opacity var(--ap-dur) var(--ap-ease-out),
+    transform var(--ap-dur) var(--ap-ease-out);
+}
+
+.ap-press__item:hover .ap-press__mark {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Wordmark treatments: a mix of fashion-magazine serif, didone caps and clean sans */
+.ap-press__item--vogue .ap-press__mark {
+  font-family: var(--ap-font-display);
+  font-size: 2.35rem;
+  letter-spacing: 0.16em;
+  margin-right: -0.16em;
+}
+
+.ap-press__item--tatler .ap-press__mark {
+  font-family: var(--ap-font-accent);
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+}
+
+.ap-press__item--bazaar .ap-press__mark {
+  font-family: var(--ap-font-display);
+  font-size: 1.7rem;
+  letter-spacing: 0.1em;
+  margin-right: -0.1em;
+}
+
+.ap-press__item--gq .ap-press__mark {
+  font-family: var(--ap-font-sans);
+  font-size: 2.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.ap-press__item--elle .ap-press__mark {
+  font-family: var(--ap-font-accent);
+  font-size: 2.3rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  margin-right: -0.24em;
+}
+
+.ap-press__item--ghp .ap-press__mark {
+  font-family: var(--ap-font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  margin-right: -0.34em;
+  padding: 0.7em 0.9em 0.7em 1.24em;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 2px;
+}
+
+/* Reduced motion: a still, centred row that wraps */
+.ap-press__static {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0.75rem;
+  margin-top: clamp(1.9rem, 1.2rem + 1.8vw, 2.6rem);
+}
+
+@media (max-width: 767px) {
+  .ap-press {
+    --ap-press-gap: 2.5rem;
+  }
+  .ap-press__item {
+    height: 2.75rem;
+  }
+  .ap-press__item--vogue .ap-press__mark {
+    font-size: 1.9rem;
+  }
+  .ap-press__item--tatler .ap-press__mark {
+    font-size: 1.45rem;
+  }
+  .ap-press__item--bazaar .ap-press__mark {
+    font-size: 1.4rem;
+  }
+  .ap-press__item--gq .ap-press__mark {
+    font-size: 1.8rem;
+  }
+  .ap-press__item--elle .ap-press__mark {
+    font-size: 1.9rem;
+  }
+  .ap-press__item--ghp .ap-press__mark {
+    font-size: 0.85rem;
+  }
+  .ap-press__marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  }
+}
+
+/* Global phone rule caps every h2; keep this title in proportion with the band. */
+@media screen and (max-width: 480px) {
+  .ap-press .ap-press__title {
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 2.4rem) !important;
+    line-height: 1.1 !important;
+  }
+}

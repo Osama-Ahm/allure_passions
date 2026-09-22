@@ -1,0 +1,301 @@
+/* ==========================================================================
+   Section 7 — Real Treatments. Real Patient Journeys. (block: ap-results)
+   Figma @1440: heading cap-top 98 · chips 281 · frame 1070x553
+   ========================================================================== */
+
+.ap-results {
+  --results-radius: 24px;
+  background: var(--ap-cream);
+  padding-block: clamp(4rem, 2.6rem + 3.2vw, 5.3rem) clamp(4.25rem, 2.6rem + 4.2vw, 6.25rem);
+  overflow: clip;
+}
+
+/* Heading: Figma intro/note are 18px on a 27px line */
+.ap-results .ap-heading {
+  gap: 0;
+}
+.ap-results .ap-heading__title {
+  margin-bottom: 0.7rem;
+}
+.ap-results .ap-heading__intro,
+.ap-results .ap-heading__note {
+  font-size: clamp(0.95rem, 0.88rem + 0.28vw, 1.125rem);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+.ap-results .ap-heading__intro {
+  max-width: 57rem;
+}
+.ap-results .ap-heading__note {
+  max-width: 64rem;
+  margin-top: 0.55rem;
+}
+
+/* --------------------------------------------------------------------------
+   Filter chips: one segmented track, a gold pill glides to the active chip
+   -------------------------------------------------------------------------- */
+.ap-results__filters-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1.75rem, 1.2rem + 1.2vw, 2.05rem);
+}
+
+.ap-results__filters {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #dfd8ce;
+  border-radius: 8px;
+  background: var(--ap-white);
+  box-shadow: 0 1px 2px rgba(20, 16, 8, 0.03), 0 10px 28px -20px rgba(20, 16, 8, 0.25);
+}
+
+.ap-results__chip {
+  position: relative;
+  min-width: 7.5rem;
+  height: 2.625rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #8f8b84;
+  font-family: var(--ap-font-sans);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: color 0.3s var(--ap-ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.ap-results__chip:hover:not(.is-active) {
+  color: var(--ap-ink);
+}
+.ap-results__chip.is-active {
+  color: var(--ap-ink);
+  cursor: default;
+}
+.ap-results__chip:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 2px;
+}
+
+.ap-results__pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: var(--ap-gold);
+  box-shadow: 0 8px 20px -12px rgba(136, 109, 48, 0.7);
+}
+
+.ap-results__chip-label {
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Comparison frame
+   -------------------------------------------------------------------------- */
+.ap-results__frame {
+  position: relative;
+  width: 100%;
+  max-width: 1070px;
+  margin: clamp(2rem, 1.2rem + 2vw, 3.2rem) auto 0;
+  aspect-ratio: 1070 / 553;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--results-radius);
+  background: #e4e2dd;
+  box-shadow: 0 1px 2px rgba(40, 30, 12, 0.06), 0 40px 70px -48px rgba(40, 30, 12, 0.55);
+}
+
+.ap-results__zoom,
+.ap-results__stage,
+.ap-results__compare,
+.ap-results__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ap-results__zoom {
+  will-change: transform;
+}
+
+.ap-results__compare {
+  overflow: hidden;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ap-results__compare.is-dragging {
+  cursor: grabbing;
+}
+
+.ap-results__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Frames the eyes to the lips; also keeps the source's retouched top-left corner out of view */
+  object-position: 50% 50%;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Soft floor shade so the white labels read on pale skin */
+.ap-results__layer::after {
+  content: '';
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(to top, rgba(28, 20, 10, 0.42), rgba(28, 20, 10, 0));
+  pointer-events: none;
+}
+
+.ap-results__layer--before {
+  will-change: clip-path;
+}
+
+.ap-results__label {
+  position: absolute;
+  z-index: 1;
+  bottom: clamp(1rem, 0.2rem + 2.2vw, 2.55rem);
+  font-family: var(--ap-font-accent);
+  font-size: clamp(1.75rem, 0.8rem + 2.9vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--ap-white);
+  text-shadow: 0 2px 24px rgba(20, 14, 6, 0.28);
+  pointer-events: none;
+}
+.ap-results__label--before {
+  left: clamp(1.1rem, 0.3rem + 2.8vw, 3.4rem);
+}
+.ap-results__label--after {
+  right: clamp(1.1rem, 0.3rem + 2.8vw, 3.2rem);
+}
+
+/* Divider: a full-width track translated by the slider value */
+.ap-results__divider {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ap-results__rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.95) 22%,
+    rgba(255, 255, 255, 0.95) 78%,
+    rgba(255, 255, 255, 0.35)
+  );
+  box-shadow: 0 0 18px rgba(20, 14, 6, 0.25);
+}
+
+.ap-results__handle-pop {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.ap-results__handle {
+  --size: clamp(2.9rem, 2.5rem + 1vw, 3.5rem);
+  position: absolute;
+  top: calc(var(--size) / -2);
+  left: calc(var(--size) / -2);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  pointer-events: auto;
+  cursor: grab;
+  outline: none;
+}
+.ap-results__compare.is-dragging .ap-results__handle {
+  cursor: grabbing;
+}
+
+.ap-results__handle-core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%),
+    var(--ap-gold);
+  color: var(--ap-ink);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.75),
+    0 10px 26px -8px rgba(20, 14, 6, 0.55);
+  transition: transform var(--ap-dur) var(--ap-ease-out);
+}
+.ap-results__handle-core svg {
+  flex: none;
+  margin-inline: -3px;
+}
+
+.ap-results__compare:hover .ap-results__handle-core {
+  transform: scale(1.07);
+}
+.ap-results__compare.is-dragging .ap-results__handle-core {
+  transform: scale(0.93);
+}
+
+.ap-results__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ap-results__handle:focus-visible .ap-results__handle-core {
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.75),
+    0 0 0 3px var(--ap-white),
+    0 0 0 6px var(--ap-gold-deep),
+    0 10px 26px -8px rgba(20, 14, 6, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .ap-results__frame {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 599px) {
+  .ap-results__frame {
+    aspect-ratio: 5 / 4;
+  }
+  .ap-results__img {
+    object-position: 50% 55%;
+  }
+  .ap-results__chip {
+    min-width: 0;
+    padding: 0 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-results__chip,
+  .ap-results__handle-core {
+    transition: none;
+  }
+}

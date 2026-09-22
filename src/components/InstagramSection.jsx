@@ -1,196 +1,266 @@
-import React from 'react';
-import { CLINIC_INFO } from '../data/treatmentData';
-import SplitWords from '../motion/SplitWords';
+import { useEffect, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import TextReveal from '../motion/TextReveal';
+import { Reveal } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT, VIEWPORT } from '../motion/presets';
+import { INSTAGRAM_URL } from '../data/links';
+import './InstagramSection.css';
 
-const InstagramIcon = ({ size = 18, color = "#1C1B18" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-  </svg>
-);
-
-const INSTAGRAM_POSTS = [
+// Figma rhythm: squares with a taller tile every few steps (the row bleeds off both edges).
+// Order is tall · square · tall · square · square · tall(video) · square · tall(video) · square · square.
+const TILES = [
   {
-    image: '/assets/images/hero_clinic_ambiance.png',
-    caption: 'Clinical precision during Morpheus8 subdermal remodeling in our Fitzrovia suite.',
-    tag: '#Morpheus8 #Fitzrovia',
+    tall: true,
+    src: '/assets/images/site/why-clinic-room.webp',
+    alt: 'A calm treatment room with a freshly made treatment bed and soft window light',
+    label: 'Behind the scenes',
+    caption: 'Inside the clinic',
+    position: '50% 62%',
   },
   {
-    image: '/assets/images/practitioner_portrait.jpg',
-    caption: 'Meet Abigail, Clinic Founder & Level 6 Medical Aesthetician at Allure Passions UK.',
-    tag: '#AllurePassionsUK #ClinicalLead',
+    src: '/assets/images/area_lips.jpg',
+    alt: 'Close-up of the lips and cheek in soft natural light',
+    label: 'Educational',
+    caption: 'Lip and perioral care',
+    position: '50% 55%',
   },
   {
-    image: '/assets/images/emsculpt_applicator.jpg',
-    caption: 'Dual action Emsculpt Neo: 30% subcutaneous fat apoptosis and 25% muscle toning.',
-    tag: '#EmsculptNeo #BodySculpting',
+    tall: true,
+    src: '/assets/images/area_body.jpg',
+    alt: 'A client resting on a treatment bed beside an Emsculpt NEO body-contouring device',
+    label: 'Technology',
+    caption: 'Emsculpt NEO body contouring',
+    position: '50% 50%',
   },
   {
-    image: '/assets/images/prefooter_serum.jpg',
-    caption: 'Post-laser barrier recovery and cellular hydration protocols for glowing skin.',
-    tag: '#ClinicalSkincare #SkinHealth',
+    src: '/assets/images/area_cheeks.jpg',
+    alt: 'A gloved practitioner treating the cheek with an energy-based handpiece',
+    label: 'Treatments',
+    caption: 'Skin treatment in progress',
+    position: '50% 45%',
+  },
+  {
+    src: '/assets/images/site/treatment-sofwave.webp',
+    alt: 'A practitioner guiding a Sofwave handpiece along the jawline of a relaxed client',
+    label: 'Patient journeys',
+    caption: 'Sofwave skin lifting',
+    position: '60% 50%',
+  },
+  {
+    tall: true,
+    video: '/assets/videos/hero-clinic-live',
+    poster: '/assets/videos/hero-clinic-live-poster.webp',
+    alt: 'Short clinic film: the reception, a consultation and a facial treatment',
+    label: 'Technology demonstrations',
+    caption: 'A day in the clinic',
+    position: '58% 50%',
+  },
+  {
+    src: '/assets/images/site/treatment-picoway.webp',
+    alt: 'A practitioner using a PicoWay laser handpiece on a client wearing eye protection',
+    label: 'Treatments',
+    caption: 'PicoWay laser session',
+    position: '58% 50%',
+  },
+  {
+    tall: true,
+    video: '/assets/videos/hero-clinic-sanctuary',
+    poster: '/assets/videos/hero-clinic-sanctuary-poster.webp',
+    alt: 'Short clinic film: warm light moving through a quiet treatment suite',
+    label: 'Behind the scenes',
+    caption: 'The treatment suite',
+    position: '62% 50%',
+  },
+  {
+    src: '/assets/images/site/why-detail-hands.webp',
+    alt: 'Gloved hands preparing a treatment tray with a glass dropper bottle',
+    label: 'Patient journeys',
+    caption: 'Preparing every treatment',
+    position: '50% 50%',
+  },
+  {
+    src: '/assets/images/prefooter_serum.jpg',
+    alt: 'A woman applying a serum from a dropper to her cheek',
+    label: 'Educational',
+    caption: 'Aftercare and skin health',
+    position: '60% 40%',
   },
 ];
 
+const tileVariants = {
+  hidden: { clipPath: 'inset(100% 0% 0% 0% round 16px)' },
+  show: (i) => ({
+    clipPath: 'inset(0% 0% 0% 0% round 16px)',
+    transition: { duration: 1.15, ease: EASE_INOUT, delay: 0.05 + Math.abs(i - 4.5) * 0.08 },
+  }),
+};
+
+const mediaVariants = {
+  hidden: { scale: 1.18 },
+  show: (i) => ({
+    scale: 1,
+    transition: { duration: 1.6, ease: EASE_OUT, delay: 0.05 + Math.abs(i - 4.5) * 0.08 },
+  }),
+};
+
+function InstagramGlyph({ size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <rect x="2.75" y="2.75" width="18.5" height="18.5" rx="5.25" />
+      <circle cx="12" cy="12" r="4.25" />
+      <circle cx="17.35" cy="6.65" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Muted loop that only plays while it is on screen. */
+function TileVideo({ tile, reduce }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || reduce) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const attempt = video.play();
+          if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(video);
+    return () => {
+      observer.disconnect();
+      video.pause();
+    };
+  }, [reduce]);
+
+  if (reduce) {
+    return (
+      <img src={tile.poster} alt={tile.alt} loading="lazy" decoding="async" style={{ objectPosition: tile.position }} />
+    );
+  }
+
+  return (
+    <video
+      ref={ref}
+      poster={tile.poster}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      disablePictureInPicture
+      disableRemotePlayback
+      aria-label={tile.alt}
+      style={{ objectPosition: tile.position }}
+    >
+      <source src={`${tile.video}.webm`} type="video/webm" />
+      <source src={`${tile.video}.mp4`} type="video/mp4" />
+    </video>
+  );
+}
+
+function Tile({ tile, index, reduce }) {
+  const Frame = reduce ? 'a' : motion.a;
+  const Media = reduce ? 'div' : motion.div;
+  const frameMotion = reduce ? {} : { variants: tileVariants, custom: index };
+  const mediaMotion = reduce ? {} : { variants: mediaVariants, custom: index };
+
+  return (
+    <Frame
+      className={`ap-social__tile${tile.tall ? ' ap-social__tile--tall' : ''}`}
+      href={INSTAGRAM_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabIndex={reduce ? undefined : -1}
+      aria-label={`${tile.caption}: see more on Instagram (opens in a new tab)`}
+      {...frameMotion}
+    >
+      <Media className="ap-social__media" {...mediaMotion}>
+        {tile.video ? (
+          <TileVideo tile={tile} reduce={reduce} />
+        ) : (
+          <img
+            src={tile.src}
+            alt={tile.alt}
+            loading="lazy"
+            decoding="async"
+            style={{ objectPosition: tile.position }}
+          />
+        )}
+      </Media>
+      {tile.video ? (
+        <span className="ap-social__reel" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="12" height="12">
+            <path d="M8 5.5v13l10.5-6.5L8 5.5z" fill="currentColor" />
+          </svg>
+        </span>
+      ) : null}
+      <span className="ap-social__veil" aria-hidden="true">
+        <span className="ap-social__glyph">
+          <InstagramGlyph />
+        </span>
+        <span className="ap-social__caption">
+          <span className="ap-social__label">{tile.label}</span>
+          {tile.caption}
+        </span>
+      </span>
+    </Frame>
+  );
+}
+
+/**
+ * Section 11 — "Shared Transformations @ALLUREPASSIONSUK". A row of rounded Instagram-style
+ * tiles (two of them quiet clinic films) that bleeds off both edges and drifts sideways
+ * as the page scrolls. Reduced motion: a still row you can scroll sideways.
+ */
 export default function InstagramSection() {
+  const reduce = useReducedMotion();
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const eased = useSpring(scrollYProgress, { stiffness: 70, damping: 22, mass: 0.6 });
+  const drift = useTransform(eased, [0, 1], ['4.2%', '-4.2%']);
+
+  const rowMotion = reduce
+    ? {}
+    : {
+        style: { x: drift },
+        initial: 'hidden',
+        whileInView: 'show',
+        // The row is far wider than a phone screen (only ~18% of it is ever visible there),
+        // so trigger on a small share of it rather than a quarter.
+        viewport: { ...VIEWPORT, amount: 0.08 },
+      };
+  const Row = reduce ? 'div' : motion.div;
+
   return (
     <section
-      style={{
-        backgroundColor: '#F5F0EA',
-        padding: '6rem 0',
-        borderBottom: '1px solid rgba(28, 27, 24, 0.08)',
-      }}
+      ref={sectionRef}
+      className={`ap-social${reduce ? ' ap-social--static' : ''}`}
+      aria-labelledby="ap-social-title"
     >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Behind The Scenes
-          </div>
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '0.75rem',
-            }}
-          >
-            <SplitWords>
-              Follow Our Journey{' '}
-              <a
-                href="https://www.instagram.com/allurepassionsuk"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: '#A87F3D', textDecoration: 'none' }}
-              >
-                {CLINIC_INFO.instagram}
-              </a>
-            </SplitWords>
-          </h2>
-          <p
-            data-reveal
-            style={{
-              color: '#4A4740',
-              fontSize: '1rem',
-              maxWidth: '620px',
-              margin: '0 auto',
-            }}
-          >
-            Daily clinical insights, practitioner masterclasses, and patient transformations from 76 Cleveland Street.
-          </p>
-        </div>
+      <div className="ap-container ap-social__head">
+        <TextReveal as="h2" id="ap-social-title" className="ap-h2 ap-social__title">
+          Shared Transformations{' '}
+          <a className="ap-social__handle" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+            <span className="ap-social__handle-text">@ALLUREPASSIONSUK</span>
+          </a>
+        </TextReveal>
+        <Reveal as="p" delay={0.15} className="ap-lead ap-social__intro">
+          Follow our latest treatments, patient journeys, educational content, technology demonstrations and
+          behind-the-scenes updates.
+        </Reveal>
+      </div>
 
-        {/* 4 Square Photo Grid (Figma Exact) */}
-        <div
-          data-reveal-children
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '1.5rem',
-          }}
-        >
-          {INSTAGRAM_POSTS.map((post, idx) => (
-            <a
-              key={idx}
-              href="https://www.instagram.com/allurepassionsuk"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-white-elevation ap-hover-zoom"
-              style={{
-                display: 'block',
-                textDecoration: 'none',
-                borderRadius: 'var(--radius-sm)',
-                overflow: 'hidden',
-                position: 'relative',
-                aspectRatio: '1/1',
-                backgroundColor: '#1C1B18',
-              }}
-            >
-              <img
-                src={post.image}
-                alt={post.caption}
-                loading="lazy"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.06)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.0)';
-                }}
-              />
-
-              {/* Hover Overlay with Instagram Icon */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(180deg, rgba(20, 19, 17, 0.2) 0%, rgba(20, 19, 17, 0.85) 100%)',
-                  opacity: 0,
-                  transition: 'opacity 0.3s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  padding: '1.25rem',
-                  color: '#FFFFFF',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '0';
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      background: 'rgba(212, 175, 55, 0.9)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#1C1B18',
-                    }}
-                  >
-                    <InstagramIcon size={18} color="#1C1B18" />
-                  </div>
-                </div>
-
-                <div>
-                  <p style={{ fontSize: '0.8rem', lineHeight: '1.4', color: '#ECE8E1', marginBottom: '0.35rem' }}>
-                    {post.caption}
-                  </p>
-                  <span style={{ fontSize: '0.72rem', color: '#D4AF37', fontWeight: '600' }}>
-                    {post.tag}
-                  </span>
-                </div>
-              </div>
-            </a>
+      <div className="ap-social__rail" data-overflow-ok>
+        <Row className="ap-social__row" {...rowMotion}>
+          {TILES.map((tile, index) => (
+            <Tile key={tile.caption} tile={tile} index={index} reduce={reduce} />
           ))}
-        </div>
-
+        </Row>
       </div>
     </section>
   );

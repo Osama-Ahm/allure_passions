@@ -1,282 +1,346 @@
-import React from 'react';
-import { ArrowRight, MessageSquare } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
-import CountUp from '../motion/CountUp';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
+import SectionHeading from './ui/SectionHeading';
+import ArrowButton from './ui/ArrowButton';
+import Button from './ui/Button';
+import { Reveal } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT } from '../motion/presets';
+import { POPULAR_TREATMENTS } from '../data/treatmentData';
+import { routeLinkHandler } from '../utils/navigation';
+import './BodyContouringSection.css';
 
-export default function BodyContouringSection({ onNavigate }) {
+const TREATMENT = Object.fromEntries(POPULAR_TREATMENTS.map((t) => [t.id, t]));
+const plainName = (id) => TREATMENT[id].name.replace(/[®™]/g, '').replace(/\s+/g, ' ').trim();
+
+// Title / subtitle / description come from POPULAR_TREATMENTS (tagline, summary); the three
+// "support" lines only use concerns that CONCERNS_LIST maps to that treatment.
+const fromData = (id, rest) => ({
+  id,
+  title: plainName(id),
+  subtitle: TREATMENT[id].tagline,
+  description: TREATMENT[id].summary,
+  ...rest,
+});
+
+const TECHNOLOGIES = [
+  {
+    id: 'emsculpt_neo',
+    title: 'Emsculpt Neo',
+    label: 'Emsculpt Neo',
+    subtitle: 'Redefining Body Contouring',
+    description:
+      'Emsculpt Neo combines radiofrequency technology with high-intensity muscle stimulation to provide an advanced approach to body contouring.',
+    supports: ['Body contouring', 'Muscle tone', 'Muscle definition'],
+    image: '/assets/images/site/treatment-emsculpt-neo.webp',
+    position: '44% 50%',
+    alt: 'A patient resting on a treatment bed with a body-contouring applicator around the abdomen while a practitioner checks the device screen',
+  },
+  fromData('emerald_laser', {
+    label: 'Emerald Laser',
+    supports: ['Stubborn fat deposits', 'Body contouring', 'Body slimming'],
+    image: '/assets/images/site/treatment-emerald-laser.webp',
+    position: '40% 50%',
+    alt: 'A patient lying beneath the green beams of a low-level laser device in a softly lit treatment room',
+  }),
+  fromData('morpheus8', {
+    label: 'Morpheus8',
+    supports: ['Skin laxity & sagging', 'Fine lines & wrinkles', 'Acne scarring'],
+    image: '/assets/images/site/treatment-morpheus8.webp',
+    position: '46% 50%',
+    alt: 'A radiofrequency microneedling handpiece held against a patient’s cheek during treatment',
+  }),
+  fromData('sofwave', {
+    label: 'Sofwave',
+    supports: ['Skin laxity & sagging', 'Fine lines & wrinkles', 'Signs of ageing'],
+    image: '/assets/images/site/treatment-sofwave.webp',
+    position: '56% 50%',
+    alt: 'A practitioner guiding an ultrasound handpiece along a patient’s jawline',
+  }),
+  fromData('picoway', {
+    label: 'PicoWay',
+    supports: ['Hyperpigmentation', 'Acne scarring', 'Tattoo removal'],
+    image: '/assets/images/site/treatment-picoway.webp',
+    position: '56% 50%',
+    alt: 'A patient wearing protective eyewear while a laser handpiece is used on her cheek',
+  }),
+  fromData('advatx', {
+    label: 'ADVATx',
+    supports: ['Active acne', 'Rosacea & redness', 'Hyperpigmentation'],
+    image: '/assets/images/site/treatment-advatx.webp',
+    position: '56% 50%',
+    alt: 'A gloved practitioner holding a laser handpiece to a patient’s cheek, with protective eyewear in place',
+  }),
+];
+
+const TOTAL = TECHNOLOGIES.length;
+const FOOTNOTE = '*Subject to preliminary physical assessment and suitability criteria during clinical intake.';
+const pad = (n) => String(n).padStart(2, '0');
+
+// Photo: the incoming frame wipes across the outgoing one, which drifts away underneath.
+const frameVariants = {
+  enter: (dir) => ({ clipPath: dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)', x: '0%', zIndex: 2 }),
+  center: { clipPath: 'inset(0% 0% 0% 0%)', x: '0%', zIndex: 2, transition: { duration: 1.05, ease: EASE_INOUT } },
+  exit: (dir) => ({ x: `${dir * -14}%`, zIndex: 1, transition: { duration: 1.05, ease: EASE_INOUT } }),
+};
+const photoVariants = {
+  enter: (dir) => ({ scale: 1.16, x: `${dir * 7}%` }),
+  center: { scale: 1, x: '0%', transition: { duration: 1.5, ease: EASE_OUT } },
+  exit: { scale: 1.06, transition: { duration: 1.05, ease: EASE_INOUT } },
+};
+
+// Copy: lines rise in one after another, from the side the slide is travelling from.
+const copyVariants = {
+  enter: {},
+  center: { transition: { staggerChildren: 0.055, delayChildren: 0.06 } },
+  exit: { transition: { staggerChildren: 0.015, staggerDirection: -1 } },
+};
+const lineVariants = {
+  enter: (dir) => ({ opacity: 0, x: dir * 26, y: 6 }),
+  center: { opacity: 1, x: 0, y: 0, transition: { duration: 0.75, ease: EASE_OUT } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.24, ease: EASE_INOUT } },
+};
+
+const STILL = { enter: {}, center: {}, exit: {} };
+
+function BadgeTick() {
   return (
-    <section
-      style={{
-        backgroundColor: '#121110',
-        color: '#FFFFFF',
-        padding: '7rem 0',
-        borderBottom: '1px solid rgba(168, 127, 61, 0.22)',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#D4AF37',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Revolutionary Body Contouring
-          </div>
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-              color: '#FFFFFF',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            <SplitWords>Emsculpt Neo® at Allure Passions UK</SplitWords>
-          </h2>
-          <p
-            data-reveal
-            style={{
-              color: '#ECE8E1',
-              fontSize: '1.05rem',
-              maxWidth: '650px',
-              margin: '0 auto',
-              fontWeight: '300',
-            }}
-          >
-            The world's first and only non-invasive body shaping procedure that combines synchronized Radiofrequency and HIFEM+ energy in a single 30-minute session.
-          </p>
-        </div>
+    <svg className="ap-tech__tick" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path
+        d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path d="m8.9 12.1 2.15 2.15 4.1-4.3" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
-        {/* Featured Spotlight Card (Figma Exact) */}
-        <div
-          className="card-dark-glass"
-          style={{
-            maxWidth: '1120px',
-            margin: '0 auto',
-            borderRadius: 'var(--radius-sm)',
-            overflow: 'hidden',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-            alignItems: 'center',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.4)',
-          }}
+/** The right-hand copy of one technology. `still` renders plain markup (used to size the card). */
+function TechCopy({ tech, dir = 1, still = false, reduce = false, onNavigate }) {
+  const M = still ? 'div' : motion.div;
+  const variants = still || reduce ? STILL : lineVariants;
+  const line = still ? {} : { variants, custom: dir };
+  return (
+    <>
+      <M className="ap-tech__head" {...line}>
+        <h3 className="ap-tech__title">{tech.title}</h3>
+        <p className="ap-tech__subtitle">{tech.subtitle}</p>
+      </M>
+      <M className="ap-tech__desc" {...line}>
+        <p>{tech.description}</p>
+      </M>
+      <M className="ap-tech__lead" {...line}>
+        <p>It may be considered by patients looking to support:</p>
+      </M>
+      <ul className="ap-tech__list">
+        {tech.supports.map((text) => (
+          <motion.li key={text} className="ap-tech__item" variants={variants} custom={dir}>
+            <BadgeTick />
+            <span>{text}</span>
+          </motion.li>
+        ))}
+      </ul>
+      <M className="ap-tech__foot" {...line}>
+        <p>{FOOTNOTE}</p>
+      </M>
+      <M className="ap-tech__cta" {...line}>
+        <Button
+          block
+          href={`/treatments/${tech.id}`}
+          onClick={routeLinkHandler(onNavigate, 'treatment-detail', tech.id)}
+          tabIndex={still ? -1 : undefined}
         >
-          {/* Left: Applicator & Treatment Room Photography */}
-          <div
-            data-reveal="image"
-            style={{
-              height: '100%',
-              minHeight: '380px',
-              position: 'relative',
-              overflow: 'hidden',
-              backgroundColor: '#1C1B18',
-            }}
-          >
-            <img
-              src="/assets/images/emsculpt_applicator.jpg"
-              alt="Patient undergoing Emsculpt Neo body contouring treatment"
-              loading="lazy"
-              data-parallax="0.07"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '16px',
-                left: '16px',
-                background: 'rgba(18, 17, 16, 0.85)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                border: '1px solid rgba(212, 175, 55, 0.4)',
-                padding: '0.4rem 0.85rem',
-                borderRadius: '2px',
-                fontSize: '0.72rem',
-                color: '#D4AF37',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: '600',
-              }}
-            >
-              76 Cleveland Street • Body Suite
-            </div>
-          </div>
+          Discover {tech.label}
+        </Button>
+      </M>
+    </>
+  );
+}
 
-          {/* Right: Metrics & Clinical Protocol */}
-          <div style={{ padding: '3.5rem 3rem' }}>
-            <div
-              data-reveal
-              style={{
-                fontSize: '0.75rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: '#D4AF37',
-                fontWeight: '600',
-                marginBottom: '0.5rem',
-              }}
-            >
-              Dual Synchronised Modality
-            </div>
+/**
+ * Section 12 — Discover Our Signature Technologies.
+ * One white card that steps through the six technologies: the photo wipes across in the
+ * direction of travel while the copy re-staggers. Arrows, swipe/drag and ←/→ keys all work.
+ */
+export default function BodyContouringSection({ onNavigate }) {
+  const reduce = useReducedMotion();
+  const cardRef = useRef(null);
+  const inView = useInView(cardRef, { once: true, amount: 0.3 });
+  const [[index, dir], setSlide] = useState([0, 1]);
+  const tech = TECHNOLOGIES[index];
 
-            <h3
-              data-reveal
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '2rem',
-                color: '#FFFFFF',
-                fontWeight: '500',
-                marginBottom: '1.5rem',
-                lineHeight: 1.2,
-              }}
-            >
-              30% Fat Reduction • 25% Muscle Hypertrophy
-            </h3>
+  const go = useCallback((delta) => {
+    setSlide(([current]) => [(current + delta + TOTAL) % TOTAL, delta > 0 ? 1 : -1]);
+  }, []);
+  const goTo = useCallback((target) => {
+    setSlide(([current]) => (target === current ? [current, 1] : [target, target > current ? 1 : -1]));
+  }, []);
 
-            {/* Metric Pills */}
-            <div
-              data-reveal-children
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1.25rem',
-                marginBottom: '2rem',
-              }}
+  // Warm the cache so every wipe reveals a decoded photo.
+  useEffect(() => {
+    if (!inView) return;
+    TECHNOLOGIES.forEach(({ image }) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = image;
+    });
+  }, [inView]);
+
+  const onKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      go(1);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      go(-1);
+    }
+  };
+
+  const onDragEnd = (_event, info) => {
+    const swipe = info.offset.x + info.velocity.x * 0.18;
+    if (swipe < -70) go(1);
+    else if (swipe > 70) go(-1);
+  };
+
+  const playing = reduce || inView;
+
+  return (
+    <section className="ap-tech" aria-labelledby="ap-tech-title">
+      <div className="ap-container">
+        <SectionHeading
+          id="ap-tech-title"
+          className="ap-tech__heading"
+          title="Discover Our Signature"
+          accent="Technologies"
+          align="center"
+          tone="dark"
+          intro="The right treatment depends on what you would like to improve, your individual assessment and what is appropriate for you."
+          note="Advanced technology gives us different ways to address different concerns."
+        />
+
+        <div
+          className="ap-tech__carousel"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Signature technologies (use the left and right arrow keys to browse)"
+          tabIndex={0}
+          onKeyDown={onKeyDown}
+        >
+          <Reveal className="ap-tech__stage" delay={0.05} amount={0.15}>
+            <motion.div
+              ref={cardRef}
+              className="ap-tech__card"
+              drag={reduce ? false : 'x'}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.14}
+              dragSnapToOrigin
+              onDragEnd={onDragEnd}
             >
-              <div
-                style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(168, 127, 61, 0.25)',
-                  padding: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                }}
+              <motion.div
+                className="ap-tech__media"
+                initial={reduce ? false : { clipPath: 'inset(100% 0% 0% 0% round 12px)' }}
+                animate={playing ? { clipPath: 'inset(0% 0% 0% 0% round 12px)' } : undefined}
+                transition={{ duration: 1.2, ease: EASE_INOUT, delay: 0.15 }}
               >
-                <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#D4AF37', fontFamily: 'var(--font-serif)' }}>
-                  <CountUp to={30} prefix="-" suffix="%" />
+                <AnimatePresence initial={false} custom={dir}>
+                  <motion.div
+                    key={tech.id}
+                    className="ap-tech__frame"
+                    custom={dir}
+                    variants={reduce ? STILL : frameVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                  >
+                    <motion.img
+                      className="ap-tech__photo"
+                      src={tech.image}
+                      alt={tech.alt}
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                      style={{ objectPosition: tech.position }}
+                      custom={dir}
+                      variants={reduce ? STILL : photoVariants}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </motion.div>
+
+              <div className="ap-tech__body">
+                {/* Every slide stacked invisibly, so the card is always as tall as the longest one. */}
+                <div className="ap-tech__sizer" aria-hidden="true" inert>
+                  {TECHNOLOGIES.map((item) => (
+                    <div key={item.id} className="ap-tech__copy">
+                      <TechCopy tech={item} still />
+                    </div>
+                  ))}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
-                  Subcutaneous Fat Layer
+                <div className="ap-tech__live" aria-live="polite">
+                  <AnimatePresence mode="wait" initial={false} custom={dir}>
+                    <motion.div
+                      key={tech.id}
+                      className="ap-tech__copy"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`${index + 1} of ${TOTAL}: ${tech.title}`}
+                      variants={reduce ? STILL : copyVariants}
+                      initial="enter"
+                      animate={playing ? 'center' : 'enter'}
+                      exit="exit"
+                    >
+                      <TechCopy tech={tech} dir={dir} reduce={reduce} onNavigate={onNavigate} />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
+            </motion.div>
+          </Reveal>
 
-              <div
-                style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(168, 127, 61, 0.25)',
-                  padding: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#D4AF37', fontFamily: 'var(--font-serif)' }}>
-                  <CountUp to={25} prefix="+" suffix="%" />
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
-                  Muscle Tone & Definition
-                </div>
-              </div>
+          <Reveal className="ap-tech__controls" delay={0.2} amount={0.5}>
+            <p className="ap-tech__count" aria-hidden="true">
+              <span className="ap-tech__count-now">
+                <AnimatePresence mode="popLayout" initial={false} custom={dir}>
+                  <motion.span
+                    key={index}
+                    custom={dir}
+                    initial={reduce ? false : { y: `${dir * 100}%`, opacity: 0 }}
+                    animate={{ y: '0%', opacity: 1 }}
+                    exit={reduce ? { opacity: 0, transition: { duration: 0 } } : { y: `${dir * -100}%`, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: EASE_OUT }}
+                  >
+                    {pad(index + 1)}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <span className="ap-tech__count-sep">/</span>
+              <span>{pad(TOTAL)}</span>
+            </p>
 
-              <div
-                style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(168, 127, 61, 0.25)',
-                  padding: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#FFFFFF', fontFamily: 'var(--font-serif)' }}>
-                  <CountUp to={30} suffix=" Min" />
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
-                  Comfortable Session
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(168, 127, 61, 0.25)',
-                  padding: '1rem',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#FFFFFF', fontFamily: 'var(--font-serif)' }}>
-                  Zero
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#ECE8E1' }}>
-                  Social or Work Downtime
-                </div>
-              </div>
+            <div className="ap-arrows ap-tech__arrows">
+              <ArrowButton dir="prev" label="Previous technology" onClick={() => go(-1)} />
+              <ArrowButton dir="next" label="Next technology" onClick={() => go(1)} />
             </div>
 
-            {/* CTAs */}
-            <div data-reveal style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <a
-                href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20regarding%20Emsculpt%20Neo%20Body%20Contouring."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-bronze"
-                style={{
-                  padding: '0.9rem 2rem',
-                  fontSize: '0.825rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  textDecoration: 'none',
-                }}
-              >
-                <MessageSquare size={15} />
-                <span>Enquire Regarding Neo®</span>
-              </a>
-
-              <button
-                onClick={() => onNavigate && onNavigate('treatment-detail', 'emsculpt_neo')}
-                style={{
-                  background: 'none',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '0.85rem 1.6rem',
-                  color: '#FFFFFF',
-                  fontSize: '0.825rem',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#D4AF37';
-                  e.currentTarget.style.color = '#D4AF37';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                  e.currentTarget.style.color = '#FFFFFF';
-                }}
-              >
-                <span>Full Protocol Specs</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-
-          </div>
+            <ol className="ap-tech__ticks">
+              {TECHNOLOGIES.map((item, i) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    className="ap-tech__tick-btn"
+                    aria-label={`Show ${item.label}`}
+                    aria-current={i === index ? 'true' : undefined}
+                    onClick={() => goTo(i)}
+                  >
+                    <span className="ap-tech__tick-bar" />
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
         </div>
-
       </div>
     </section>
   );

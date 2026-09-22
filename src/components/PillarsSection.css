@@ -1,235 +1,440 @@
-.pillars {
-  background: var(--ap-linen);
-  color: var(--ap-ink);
-  padding-block: clamp(5rem, 9vw, 8.5rem);
-  border-bottom: 1px solid rgba(28, 27, 24, 0.06);
-}
+/* ==========================================================================
+   Section 4 — Expertise Behind Every Treatment (+ Personalised Treatment Guidance)
+   Figma: 1290 x 600 panel, 3 x 2 cells of 430 x 300 over one dimmed photograph.
+   ========================================================================== */
 
-.pillars__layout {
-  display: grid;
-  gap: 2.5rem;
-}
-
-@media (min-width: 960px) {
-  .pillars__layout {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    align-items: center;
-    column-gap: clamp(3rem, 6vw, 6.5rem);
-  }
-}
-
-/* Image frame */
-.pillars__media {
+.ap-expertise {
+  --expertise-radius: var(--ap-radius-lg);
+  --expertise-line: rgba(255, 255, 255, 0.11);
   position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: var(--ap-radius-card);
-  background: #E6DED2;
-  isolation: isolate;
+  padding-block: clamp(3.5rem, 1.6rem + 4.1vw, 5.25rem) clamp(4rem, 2.3rem + 4.2vw, 6.4rem);
+  background: var(--ap-white);
+  color: var(--ap-text);
+  font-family: var(--ap-font-sans);
 }
 
-@media (min-width: 960px) {
-  .pillars__media {
-    aspect-ratio: 4 / 5;
-  }
-}
-
-.pillars__media .pillars__image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(1.06);
-  transition: opacity 0.9s var(--ease-editorial), transform 1.8s var(--ease-editorial);
-}
-
-.pillars__media .pillars__image.is-active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.pillars__media::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 35%;
-  background: linear-gradient(to top, rgba(20, 18, 15, 0.5), rgba(20, 18, 15, 0));
-  pointer-events: none;
-}
-
-.pillars__counter {
-  position: absolute;
-  left: 1.5rem;
-  bottom: 1.35rem;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  font-variant-numeric: tabular-nums;
-  color: var(--ap-ivory);
-}
-
-.pillars__counter-rule {
-  width: 2.5rem;
-  height: 1px;
-  background: rgba(247, 243, 236, 0.55);
-}
-
-/* Principles list */
-.pillars__list {
-  list-style: none;
-}
-
-.pillars__item {
-  position: relative;
-  display: grid;
-  grid-template-columns: 3.25rem minmax(0, 1fr);
-  padding-block: clamp(1.6rem, 2.6vw, 2.3rem);
-  border-top: 1px solid rgba(28, 27, 24, 0.12);
-}
-
-.pillars__item:last-child {
-  border-bottom: 1px solid rgba(28, 27, 24, 0.12);
-}
-
-/* Ink rule that draws across the active principle */
-.pillars__item::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--ap-ink);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.9s var(--ease-editorial);
-}
-
-.pillars__item.is-active::before {
-  transform: scaleX(1);
-}
-
-.pillars__index {
-  padding-top: 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  font-variant-numeric: tabular-nums;
-  color: var(--ap-muted);
-  transition: color 0.4s var(--ease-editorial);
-}
-
-.pillars__title {
-  font-family: var(--font-serif);
-  font-size: clamp(1.8rem, 1.2rem + 1.25vw, 2.4rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--ap-muted);
-  transition: color 0.4s var(--ease-editorial);
-}
-
-.pillars__item.is-active .pillars__index {
-  color: var(--ap-bronze-text);
-}
-
-.pillars__item.is-active .pillars__title {
-  color: var(--ap-ink);
-}
-
-.pillars__description,
-.pillars__tags {
-  grid-column: 2;
-}
-
-.pillars__description {
-  max-width: 36rem;
-  margin-top: 0.85rem;
-  font-size: 0.98rem;
-  line-height: 1.75;
-  color: #4A4740;
-}
-
-.pillars__tags {
-  display: flex;
-  flex-wrap: wrap;
+/* Heading: Figma intro is 18px Poppins on 27px lines */
+.ap-expertise__heading {
   gap: 0.5rem;
-  margin-top: 1.15rem;
-  list-style: none;
 }
-
-.pillars__tag {
-  padding: 0.38rem 0.8rem;
-  border: 1px solid rgba(28, 27, 24, 0.13);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  font-size: 0.74rem;
-  font-weight: 500;
+.ap-expertise__heading .ap-heading__intro {
+  font-size: clamp(0.98rem, 0.9rem + 0.25vw, 1.125rem);
+  line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--ap-ink);
 }
 
-@media (hover: hover) {
-  .pillars__item {
-    cursor: default;
+/* --------------------------------------------------------------------------
+   Credentials panel
+   -------------------------------------------------------------------------- */
+.ap-expertise__panel {
+  position: relative;
+  isolation: isolate;
+  margin-top: clamp(2.25rem, 1.6rem + 1.4vw, 3.1rem);
+  overflow: hidden;
+  border-radius: var(--expertise-radius);
+  background: #0e0d0b;
+  color: var(--ap-white);
+  box-shadow: 0 34px 70px -46px rgba(20, 16, 8, 0.55);
+}
+
+.ap-expertise__backdrop,
+.ap-expertise__glow-wrap,
+.ap-expertise__glow,
+.ap-expertise__glow-media,
+.ap-expertise__lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ap-expertise__backdrop {
+  z-index: 0;
+}
+
+.ap-expertise__photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  filter: grayscale(0.55) contrast(1.24);
+}
+
+/* Dims the photograph to the Figma's charcoal (white reads ~#5b5a58) */
+.ap-expertise__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 45%, rgba(10, 9, 8, 0) 0%, rgba(10, 9, 8, 0.26) 100%),
+    rgba(10, 9, 8, 0.6);
+}
+
+/* The warm window onto the photograph */
+.ap-expertise__glow-wrap {
+  z-index: 1;
+}
+.ap-expertise__glow {
+  will-change: clip-path;
+}
+.ap-expertise__photo--lit {
+  filter: grayscale(1) contrast(1.04);
+  will-change: transform;
+}
+.ap-expertise__glow-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(90, 80, 55, 0.7);
+}
+
+/* Hairlines between the cells (drawn in on entrance) */
+.ap-expertise__lines {
+  z-index: 2;
+}
+.ap-expertise__line {
+  position: absolute;
+  display: block;
+  background: var(--expertise-line);
+}
+.ap-expertise__line--v1,
+.ap-expertise__line--v2 {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: 50% 0;
+}
+.ap-expertise__line--h1,
+.ap-expertise__line--h2 {
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: 0 50%;
+}
+.ap-expertise__line--v1 {
+  left: calc(100% / 3);
+}
+.ap-expertise__line--v2 {
+  left: calc(200% / 3);
+}
+.ap-expertise__line--h1 {
+  top: 50%;
+}
+.ap-expertise__line--h2 {
+  display: none;
+}
+
+/* Grid of credentials */
+.ap-expertise__grid {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-expertise__cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 18.75rem; /* 300 */
+  padding: 2.5rem 1.75rem;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Bright frame + warm top light on the active cell */
+.ap-expertise__ring {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(90% 70% at 50% 0%, rgba(221, 196, 140, 0.16), rgba(221, 196, 140, 0) 70%);
+  box-shadow: inset 0 0 0 1px rgba(255, 246, 228, 0.5);
+  opacity: 0;
+  transition: opacity 0.7s var(--ap-ease-out);
+  pointer-events: none;
+}
+
+/* Gold hairline that draws across the top of the active cell */
+.ap-expertise__edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(221, 196, 140, 0) 0%,
+    var(--ap-gold) 18%,
+    var(--ap-gold-soft) 50%,
+    var(--ap-gold) 82%,
+    rgba(221, 196, 140, 0) 100%
+  );
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+  transition: transform 0.6s var(--ap-ease-inout);
+  pointer-events: none;
+}
+
+.ap-expertise__cell.is-active .ap-expertise__ring {
+  opacity: 1;
+}
+.ap-expertise__cell.is-active .ap-expertise__edge {
+  transform: scaleX(1);
+  transform-origin: 0 50%;
+  transition: transform 1.2s var(--ap-ease-out) 0.25s;
+}
+
+/* Round the frame where a cell meets the panel's corners (3-column layout) */
+.ap-expertise__cell:nth-child(1) .ap-expertise__ring {
+  border-top-left-radius: var(--expertise-radius);
+}
+.ap-expertise__cell:nth-child(3) .ap-expertise__ring {
+  border-top-right-radius: var(--expertise-radius);
+}
+.ap-expertise__cell:nth-child(4) .ap-expertise__ring {
+  border-bottom-left-radius: var(--expertise-radius);
+}
+.ap-expertise__cell:nth-child(6) .ap-expertise__ring {
+  border-bottom-right-radius: var(--expertise-radius);
+}
+
+.ap-expertise__index {
+  display: none;
+}
+
+.ap-expertise__copy {
+  display: grid;
+  justify-items: center;
+  max-width: var(--measure, 21rem);
+}
+
+.ap-expertise__title {
+  max-width: 20.25rem;
+  font-family: var(--ap-font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.09;
+  letter-spacing: -0.012em;
+  color: var(--ap-white);
+  text-wrap: balance;
+}
+
+.ap-expertise__text {
+  margin-top: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.88);
+  transition: color 0.6s var(--ap-ease-out);
+}
+.ap-expertise__cell.is-active .ap-expertise__text {
+  color: rgba(255, 255, 255, 0.97);
+}
+
+/* --------------------------------------------------------------------------
+   Personalised Treatment Guidance
+   -------------------------------------------------------------------------- */
+.ap-expertise__guidance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem 3rem;
+  margin-top: clamp(2.25rem, 1.5rem + 1.3vw, 2.6rem);
+}
+
+.ap-expertise__guidance-title {
+  font-family: var(--ap-font-display);
+  font-size: clamp(2.1rem, 1.2rem + 2.3vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  color: var(--ap-ink);
+}
+
+.ap-expertise__guidance-text {
+  margin-top: 1.15rem;
+  font-size: clamp(0.98rem, 0.9rem + 0.25vw, 1.125rem);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--ap-ink);
+}
+
+.ap-expertise__guidance-action {
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Laptop
+   -------------------------------------------------------------------------- */
+@media (max-width: 1199px) {
+  .ap-expertise__cell {
+    min-height: 18rem;
+    padding: 2.25rem 1.5rem;
+  }
+  .ap-expertise__title {
+    font-size: 1.75rem;
+  }
+  .ap-expertise__text {
+    font-size: 0.9375rem;
+    margin-top: 0.8rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet: two columns, three rows
+   -------------------------------------------------------------------------- */
+@media (max-width: 959px) {
+  .ap-expertise__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ap-expertise__cell {
+    min-height: 16.5rem;
+    padding: 2.25rem 1.75rem;
+  }
+  .ap-expertise__line--v1 {
+    left: 50%;
+  }
+  .ap-expertise__line--v2 {
+    display: none;
+  }
+  .ap-expertise__line--h1 {
+    top: calc(100% / 3);
+  }
+  .ap-expertise__line--h2 {
+    display: block;
+    top: calc(200% / 3);
   }
 
-  .pillars__item:not(.is-active):hover .pillars__title {
-    color: #45423C;
+  .ap-expertise__cell .ap-expertise__ring {
+    border-radius: 0;
+  }
+  .ap-expertise__cell:nth-child(1) .ap-expertise__ring {
+    border-top-left-radius: var(--expertise-radius);
+  }
+  .ap-expertise__cell:nth-child(2) .ap-expertise__ring {
+    border-top-right-radius: var(--expertise-radius);
+  }
+  .ap-expertise__cell:nth-child(5) .ap-expertise__ring {
+    border-bottom-left-radius: var(--expertise-radius);
+  }
+  .ap-expertise__cell:nth-child(6) .ap-expertise__ring {
+    border-bottom-right-radius: var(--expertise-radius);
+  }
+
+  .ap-expertise__guidance {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Phone: one elegant list inside a single panel
+   -------------------------------------------------------------------------- */
+@media (max-width: 639px) {
+  .ap-expertise {
+    --expertise-radius: 20px;
+  }
+  .ap-expertise__heading .ap-heading__intro {
+    font-size: 0.975rem;
+    line-height: 1.6;
+  }
+
+  .ap-expertise__photo {
+    object-position: 38% 50%;
+  }
+  .ap-expertise__backdrop::after {
+    background:
+      linear-gradient(180deg, rgba(10, 9, 8, 0) 0%, rgba(10, 9, 8, 0.28) 100%),
+      rgba(10, 9, 8, 0.62);
+  }
+
+  .ap-expertise__lines {
+    display: none;
+  }
+
+  .ap-expertise__grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  .ap-expertise__cell {
+    min-height: 0;
+    place-items: start;
+    align-content: start;
+    padding: 1.7rem 1.5rem 1.8rem;
+    text-align: left;
+  }
+  .ap-expertise__cell + .ap-expertise__cell {
+    border-top: 1px solid var(--expertise-line);
+  }
+
+  .ap-expertise__cell .ap-expertise__ring {
+    border-radius: 0;
+  }
+  .ap-expertise__cell:nth-child(1) .ap-expertise__ring {
+    border-radius: var(--expertise-radius) var(--expertise-radius) 0 0;
+  }
+  .ap-expertise__cell:nth-child(6) .ap-expertise__ring {
+    border-radius: 0 0 var(--expertise-radius) var(--expertise-radius);
+  }
+  .ap-expertise__ring {
+    background: radial-gradient(80% 90% at 0% 0%, rgba(221, 196, 140, 0.16), rgba(221, 196, 140, 0) 70%);
+  }
+
+  .ap-expertise__index {
+    display: block;
+    margin-bottom: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ap-gold-text);
+  }
+
+  .ap-expertise__copy {
+    justify-items: start;
+    max-width: none;
+  }
+
+  /* index.css forces small-screen h3 sizes with !important */
+  .ap-expertise__title {
+    max-width: none;
+    font-size: 1.625rem !important;
+    line-height: 1.12;
+    text-wrap: pretty;
+  }
+  .ap-expertise__text {
+    margin-top: 0.55rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  .ap-expertise__guidance-title {
+    font-size: 2.125rem !important;
+    line-height: 1.06 !important;
+  }
+  .ap-expertise__guidance-text {
+    margin-top: 0.85rem;
+    font-size: 0.975rem;
+  }
+  .ap-expertise__guidance-action,
+  .ap-expertise__guidance-action .ap-btn {
+    width: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pillars__media .pillars__image {
-    transform: none;
-    transition: opacity 0.4s linear;
-  }
-
-  .pillars__item::before {
+  .ap-expertise__ring,
+  .ap-expertise__edge,
+  .ap-expertise__cell.is-active .ap-expertise__edge,
+  .ap-expertise__text {
     transition: none;
-  }
-}
-
-/* Stacked layout: the image sits above the list, so every principle reads at full strength */
-@media (max-width: 959px) {
-  .pillars__item::before {
-    display: none;
-  }
-
-  .pillars__index,
-  .pillars__item.is-active .pillars__index {
-    color: var(--ap-bronze-text);
-  }
-
-  .pillars__title {
-    color: var(--ap-ink);
-  }
-}
-
-@media (max-width: 480px) {
-  h3.pillars__title {
-    font-size: 1.65rem !important;
-  }
-}
-
-@media (max-width: 639px) {
-  .pillars__item {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .pillars__index {
-    padding-top: 0;
-    margin-bottom: 0.65rem;
-  }
-
-  .pillars__description,
-  .pillars__tags {
-    grid-column: 1;
   }
 }

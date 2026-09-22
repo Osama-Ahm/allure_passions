@@ -1,246 +1,239 @@
-import React, { useState } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
+import TextReveal from '../motion/TextReveal';
+import { Reveal } from '../motion/Reveal';
+import { EASE_OUT, VIEWPORT } from '../motion/presets';
+import { scrollToTarget } from '../motion/smoothScroll';
+import Button from './ui/Button';
+import { BOOK_CONSULTATION_URL } from '../data/links';
 import { CONCERNS_LIST, POPULAR_TREATMENTS } from '../data/treatmentData';
-import { Search, Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
+import { routeLinkHandler, showConcernsPath } from '../utils/navigation';
+import './WhatWeTreatSection.css';
 
-export default function WhatWeTreatSection({ onNavigate }) {
-  const categories = ['All', 'Skin', 'Skin Tightening', 'Body', 'Laser', 'Wellness'];
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [activeConcernId, setActiveConcernId] = useState('hyperpigmentation');
-  const [searchTerm, setSearchTerm] = useState('');
+// Figma copy (section 6). `concern` names the CONCERNS_LIST entry an item matches, if any.
+const CATEGORIES = [
+  {
+    title: 'Skin & Complexion',
+    items: [
+      { label: 'Hyperpigmentation', concern: 'hyperpigmentation' },
+      { label: 'Melasma', concern: 'melasma' },
+      { label: 'Acne', concern: 'acne' },
+      { label: 'Acne scarring', concern: 'acne_scarring' },
+      { label: 'Rosacea', concern: 'rosacea' },
+      { label: 'Redness', concern: 'rosacea' },
+      { label: 'Lentigines / age spots', concern: 'lentigines' },
+      { label: 'Vascular lesions', concern: 'vascular' },
+      { label: 'Skin clarity', concern: 'skin_clarity' },
+    ],
+  },
+  {
+    title: 'Ageing & Skin Quality',
+    items: [
+      { label: 'Fine lines', concern: 'wrinkles' },
+      { label: 'Wrinkles', concern: 'wrinkles' },
+      { label: 'Skin laxity', concern: 'skin_laxity' },
+      { label: 'Signs of ageing', concern: 'signs_ageing' },
+      { label: 'Texture' },
+      { label: 'Striae', concern: 'striae' },
+    ],
+  },
+  {
+    title: 'Body',
+    items: [
+      { label: 'Stubborn fat', concern: 'stubborn_fat' },
+      { label: 'Body contouring', concern: 'body_contouring' },
+      { label: 'Muscle tone', concern: 'muscle_tone' },
+      { label: 'Muscle definition', concern: 'muscle_tone' },
+      { label: 'Skin tightening' },
+    ],
+  },
+  {
+    title: 'Additional Concerns',
+    items: [
+      { label: 'Tattoo removal', concern: 'tattoo_removal' },
+      { label: 'Lip enhancement and plumping', concern: 'lip_plumping' },
+      { label: 'Wellness', concern: 'wellness' },
+      { label: 'Cellular health', concern: 'wellness' },
+    ],
+  },
+];
 
-  const filteredConcerns = CONCERNS_LIST.filter((item) => {
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+// A concern links to the first treatment CONCERNS_LIST recommends that has its own page.
+const SHORT_NAMES = {
+  picoway: 'PicoWay',
+  advatx: 'ADVATx',
+  morpheus8: 'Morpheus8',
+  sofwave: 'Sofwave',
+  emsculpt_neo: 'Emsculpt Neo',
+  emerald_laser: 'Emerald Green Laser Lipo',
+};
+const TREATMENT_NAMES = Object.fromEntries(
+  POPULAR_TREATMENTS.map((t) => [t.id, SHORT_NAMES[t.id] || t.name.replace(/[®™]/g, '')]),
+);
+function treatmentFor(concernId) {
+  const concern = CONCERNS_LIST.find((c) => c.id === concernId);
+  const id = concern?.treatments.find((t) => TREATMENT_NAMES[t]);
+  return id ? { id, name: TREATMENT_NAMES[id] } : null;
+}
 
-  const activeConcern = CONCERNS_LIST.find((c) => c.id === activeConcernId) || CONCERNS_LIST[0];
+const BACKGROUND = '/assets/images/area_eyes.jpg';
 
-  const matchedTreatments = POPULAR_TREATMENTS.filter((t) =>
-    activeConcern.treatments.includes(t.id)
+// Card stagger: 4-up on wide screens, 2-up on tablets, stacked on phones.
+const GRID_4 = '(min-width: 1200px)';
+const GRID_2 = '(min-width: 640px)';
+function subscribeLayout(onChange) {
+  const queries = [GRID_4, GRID_2].map((q) => window.matchMedia(q));
+  queries.forEach((q) => q.addEventListener('change', onChange));
+  return () => queries.forEach((q) => q.removeEventListener('change', onChange));
+}
+const getColumns = () => (window.matchMedia(GRID_4).matches ? 4 : window.matchMedia(GRID_2).matches ? 2 : 1);
+const getServerColumns = () => 4;
+
+// Glass cards rise in and come into focus (blur to sharp) on the copy only,
+// so the frosted surface itself never loses its backdrop blur.
+const cardVariants = {
+  hidden: { opacity: 0, y: 48 },
+  show: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, ease: EASE_OUT, delay },
+  }),
+};
+const contentVariants = {
+  hidden: { opacity: 0, filter: 'blur(10px)' },
+  show: (delay = 0) => ({
+    opacity: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 1, ease: EASE_OUT, delay: delay + 0.15 },
+    transitionEnd: { filter: 'none' },
+  }),
+};
+
+function ConcernItem({ item, onNavigate }) {
+  const treatment = item.concern ? treatmentFor(item.concern) : null;
+  if (!treatment) {
+    return (
+      <li className="ap-concerns__item">
+        <span className="ap-concerns__label">{item.label}</span>
+      </li>
+    );
+  }
+  return (
+    <li className="ap-concerns__item">
+      <a
+        className="ap-concerns__link"
+        href={`/treatments/${treatment.id}`}
+        onClick={routeLinkHandler(onNavigate, 'treatment-detail', treatment.id)}
+        aria-label={`${item.label}: explore ${treatment.name}`}
+      >
+        <span className="ap-concerns__label">{item.label}</span>
+        <ArrowUpRight className="ap-concerns__arrow" size={15} strokeWidth={1.75} aria-hidden="true" />
+      </a>
+    </li>
   );
+}
 
-  const handleTreatmentClick = (id) => {
-    if (onNavigate) {
-      onNavigate('treatment-detail', id);
-    }
+/**
+ * Section 6 — "Skin, Body & Wellness Concerns" + "Not sure where to begin?"
+ * Four frosted concern cards over a dimmed skin close-up that drifts with the scroll.
+ */
+export default function WhatWeTreatSection({ onNavigate }) {
+  const sectionRef = useRef(null);
+  const reduce = useReducedMotion();
+  const columns = useSyncExternalStore(subscribeLayout, getColumns, getServerColumns);
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const bgY = useTransform(scrollYProgress, [0, 1], ['-7%', '7%']);
+
+  const exploreConcerns = () => {
+    showConcernsPath();
+    scrollToTarget('#concerns', { offset: -110 });
   };
 
   return (
-    <section id="what-we-treat" className="section-padding" style={{
-      background: '#FAF7F2',
-      borderBottom: '1px solid rgba(28, 27, 24, 0.06)'
-    }}>
-      <div className="container">
-        
-        {/* Section Header */}
-        <div className="section-header">
-          <div className="badge-bronze" style={{ marginBottom: '1rem' }}>
-            <Sparkles size={13} /> Personalised Treatment Pathways
-          </div>
-          <h2 className="heading-lg" style={{ color: '#1C1B18' }}>
-            What We <span className="text-bronze-gradient">Treat</span>
-          </h2>
-          <p>
-            Skin, Body & Cellular Concerns. Select your specific concern below to explore our targeted clinical protocols and device technologies.
-          </p>
-        </div>
+    <section ref={sectionRef} className="ap-concerns" aria-labelledby="ap-concerns-title">
+      <div className="ap-concerns__bg" aria-hidden="true">
+        <motion.div className="ap-concerns__photo" style={reduce ? undefined : { y: bgY }}>
+          <img src={BACKGROUND} alt="" loading="lazy" decoding="async" />
+        </motion.div>
+        <div className="ap-concerns__tint" />
+        <div className="ap-concerns__shade" />
+      </div>
 
-        {/* Filter Bar & Search */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          marginBottom: '2.5rem',
-          background: '#FFFFFF',
-          padding: '1rem 1.5rem',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid rgba(168, 127, 61, 0.2)',
-          boxShadow: '0 4px 15px rgba(28, 27, 24, 0.03)'
-        }}>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                style={{
-                  background: selectedCategory === cat ? 'var(--bronze-gradient)' : '#FAF7F2',
-                  color: selectedCategory === cat ? '#FFFFFF' : '#4A4740',
-                  border: selectedCategory === cat ? 'none' : '1px solid rgba(28, 27, 24, 0.08)',
-                  padding: '0.45rem 1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  fontWeight: selectedCategory === cat ? '600' : '500',
-                  fontSize: '0.825rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
+      <div className="ap-container ap-concerns__inner">
+        <header className="ap-concerns__head">
+          <TextReveal as="h2" id="ap-concerns-title" className="ap-h2 ap-concerns__title">
+            Skin, Body &amp; <em className="ap-accent ap-concerns__accent">Wellness Concerns</em>
+          </TextReveal>
+          <Reveal as="p" delay={0.15} className="ap-lead ap-concerns__note">
+            You do not need to know which treatment you need before speaking with us.
+          </Reveal>
+          <Reveal as="p" delay={0.23} className="ap-lead ap-concerns__text">
+            Start with the concern you would like to improve, and explore the treatment options that may be appropriate
+            for you.
+          </Reveal>
+          <Reveal delay={0.3} className="ap-concerns__action">
+            <Button onClick={exploreConcerns}>Explore Your Concern</Button>
+          </Reveal>
+        </header>
+
+        <ul className="ap-concerns__grid" aria-label="Concerns we treat">
+          {CATEGORIES.map((category, index) => {
+            const delay = (index % columns) * 0.1;
+            const titleId = `ap-concerns-cat-${index + 1}`;
+            return (
+              <motion.li
+                key={category.title}
+                className="ap-concerns__card"
+                aria-labelledby={titleId}
+                {...(reduce
+                  ? {}
+                  : {
+                      variants: cardVariants,
+                      custom: delay,
+                      initial: 'hidden',
+                      whileInView: 'show',
+                      viewport: { ...VIEWPORT, amount: 0.3 },
+                    })}
               >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ position: 'relative', minWidth: '220px' }}>
-            <Search size={15} color="#7A756C" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
-            <input
-              type="text"
-              placeholder="Search your concern..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                width: '100%',
-                background: '#FAF7F2',
-                border: '1px solid rgba(168, 127, 61, 0.3)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '0.45rem 0.85rem 0.45rem 2.25rem',
-                color: '#1C1B18',
-                fontSize: '0.85rem',
-                outline: 'none'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Dual Panel Layout */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(280px, 1fr) minmax(340px, 1.4fr)',
-          gap: '2rem'
-        }}>
-          
-          {/* Left: Concern Pills */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-            maxHeight: '520px',
-            overflowY: 'auto',
-            paddingRight: '0.5rem'
-          }}>
-            {filteredConcerns.map((concern) => {
-              const isActive = concern.id === activeConcernId;
-              return (
-                <button
-                  key={concern.id}
-                  onClick={() => setActiveConcernId(concern.id)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.9rem 1.15rem',
-                    borderRadius: 'var(--radius-sm)',
-                    background: isActive ? '#FFFFFF' : '#FAF7F2',
-                    border: isActive ? '1.5px solid #A87F3D' : '1px solid rgba(28, 27, 24, 0.06)',
-                    color: isActive ? '#1C1B18' : '#7A756C',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isActive ? '0 4px 12px rgba(168, 127, 61, 0.1)' : 'none'
-                  }}
+                <span className="ap-concerns__sheen" aria-hidden="true" />
+                <motion.div
+                  className="ap-concerns__card-inner"
+                  variants={reduce ? undefined : contentVariants}
+                  custom={delay}
                 >
-                  <div>
-                    <div style={{ fontWeight: isActive ? '600' : '400', fontSize: '0.9rem' }}>{concern.name}</div>
-                    <div style={{ fontSize: '0.75rem', color: isActive ? '#A87F3D' : '#9E988E' }}>{concern.category}</div>
-                  </div>
-                  <ArrowRight size={15} color={isActive ? '#A87F3D' : '#9E988E'} />
-                </button>
-              );
-            })}
+                  <p className="ap-concerns__cat">Category {String(index + 1).padStart(2, '0')}</p>
+                  <h3 id={titleId} className="ap-concerns__card-title">
+                    {category.title}
+                  </h3>
+                  <ul className="ap-concerns__list">
+                    {category.items.map((item) => (
+                      <ConcernItem key={item.label} item={item} onNavigate={onNavigate} />
+                    ))}
+                  </ul>
+                </motion.div>
+              </motion.li>
+            );
+          })}
+        </ul>
+
+        <div className="ap-concerns__cta">
+          <div className="ap-concerns__cta-copy">
+            <TextReveal as="h3" className="ap-concerns__cta-title">
+              Not sure where to begin?
+            </TextReveal>
+            <Reveal as="p" delay={0.15} className="ap-lead ap-concerns__cta-text">
+              Our consultation process is designed to understand your concerns first and recommend an appropriate
+              treatment pathway based on your individual needs.
+            </Reveal>
           </div>
-
-          {/* Right: Matched Clinical Options */}
-          <div className="editorial-card" style={{ padding: '2rem', border: '1px solid rgba(168, 127, 61, 0.3)', background: '#FFFFFF' }}>
-            
-            <div style={{ marginBottom: '1.5rem', borderBottom: '1px solid rgba(28, 27, 24, 0.08)', paddingBottom: '1rem' }}>
-              <span className="badge-bronze" style={{ fontSize: '0.725rem', marginBottom: '0.4rem' }}>
-                SELECTED CONCERN
-              </span>
-              <h3 className="heading-md" style={{ color: '#1C1B18', marginTop: '0.2rem' }}>
-                {activeConcern.name}
-              </h3>
-              <p style={{ color: '#7A756C', fontSize: '0.875rem', marginTop: '0.25rem', fontWeight: '300' }}>
-                Recommended medical aesthetic technologies for <strong>{activeConcern.name}</strong>:
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-              {matchedTreatments.length > 0 ? (
-                matchedTreatments.map((tr) => (
-                  <div
-                    key={tr.id}
-                    style={{
-                      background: '#FAF7F2',
-                      border: '1px solid rgba(168, 127, 61, 0.22)',
-                      borderRadius: 'var(--radius-sm)',
-                      padding: '1.15rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '1rem',
-                      flexWrap: 'wrap'
-                    }}
-                  >
-                    <div style={{ flex: 1, minWidth: '180px' }}>
-                      <div style={{ fontWeight: '600', color: '#1C1B18', fontSize: '1rem' }}>{tr.name}</div>
-                      <p style={{ fontSize: '0.825rem', color: '#7A756C', margin: 0, fontWeight: '300' }}>
-                        {tr.tagline} — {tr.pricing.split('|')[0]}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => handleTreatmentClick(tr.id)}
-                      className="btn-outline-bronze"
-                      style={{ padding: '0.45rem 0.95rem', fontSize: '0.775rem' }}
-                    >
-                      View Details
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <div style={{ color: '#7A756C', padding: '1rem 0', fontSize: '0.9rem' }}>
-                  Please consult our clinical practitioner for bespoke combination options.
-                </div>
-              )}
-            </div>
-
-            {/* Consultation Enquiry Block (Strictly No Booking Engine) */}
-            <div style={{
-              background: 'rgba(168, 127, 61, 0.08)',
-              padding: '1.25rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px dashed rgba(168, 127, 61, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem'
-            }}>
-              <div>
-                <div style={{ fontWeight: '600', color: '#A87F3D', fontSize: '0.9rem' }}>
-                  Unsure which treatment fits your concern?
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#7A756C' }}>
-                  Discuss targeted treatment pathways with our Level 6 clinical team.
-                </div>
-              </div>
-
-              <a
-                href={`https://wa.me/447342052249?text=${encodeURIComponent(`Hello Allure Passions UK, I would like to consult regarding ${activeConcern.name}.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-bronze"
-                style={{ padding: '0.65rem 1.25rem', fontSize: '0.8rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-              >
-                <MessageSquare size={14} /> Enquire Regarding Concern
-              </a>
-            </div>
-
-          </div>
-
+          <Reveal delay={0.25} className="ap-concerns__cta-action">
+            <Button href={BOOK_CONSULTATION_URL} target="_blank" rel="noopener noreferrer">
+              Book a Consultation
+            </Button>
+          </Reveal>
         </div>
-
       </div>
     </section>
   );

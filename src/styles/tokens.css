@@ -1,0 +1,438 @@
+/* ==========================================================================
+   ALLURE PASSIONS UK — DESIGN TOKENS (Figma "ALLURE PASSION mock 1")
+   Display: Instrument Serif · Body/UI: Poppins · Accent caps: Cormorant Garamond
+   Every homepage section builds on these tokens and the .ap-* primitives below.
+   ========================================================================== */
+
+:root {
+  /* Palette sampled from the Figma frame */
+  --ap-gold: #ddc48c; /* buttons, chips, arrow buttons */
+  --ap-gold-soft: #e6d2a4; /* hover tint of gold fills */
+  --ap-gold-deep: #c9ad6c; /* pressed / borders on gold */
+  --ap-gold-text: #d9bf86; /* italic accent words in headings */
+  --ap-gold-ink: #886d30; /* small gold text on light grounds */
+  --ap-ink: #0b0a09; /* headings on light */
+  --ap-text: #1b1a17; /* body on light */
+  --ap-text-muted: #6f6b63; /* secondary copy on light */
+  --ap-charcoal: #32312c; /* dark sections, card 1 */
+  --ap-charcoal-2: #2a2925;
+  --ap-olive: #463e2c;
+  --ap-night: #080707; /* technology section base, footer */
+  --ap-black: #000;
+  --ap-white: #fff;
+  --ap-paper: #fafafa; /* concern path section */
+  --ap-cream: #f6f3e1; /* results, social, skincare grounds */
+  --ap-cream-2: #f7f4e3;
+  --ap-mist: #f7f7f9; /* consultation CTA left panel */
+  --ap-line-light: rgba(11, 10, 9, 0.1);
+  --ap-line-dark: rgba(255, 255, 255, 0.14);
+  --ap-glass: rgba(255, 255, 255, 0.16);
+  --ap-glass-border: rgba(255, 255, 255, 0.42);
+
+  /* Type */
+  --ap-font-display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --ap-font-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  --ap-font-accent: 'Cormorant Garamond', Georgia, serif;
+
+  --ap-fs-hero: clamp(3.25rem, 1rem + 4.9vw, 5rem); /* 52px phones → 80px @1440 */
+  --ap-fs-h2: clamp(2.3rem, 1.1rem + 3.1vw, 3.5rem); /* 56px @1440: most Figma section titles (55-57px) */
+  --ap-fs-h3: clamp(1.75rem, 1.1rem + 1.6vw, 2.6rem); /* ~40px @1440 */
+  --ap-fs-card: clamp(1.6rem, 1.2rem + 1vw, 2.25rem); /* ~36px @1440 */
+  --ap-fs-lead: clamp(1rem, 0.92rem + 0.3vw, 1.2rem); /* ~19px @1440 */
+  --ap-fs-body: clamp(0.95rem, 0.9rem + 0.18vw, 1.0625rem); /* ~17px */
+  --ap-fs-small: 0.875rem;
+  --ap-fs-eyebrow: 0.8125rem;
+  --ap-tracking-display: -0.022em;
+
+  /* Layout: the Figma frame is 1440 wide with 75px gutters (1290 content) */
+  --ap-container: 1290px;
+  --ap-gutter: clamp(1.25rem, 0.4rem + 3.6vw, 4.6875rem);
+  --ap-section-y: clamp(4.5rem, 3rem + 5vw, 8.5rem);
+
+  /* Shape & depth */
+  --ap-radius-xs: 6px; /* buttons */
+  --ap-radius-sm: 10px;
+  --ap-radius-md: 16px; /* cards */
+  --ap-radius-lg: 24px;
+  --ap-radius-xl: 32px;
+  --ap-shadow-card: 0 1px 2px rgba(20, 16, 8, 0.05), 0 12px 32px -12px rgba(20, 16, 8, 0.16);
+  --ap-shadow-lift: 0 2px 4px rgba(20, 16, 8, 0.06), 0 28px 60px -20px rgba(20, 16, 8, 0.28);
+  --ap-shadow-gold: 0 10px 30px -12px rgba(170, 132, 58, 0.55);
+
+  /* Motion (mirrors src/motion/presets.js) */
+  --ap-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ap-ease-inout: cubic-bezier(0.76, 0, 0.24, 1);
+  --ap-ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ap-dur-fast: 0.25s;
+  --ap-dur: 0.5s;
+  --ap-dur-slow: 0.9s;
+
+  /* Legacy variables (inner pages) now point at the Figma type pairing */
+  --font-serif: var(--ap-font-display);
+  --font-sans: var(--ap-font-sans);
+}
+
+/* index.css sets body { overflow-x: hidden }, which makes <body> a scroll container and
+   silently breaks every position: sticky inside it (the pinned hero video, the About
+   article's photo column). `clip` hides sideways overflow the same way without that side effect. */
+body {
+  overflow-x: clip;
+}
+
+/* Lenis smooth scrolling (replaces html { scroll-behavior: smooth }) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+.ap-container {
+  width: 100%;
+  max-width: calc(var(--ap-container) + var(--ap-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--ap-gutter);
+}
+
+.ap-section {
+  position: relative;
+  padding-block: var(--ap-section-y);
+  font-family: var(--ap-font-sans);
+  color: var(--ap-text);
+}
+
+.ap-section--dark {
+  background: var(--ap-charcoal);
+  color: var(--ap-white);
+}
+
+/* --------------------------------------------------------------------------
+   Typography primitives
+   -------------------------------------------------------------------------- */
+.ap-display {
+  font-family: var(--ap-font-display);
+  font-weight: 400;
+  letter-spacing: var(--ap-tracking-display);
+  line-height: 1.02;
+  color: var(--ap-ink);
+  text-wrap: balance;
+}
+
+.ap-h2 {
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-h2);
+  font-weight: 400;
+  letter-spacing: var(--ap-tracking-display);
+  line-height: 1.04;
+  color: var(--ap-ink);
+  text-wrap: balance;
+}
+
+.ap-section--dark .ap-h2,
+.ap-on-dark .ap-h2 {
+  color: var(--ap-white);
+}
+
+/* The gold italic half of every Figma heading */
+.ap-accent {
+  font-family: var(--ap-font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ap-gold-text);
+}
+
+.ap-lead {
+  font-size: var(--ap-fs-lead);
+  line-height: 1.55;
+  letter-spacing: 0; /* Figma body copy is untracked */
+}
+
+.ap-body {
+  font-size: var(--ap-fs-body);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Eyebrow label with a short leading hairline (also defined, older, in index.css) */
+.ap-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--ap-font-sans);
+  font-size: var(--ap-fs-eyebrow);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ap-eyebrow::before {
+  content: '';
+  flex: none;
+  width: 2rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.ap-gold-ink {
+  color: var(--ap-gold-ink);
+}
+
+/* <SectionHeading> */
+.ap-heading {
+  display: grid;
+  gap: 0.65rem;
+}
+.ap-heading__title {
+  margin-bottom: 0.35rem;
+}
+.ap-heading--center {
+  justify-items: center;
+  text-align: center;
+}
+.ap-heading--center .ap-heading__intro,
+.ap-heading--center .ap-heading__note {
+  max-width: 60rem;
+}
+.ap-heading--left .ap-heading__intro,
+.ap-heading--left .ap-heading__note {
+  max-width: 52rem;
+}
+.ap-heading__intro {
+  color: var(--ap-text);
+}
+.ap-heading__note {
+  color: var(--ap-gold-ink);
+}
+.ap-heading--dark .ap-heading__title {
+  color: var(--ap-white);
+}
+.ap-heading--dark .ap-heading__intro {
+  color: rgba(255, 255, 255, 0.92);
+}
+.ap-heading--dark .ap-heading__note {
+  color: var(--ap-gold-text);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons (see src/components/ui/Button.jsx)
+   -------------------------------------------------------------------------- */
+.ap-btn {
+  --btn-bg: var(--ap-gold);
+  --btn-fg: var(--ap-ink);
+  --btn-border: transparent;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 3.4375rem; /* 55px */
+  padding: 0 1.875rem;
+  overflow: hidden;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--ap-radius-xs);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--ap-font-sans);
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--ap-dur) var(--ap-ease-out),
+    border-color var(--ap-dur) var(--ap-ease-out),
+    color var(--ap-dur) var(--ap-ease-out),
+    box-shadow var(--ap-dur) var(--ap-ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Soft sheen that sweeps across on hover */
+.ap-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.55) 45%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.9s var(--ap-ease-out);
+  pointer-events: none;
+}
+
+.ap-btn:hover::after {
+  transform: translateX(120%);
+}
+
+.ap-btn--gold:hover {
+  --btn-bg: var(--ap-gold-soft);
+  box-shadow: var(--ap-shadow-gold);
+}
+
+.ap-btn--dark {
+  --btn-bg: var(--ap-black);
+  --btn-fg: var(--ap-white);
+}
+.ap-btn--dark::after {
+  background: linear-gradient(105deg, transparent 20%, rgba(221, 196, 140, 0.35) 45%, transparent 70%);
+}
+.ap-btn--dark:hover {
+  --btn-bg: #1c1a16;
+}
+
+/* Frosted outline on imagery (hero "Explore Treatments") */
+.ap-btn--glass {
+  --btn-bg: rgba(255, 255, 255, 0.12);
+  --btn-fg: var(--ap-white);
+  --btn-border: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+}
+.ap-btn--glass:hover {
+  --btn-bg: rgba(255, 255, 255, 0.24);
+}
+
+.ap-btn--outline {
+  --btn-bg: transparent;
+  --btn-fg: var(--ap-ink);
+  --btn-border: var(--ap-ink);
+}
+.ap-btn--outline:hover {
+  --btn-bg: var(--ap-ink);
+  --btn-fg: var(--ap-white);
+}
+
+.ap-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.ap-btn:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 3px;
+}
+
+.ap-btn__icon {
+  display: inline-flex;
+  transition: transform var(--ap-dur) var(--ap-ease-out);
+}
+.ap-btn:hover .ap-btn__icon {
+  transform: translateX(3px);
+}
+
+/* Gold square carousel arrows (Figma 64x62) */
+.ap-arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 4rem;
+  height: 3.875rem;
+  border: 0;
+  border-radius: var(--ap-radius-xs);
+  background: var(--ap-gold);
+  color: var(--ap-ink);
+  cursor: pointer;
+  transition:
+    background-color var(--ap-dur-fast) var(--ap-ease-out),
+    box-shadow var(--ap-dur) var(--ap-ease-out),
+    opacity var(--ap-dur-fast) linear;
+}
+.ap-arrow:hover {
+  background: var(--ap-gold-soft);
+  box-shadow: var(--ap-shadow-gold);
+}
+.ap-arrow:disabled {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+}
+.ap-arrow--glass {
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: var(--ap-white);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.ap-arrow--glass:hover {
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: none;
+}
+.ap-arrow:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 3px;
+}
+
+.ap-arrows {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+/* Word mask used by <TextReveal>; removed visually once settled */
+.ap-tr-word {
+  display: inline-block;
+  vertical-align: top;
+  overflow: clip;
+  overflow-clip-margin: 0.12em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.ap-tr-word > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Media frame used by <RevealImage> */
+.ap-media {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ap-media > img,
+.ap-media > video,
+.ap-media__inner > img,
+.ap-media__inner > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ap-media__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.ap-media__inner {
+  position: absolute;
+  inset: -8% 0;
+  will-change: transform;
+}
+
+.ap-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-btn::after {
+    display: none;
+  }
+}

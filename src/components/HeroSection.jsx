@@ -1,219 +1,183 @@
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight, MessageSquare } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
+import { useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { ArrowRight, Gem, ShieldCheck, Sparkles } from 'lucide-react';
+import TextReveal from '../motion/TextReveal';
+import useCurtainOpen from '../motion/useCurtainOpen';
+import { EASE_OUT } from '../motion/presets';
+import Button from './ui/Button';
+import useScrubVideo, { pickScrubSource, useBlobSource } from './hero/useScrubVideo';
+import { BOOK_CONSULTATION_URL } from '../data/links';
+import './HeroSection.css';
 
+const SOURCES = {
+  large: '/assets/videos/clinic_tour_scrub-1080.mp4',
+  small: '/assets/videos/clinic_tour_scrub-720.mp4',
+};
+const POSTERS = {
+  large: '/assets/videos/clinic_tour_poster-1920.webp',
+  small: '/assets/videos/clinic_tour_poster-1280.webp',
+};
+
+// Quiet credentials in the right gutter: hairline-ruled, no cards.
+const MARKS = [
+  { Icon: Gem, title: 'Bespoke Plans', text: 'Anatomically tailored protocols' },
+  { Icon: Sparkles, title: 'Targeted Energy', text: 'PicoWay · Morpheus8 · Sofwave' },
+  { Icon: ShieldCheck, title: 'JCCP Verified', text: 'Clinical governance standards' },
+];
+
+/**
+ * Section 1 — Hero. The clinic tour video is pinned full-screen and plays
+ * forward and backward with the scroll (see useScrubVideo for how it stays smooth),
+ * with the Figma headline, calls to action and a hairline list of credentials over it.
+ */
 export default function HeroSection({ onNavigate }) {
   const sectionRef = useRef(null);
+  const stageRef = useRef(null);
   const videoRef = useRef(null);
-  const contentRef = useRef(null);
+  const reduce = useReducedMotion();
+  const open = useCurtainOpen();
 
-  // Scroll parallax: the film drifts slower than the page while the copy lifts and fades.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+  const source = pickScrubSource(SOURCES);
+  const poster = source === SOURCES.large ? POSTERS.large : POSTERS.small;
 
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const height = section.offsetHeight;
-      const y = Math.min(Math.max(window.scrollY, 0), height);
-      if (videoRef.current) videoRef.current.style.translate = `0 ${(y * 0.35).toFixed(1)}px`;
-      if (contentRef.current) {
-        contentRef.current.style.translate = `0 ${(y * -0.12).toFixed(1)}px`;
-        contentRef.current.style.opacity = String(Math.max(0, 1 - y / (height * 0.75)).toFixed(3));
-      }
-    };
-    const handleScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] });
 
-    update();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(frame);
-    };
-  }, []);
+  useBlobSource({ videoRef, src: source, enabled: !reduce });
+  useScrubVideo({ videoRef, observeRef: stageRef, progress: scrollYProgress, enabled: !reduce });
+
+  // Overlay choreography, eased with a light spring so it trails the scroll softly.
+  const soft = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.6 });
+  const copyY = useTransform(soft, [0, 0.8], [0, -70]);
+  const copyOpacity = useTransform(soft, [0, 0.62, 0.86], [1, 1, 0]);
+  const copyBlur = useTransform(soft, [0.62, 0.86], ['blur(0px)', 'blur(6px)']);
+  const marksY = useTransform(soft, [0, 0.8], [0, -40]);
+  const marksOpacity = useTransform(soft, [0, 0.55, 0.8], [1, 1, 0]);
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const mediaScale = useTransform(soft, [0, 1], [1, 1.06]);
+  const shade = useTransform(soft, [0.7, 1], [0, 0.45]);
+
+  const show = open ? 'show' : 'hidden';
 
   return (
     <section
       ref={sectionRef}
-      style={{
-        position: 'relative',
-        minHeight: '92vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        background: '#121110',
-        paddingTop: '6rem',
-        paddingBottom: '4rem',
-      }}
+      className={`ap-hero${reduce ? ' ap-hero--static' : ''}`}
+      aria-labelledby="ap-hero-title"
     >
-      {/* 1. Cinematic Full-Bleed Video Background */}
-      <video
-        ref={videoRef}
-        className="hero-media hero-parallax"
-        src="/assets/videos/clinic_hero_walkthrough.mp4"
-        poster="/assets/images/hero_clinic_ambiance.png"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: 1,
-        }}
-      />
-
-      {/* 2. Gradient Vignette Overlay Scrim */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, rgba(14, 13, 12, 0.72) 0%, rgba(14, 13, 12, 0.45) 50%, rgba(14, 13, 12, 0.88) 100%)',
-          zIndex: 2,
-        }}
-      />
-
-      {/* 3. Hero Editorial Content (Figma Exact) */}
-      <div
-        ref={contentRef}
-        className="hero-parallax"
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          maxWidth: '1200px',
-          width: '100%',
-          margin: '0 auto',
-          padding: '0 2rem',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        {/* Tracked Overline */}
-        <div
-          className="hero-overline"
-          style={{
-            fontSize: '0.825rem',
-            letterSpacing: '0.24em',
-            textTransform: 'uppercase',
-            color: '#D4AF37',
-            fontWeight: '600',
-            marginBottom: '1.25rem',
-          }}
+      <div ref={stageRef} className="ap-hero__stage">
+        <motion.div
+          className="ap-hero__media"
+          initial={reduce ? false : { scale: 1.14, opacity: 0 }}
+          animate={open ? { scale: 1, opacity: 1 } : undefined}
+          transition={{ duration: 2.1, ease: EASE_OUT }}
         >
-          Aesthetic & Cellular Medicine • Fitzrovia, London
+          <motion.div className="ap-hero__media-inner" style={reduce ? undefined : { scale: mediaScale }}>
+            {reduce ? (
+              <img className="ap-hero__video" src={poster} alt="" />
+            ) : (
+              <video
+                ref={videoRef}
+                className="ap-hero__video"
+                poster={poster}
+                muted
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                disableRemotePlayback
+                tabIndex={-1}
+                aria-hidden="true"
+              />
+            )}
+          </motion.div>
+          <div className="ap-hero__scrim" aria-hidden="true" />
+          <motion.div className="ap-hero__shade" style={reduce ? undefined : { opacity: shade }} aria-hidden="true" />
+        </motion.div>
+
+        <div className="ap-container ap-hero__layout">
+          <motion.div
+            className="ap-hero__copy"
+            style={reduce ? undefined : { y: copyY, opacity: copyOpacity, filter: copyBlur }}
+          >
+            <TextReveal as="h1" id="ap-hero-title" className="ap-hero__title" play={open} delay={0.25} gap={0.07}>
+              <span className="ap-hero__line">Advanced Aesthetics.</span>{' '}
+              <em className="ap-hero__line ap-accent">Personalised Around You.</em>
+            </TextReveal>
+            <motion.p
+              className="ap-hero__lead"
+              variants={copyVariants}
+              initial={reduce ? false : 'hidden'}
+              animate={show}
+              custom={0.75}
+            >
+              Discover advanced, non-invasive treatments for skin, body and wellbeing, delivered with a
+              personalised and patient-centred approach.
+            </motion.p>
+            <motion.div
+              className="ap-hero__actions"
+              variants={copyVariants}
+              initial={reduce ? false : 'hidden'}
+              animate={show}
+              custom={0.9}
+            >
+              <Button href={BOOK_CONSULTATION_URL} target="_blank" rel="noopener noreferrer">
+                Book a Consultation
+              </Button>
+              <Button
+                variant="glass"
+                href="/treatments"
+                icon={<ArrowRight size={18} strokeWidth={1.6} />}
+                onClick={(event) => {
+                  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+                  event.preventDefault();
+                  onNavigate?.('treatments');
+                }}
+              >
+                Explore Treatments
+              </Button>
+            </motion.div>
+          </motion.div>
+
+          <motion.ul
+            className="ap-hero__marks"
+            aria-label="Why patients choose Allure Passions"
+            style={reduce ? undefined : { opacity: marksOpacity, y: marksY }}
+          >
+            {MARKS.map(({ Icon, title, text }, index) => (
+              <motion.li
+                key={title}
+                className="ap-hero__mark"
+                initial={reduce ? false : { opacity: 0, y: 14 }}
+                animate={open ? { opacity: 1, y: 0 } : undefined}
+                transition={{ duration: 1, ease: EASE_OUT, delay: 1.05 + index * 0.12 }}
+              >
+                <Icon className="ap-hero__mark-icon" size={18} strokeWidth={1.3} aria-hidden="true" />
+                <span className="ap-hero__mark-text">
+                  <strong>{title}</strong>
+                  <span>{text}</span>
+                </span>
+              </motion.li>
+            ))}
+          </motion.ul>
         </div>
 
-        {/* Figma Exact Headline: "Advanced Aesthetics" */}
-        <h1
-          className="hero-title"
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(2.8rem, 6.2vw, 5.2rem)',
-            fontWeight: '400',
-            color: '#FFFFFF',
-            lineHeight: '1.08',
-            letterSpacing: '-0.015em',
-            maxWidth: '900px',
-            marginBottom: '1.5rem',
-            textShadow: '0 4px 30px rgba(0, 0, 0, 0.6)',
-          }}
-        >
-          <SplitWords>Advanced Aesthetics</SplitWords>
-        </h1>
-
-        {/* Supporting Clinical Tagline */}
-        <p
-          className="hero-copy"
-          style={{
-            fontSize: 'clamp(1.05rem, 1.4vw, 1.25rem)',
-            color: '#ECE8E1',
-            lineHeight: '1.7',
-            maxWidth: '680px',
-            marginBottom: '2.5rem',
-            fontWeight: '300',
-            textShadow: '0 2px 14px rgba(0, 0, 0, 0.5)',
-          }}
-        >
-          A doctor-led practice providing non-invasive clinical skin, body, and cellular rejuvenation with unmatched precision in the heart of Fitzrovia.
-        </p>
-
-        {/* Dual CTAs (Figma Exact: Left Gold Filled, Right Dark/Outline) */}
-        <div
-          className="hero-actions"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1.25rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <button
-            onClick={() => onNavigate('treatments')}
-            className="btn-bronze"
-            style={{
-              padding: '0.95rem 2.4rem',
-              fontSize: '0.85rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              boxShadow: '0 8px 24px rgba(168, 127, 61, 0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <span>Explore Treatments</span>
-            <ArrowRight size={16} />
-          </button>
-
-          <a
-            href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20regarding%20a%20clinical%20treatment."
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              padding: '0.9rem 2.2rem',
-              fontSize: '0.85rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: '#FFFFFF',
-              background: 'rgba(20, 19, 17, 0.45)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: 'var(--radius-sm)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              textDecoration: 'none',
-              transition: 'all 0.25s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#D4AF37';
-              e.currentTarget.style.color = '#D4AF37';
-              e.currentTarget.style.background = 'rgba(20, 19, 17, 0.7)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-              e.currentTarget.style.color = '#FFFFFF';
-              e.currentTarget.style.background = 'rgba(20, 19, 17, 0.45)';
-            }}
-          >
-            <MessageSquare size={15} />
-            <span>Direct Consultation</span>
-          </a>
-        </div>
+        {!reduce && (
+          <>
+            <motion.div className="ap-hero__cue" style={{ opacity: cueOpacity }} aria-hidden="true">
+              <span className="ap-hero__cue-label">Scroll to tour the clinic</span>
+              <span className="ap-hero__cue-line" />
+            </motion.div>
+            <div className="ap-hero__rail" aria-hidden="true">
+              <motion.span style={{ scaleX: railScale }} />
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
 }
+
+const copyVariants = {
+  hidden: { opacity: 0, y: 26 },
+  show: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 1, ease: EASE_OUT, delay } }),
+};

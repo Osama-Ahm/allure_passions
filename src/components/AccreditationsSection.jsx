@@ -1,363 +1,208 @@
-import React from 'react';
-import { Award, ArrowRight } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
+import { useId } from 'react';
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
+import SectionHeading from './ui/SectionHeading';
+import Button from './ui/Button';
+import { Reveal, RevealGroup, RevealItem } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT } from '../motion/presets';
+import { routeLinkHandler } from '../utils/navigation';
+import './AccreditationsSection.css';
 
+// Scalloped seal: eight lobes around a centre disc (see RosetteIcon).
+const LOBES = Array.from({ length: 8 }, (_, i) => {
+  const angle = (i * Math.PI) / 4 - Math.PI / 2;
+  return [30 + 19 * Math.cos(angle), 28.5 + 19 * Math.sin(angle)];
+});
+
+/** Filled award rosette with a check cut through it (Figma "London Clinic Series" mark). */
+function RosetteIcon() {
+  const mask = `ap-rosette-${useId().replace(/[^\w-]/g, '')}`;
+  return (
+    <svg viewBox="0 0 60 84" width="60" height="84" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width="60" height="84">
+          <g fill="#fff">
+            <circle cx="30" cy="28.5" r="20.5" />
+            {LOBES.map(([cx, cy]) => (
+              <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="9.5" />
+            ))}
+          </g>
+          <path d="M20.5 30 L27 36.4 L39.5 23.6" fill="none" stroke="#000" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+        </mask>
+      </defs>
+      <path d="M18.8 52 V79.6 L30 71.6 L41.2 79.6 V52" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      <rect width="60" height="58" fill="currentColor" mask={`url(#${mask})`} />
+    </svg>
+  );
+}
+
+/** Filled shield with a check cut through it (Figma "Clinical Governance" mark). */
+function ShieldIcon() {
+  const mask = `ap-shield-${useId().replace(/[^\w-]/g, '')}`;
+  return (
+    <svg viewBox="0 0 64 78" width="64" height="78" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="78">
+          <path
+            d="M32 .6 62.4 13a2.6 2.6 0 0 1 1.6 2.4V38c0 18.4-12.6 33-32 39.4C12.6 71 0 56.4 0 38V15.4A2.6 2.6 0 0 1 1.6 13Z"
+            fill="#fff"
+          />
+          <path d="M14.2 42.4 25.4 53.6 50 29" fill="none" stroke="#000" strokeWidth="7.2" strokeLinejoin="miter" />
+        </mask>
+      </defs>
+      <rect width="64" height="78" fill="currentColor" mask={`url(#${mask})`} />
+    </svg>
+  );
+}
+
+const CARDS = [
+  {
+    id: 'honour',
+    tone: 'charcoal',
+    eyebrow: 'Annual Clinical Honour',
+    title: 'London Clinic Series',
+    Icon: RosetteIcon,
+    statement: 'Best Advanced Skin & Body Aesthetics Clinic 2026 – London',
+    meta: { strong: 'GHP Awards', text: 'Presented by Global Health & Pharma' },
+    footer: { label: 'Program: Global Excellence Awards', status: 'Verified Entry' },
+  },
+  {
+    id: 'governance',
+    tone: 'black',
+    eyebrow: 'Regulatory Status',
+    title: 'Clinical Governance',
+    Icon: ShieldIcon,
+    statement: 'JCCP Registered Sanctuary',
+    body: 'Alongside relevant professional qualifications, advanced technology training, industry memberships and continuing professional education.',
+    footer: { label: 'Joint Council for Cosmetic Practitioners', status: 'Level 6 Compliant' },
+  },
+];
+
+// Card contents rise in after the card itself; `custom` is the delay in seconds.
+const rise = {
+  hidden: { opacity: 0, y: 16 },
+  show: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE_OUT, delay } }),
+};
+const iconSettle = {
+  hidden: { opacity: 0, scale: 0.55, rotate: -18 },
+  show: { opacity: 1, scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 170, damping: 14, delay: 0.42 } },
+};
+const drawLine = {
+  hidden: { scaleX: 0 },
+  show: { scaleX: 1, transition: { duration: 1.25, ease: EASE_INOUT, delay: 0.5 } },
+};
+
+function RecognitionCard({ card }) {
+  const reduce = useReducedMotion();
+  const pointerX = useMotionValue(-600);
+  const pointerY = useMotionValue(-600);
+  const glow = useMotionValue(0);
+  const glowSpring = useSpring(glow, { stiffness: 150, damping: 24 });
+  const glowOpacity = reduce ? glow : glowSpring;
+  const fill = useMotionTemplate`radial-gradient(440px circle at ${pointerX}px ${pointerY}px, rgba(221, 196, 140, 0.14), rgba(221, 196, 140, 0) 62%)`;
+  const edge = useMotionTemplate`radial-gradient(320px circle at ${pointerX}px ${pointerY}px, rgba(232, 208, 150, 0.75), rgba(232, 208, 150, 0) 70%)`;
+
+  const track = (event) => {
+    if (event.pointerType === 'touch') return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    pointerX.set(event.clientX - rect.left);
+    pointerY.set(event.clientY - rect.top);
+  };
+  const enter = (event) => {
+    if (event.pointerType === 'touch') return;
+    track(event);
+    glow.set(1);
+  };
+  const leave = () => glow.set(0);
+
+  const { Icon } = card;
+  const v = (variants) => (reduce ? undefined : variants);
+
+  return (
+    <article
+      className={`ap-recognition__card ap-recognition__card--${card.tone}`}
+      onPointerEnter={enter}
+      onPointerMove={track}
+      onPointerLeave={leave}
+    >
+      <motion.span className="ap-recognition__spotlight" style={{ background: fill, opacity: glowOpacity }} aria-hidden="true" />
+      <motion.span className="ap-recognition__edge" style={{ background: edge, opacity: glowOpacity }} aria-hidden="true" />
+
+      <header className="ap-recognition__head">
+        <div className="ap-recognition__heading">
+          <motion.p className="ap-recognition__eyebrow" variants={v(rise)} custom={0.18}>
+            {card.eyebrow}
+          </motion.p>
+          <motion.h3 className="ap-recognition__title" variants={v(rise)} custom={0.26}>
+            {card.title}
+          </motion.h3>
+        </div>
+        <motion.span className="ap-recognition__icon" variants={v(iconSettle)}>
+          <span className="ap-recognition__icon-inner">
+            <Icon />
+          </span>
+        </motion.span>
+      </header>
+
+      <div className="ap-recognition__body">
+        <motion.p className="ap-recognition__statement" variants={v(rise)} custom={0.34}>
+          {card.statement}
+        </motion.p>
+        {card.meta ? (
+          <motion.p className="ap-recognition__meta" variants={v(rise)} custom={0.44}>
+            <span className="ap-recognition__meta-strong">{card.meta.strong}</span>
+            <span className="ap-recognition__meta-sep" aria-hidden="true" />
+            <span>{card.meta.text}</span>
+          </motion.p>
+        ) : null}
+        {card.body ? (
+          <motion.p className="ap-recognition__text" variants={v(rise)} custom={0.44}>
+            {card.body}
+          </motion.p>
+        ) : null}
+      </div>
+
+      <footer className="ap-recognition__footer">
+        <motion.span className="ap-recognition__rule" variants={v(drawLine)} aria-hidden="true" />
+        <motion.p className="ap-recognition__footer-row" variants={v(rise)} custom={0.62}>
+          <span className="ap-recognition__footer-label">{card.footer.label}</span>
+          <span className="ap-recognition__footer-status">{card.footer.status}</span>
+        </motion.p>
+      </footer>
+    </article>
+  );
+}
+
+/**
+ * Section 8 — Recognised for Advanced Aesthetic Care.
+ * Two credential cards (GHP award, JCCP registration) with a pointer-following gold
+ * spotlight, then the "View Our Credentials" link to the About page.
+ */
 export default function AccreditationsSection({ onNavigate }) {
   return (
-    <section
-      style={{
-        backgroundColor: '#FAF7F2',
-        padding: '6.5rem 0',
-        borderBottom: '1px solid rgba(28, 27, 24, 0.08)',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 1.5rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.78rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Clinical Governance & Industry Recognition
-          </div>
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.2rem, 4vw, 3.4rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            <SplitWords>Recognised Excellence</SplitWords>
-          </h2>
-          <p
-            data-reveal
-            style={{
-              color: '#4A4740',
-              fontSize: '1.05rem',
-              maxWidth: '640px',
-              margin: '0 auto',
-              fontWeight: '300',
-            }}
-          >
-            Operating under rigorous UK clinical governance, Professional Standards Authority accreditation, and verified industry recognition.
-          </p>
-        </div>
+    <section className="ap-section ap-recognition" aria-labelledby="ap-recognition-title">
+      <div className="ap-container">
+        <SectionHeading
+          id="ap-recognition-title"
+          className="ap-recognition__heading-block"
+          align="center"
+          title="Recognised for"
+          accent="Advanced Aesthetic Care"
+          intro="Professional standards, continuous education and trusted recognition form an important part of the Allure Passions approach."
+        />
 
-        {/* 2 Prestigious Accreditation Plaques */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
-            gap: '2.5rem',
-            maxWidth: '1200px',
-            margin: '0 auto 3.5rem auto',
-          }}
-        >
-          {/* Plaque 1: JCCP Registered Practice & Public Safety */}
-          <div
-            className="card-white-elevation"
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid rgba(168, 127, 61, 0.28)',
-              padding: 'clamp(2.25rem, 4vw, 3rem) clamp(1.75rem, 3.5vw, 2.5rem)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              boxShadow: '0 8px 30px rgba(28, 27, 24, 0.04)',
-            }}
-          >
-            <div>
-              {/* Official Seal Showcase */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '2rem',
-                  padding: '1.25rem',
-                  background: '#FAF7F2',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid rgba(168, 127, 61, 0.2)',
-                  minHeight: '140px',
-                }}
-              >
-                <img
-                  src="/assets/images/jccp_badge_real.png"
-                  alt="Joint Council for Cosmetic Practitioners - Assuring Public Safety"
-                  style={{
-                    maxHeight: '100px',
-                    maxWidth: '260px',
-                    width: 'auto',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }}
-                />
-              </div>
+        <RevealGroup className="ap-recognition__grid" gap={0.14} amount={0.25}>
+          {CARDS.map((card) => (
+            <RevealItem key={card.id} variant="card" className="ap-recognition__item">
+              <RecognitionCard card={card} />
+            </RevealItem>
+          ))}
+        </RevealGroup>
 
-              {/* Status Pill */}
-              <div style={{ marginBottom: '1rem' }}>
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    background: 'rgba(168, 127, 61, 0.09)',
-                    border: '1px solid rgba(168, 127, 61, 0.25)',
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.72rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: '#A87F3D',
-                  }}
-                >
-                  <Award size={13} color="#A87F3D" />
-                  <span>PSA Government-Approved Register</span>
-                </span>
-              </div>
-
-              {/* Title & Subtitle */}
-              <h3
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: 'clamp(1.5rem, 2.2vw, 1.85rem)',
-                  color: '#1C1B18',
-                  fontWeight: '500',
-                  lineHeight: 1.2,
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Joint Council for Cosmetic Practitioners
-              </h3>
-
-              <div
-                style={{
-                  fontSize: '0.85rem',
-                  color: '#A87F3D',
-                  fontWeight: '600',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                Level 6 Clinical Care • PSA Accredited Oversight
-              </div>
-
-              <p
-                style={{
-                  fontSize: '0.925rem',
-                  color: '#4A4740',
-                  lineHeight: '1.75',
-                  marginBottom: '2rem',
-                  fontWeight: '300',
-                }}
-              >
-                Allure Passions UK operates under the accredited clinical register of the <strong>Joint Council for Cosmetic Practitioners (JCCP)</strong>, recognized by the UK Professional Standards Authority. Every procedure meets rigorous Level 6 clinical training benchmarks, sterile suite protocols, and verified patient safety guidelines.
-              </p>
-
-              {/* Credential Attributes */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Registry Tier</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>PSA Approved</div>
-                </div>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Competence</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Level 6 Certified</div>
-                </div>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Suite Location</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Fitzrovia</div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                paddingTop: '1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '0.785rem',
-                color: '#7A756C',
-              }}
-            >
-              <span>76 Cleveland Street, W1T 6NB</span>
-              <span style={{ color: '#A87F3D', fontWeight: '600' }}>Active PSA Registry</span>
-            </div>
-          </div>
-
-          {/* Plaque 2: GHP Global Excellence Award 2026 */}
-          <div
-            className="card-white-elevation"
-            style={{
-              background: '#FFFFFF',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid rgba(168, 127, 61, 0.28)',
-              padding: 'clamp(2.25rem, 4vw, 3rem) clamp(1.75rem, 3.5vw, 2.5rem)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              boxShadow: '0 8px 30px rgba(28, 27, 24, 0.04)',
-            }}
-          >
-            <div>
-              {/* Official Seal Showcase */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '2rem',
-                  padding: '1.25rem',
-                  background: '#FAF7F2',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid rgba(168, 127, 61, 0.2)',
-                  minHeight: '140px',
-                }}
-              >
-                <img
-                  src="/assets/images/ghp_award_official.svg"
-                  alt="Global Health & Pharma - Global Excellence Awards 2026 Winner"
-                  style={{
-                    maxHeight: '110px',
-                    maxWidth: '110px',
-                    width: 'auto',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }}
-                />
-              </div>
-
-              {/* Status Pill */}
-              <div style={{ marginBottom: '1rem' }}>
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    background: 'rgba(168, 127, 61, 0.09)',
-                    border: '1px solid rgba(168, 127, 61, 0.25)',
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.72rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: '#A87F3D',
-                  }}
-                >
-                  <Award size={13} color="#A87F3D" />
-                  <span>Global Health & Pharma • 2026 Winner</span>
-                </span>
-              </div>
-
-              {/* Title & Subtitle */}
-              <h3
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: 'clamp(1.5rem, 2.2vw, 1.85rem)',
-                  color: '#1C1B18',
-                  fontWeight: '500',
-                  lineHeight: 1.2,
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Global Excellence Awards 2026
-              </h3>
-
-              <div
-                style={{
-                  fontSize: '0.85rem',
-                  color: '#A87F3D',
-                  fontWeight: '600',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                Best Advanced Skin & Body Aesthetics Clinic — London
-              </div>
-
-              <p
-                style={{
-                  fontSize: '0.925rem',
-                  color: '#4A4740',
-                  lineHeight: '1.75',
-                  marginBottom: '2rem',
-                  fontWeight: '300',
-                }}
-              >
-                Conferred in the prestigious <strong>Global Excellence Awards 2026</strong> hosted by Global Health & Pharma (GHP). Awarded in recognition of clinical excellence in non-surgical cellular renewal, dual-wavelength laser mechanics (ADVATx®), and transformative body sculpting standards.
-              </p>
-
-              {/* Credential Attributes */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Category</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Skin & Body Clinic</div>
-                </div>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Jurisdiction</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>Central London</div>
-                </div>
-                <div style={{ background: '#FAF7F2', padding: '0.85rem 1rem', borderRadius: '4px', border: '1px solid rgba(28, 27, 24, 0.08)' }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#7A756C', letterSpacing: '0.06em' }}>Award Year</div>
-                  <div style={{ fontSize: '0.825rem', color: '#1C1B18', fontWeight: '600', marginTop: '0.2rem' }}>2026 Honouree</div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                paddingTop: '1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '0.785rem',
-                color: '#7A756C',
-              }}
-            >
-              <span>Citation: GHP-LON-2026-AP</span>
-              <span style={{ color: '#A87F3D', fontWeight: '600' }}>Verified Award</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom CTA to /about */}
-        <div data-reveal style={{ textAlign: 'center' }}>
-          <button
-            onClick={() => onNavigate && onNavigate('about')}
-            className="btn-outline-bronze"
-            style={{
-              padding: '0.85rem 2.2rem',
-              fontSize: '0.825rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <span>Learn More About Our Clinical Governance</span>
-            <ArrowRight size={15} />
-          </button>
-        </div>
-
+        <Reveal className="ap-recognition__cta" delay={0.1}>
+          <Button href="/about" onClick={routeLinkHandler(onNavigate, 'about')}>
+            View Our Credentials
+          </Button>
+        </Reveal>
       </div>
     </section>
   );

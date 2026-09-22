@@ -1,164 +1,109 @@
-import React from 'react';
-import { Phone, MessageSquare, MapPin } from 'lucide-react';
-import { CLINIC_INFO } from '../data/treatmentData';
-import SplitWords from '../motion/SplitWords';
+import { useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import TextReveal from '../motion/TextReveal';
+import { Reveal } from '../motion/Reveal';
+import { EASE_OUT, VIEWPORT } from '../motion/presets';
+import { scrollToTarget } from '../motion/smoothScroll';
+import Button from './ui/Button';
+import { BOOK_CONSULTATION_URL } from '../data/links';
+import { showConcernsPath } from '../utils/navigation';
+import './PreFooterCtaSection.css';
 
+const PHOTO = {
+  src: '/assets/images/prefooter_serum.jpg',
+  alt: 'Close-up of a woman applying a clear serum from a glass dropper to her cheek',
+  position: '30% 38%',
+};
+
+// The concerns section id (older builds used #what-we-treat).
+const CONCERNS_TARGETS = ['#concerns', '#what-we-treat'];
+
+function exploreConcerns(event) {
+  const target = CONCERNS_TARGETS.map((selector) => document.querySelector(selector)).find(Boolean);
+  if (!target) return;
+  event.preventDefault();
+  // Keep Lenis's own anchor handler from re-targeting the same click.
+  event.stopPropagation();
+  showConcernsPath();
+  scrollToTarget(target);
+}
+
+/**
+ * Section 14 — "Not Sure Which Treatment Is Right for You?"
+ * Consultation invitation on the mist panel, with the serum close-up easing in
+ * from the right and drifting gently against the scroll.
+ */
 export default function PreFooterCtaSection() {
+  const sectionRef = useRef(null);
+  const reduce = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const drift = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.5 });
+  const photoY = useTransform(drift, [0, 1], ['-5%', '5%']);
+  const photoScale = useTransform(drift, [0, 0.5, 1], [1.1, 1.04, 1.02]);
+
   return (
-    <section
-      style={{
-        backgroundColor: '#161514',
-        color: '#FFFFFF',
-        position: 'relative',
-        overflow: 'hidden',
-        borderTop: '1px solid rgba(168, 127, 61, 0.25)',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-            alignItems: 'center',
-          }}
-        >
-          {/* Left Column: Editorial Consultation Invitation */}
-          <div
-            style={{
-              padding: '6rem 3rem',
-            }}
-          >
-            <div
-              data-reveal
-              style={{
-                fontSize: '0.8rem',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: '#D4AF37',
-                fontWeight: '600',
-                marginBottom: '1rem',
-              }}
-            >
-              Private Consultations
-            </div>
+    <section ref={sectionRef} className="ap-cta" aria-labelledby="ap-cta-title">
+      <motion.div
+        className="ap-cta__media"
+        initial={reduce ? false : { opacity: 0, x: 40 }}
+        whileInView={reduce ? undefined : { opacity: 1, x: 0 }}
+        viewport={VIEWPORT}
+        transition={{ duration: 1.6, ease: EASE_OUT }}
+      >
+        <motion.div className="ap-cta__media-inner" style={reduce ? undefined : { y: photoY, scale: photoScale }}>
+          <img
+            className="ap-cta__photo"
+            src={PHOTO.src}
+            alt={PHOTO.alt}
+            width="1376"
+            height="768"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 899px) 100vw, 58vw"
+            style={{ objectPosition: PHOTO.position }}
+          />
+        </motion.div>
+      </motion.div>
 
-            <h2
-              data-reveal="words"
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-                color: '#FFFFFF',
-                fontWeight: '400',
-                lineHeight: 1.15,
-                marginBottom: '1.5rem',
-              }}
-            >
-              <SplitWords>Begin Your Aesthetic Journey With Us</SplitWords>
-            </h2>
+      <div className="ap-container ap-cta__layout">
+        <div className="ap-cta__copy">
+          <TextReveal as="h2" id="ap-cta-title" className="ap-cta__title" gap={0.055}>
+            <span className="ap-cta__line">Not Sure Which</span>{' '}
+            <span className="ap-cta__line">
+              Treatment <em className="ap-accent">Is Right for You?</em>
+            </span>
+          </TextReveal>
 
-            <p
-              data-reveal
-              style={{
-                fontSize: '1.05rem',
-                color: '#ECE8E1',
-                lineHeight: '1.75',
-                marginBottom: '2rem',
-                fontWeight: '300',
-                maxWidth: '520px',
-              }}
-            >
-              Meet with our clinical practitioners in Fitzrovia to discuss your aesthetic goals, evaluate skin tissue health, and tailor an individualized treatment protocol.
-            </p>
+          <Reveal as="p" className="ap-cta__lead" delay={0.28}>
+            You do not need to make that decision alone.
+          </Reveal>
 
-            <div data-reveal style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem', fontSize: '0.9rem', color: '#C7C2B8' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <MapPin size={16} color="#D4AF37" />
-                <span>76 Cleveland Street, Fitzrovia, London, W1T 6NB</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Phone size={16} color="#D4AF37" />
-                <a href={`tel:${CLINIC_INFO.phone}`} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                  {CLINIC_INFO.phone}
-                </a>
-              </div>
-            </div>
-
-            <div data-reveal style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-              <a
-                href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20request%20an%20Initial%20Clinical%20Consultation."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-bronze"
-                style={{
-                  padding: '0.95rem 2.4rem',
-                  fontSize: '0.85rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  textDecoration: 'none',
-                }}
-              >
-                <MessageSquare size={16} />
-                <span>Request Consultation</span>
-              </a>
-
-              <a
-                href={`tel:${CLINIC_INFO.phone}`}
-                style={{
-                  padding: '0.9rem 2rem',
-                  fontSize: '0.85rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.4)',
-                  borderRadius: 'var(--radius-sm)',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#D4AF37';
-                  e.currentTarget.style.color = '#D4AF37';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                  e.currentTarget.style.color = '#FFFFFF';
-                }}
-              >
-                <Phone size={15} />
-                <span>Call Practice</span>
-              </a>
-            </div>
+          <div className="ap-cta__body">
+            <Reveal as="p" delay={0.38}>
+              Tell us what you would like to improve and our team can help you understand the treatment options
+              available and the most appropriate next step for your individual concerns.
+            </Reveal>
+            <Reveal as="p" delay={0.46}>
+              Whether your focus is your skin, body or overall wellbeing, your journey starts with a personalised
+              consultation.
+            </Reveal>
           </div>
 
-          {/* Right Column: Close-Up Photography (Figma Exact) */}
-          <div
-            data-reveal="image"
-            style={{
-              height: '100%',
-              minHeight: '440px',
-              position: 'relative',
-              overflow: 'hidden',
-              backgroundColor: '#121110',
-            }}
-          >
-            <img
-              src="/assets/images/prefooter_serum.jpg"
-              alt="Hydrating serum application to glowing skin"
-              loading="lazy"
-              data-parallax="0.08"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block',
-              }}
-            />
-          </div>
+          <Reveal className="ap-cta__actions" delay={0.56}>
+            <Button
+              className="ap-cta__btn"
+              href={BOOK_CONSULTATION_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Book Your Consultation
+              <span className="ap-visually-hidden"> (opens WhatsApp in a new tab)</span>
+            </Button>
+            <Button className="ap-cta__btn" variant="dark" href="#concerns" onClick={exploreConcerns}>
+              Explore Your Concerns
+            </Button>
+          </Reveal>
         </div>
       </div>
     </section>

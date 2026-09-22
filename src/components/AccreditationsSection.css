@@ -1,0 +1,292 @@
+/* ==========================================================================
+   Section 8 — Recognised for Advanced Aesthetic Care (block: ap-recognition)
+   Figma @1440: heading cap-top 98 · cards 630x426 @264 (gap 30) · button @740
+   ========================================================================== */
+
+.ap-recognition {
+  background: var(--ap-white);
+  padding-block: clamp(4rem, 2.6rem + 3.2vw, 5.3rem) clamp(4.25rem, 2.6rem + 4.2vw, 6.25rem);
+}
+
+.ap-recognition .ap-heading {
+  gap: 0;
+}
+.ap-recognition .ap-heading__title {
+  margin-bottom: 0.7rem;
+}
+.ap-recognition .ap-heading__intro {
+  max-width: 47.5rem;
+  font-size: clamp(0.95rem, 0.88rem + 0.28vw, 1.125rem);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.ap-recognition__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 0.2rem + 1.6vw, 1.875rem);
+  margin-top: clamp(2.25rem, 1.6rem + 1.6vw, 3.05rem);
+}
+
+.ap-recognition__item {
+  display: flex;
+}
+
+.ap-recognition__card {
+  --pad: clamp(1.5rem, 0.3rem + 3.14vw, 3.125rem); /* 50px @1440 */
+  --text-end: clamp(0px, -1.6rem + 3.3vw, 22px);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: clamp(20rem, 12.44rem + 15.77vw, 26.625rem); /* 426px @1440 */
+  padding: var(--pad);
+  border-radius: var(--ap-radius-lg);
+  overflow: hidden;
+  color: var(--ap-white);
+  transition: transform 0.7s var(--ap-ease-out);
+}
+
+.ap-recognition__card--charcoal {
+  background: var(--ap-charcoal);
+}
+.ap-recognition__card--black {
+  background: var(--ap-black);
+}
+
+/* Lift + deeper shadow on hover (shadow lives on a pseudo layer so only opacity animates) */
+.ap-recognition__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  box-shadow: 0 36px 70px -34px rgba(20, 16, 8, 0.55);
+  opacity: 0;
+  transition: opacity 0.7s var(--ap-ease-out);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .ap-recognition__card:hover {
+    transform: translateY(-4px);
+  }
+  .ap-recognition__card:hover::after {
+    opacity: 1;
+  }
+  .ap-recognition__card:hover .ap-recognition__icon-inner {
+    transform: rotate(-6deg) scale(1.06);
+  }
+}
+
+/* Pointer-following gold spotlight (fill) and a fine gold rim that lights near the pointer */
+.ap-recognition__spotlight,
+.ap-recognition__edge {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ap-recognition__edge {
+  z-index: 3;
+  padding: 1px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* Header: eyebrow + serif title, award mark on the right */
+.ap-recognition__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.ap-recognition__heading {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.1rem;
+}
+
+.ap-recognition__eyebrow {
+  font-family: var(--ap-font-sans);
+  font-size: clamp(0.8125rem, 0.72rem + 0.3vw, 1rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ap-gold);
+}
+
+.ap-recognition__title {
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--ap-white);
+}
+
+.ap-recognition__icon {
+  flex: none;
+  display: inline-flex;
+  color: var(--ap-gold);
+  transform-origin: 50% 40%;
+}
+.ap-recognition__icon-inner {
+  display: inline-flex;
+  transition: transform 0.7s var(--ap-ease-out);
+}
+.ap-recognition__icon svg {
+  display: block;
+  width: auto;
+  height: clamp(3.4rem, 2.68rem + 2.857vw, 5.25rem); /* 84px @1440 */
+}
+.ap-recognition__card--black .ap-recognition__icon svg {
+  height: clamp(3.2rem, 2.56rem + 2.571vw, 4.875rem); /* 78px @1440 */
+}
+
+/* Body */
+.ap-recognition__body {
+  display: grid;
+  align-content: start;
+  gap: clamp(0.75rem, 0.5rem + 0.6vw, 1.15rem);
+  margin-top: clamp(1.75rem, 1.2rem + 1.4vw, 2.4rem);
+  margin-inline-end: var(--text-end);
+}
+
+.ap-recognition__statement {
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--ap-white);
+  text-wrap: pretty;
+}
+
+.ap-recognition__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.05rem;
+  font-family: var(--ap-font-sans);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--ap-gold);
+}
+.ap-recognition__meta-strong {
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ap-recognition__meta-sep {
+  width: 1px;
+  height: 0.95rem;
+  background: rgba(221, 196, 140, 0.45);
+}
+
+.ap-recognition__text {
+  max-width: 31rem;
+  font-family: var(--ap-font-sans);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  line-height: 1.55;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Footer: hairline that draws in, then label + status */
+.ap-recognition__footer {
+  margin-top: auto;
+  padding-top: clamp(1.75rem, 1rem + 1.6vw, 2.5rem);
+  margin-inline-end: var(--text-end);
+}
+
+.ap-recognition__rule {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  transform-origin: left center;
+}
+
+.ap-recognition__footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1.5rem;
+  margin-top: 1.1rem;
+  font-family: var(--ap-font-sans);
+  font-size: clamp(0.875rem, 0.82rem + 0.2vw, 1rem);
+  line-height: 1.5;
+  color: var(--ap-white);
+}
+.ap-recognition__footer-label {
+  font-weight: 300;
+}
+.ap-recognition__footer-status {
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* CTA */
+.ap-recognition__cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.25rem, 1.6rem + 1.6vw, 3.2rem);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 899px) {
+  .ap-recognition__grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+  .ap-recognition__card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .ap-recognition__card {
+    --pad: 1.6rem;
+    border-radius: var(--ap-radius-md);
+  }
+  .ap-recognition__head {
+    gap: 1rem;
+  }
+  .ap-recognition__footer-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-recognition__card,
+  .ap-recognition__card::after,
+  .ap-recognition__icon-inner {
+    transition: none;
+  }
+  .ap-recognition__card:hover {
+    transform: none;
+  }
+}

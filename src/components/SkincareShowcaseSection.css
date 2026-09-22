@@ -1,0 +1,284 @@
+/* Section 13 — Professional Skincare Beyond the Clinic (Figma 13, 1440 x 1103) */
+
+.ap-skincare {
+  position: relative;
+  padding-block: clamp(4.25rem, 2.9rem + 3.4vw, 5.75rem) clamp(4.5rem, 3.4rem + 3vw, 6.25rem);
+  overflow-x: clip;
+  background: linear-gradient(180deg, var(--ap-cream) 0%, #faf8ee 45%, #fdfdfa 82%, var(--ap-white) 100%);
+  color: var(--ap-text);
+  font-family: var(--ap-font-sans);
+}
+
+.ap-skincare__heading {
+  margin-bottom: clamp(2.25rem, 1.6rem + 1.6vw, 3.05rem);
+}
+/* The Figma sets these intro lines in a ~870px box */
+.ap-skincare__heading .ap-heading__intro,
+.ap-skincare__heading .ap-heading__note {
+  max-width: 54.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Carousel
+   -------------------------------------------------------------------------- */
+.ap-skincare__carousel {
+  outline: none;
+}
+
+.ap-skincare__carousel:focus-visible .ap-skincare__card.is-active {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 6px;
+}
+
+/* Full-bleed clip so the next card can run off the right edge of the page */
+.ap-skincare__viewport {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.ap-skincare__track {
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform;
+}
+
+.ap-skincare__card {
+  --ap-skc-pad: 10px;
+  position: relative;
+  display: grid;
+  flex: 0 0 min(66.8125rem, 83%);
+  grid-template-columns: minmax(0, 508fr) minmax(0, 453fr);
+  column-gap: 51px;
+  padding: var(--ap-skc-pad) 45px var(--ap-skc-pad) var(--ap-skc-pad);
+  border: 1px solid #e3e3e3;
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-white);
+  box-shadow:
+    0 1px 2px rgba(60, 48, 20, 0.04),
+    0 30px 60px -38px rgba(60, 48, 20, 0.28);
+  transition:
+    box-shadow 0.6s var(--ap-ease-out),
+    border-color 0.6s var(--ap-ease-out);
+}
+
+.ap-skincare__card:not(.is-active) {
+  cursor: pointer;
+}
+
+.ap-skincare__card.is-active:hover {
+  border-color: #dcd3bd;
+  box-shadow:
+    0 1px 2px rgba(60, 48, 20, 0.05),
+    0 40px 70px -36px rgba(60, 48, 20, 0.34);
+}
+
+.ap-skincare__card a {
+  -webkit-user-drag: none;
+}
+
+/* Product photo */
+.ap-skincare__media {
+  position: relative;
+  min-height: 37.8125rem; /* 605px */
+  overflow: hidden;
+  border-radius: 12px;
+  background: #ece6d6;
+  isolation: isolate;
+}
+
+.ap-skincare__media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 1.6s var(--ap-ease-out);
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.ap-skincare__card.is-active:hover .ap-skincare__media img {
+  transform: scale(1.04);
+}
+
+.ap-skincare__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+.ap-skincare__chip {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(221, 196, 140, 0.55);
+  border-radius: 999px;
+  background: rgba(14, 12, 10, 0.62);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  color: var(--ap-gold-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+/* Copy */
+.ap-skincare__body {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  min-width: 0;
+  padding-block: 1.5rem;
+}
+
+.ap-skincare__title {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--ap-black);
+}
+
+.ap-skincare__lead {
+  margin: 0.95rem 0 0;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--ap-black);
+}
+
+.ap-skincare__list {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-skincare__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.015em;
+  color: var(--ap-black);
+}
+
+.ap-skincare__tick {
+  flex: none;
+  color: var(--ap-gold);
+}
+
+.ap-skincare__cta {
+  margin-top: 1.95rem;
+}
+
+/* Prescription-only notice (Tretinoin) */
+.ap-skincare__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 1.1rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(136, 109, 48, 0.28);
+  border-radius: var(--ap-radius-sm);
+  background: linear-gradient(135deg, rgba(221, 196, 140, 0.2), rgba(221, 196, 140, 0.08));
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--ap-text);
+}
+
+.ap-skincare__notice strong {
+  font-weight: 600;
+  color: var(--ap-black);
+}
+
+.ap-skincare__notice-icon {
+  flex: none;
+  margin-top: 0.1rem;
+  color: var(--ap-gold-ink);
+}
+
+.ap-skincare__card--pom .ap-skincare__lead {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+  color: #535353;
+}
+
+/* Controls */
+.ap-skincare__controls {
+  margin-top: 3.125rem;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .ap-skincare__card {
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    column-gap: clamp(1.75rem, 3vw, 3.2rem);
+    padding-right: clamp(1.75rem, 3vw, 2.8rem);
+  }
+  .ap-skincare__media {
+    min-height: 32rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .ap-skincare__card {
+    --ap-skc-pad: 9px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--ap-skc-pad);
+  }
+  .ap-skincare__media {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .ap-skincare__body {
+    align-self: start;
+    padding: 1.75rem clamp(0.9rem, 3vw, 1.75rem) 1.1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .ap-skincare__track {
+    gap: 14px;
+  }
+  .ap-skincare__card {
+    flex-basis: 88%;
+  }
+  .ap-skincare__media {
+    aspect-ratio: 1 / 1;
+  }
+  .ap-skincare__lead {
+    font-size: 1.0625rem;
+  }
+  .ap-skincare__list {
+    gap: 1rem;
+  }
+  .ap-skincare__controls {
+    margin-top: 2rem;
+  }
+}

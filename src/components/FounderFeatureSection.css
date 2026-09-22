@@ -1,0 +1,266 @@
+/* Founder spotlight — excerpt of the Global Health & Pharma Q3 2026 feature. Block: .ap-feature */
+
+.ap-feature {
+  position: relative;
+  padding-block: clamp(4.5rem, 3rem + 4.4vw, 7.5rem);
+  overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 100% 0%, rgba(221, 196, 140, 0.16) 0%, rgba(221, 196, 140, 0) 60%),
+    linear-gradient(180deg, var(--ap-cream-2) 0%, var(--ap-cream) 100%);
+  font-family: var(--ap-font-sans);
+  color: var(--ap-text);
+}
+
+.ap-feature__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2.5rem, 1rem + 5vw, 6.5rem);
+}
+
+/* ---- Photograph ------------------------------------------------------------ */
+
+.ap-feature__figure {
+  margin: 0;
+}
+
+.ap-feature__photo {
+  aspect-ratio: 1055 / 873;
+  width: 100%;
+  background: #ecebe8;
+  box-shadow: 0 40px 80px -48px rgba(40, 30, 14, 0.55);
+}
+
+.ap-feature__tag {
+  position: absolute;
+  top: clamp(0.85rem, 1.6vw, 1.35rem);
+  left: clamp(0.85rem, 1.6vw, 1.35rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.8rem 0.5rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: var(--ap-radius-xs);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--ap-ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.ap-feature__tag-mark {
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  background: var(--ap-ink);
+  color: var(--ap-gold);
+  font-family: var(--ap-font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: none;
+}
+
+.ap-feature__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1.5rem;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(11, 10, 9, 0.12);
+}
+
+.ap-feature__caption-name {
+  font-family: var(--ap-font-display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ap-ink);
+}
+
+.ap-feature__caption-role {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+
+/* ---- Copy ------------------------------------------------------------------ */
+
+.ap-feature__copy {
+  max-width: 36rem;
+}
+
+.ap-feature__eyebrow {
+  margin: 0 0 1.25rem;
+  color: var(--ap-gold-ink);
+}
+
+.ap-feature__title {
+  margin: 0;
+}
+
+.ap-feature__accent {
+  display: block;
+}
+
+.ap-feature__summary {
+  margin: 1.5rem 0 0;
+  font-size: var(--ap-fs-body);
+  line-height: 1.65;
+  color: var(--ap-text);
+}
+
+.ap-feature__quote {
+  position: relative;
+  margin: 2.25rem 0 0;
+  padding-left: 1.6rem;
+}
+
+.ap-feature__quote-rule {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--ap-gold) 0%, var(--ap-gold-deep) 100%);
+  transform-origin: 50% 0;
+}
+
+.ap-feature__quote-text {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.45rem, 1rem + 1.15vw, 2rem);
+  font-style: italic;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  color: var(--ap-ink);
+  text-wrap: pretty;
+}
+
+.ap-feature__quote-cite {
+  margin-top: 0.9rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--ap-text-muted);
+}
+
+.ap-feature__pillars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 2.25rem 0 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(11, 10, 9, 0.12);
+  list-style: none;
+}
+
+.ap-feature__pillar {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+}
+
+.ap-feature__pillar-index {
+  font-family: var(--ap-font-display);
+  font-size: 1.125rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--ap-gold-ink);
+}
+
+.ap-feature__pillar-text {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--ap-ink);
+}
+
+.ap-feature__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.ap-feature__pdf {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
+  color: var(--ap-ink);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.ap-feature__pdf::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.1rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: 0 50%;
+  transition:
+    opacity 0.35s var(--ap-ease-out),
+    background-color 0.35s var(--ap-ease-out);
+}
+
+.ap-feature__pdf svg {
+  color: var(--ap-gold-ink);
+  transition: transform 0.45s var(--ap-ease-out);
+}
+
+.ap-feature__pdf:hover::after,
+.ap-feature__pdf:focus-visible::after {
+  opacity: 1;
+  background: var(--ap-gold-deep);
+}
+
+.ap-feature__pdf:hover svg {
+  transform: translateY(2px);
+}
+
+.ap-feature__pdf:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ---- Responsive ------------------------------------------------------------ */
+
+@media (max-width: 960px) {
+  .ap-feature__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ap-feature__copy {
+    max-width: 40rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .ap-feature__caption {
+    flex-direction: column;
+  }
+  .ap-feature__pillars {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+  .ap-feature__pillar {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: baseline;
+  }
+  .ap-feature__actions .ap-btn {
+    width: 100%;
+  }
+}

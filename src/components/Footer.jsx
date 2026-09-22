@@ -1,347 +1,248 @@
-import React from 'react';
+import { useRef } from 'react';
+import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { ArrowUpRight, Mail, MapPin } from 'lucide-react';
+import InstagramIcon from './ui/InstagramIcon';
 import { CLINIC_INFO } from '../data/treatmentData';
-import { Phone, Mail, MapPin, ArrowUp, ShieldCheck, Award } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
+import { BOOK_CONSULTATION_URL, EMAIL_URL, INSTAGRAM_URL, PHONE_URL, whatsappLink } from '../data/links';
+import { EASE_OUT, SPRING_SNAPPY, VIEWPORT } from '../motion/presets';
+import { getLenis, scrollToTarget } from '../motion/smoothScroll';
+import { routeLinkHandler, showConcernsPath } from '../utils/navigation';
+import './Footer.css';
 
-export default function Footer({ onNavigate }) {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+const LOGO = { src: '/assets/images/allure_logo.png', width: 614, height: 740 };
 
-  const handleRoute = (route, treatmentId = null) => {
-    if (onNavigate) {
-      onNavigate(route, treatmentId);
+// There is no FAQ page yet: the closest live destination is a WhatsApp question to the clinic team.
+const CONSULTATION_QUESTION_URL = whatsappLink(
+  'Hello Allure Passions UK, I have a question about consultations.',
+);
+
+/*
+ * Link kinds: `route` (in-app page), `anchor` (a homepage section, reached from any page),
+ * `external` (new tab) and plain `href` (tel:/mailto:). Items without a destination render as text.
+ */
+const COLUMNS = [
+  {
+    id: 'quick-links',
+    title: 'Quick Links',
+    links: [
+      { label: 'Treatments', route: 'treatments', href: '/treatments' },
+      { label: 'Concerns', anchor: ['#concerns', '#what-we-treat'], href: '/#concerns' },
+      { label: 'About Allure Passions', route: 'about', href: '/about' },
+      { label: 'Clinical Results', anchor: ['#results'], href: '/#results' },
+      { label: 'Professional Skincare Shop', route: 'prescription-skincare', href: '/prescription-skincare' },
+    ],
+  },
+  {
+    id: 'consultation',
+    title: 'Consultation',
+    links: [
+      { label: 'Book Consultation', external: true, href: BOOK_CONSULTATION_URL, hint: 'opens WhatsApp in a new tab' },
+      { label: 'Contact Clinic', href: PHONE_URL, hint: `call ${CLINIC_INFO.phone}` },
+      { label: 'Consultation FAQs', external: true, href: CONSULTATION_QUESTION_URL, hint: 'ask our team on WhatsApp, opens in a new tab' },
+    ],
+    social: true,
+  },
+  {
+    id: 'information',
+    title: 'Information',
+    links: [
+      // Policy pages do not exist yet; they stay as text until they are published.
+      { label: 'Privacy Policy' },
+      { label: 'Terms of Service' },
+      { label: 'Cookie Policy' },
+      { label: 'Consultation Information & Governance', route: 'about', href: '/about' },
+    ],
+  },
+];
+
+const SOCIAL = [
+  { label: 'Allure Passions UK on Instagram', href: INSTAGRAM_URL, Icon: InstagramIcon, external: true },
+  { label: `Email ${CLINIC_INFO.email}`, href: EMAIL_URL, Icon: Mail },
+];
+
+const grid = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+const column = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.055 } },
+};
+const line = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE_OUT } },
+};
+
+const isModifiedClick = (event) =>
+  event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+
+const onHomePage = () => (window.location.pathname.replace(/\/$/, '') || '/') === '/';
+
+/** Scroll to a homepage section; from another page, go home first and scroll once the curtain lifts. */
+function homeAnchorHandler(onNavigate, selectors) {
+  const find = () => selectors.map((selector) => document.querySelector(selector)).find(Boolean);
+  return (event) => {
+    if (isModifiedClick(event)) return;
+    event.preventDefault();
+    event.stopPropagation(); // Lenis's anchor handler would otherwise re-target the click.
+
+    if (onHomePage()) {
+      const target = find();
+      if (selectors.includes('#concerns')) showConcernsPath();
+      if (target) scrollToTarget(target);
+      return;
     }
+
+    onNavigate?.('home');
+    const started = performance.now();
+    const settle = () => {
+      const curtainDown = document.documentElement.getAttribute('data-curtain') === 'closed';
+      const target = onHomePage() && !curtainDown ? find() : null;
+      if (target) {
+        getLenis()?.resize(); // the page just swapped, so refresh Lenis's scroll limit first
+        scrollToTarget(target);
+        return;
+      }
+      if (performance.now() - started < 5000) requestAnimationFrame(settle);
+    };
+    requestAnimationFrame(settle);
   };
+}
+
+function FooterLink({ link, onNavigate }) {
+  if (!link.href) {
+    return <span className="ap-footer__text">{link.label}</span>;
+  }
+
+  let behaviour = {};
+  if (link.route) behaviour = { onClick: routeLinkHandler(onNavigate, link.route) };
+  else if (link.anchor) behaviour = { onClick: homeAnchorHandler(onNavigate, link.anchor) };
+  else if (link.external) behaviour = { target: '_blank', rel: 'noopener noreferrer' };
 
   return (
-    <footer
-      style={{
-        backgroundColor: '#0A0A0A',
-        color: '#C4C8D2',
-        borderTop: '1px solid rgba(168, 127, 61, 0.3)',
-        padding: '6rem 0 3rem 0',
-        position: 'relative',
-      }}
-    >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Top Brand Crest & Monogram (Figma Exact) */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            marginBottom: '4.5rem',
-            paddingBottom: '3.5rem',
-            borderBottom: '1px solid rgba(168, 127, 61, 0.2)',
-          }}
-        >
-          {/* Brand Logo */}
-          <img
-            data-reveal="frame"
-            src="/assets/images/allure_logo.png"
-            alt={CLINIC_INFO.name}
-            style={{
-              height: '72px',
-              width: 'auto',
-              marginBottom: '0.75rem',
-            }}
-          />
+    <a className="ap-footer__link" href={link.href} {...behaviour}>
+      <span className="ap-footer__link-text">{link.label}</span>
+      {link.hint ? <span className="ap-visually-hidden"> ({link.hint})</span> : null}
+      {link.external ? <ArrowUpRight className="ap-footer__link-icon" size={15} strokeWidth={1.6} aria-hidden="true" /> : null}
+    </a>
+  );
+}
 
-          <div
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.6rem',
-              letterSpacing: '0.12em',
-              color: '#FFFFFF',
-              textTransform: 'uppercase',
-              marginBottom: '0.35rem',
-            }}
-          >
-            <SplitWords>{CLINIC_INFO.name}</SplitWords>
-          </div>
+/**
+ * Section 15 — Footer (every route). Gold AP monogram, three link columns and the
+ * clinic address bar. The monogram rises out of its frame and drifts slowly with the
+ * last stretch of scroll; the columns stagger in line by line.
+ */
+export default function Footer({ onNavigate }) {
+  const footerRef = useRef(null);
+  const reduce = useReducedMotion();
+  // The monogram starts below its clipping frame, so watch the frame (an element hidden by an
+  // ancestor's overflow never registers with IntersectionObserver).
+  const monoFrameRef = useRef(null);
+  const monoInView = useInView(monoFrameRef, VIEWPORT);
 
-          <div
-            data-reveal="fade"
-            style={{
-              fontSize: '0.75rem',
-              letterSpacing: '0.25em',
-              color: '#D4AF37',
-              textTransform: 'uppercase',
-              fontWeight: '500',
-            }}
-          >
-            Fitzrovia • London
-          </div>
+  const { scrollYProgress } = useScroll({ target: footerRef, offset: ['start end', 'end end'] });
+  const drift = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.6 });
+  const monoY = useTransform(drift, [0, 1], [56, 0]);
+
+  const reveal = reduce ? {} : { initial: 'hidden', whileInView: 'show', viewport: VIEWPORT };
+  const year = new Date().getFullYear();
+
+  return (
+    <footer ref={footerRef} className="ap-footer">
+      <div className="ap-container ap-footer__top">
+        <div className="ap-footer__brand">
+          <motion.div className="ap-footer__drift" style={reduce ? undefined : { y: monoY }}>
+            <a
+              className="ap-footer__mono-link"
+              href="/"
+              onClick={routeLinkHandler(onNavigate, 'home')}
+              aria-label={`${CLINIC_INFO.name} home`}
+            >
+              <span ref={monoFrameRef} className="ap-footer__mono-frame">
+                <motion.span
+                  className="ap-footer__mono"
+                  initial={reduce ? false : { y: '104%' }}
+                  animate={reduce || !monoInView ? undefined : { y: '0%' }}
+                  transition={{ duration: 1.35, ease: EASE_OUT }}
+                >
+                  <img src={LOGO.src} alt="" width={LOGO.width} height={LOGO.height} loading="lazy" decoding="async" />
+                  <span className="ap-footer__sheen" aria-hidden="true">
+                    {reduce ? null : (
+                      <motion.span
+                        className="ap-footer__glint"
+                        initial={{ x: '-110%' }}
+                        animate={monoInView ? { x: '110%' } : undefined}
+                        transition={{ duration: 1.7, ease: [0.45, 0, 0.2, 1], delay: 1.05 }}
+                      />
+                    )}
+                  </span>
+                </motion.span>
+              </span>
+            </a>
+          </motion.div>
         </div>
 
-        {/* 4 Directory Columns (Figma Exact) */}
-        <div
-          data-reveal-children
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '3rem',
-            marginBottom: '4.5rem',
-          }}
+        <motion.div className="ap-footer__nav" variants={grid} {...reveal}>
+          {COLUMNS.map((col) => (
+            <motion.nav key={col.id} className="ap-footer__col" aria-labelledby={`ap-footer-${col.id}`} variants={column}>
+              <motion.h2 id={`ap-footer-${col.id}`} className="ap-footer__heading" variants={line}>
+                {col.title}
+              </motion.h2>
+              <ul className="ap-footer__list">
+                {col.links.map((link) => (
+                  <motion.li key={link.label} className="ap-footer__item" variants={line}>
+                    <FooterLink link={link} onNavigate={onNavigate} />
+                  </motion.li>
+                ))}
+              </ul>
+              {col.social ? (
+                <motion.ul className="ap-footer__social" variants={line} aria-label="Follow and contact">
+                  {SOCIAL.map(({ label, href, Icon, external }) => (
+                    <li key={href}>
+                      <motion.a
+                        className="ap-footer__icon"
+                        href={href}
+                        aria-label={label}
+                        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        whileHover={reduce ? undefined : { y: -3 }}
+                        whileTap={reduce ? undefined : { scale: 0.92 }}
+                        transition={SPRING_SNAPPY}
+                      >
+                        <Icon size={16} strokeWidth={1.6} aria-hidden="true" />
+                      </motion.a>
+                    </li>
+                  ))}
+                </motion.ul>
+              ) : null}
+            </motion.nav>
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="ap-footer__bar">
+        <motion.span
+          className="ap-footer__rule"
+          aria-hidden="true"
+          initial={reduce ? false : { scaleX: 0 }}
+          whileInView={reduce ? undefined : { scaleX: 1 }}
+          viewport={{ once: true, amount: 1 }}
+          transition={{ duration: 1.6, ease: EASE_OUT, delay: 0.2 }}
+        />
+        <motion.div
+          className="ap-container ap-footer__bar-inner"
+          initial={reduce ? false : { opacity: 0, y: 10 }}
+          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.35 }}
         >
-          {/* Col 1: Clinic Location & Contact */}
-          <div>
-            <h4
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '1.25rem',
-                color: '#FFFFFF',
-                fontWeight: '500',
-                marginBottom: '1.5rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              Fitzrovia Clinic
-            </h4>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.875rem', color: '#9E988E', lineHeight: '1.6' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <MapPin size={16} color="#D4AF37" style={{ flexShrink: 0, marginTop: '3px' }} />
-                <span>
-                  76 Cleveland Street, Fitzrovia,<br />
-                  London, W1T 6NB
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Phone size={16} color="#D4AF37" style={{ flexShrink: 0 }} />
-                <a href={`tel:${CLINIC_INFO.phone}`} style={{ color: '#ECE8E1', textDecoration: 'none' }}>
-                  {CLINIC_INFO.phone}
-                </a>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Mail size={16} color="#D4AF37" style={{ flexShrink: 0 }} />
-                <a href={`mailto:${CLINIC_INFO.email}`} style={{ color: '#ECE8E1', textDecoration: 'none' }}>
-                  {CLINIC_INFO.email}
-                </a>
-              </div>
-
-              <div style={{ marginTop: '0.5rem', color: '#7A756C', fontSize: '0.8rem' }}>
-                Mon – Sat: 09:30 – 19:30<br />
-                Sunday: By Appointment Only
-              </div>
-            </div>
-          </div>
-
-          {/* Col 2: Flagship Modalities */}
-          <div>
-            <h4
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '1.25rem',
-                color: '#FFFFFF',
-                fontWeight: '500',
-                marginBottom: '1.5rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              Flagship Modalities
-            </h4>
-
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.875rem' }}>
-              {[
-                { name: 'Morpheus8™ Fractional RF', id: 'morpheus8' },
-                { name: 'PicoWay® Picosecond Laser', id: 'picoway' },
-                { name: 'ADVATx® Dual Wavelength Laser', id: 'advatx' },
-                { name: 'Sofwave™ SUPERB™ Ultrasound', id: 'sofwave' },
-                { name: 'Emsculpt Neo® HIFEM + RF', id: 'emsculpt_neo' },
-                { name: 'Emerald™ Green Laser Lipo', id: 'emerald_laser' },
-              ].map((item, idx) => (
-                <li key={idx}>
-                  <button
-                    onClick={() => handleRoute('treatment-detail', item.id)}
-                    className="ap-underline"
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#9E988E',
-                      cursor: 'pointer',
-                      padding: 0,
-                      textAlign: 'left',
-                      fontSize: '0.875rem',
-                      transition: 'color 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#D4AF37';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#9E988E';
-                    }}
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3: Practice Directory */}
-          <div>
-            <h4
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '1.25rem',
-                color: '#FFFFFF',
-                fontWeight: '500',
-                marginBottom: '1.5rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              The Practice
-            </h4>
-
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.875rem' }}>
-              {[
-                { name: 'Home', route: 'home' },
-                { name: 'All Treatments Portfolio', route: 'treatments' },
-                { name: 'About Abigail & Clinical Governance', route: 'about' },
-                { name: 'Official Pricing Directory', route: 'pricing' },
-                { name: 'Prescription Retinoids Portal', route: 'prescription-skincare' },
-                { name: 'Direct WhatsApp Consultation', isWhatsApp: true },
-              ].map((item, idx) => (
-                <li key={idx}>
-                  <button
-                    className="ap-underline"
-                    onClick={() => {
-                      if (item.isWhatsApp) {
-                        window.open('https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20consult%20with%20your%20clinical%20team.', '_blank');
-                      } else {
-                        handleRoute(item.route);
-                      }
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: item.isWhatsApp ? '#D4AF37' : '#9E988E',
-                      cursor: 'pointer',
-                      padding: 0,
-                      textAlign: 'left',
-                      fontSize: '0.875rem',
-                      fontWeight: item.isWhatsApp ? '600' : '400',
-                      transition: 'color 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#D4AF37';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = item.isWhatsApp ? '#D4AF37' : '#9E988E';
-                    }}
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 4: Clinical Accreditations & POM Notice */}
-          <div>
-            <h4
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '1.25rem',
-                color: '#FFFFFF',
-                fontWeight: '500',
-                marginBottom: '1.5rem',
-                letterSpacing: '0.04em',
-              }}
-            >
-              Governance & Safety
-            </h4>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.825rem', color: '#9E988E' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#D4AF37' }}>
-                <Award size={18} />
-                <span style={{ fontWeight: '600' }}>GHP 2026 Winner — London</span>
-              </div>
-              <p style={{ lineHeight: '1.5' }}>
-                Best Advanced Skin & Body Aesthetics Clinic 2026, awarded by Global Health & Pharma.
-              </p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#D4AF37', marginTop: '0.5rem' }}>
-                <ShieldCheck size={18} />
-                <span style={{ fontWeight: '600' }}>JCCP Registered Practice</span>
-              </div>
-              <p style={{ lineHeight: '1.5' }}>
-                Level 6 Certified Medical Aesthetician operating in full compliance with UK cosmetic standards.
-              </p>
-
-              <div
-                style={{
-                  marginTop: '0.5rem',
-                  padding: '0.75rem',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid rgba(168, 127, 61, 0.2)',
-                  fontSize: '0.72rem',
-                  color: '#7A756C',
-                  lineHeight: '1.4',
-                }}
-              >
-                UK POM Notice: Tretinoin requires medical suitability review and physical in-clinic collection at 76 Cleveland Street.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar: Copyright & Back To Top */}
-        <div
-          data-reveal="fade"
-          style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            paddingTop: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            fontSize: '0.785rem',
-            color: '#7A756C',
-          }}
-        >
-          <div>
-            © {new Date().getFullYear()} Allure Passions UK Aesthetic Clinic. All rights reserved. 76 Cleveland Street, Fitzrovia, London, W1T 6NB.
-          </div>
-
-          <button
-            onClick={scrollToTop}
-            aria-label="Back to Top"
-            style={{
-              background: 'none',
-              border: '1px solid rgba(168, 127, 61, 0.3)',
-              borderRadius: '50%',
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#D4AF37',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(168, 127, 61, 0.15)';
-              e.currentTarget.style.borderColor = '#D4AF37';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'none';
-              e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.3)';
-            }}
-          >
-            <ArrowUp size={16} />
-          </button>
-        </div>
-
+          <a className="ap-footer__address" href={CLINIC_INFO.mapsUrl} target="_blank" rel="noopener noreferrer">
+            <MapPin className="ap-footer__pin" size={18} strokeWidth={1.6} aria-hidden="true" />
+            <span className="ap-footer__link-text">{CLINIC_INFO.address}</span>
+            <span className="ap-visually-hidden"> (open in Google Maps, new tab)</span>
+          </a>
+          <p className="ap-footer__legal">© {year} Allure Passions UK. All rights reserved.</p>
+        </motion.div>
       </div>
     </footer>
   );

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useMotionSystem from './motion/useMotionSystem';
+import { startSmoothScroll, scrollToY } from './motion/smoothScroll';
 import PageCurtain from './motion/PageCurtain';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import TreatmentAreasSection from './components/TreatmentAreasSection';
 import FounderSection from './components/FounderSection';
+import FounderFeatureSection from './components/FounderFeatureSection';
 import PillarsSection from './components/PillarsSection';
 import SignatureTreatmentsSection from './components/SignatureTreatmentsSection';
-import PricingMenuSection from './components/PricingMenuSection';
+import WhatWeTreatSection from './components/WhatWeTreatSection';
 import BeforeAfterSection from './components/BeforeAfterSection';
 import AccreditationsSection from './components/AccreditationsSection';
 import PressBarSection from './components/PressBarSection';
@@ -65,6 +67,11 @@ export default function App() {
 
   useMotionSystem();
 
+  // Eased wheel scrolling site-wide (skipped for reduced motion); keeps the hero video glide smooth.
+  useEffect(() => {
+    startSmoothScroll();
+  }, []);
+
   // Sync state with native browser Back and Forward button navigation
   useEffect(() => {
     const handlePopState = () => {
@@ -88,14 +95,14 @@ export default function App() {
     if (treatmentId) {
       setSelectedTreatmentId(treatmentId);
     }
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollToY(0, { immediate: true });
   };
 
   // Navigation handler: HTML5 pushState behind a branded curtain sweep
   const handleNavigate = (route, treatmentId = null) => {
     const isSamePage = route === currentRoute && (!treatmentId || treatmentId === selectedTreatmentId);
     if (isSamePage) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToY(0);
       return;
     }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -130,7 +137,7 @@ export default function App() {
     <div style={{ minHeight: '100vh', background: '#FAF7F2', color: '#1C1B18', display: 'flex', flexDirection: 'column' }}>
       <PageCurtain phase={curtainPhase} />
 
-      {/* Figma Exact Header: Fixed Overlay (Left MENU, Center AP Crest, Right ENQUIRE) */}
+      {/* Fixed header over the hero: Menu, AP monogram, shortcuts */}
       <Navbar
         currentRoute={currentRoute}
         onNavigate={handleNavigate}
@@ -140,63 +147,51 @@ export default function App() {
       <div style={{ flex: 1 }}>
         {currentRoute === 'home' && (
           <main>
-            {/* Section 1: Clean Cinematic Hero Banner (Figma Exact) */}
-            <HeroSection
-              onNavigate={handleNavigate}
-            />
+            {/* Homepage order follows the Figma frame "ALLURE PASSION mock 1" (node 2:12) */}
+            {/* 1. Hero: clinic tour video that plays with the scroll */}
+            <HeroSection onNavigate={handleNavigate} />
 
-            {/* Section 2: Treatment Areas & Concern Carousel (Figma Exact) */}
-            <TreatmentAreasSection
-              onNavigate={handleNavigate}
-            />
+            {/* 2. Start With What Matters to You: concern / treatment paths */}
+            <TreatmentAreasSection onNavigate={handleNavigate} />
 
-            {/* Section 3: Verified Clinical Outcomes / Real Results & Patient Transformations (Motion Slider Graphic) */}
-            <BeforeAfterSection />
+            {/* 3. Welcome to Allure Passions, UK Aesthetic Clinic */}
+            <FounderSection onNavigate={handleNavigate} />
 
-            {/* Section 4: Meet the Practitioner / Founder (Figma Exact: Bio + Studio Portrait) */}
-            <FounderSection
-              onNavigate={handleNavigate}
-            />
+            {/* 3b. Founder spotlight: excerpt of the GHP Q3 2026 feature (full article on /about) */}
+            <FounderFeatureSection onNavigate={handleNavigate} />
 
-            {/* Section 5: The Allure Standard (Editorial principles list with image that follows the active pillar) */}
-            <PillarsSection />
+            {/* 4. Expertise Behind Every Treatment + Personalised Treatment Guidance */}
+            <PillarsSection onNavigate={handleNavigate} />
 
-            {/* Section 6: Signature Treatments (Staggered image gallery on night ground; swipe rail on phones) */}
-            <SignatureTreatmentsSection
-              onNavigate={handleNavigate}
-            />
+            {/* 5. Advanced Treatments. Personalised to You. */}
+            <SignatureTreatmentsSection onNavigate={handleNavigate} />
 
-            {/* Section 7: Treatment Menu & Pricing (Tabbed highlights sourced from the official price list) */}
-            <PricingMenuSection
-              onNavigate={handleNavigate}
-            />
+            {/* 6. Skin, Body & Wellness Concerns + Not sure where to begin? */}
+            <WhatWeTreatSection onNavigate={handleNavigate} />
 
-            {/* Section 8: Accreditations & Industry Honours (Figma Exact: GHP 2026 & JCCP Cards) */}
-            <AccreditationsSection
-              onNavigate={handleNavigate}
-            />
+            {/* 7. Real Treatments. Real Patient Journeys. */}
+            <BeforeAfterSection onNavigate={handleNavigate} />
 
-            {/* Section 9: Luxury Editorial Press & Media Bar (Figma Exact: Vogue, Tatler, Harper's Bazaar) */}
+            {/* 8. Recognized for Advanced Aesthetic Care */}
+            <AccreditationsSection onNavigate={handleNavigate} />
+
+            {/* 9. As Featured In */}
             <PressBarSection />
 
-            {/* Section 10: Client Testimonials (Figma Exact: 2x3 Grid of 5-Star Reviews) */}
+            {/* 10. What Our Patients Say */}
             <TestimonialsSection />
 
-            {/* Section 11: Live Instagram Behind-the-Scenes Feed (Figma Exact: 4 Photos) */}
+            {/* 11. Shared Transformations @ALLUREPASSIONSUK */}
             <InstagramSection />
 
-            {/* Section 12: Revolutionary Body Contouring (Figma Exact: Emsculpt Neo Spotlight Card) */}
-            <BodyContouringSection
-              onNavigate={handleNavigate}
-            />
+            {/* 12. Discover Our Signature Technologies */}
+            <BodyContouringSection onNavigate={handleNavigate} />
 
-            {/* Section 13: Medical-Grade Skincare & Prescription Hub (Figma Exact: Kojivit & Tretinoin) */}
-            <SkincareShowcaseSection
-              onNavigate={handleNavigate}
-            />
+            {/* 13. Professional Skincare Beyond the Clinic */}
+            <SkincareShowcaseSection onNavigate={handleNavigate} />
 
-            {/* Section 14: Pre-Footer Consultation CTA (Figma Exact: Split Banner with Aesthetic Visual) */}
-            <PreFooterCtaSection />
+            {/* 14. Not Sure Which Treatment Is Right for You? */}
+            <PreFooterCtaSection onNavigate={handleNavigate} />
           </main>
         )}
 
@@ -247,7 +242,7 @@ export default function App() {
         )}
       </div>
 
-      {/* Section 15: Deep Obsidian Luxury Footer (Figma Exact: Gold AP Crest & Fitzrovia Directory) */}
+      {/* 15. Footer */}
       <Footer
         onNavigate={handleNavigate}
       />

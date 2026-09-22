@@ -1,6 +1,7 @@
 import React from 'react';
 import { Award, CheckCircle2, ArrowLeft, MessageSquare, MapPin } from 'lucide-react';
 import { CLINIC_INFO, CREDENTIALS } from '../../data/treatmentData';
+import GhpFeatureArticle from './about/GhpFeatureArticle';
 
 export default function AboutPage({ onNavigate }) {
 
@@ -119,6 +120,9 @@ export default function AboutPage({ onNavigate }) {
             </div>
           </div>
         </div>
+
+        {/* Founder feature: Global Health & Pharma, Q3 2026 */}
+        <GhpFeatureArticle />
 
         {/* Credentials Grid */}
         <div style={{ borderTop: '1px solid rgba(28, 27, 24, 0.08)', paddingTop: '4rem' }}>

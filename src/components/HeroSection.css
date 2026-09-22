@@ -1,0 +1,312 @@
+/* Section 1 — Hero: pinned clinic-tour video that plays with the scroll */
+
+.ap-hero {
+  /* Scroll distance over which the 8-second tour plays (about 11px of scroll per frame). */
+  --ap-hero-scrub: 230vh;
+  position: relative;
+  height: calc(100svh + var(--ap-hero-scrub));
+  background: #17120d;
+  font-family: var(--ap-font-sans);
+}
+
+.ap-hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 34rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ap-hero__media,
+.ap-hero__media-inner {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.ap-hero__media {
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+}
+
+.ap-hero__media-inner {
+  z-index: 0;
+  transform-origin: 50% 55%;
+  will-change: transform;
+}
+
+.ap-hero__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 45%;
+  background: #cdbfa9;
+}
+
+/* The tour is bright and creamy; warm dark gradients keep white type legible. */
+.ap-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(20, 14, 9, 0.55) 0%, rgba(20, 14, 9, 0.18) 16%, rgba(20, 14, 9, 0) 30%),
+    radial-gradient(120% 95% at 0% 100%, rgba(22, 15, 9, 0.78) 0%, rgba(22, 15, 9, 0.42) 38%, rgba(22, 15, 9, 0) 68%),
+    linear-gradient(0deg, rgba(20, 14, 9, 0.62) 0%, rgba(20, 14, 9, 0.2) 34%, rgba(20, 14, 9, 0) 58%),
+    radial-gradient(70% 70% at 100% 100%, rgba(22, 15, 9, 0.45) 0%, rgba(22, 15, 9, 0) 70%);
+}
+
+.ap-hero__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #0f0b07;
+  opacity: 0;
+}
+
+.ap-hero__layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2.5rem;
+  height: 100%;
+  padding-bottom: clamp(3.25rem, 8.4vh, 4.75rem);
+}
+
+.ap-hero__copy {
+  max-width: 47rem;
+  will-change: transform, opacity;
+}
+
+.ap-hero__title {
+  margin: 0 0 1.35rem;
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-hero);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.028em;
+  color: var(--ap-white);
+  text-shadow: 0 2px 30px rgba(10, 6, 3, 0.25);
+}
+
+.ap-hero__line {
+  display: block;
+}
+
+.ap-hero__title .ap-accent {
+  color: var(--ap-gold-text);
+  letter-spacing: -0.03em;
+}
+
+.ap-hero__lead {
+  max-width: 44rem;
+  margin: 0 0 2.5rem;
+  font-size: clamp(1rem, 0.92rem + 0.3vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.ap-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.ap-hero__actions .ap-btn {
+  min-width: 15.5rem;
+}
+
+/* Credentials: a hairline-ruled list in the right gutter, no cards */
+.ap-hero__marks {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 17.5rem;
+  margin: 0 clamp(1.5rem, 3vw, 3rem) 0.2rem 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ap-white);
+  text-shadow: 0 1px 16px rgba(10, 6, 3, 0.5);
+}
+
+/* An edgeless pool of shade so the list reads over the lit shelves */
+.ap-hero__marks::before {
+  content: '';
+  position: absolute;
+  inset: -4.5rem -4rem -3rem -5rem;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(18, 12, 6, 0.62), rgba(18, 12, 6, 0.38) 55%, rgba(18, 12, 6, 0));
+  pointer-events: none;
+}
+
+.ap-hero__mark {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.9rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+}
+.ap-hero__mark:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.ap-hero__mark-icon {
+  margin-top: 0.3rem;
+  color: var(--ap-gold-text);
+  filter: drop-shadow(0 1px 8px rgba(10, 6, 3, 0.45));
+}
+
+.ap-hero__mark-text {
+  display: grid;
+  gap: 0.2rem;
+}
+.ap-hero__mark-text strong {
+  font-family: var(--ap-font-display);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+}
+.ap-hero__mark-text span {
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Scroll cue (right gutter) and tour progress */
+.ap-hero__cue {
+  position: absolute;
+  right: clamp(1rem, 2.2vw, 2rem);
+  bottom: 2.25rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  pointer-events: none;
+}
+
+.ap-hero__cue-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ap-hero__cue-line {
+  position: relative;
+  width: 1px;
+  height: 3rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.ap-hero__cue-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 1px;
+  height: 40%;
+  background: var(--ap-gold);
+  animation: apHeroCue 2.2s var(--ap-ease-inout) infinite;
+}
+
+@keyframes apHeroCue {
+  0% {
+    top: -40%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.ap-hero__rail {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ap-hero__rail span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ap-gold-deep), var(--ap-gold));
+  transform-origin: 0 50%;
+}
+
+/* Reduced motion: a still of the clinic, no pinning */
+.ap-hero--static {
+  height: auto;
+}
+.ap-hero--static .ap-hero__stage {
+  position: relative;
+}
+
+@media (max-width: 1180px) {
+  .ap-hero__marks {
+    width: 17rem;
+    margin-right: 1.5rem;
+  }
+  .ap-hero__mark-text strong {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .ap-hero {
+    --ap-hero-scrub: 190vh;
+  }
+  .ap-hero__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ap-hero__marks {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .ap-hero {
+    --ap-hero-scrub: 170vh;
+  }
+  .ap-hero__layout {
+    padding-bottom: 5.25rem;
+  }
+  .ap-hero__title {
+    margin-bottom: 1rem;
+  }
+  .ap-hero__lead {
+    margin-bottom: 1.75rem;
+  }
+  .ap-hero__actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .ap-hero__actions .ap-btn {
+    width: 100%;
+    min-width: 0;
+  }
+  .ap-hero__cue {
+    right: 50%;
+    bottom: 1.25rem;
+    transform: translateX(50%);
+  }
+  .ap-hero__cue-label {
+    display: none;
+  }
+}

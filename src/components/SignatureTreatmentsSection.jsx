@@ -1,139 +1,247 @@
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { POPULAR_TREATMENTS } from '../data/treatmentData';
-import SplitWords from '../motion/SplitWords';
+import { useRef, useSyncExternalStore } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'motion/react';
+import SectionHeading from './ui/SectionHeading';
+import Button from './ui/Button';
+import { Reveal } from '../motion/Reveal';
+import { DURATION, EASE_OUT, SPRING_SOFT, VIEWPORT } from '../motion/presets';
 import { routeLinkHandler } from '../utils/navigation';
-import { withTrademarks } from '../utils/trademarks';
 import './SignatureTreatmentsSection.css';
 
-// Short image tags, plus focal points for the landscape crop of each square photograph.
-const CARD_DETAILS = {
-  picoway: { tag: 'Skin Renewal', imagePosition: '50% 0%' },
-  advatx: { tag: 'Redness & Rosacea', imagePosition: '50% 100%' },
-  morpheus8: { tag: 'Skin Tightening', imagePosition: '40% 55%' },
-  sofwave: { tag: 'Face & Neck Lift', imagePosition: '50% 100%' },
-  emsculpt_neo: { tag: 'Body Contouring', imagePosition: '50% 100%' },
-  emerald_laser: { tag: 'Targeted Fat Loss', imagePosition: '50% 85%' },
+const IMAGE_ROOT = '/assets/images/site/technologies';
+
+// Figma copy (section 5). `position` frames each client photo in the 390x336 slot.
+const TREATMENTS = [
+  {
+    id: 'picoway',
+    name: 'PicoWay',
+    subtitle: 'Precision Laser Technology for Skin Clarity',
+    description:
+      'PicoWay uses advanced picosecond laser technology and may be used within personalised treatment plans for concerns including pigmentation, skin revitalisation and tattoo removal.',
+    cta: 'Explore PicoWay',
+    image: `${IMAGE_ROOT}/picoway.jpg`,
+    position: '45% 50%',
+    alt: 'Gloved practitioner holding a laser handpiece to a client’s cheek, the client wearing protective eyewear',
+  },
+  {
+    id: 'advatx',
+    name: 'ADVATx',
+    subtitle: 'Advanced Laser Treatment for Healthier Skin',
+    description:
+      'ADVATx technology can be used to address a range of skin concerns including acne, redness, pigmentation and overall skin rejuvenation with zero thermal compromise.',
+    cta: 'Explore ADVATx',
+    image: `${IMAGE_ROOT}/advantx.jpg`,
+    position: '50% 50%',
+    alt: 'ADVATx laser handpiece directing a warm beam towards a client’s face',
+  },
+  {
+    id: 'morpheus8',
+    name: 'Morpheus8',
+    subtitle: 'Advanced Skin Remodelling',
+    description:
+      'Morpheus8 combines fractional radiofrequency with microneedling technology to support skin remodelling, improved texture, skin tightening and subcutaneous adipose reshaping.',
+    cta: 'Explore Morpheus8',
+    image: `${IMAGE_ROOT}/Morpheus8.jpg`,
+    position: '38% 50%',
+    alt: 'Microneedling applicator tip poised above a client’s forehead',
+  },
+  {
+    id: 'sofwave',
+    name: 'Sofwave',
+    subtitle: 'Non-Invasive Skin Tightening',
+    description:
+      'Sofwave uses ultrasound technology designed to stimulate collagen production and support firmer, tighter-looking skin across the face, submental and neck areas.',
+    cta: 'Explore Sofwave',
+    image: `${IMAGE_ROOT}/Sofwave.jpg`,
+    position: '42% 50%',
+    alt: 'Ultrasound applicator held beneath a relaxed client’s jawline',
+  },
+  {
+    id: 'emsculpt_neo',
+    name: 'Emsculpt Neo',
+    subtitle: 'Body Contouring & Muscle Definition',
+    description:
+      'Emsculpt Neo combines radiofrequency energy with muscle stimulation technology to support body contouring and improved muscle definition simultaneously.',
+    cta: 'Explore Emsculpt Neo',
+    image: `${IMAGE_ROOT}/EmsculptNeo.jpg`,
+    position: '62% 50%',
+    alt: 'Emsculpt Neo applicator strapped in place on a client lying on a treatment bed',
+  },
+  {
+    id: 'emerald_laser',
+    name: 'Emerald Green Laser Lipo',
+    subtitle: 'Non-Invasive Body Contouring',
+    description:
+      'Emerald Green Laser uses low-level laser technology as part of a non-invasive approach to body contouring, circumference reduction and holistic lymphatic wellness.',
+    cta: 'Explore Emerald Green Laser',
+    image: `${IMAGE_ROOT}/Emeraldlaser.webp`,
+    position: '45% 50%',
+    alt: 'Green laser lines projected across a client’s body beneath the Emerald laser heads',
+  },
+];
+
+// Layout breakpoints (keep in sync with SignatureTreatmentsSection.css).
+const GRID_3 = '(min-width: 1000px)';
+const GRID_2 = '(min-width: 640px)';
+
+function subscribeLayout(onChange) {
+  const queries = [GRID_3, GRID_2].map((q) => window.matchMedia(q));
+  queries.forEach((q) => q.addEventListener('change', onChange));
+  return () => queries.forEach((q) => q.removeEventListener('change', onChange));
+}
+const getColumns = () => (window.matchMedia(GRID_3).matches ? 3 : window.matchMedia(GRID_2).matches ? 2 : 1);
+const getServerColumns = () => 3;
+
+// Each card rises in as it reaches the viewport; cards in the same row fan in left to right.
+const cardVariants = {
+  hidden: { opacity: 0, y: 44, scale: 0.97 },
+  show: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: DURATION.slow, ease: EASE_OUT, delay },
+  }),
 };
 
-const startingPrice = (pricing = '') => pricing.match(/£[\d,]+/)?.[0];
+const photoVariants = {
+  hidden: { scale: 1.14 },
+  show: (delay = 0) => ({ scale: 1, transition: { duration: 1.6, ease: EASE_OUT, delay } }),
+};
 
-export default function SignatureTreatmentsSection({ onNavigate }) {
-  const railRef = useRef(null);
-  const progressRef = useRef(null);
+const TILT = 2.5; // degrees at the card edge, kept deliberately small
 
-  // Mobile rail: mirror horizontal scroll position in the progress bar.
-  useEffect(() => {
-    const rail = railRef.current;
-    const progress = progressRef.current;
-    if (!rail || !progress) return undefined;
+function TreatmentCard({ treatment, delay, rail, onNavigate, reduce }) {
+  const href = `/treatments/${treatment.id}`;
+  const go = routeLinkHandler(onNavigate, 'treatment-detail', treatment.id);
 
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const maxScroll = rail.scrollWidth - rail.clientWidth;
-      const visible = rail.clientWidth / rail.scrollWidth;
-      const travelled = maxScroll > 0 ? rail.scrollLeft / maxScroll : 0;
-      progress.style.setProperty('--rail-size', visible.toFixed(3));
-      progress.style.setProperty('--rail-progress', travelled.toFixed(3));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
+  // Pointer tilt (mouse only): pointer position → spring-smoothed rotation.
+  const bounds = useRef(null);
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [TILT, -TILT]), SPRING_SOFT);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-TILT, TILT]), SPRING_SOFT);
 
-    update();
-    rail.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      rail.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
+  const onPointerEnter = (event) => {
+    bounds.current = event.currentTarget.getBoundingClientRect();
+  };
+  const onPointerMove = (event) => {
+    if (reduce || event.pointerType !== 'mouse' || !bounds.current) return;
+    const { left, top, width, height } = bounds.current;
+    px.set((event.clientX - left) / width - 0.5);
+    py.set((event.clientY - top) / height - 0.5);
+  };
+  const onPointerLeave = () => {
+    bounds.current = null;
+    px.set(0);
+    py.set(0);
+  };
+
+  const motionProps = reduce
+    ? {}
+    : {
+        variants: cardVariants,
+        custom: delay,
+        initial: 'hidden',
+        whileInView: 'show',
+        // In the phone rail the next card only peeks in, so any visible sliver counts.
+        viewport: { ...VIEWPORT, amount: rail ? 0 : 0.25 },
+      };
 
   return (
-    <section
-      id="signature-treatments"
-      className="signature ap-on-dark"
-      aria-labelledby="signature-title"
-    >
+    <motion.li className="ap-treatments__item" {...motionProps}>
+      <motion.article
+        className="ap-treatments__card"
+        style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1400 }}
+        whileHover={reduce ? undefined : { y: -8 }}
+        transition={SPRING_SOFT}
+        onPointerEnter={onPointerEnter}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
+      >
+        <a className="ap-treatments__media" href={href} onClick={go} tabIndex={-1} aria-hidden="true">
+          <span className="ap-treatments__zoom">
+            <motion.img
+              src={treatment.image}
+              alt={treatment.alt}
+              loading="lazy"
+              decoding="async"
+              style={{ objectPosition: treatment.position }}
+              variants={reduce ? undefined : photoVariants}
+              custom={delay}
+            />
+          </span>
+        </a>
+
+        <div className="ap-treatments__body">
+          <h3 className="ap-treatments__title">{treatment.name}</h3>
+          <p className="ap-treatments__subtitle">{treatment.subtitle}</p>
+          <p className="ap-treatments__desc">{treatment.description}</p>
+          <Button href={href} onClick={go} block className="ap-treatments__cta">
+            {treatment.cta}
+          </Button>
+        </div>
+      </motion.article>
+    </motion.li>
+  );
+}
+
+/**
+ * Section 5 — "Advanced Treatments. Personalised to You."
+ * Six white treatment cards on charcoal (3 x 2 on desktop, 2-up on tablet,
+ * a swipeable snap rail on phones) and a link through to every treatment.
+ */
+export default function SignatureTreatmentsSection({ onNavigate }) {
+  const reduce = useReducedMotion();
+  const columns = useSyncExternalStore(subscribeLayout, getColumns, getServerColumns);
+  const railRef = useRef(null);
+  const { scrollXProgress } = useScroll({ container: railRef });
+  const railSpring = useSpring(scrollXProgress, { stiffness: 260, damping: 40, mass: 0.4 });
+  // The thumb starts at one card's share of the rail and fills as the rail is swiped.
+  const railProgress = useTransform(reduce ? scrollXProgress : railSpring, [0, 1], [1 / TREATMENTS.length, 1]);
+
+  return (
+    <section id="treatments" className="ap-treatments" aria-labelledby="ap-treatments-title">
       <div className="ap-container">
-        <header className="ap-head">
-          <div className="ap-head__title">
-            <span className="ap-eyebrow" data-reveal>Clinical Excellence</span>
-            <h2 id="signature-title" className="ap-display" data-reveal="words">
-              <SplitWords>
-                Advanced Treatments. <em>Personalised to You.</em>
-              </SplitWords>
-            </h2>
-          </div>
-          <div className="ap-head__aside" data-reveal>
-            <p className="ap-lede">
-              Every technology works differently, which is why each recommendation begins with your individual concern
-              and suitability. Explore our most sought-after treatments.
-            </p>
-            <a
-              href="/treatments"
-              className="ap-btn ap-btn--ghost"
-              onClick={routeLinkHandler(onNavigate, 'treatments')}
-            >
-              <span>Explore All Treatments</span>
-              <ArrowRight size={16} />
-            </a>
-          </div>
-        </header>
+        <SectionHeading
+          id="ap-treatments-title"
+          className="ap-treatments__head"
+          title="Advanced Treatments."
+          accent="Personalised to You."
+          align="center"
+          tone="dark"
+          intro="Every technology works differently, which is why treatment recommendations should always begin with your individual concern and suitability."
+          note="Explore some of our most sought-after treatments."
+        />
 
-        <ul ref={railRef} className="signature__grid">
-          {POPULAR_TREATMENTS.map((treatment) => {
-            const price = startingPrice(treatment.pricing);
-            const details = CARD_DETAILS[treatment.id] || {};
-            return (
-              <li key={treatment.id} className="signature__cell">
-                <div className="signature__reveal" data-reveal>
-                  <a
-                    href={`/treatments/${treatment.id}`}
-                    className="signature__card"
-                    onClick={routeLinkHandler(onNavigate, 'treatment-detail', treatment.id)}
-                  >
-                    <div className="signature__media">
-                      <img
-                        src={treatment.image}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                        style={{ objectPosition: details.imagePosition || 'center' }}
-                      />
-                      <span className="signature__category">{details.tag || treatment.category}</span>
-                      <span className="signature__arrow" aria-hidden="true">
-                        <ArrowUpRight size={18} strokeWidth={1.75} />
-                      </span>
-                    </div>
-
-                    <div className="signature__body">
-                      <h3 className="signature__name">{withTrademarks(treatment.name)}</h3>
-                      <p className="signature__summary">{treatment.summary || treatment.shortDesc}</p>
-                      <div className="signature__meta">
-                        {price && (
-                          <span className="signature__price">
-                            From <strong>{price}</strong>
-                          </span>
-                        )}
-                        <span className="signature__cta">
-                          Discover
-                          <ArrowRight size={15} />
-                        </span>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </li>
-            );
-          })}
+        <ul ref={railRef} className="ap-treatments__grid" data-overflow-ok aria-label="Featured treatments">
+          {TREATMENTS.map((treatment, index) => (
+            <TreatmentCard
+              key={treatment.id}
+              treatment={treatment}
+              // Stagger within a row; on the phone rail only the first two cards share the entrance.
+              delay={(columns === 1 ? Math.min(index, 1) : index % columns) * 0.1}
+              rail={columns === 1}
+              onNavigate={onNavigate}
+              reduce={reduce}
+            />
+          ))}
         </ul>
 
-        <div ref={progressRef} className="signature__progress" aria-hidden="true">
-          <span />
+        <div className="ap-treatments__progress" aria-hidden="true">
+          <motion.span style={{ scaleX: railProgress }} />
         </div>
+
+        <Reveal className="ap-treatments__foot" delay={0.1}>
+          <Button href="/treatments" onClick={routeLinkHandler(onNavigate, 'treatments')}>
+            Explore All Treatments
+          </Button>
+        </Reveal>
       </div>
     </section>
   );

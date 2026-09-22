@@ -1,0 +1,239 @@
+/* About page — Global Health & Pharma Q3 2026 feature, set as an editorial article. Block: .ap-ghp */
+
+.ap-ghp {
+  margin: 0 0 5.5rem;
+  padding-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+  border-top: 1px solid rgba(28, 27, 24, 0.08);
+  font-family: var(--ap-font-sans);
+  color: var(--ap-text);
+  scroll-margin-top: 6rem;
+}
+
+.ap-ghp__head {
+  max-width: 60rem;
+  margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem);
+}
+
+.ap-ghp__eyebrow {
+  margin: 0 0 1.25rem;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__title {
+  margin: 0;
+}
+
+.ap-ghp__standfirst {
+  max-width: 54rem;
+  margin: 1.75rem 0 0;
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.65;
+  letter-spacing: 0.002em;
+  color: var(--ap-ink);
+}
+
+.ap-ghp__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: clamp(2.5rem, 1rem + 4.5vw, 5.5rem);
+}
+
+/* ---- Aside: photograph, pillars, download (sticky on wide screens) ---------- */
+
+.ap-ghp__aside {
+  position: sticky;
+  top: 6.5rem;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.ap-ghp__figure {
+  margin: 0;
+}
+
+.ap-ghp__photo {
+  aspect-ratio: 1055 / 873;
+  width: 100%;
+  background: #ecebe8;
+  box-shadow: 0 32px 64px -40px rgba(40, 30, 14, 0.5);
+}
+
+.ap-ghp__caption {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.ap-ghp__caption-name {
+  font-family: var(--ap-font-display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--ap-ink);
+}
+
+.ap-ghp__caption-role {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__pillars {
+  padding: 1.25rem 1.4rem;
+  border: 1px solid rgba(136, 109, 48, 0.22);
+  border-radius: var(--ap-radius-md);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.ap-ghp__pillars-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__pillars ol {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-ghp__pillars li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: baseline;
+  font-size: 0.975rem;
+  color: var(--ap-ink);
+}
+
+.ap-ghp__pillars li span {
+  font-family: var(--ap-font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__pdf {
+  position: relative;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
+  color: var(--ap-ink);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.ap-ghp__pdf::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.1rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transition:
+    opacity 0.35s var(--ap-ease-out),
+    background-color 0.35s var(--ap-ease-out);
+}
+
+.ap-ghp__pdf svg {
+  color: var(--ap-gold-ink);
+  transition: transform 0.45s var(--ap-ease-out);
+}
+
+.ap-ghp__pdf:hover::after,
+.ap-ghp__pdf:focus-visible::after {
+  opacity: 1;
+  background: var(--ap-gold-deep);
+}
+
+.ap-ghp__pdf:hover svg {
+  transform: translateY(2px);
+}
+
+.ap-ghp__pdf:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ---- Article body ------------------------------------------------------------ */
+
+.ap-ghp__body {
+  max-width: 42rem;
+}
+
+.ap-ghp__para {
+  margin: 0 0 1.35rem;
+  font-size: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem);
+  line-height: 1.85;
+  color: #3b3934;
+}
+
+/* Editorial drop cap on the opening paragraph */
+.ap-ghp__para--first::first-letter {
+  float: left;
+  margin: 0.08em 0.14em 0 0;
+  font-family: var(--ap-font-display);
+  font-size: 4.4em;
+  line-height: 0.78;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__pull {
+  margin: 2.5rem 0 2.75rem;
+  padding: 2rem 0 1.75rem;
+  border-top: 1px solid rgba(136, 109, 48, 0.3);
+  border-bottom: 1px solid rgba(136, 109, 48, 0.3);
+}
+
+.ap-ghp__pull blockquote {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.35rem);
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ap-ink);
+  text-wrap: balance;
+}
+
+.ap-ghp__pull figcaption {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+
+.ap-ghp__source {
+  margin: 2rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(28, 27, 24, 0.1);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--ap-text-muted);
+}
+
+@media (max-width: 900px) {
+  .ap-ghp__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ap-ghp__aside {
+    position: static;
+  }
+  .ap-ghp__body {
+    max-width: none;
+  }
+}

@@ -1,313 +1,283 @@
-import React from 'react';
-import { ArrowRight, ShieldAlert, MessageSquare } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate, motion, useInView, useMotionValue, useReducedMotion } from 'motion/react';
+import { ShieldAlert } from 'lucide-react';
+import SectionHeading from './ui/SectionHeading';
+import ArrowButton from './ui/ArrowButton';
+import Button from './ui/Button';
+import { Reveal } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT } from '../motion/presets';
+import { routeLinkHandler } from '../utils/navigation';
+import './SkincareShowcaseSection.css';
 
-export default function SkincareShowcaseSection({ onNavigate }) {
+// Tretinoin is a prescription-only medicine: it carries the disclaimer, never a price,
+// a basket/buy action or a list of benefits (POMs may not be promoted to the public).
+const POM_NOTICE = {
+  lead: 'Prescription-only medicine.',
+  rest: 'Available only after a consultation and clinical assessment.',
+};
+
+const SHOWCASE = [
+  {
+    id: 'kojivit_ultra',
+    name: 'Kojivit Ultra',
+    image: '/assets/images/kojivit_ultra_cream.png',
+    srcSet: '/assets/images/kojivit-ultra.webp 800w, /assets/images/kojivit_ultra_cream.png 1024w',
+    position: '50% 50%',
+    alt: 'Kojivit Ultra brightening cream, boxed and in its gold-lidded jar, on a black marble tray',
+    lead: 'Professional skincare developed for concerns including:',
+    concerns: ['Hyperpigmentation', 'Uneven skin tone', 'Skin brightening', 'Exfoliation', 'Signs of ageing'],
+    cta: 'Explore Kojivit Ultra',
+  },
+  {
+    id: 'tretinoin_prescription',
+    name: 'Tretinoin',
+    prescription: true,
+    image: '/assets/images/tretinoin_prescription.png',
+    position: '50% 50%',
+    alt: 'Two boxed tretinoin cream tubes from the clinic’s prescription range on a dark slate surface',
+    lead: 'Suitability is assessed by a prescriber during your consultation.',
+    cta: 'Book a Prescription Consultation',
+  },
+];
+
+const TOTAL = SHOWCASE.length;
+const TRACK_SPRING = { type: 'spring', stiffness: 150, damping: 26, mass: 1 };
+
+const copyVariants = {
+  off: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+  on: { transition: { staggerChildren: 0.07, delayChildren: 0.22 } },
+};
+const lineVariants = {
+  off: { opacity: 0, y: 16, transition: { duration: 0.3, ease: EASE_INOUT } },
+  on: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE_OUT } },
+};
+const STILL = { off: {}, on: {} };
+
+function BadgeTick() {
   return (
-    <section
-      style={{
-        backgroundColor: '#FAF7F2',
-        padding: '7rem 0',
-        borderBottom: '1px solid rgba(28, 27, 24, 0.08)',
-      }}
+    <svg className="ap-skincare__tick" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path
+        d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path d="m8.9 12.1 2.15 2.15 4.1-4.3" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ProductCard({ product, position, active, side, shown, reduce, onActivate, onNavigate }) {
+  const line = reduce ? STILL : lineVariants;
+  const href = '/prescription-skincare';
+  return (
+    <motion.li
+      className={`ap-skincare__card${active ? ' is-active' : ''}${product.prescription ? ' ap-skincare__card--pom' : ''}`}
+      role="group"
+      aria-roledescription="slide"
+      aria-label={`${position} of ${TOTAL}: ${product.name}`}
+      style={{ transformOrigin: side < 0 ? '100% 50%' : '0% 50%' }}
+      animate={reduce ? undefined : { scale: active ? 1 : 0.955, opacity: active ? 1 : 0.62 }}
+      transition={{ duration: 0.9, ease: EASE_OUT }}
+      onClick={active ? undefined : onActivate}
+      onFocus={active ? undefined : onActivate}
     >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Prescription & Clinical Formulations
-          </div>
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            <SplitWords>Medical-Grade Skincare</SplitWords>
-          </h2>
-          <p
-            data-reveal
-            style={{
-              color: '#4A4740',
-              fontSize: '1.05rem',
-              maxWidth: '650px',
-              margin: '0 auto',
-            }}
-          >
-            Dermatologist-formulated homecare regimes that maintain cellular turnover and accelerate post-treatment skin renewal.
-          </p>
-        </div>
+      <div className="ap-skincare__media">
+        <img
+          src={product.image}
+          srcSet={product.srcSet}
+          sizes="(min-width: 861px) 640px, 92vw"
+          alt={product.alt}
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+          style={{ objectPosition: product.position }}
+        />
+        {product.prescription ? (
+          <span className="ap-skincare__chip">
+            <ShieldAlert size={14} strokeWidth={1.8} aria-hidden="true" />
+            Prescription-only medicine
+          </span>
+        ) : null}
+      </div>
 
-        {/* 2 Product Podium Cards (Figma Exact) */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-            gap: '2.5rem',
-            maxWidth: '1060px',
-            margin: '0 auto',
-          }}
-        >
-          {/* Card 1: Kojivit Ultra */}
-          <div
-            className="card-white-elevation"
-            style={{
-              borderRadius: 'var(--radius-sm)',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              background: '#FFFFFF',
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  height: '300px',
-                  width: '100%',
-                  backgroundColor: '#F3EFE9',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '2rem',
-                  position: 'relative',
-                }}
+      <motion.div
+        className="ap-skincare__body"
+        variants={reduce ? STILL : copyVariants}
+        initial={false}
+        animate={shown ? 'on' : 'off'}
+      >
+        <motion.h3 className="ap-skincare__title" variants={line}>
+          {product.name}
+        </motion.h3>
+
+        {product.prescription ? (
+          <>
+            <motion.p className="ap-skincare__notice" role="note" variants={line}>
+              <ShieldAlert className="ap-skincare__notice-icon" size={20} strokeWidth={1.6} aria-hidden="true" />
+              <span>
+                <strong>{POM_NOTICE.lead}</strong> {POM_NOTICE.rest}
+              </span>
+            </motion.p>
+            <motion.p className="ap-skincare__lead" variants={line}>
+              {product.lead}
+            </motion.p>
+          </>
+        ) : (
+          <>
+            <motion.p className="ap-skincare__lead" variants={line}>
+              {product.lead}
+            </motion.p>
+            <ul className="ap-skincare__list">
+              {product.concerns.map((text) => (
+                <motion.li key={text} className="ap-skincare__item" variants={line}>
+                  <BadgeTick />
+                  <span>{text}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        <motion.div className="ap-skincare__cta" variants={line}>
+          <Button block href={href} onClick={routeLinkHandler(onNavigate, 'prescription-skincare')}>
+            {product.cta}
+          </Button>
+        </motion.div>
+      </motion.div>
+    </motion.li>
+  );
+}
+
+/**
+ * Section 13 — Professional Skincare Beyond the Clinic.
+ * A spring-driven track of product cards with the next card peeking in from the right.
+ * Arrows, drag/swipe, ←/→ keys and tabbing into a card all move the track.
+ */
+export default function SkincareShowcaseSection({ onNavigate }) {
+  const reduce = useReducedMotion();
+  const trackRef = useRef(null);
+  const inView = useInView(trackRef, { once: true, amount: 0.35 });
+  const [index, setIndex] = useState(0);
+  const [step, setStep] = useState(0);
+  const x = useMotionValue(0);
+  const lastStep = useRef(0);
+
+  // Distance between card starts, measured from the live layout (card width + gap).
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+    const measure = () => {
+      const card = track.firstElementChild;
+      if (!card) return;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      setStep(card.offsetWidth + gap);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const target = -index * step;
+    if (reduce || lastStep.current !== step) {
+      lastStep.current = step;
+      x.set(target);
+      return undefined;
+    }
+    const controls = animate(x, target, TRACK_SPRING);
+    return () => controls.stop();
+  }, [index, step, reduce, x]);
+
+  const go = useCallback((delta) => setIndex((current) => (current + delta + TOTAL) % TOTAL), []);
+
+  const onKeyDown = (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      go(1);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      go(-1);
+    }
+  };
+
+  const onDragEnd = (_event, info) => {
+    if (!step) return;
+    const projected = x.get() + info.velocity.x * 0.25;
+    let next = Math.round(-projected / step);
+    if (next === index) {
+      if (info.offset.x < -60) next = index + 1;
+      else if (info.offset.x > 60) next = index - 1;
+    }
+    next = Math.min(TOTAL - 1, Math.max(0, next));
+    if (next === index) animate(x, -index * step, TRACK_SPRING);
+    else setIndex(next);
+  };
+
+  return (
+    <section className="ap-skincare" aria-labelledby="ap-skincare-title">
+      <div className="ap-container">
+        <SectionHeading
+          id="ap-skincare-title"
+          className="ap-skincare__heading"
+          title="Professional Skincare"
+          accent="Beyond the Clinic"
+          align="center"
+          intro="Support your skincare journey with professional products and personalised guidance from Allure Passions UK Aesthetic Clinic."
+        />
+      </div>
+
+      <div
+        className="ap-skincare__carousel"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Professional skincare (use the left and right arrow keys to browse)"
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+      >
+        <div className="ap-skincare__viewport" data-overflow-ok>
+          <div className="ap-container">
+            <Reveal amount={0.15} delay={0.05}>
+              <motion.ul
+                ref={trackRef}
+                className="ap-skincare__track"
+                style={{ x }}
+                drag={reduce || !step ? false : 'x'}
+                dragConstraints={{ left: -(TOTAL - 1) * step, right: 0 }}
+                dragElastic={0.12}
+                dragMomentum={false}
+                onDragEnd={onDragEnd}
               >
-                <img
-                  src="/assets/images/kojivit_ultra_cream.png"
-                  alt="Kojivit Ultra Brightening Cream"
-                  loading="lazy"
-                  className="ap-float"
-                  style={{
-                    maxHeight: '100%',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 15px 25px rgba(28, 27, 24, 0.15))',
-                    transition: 'transform 0.4s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.0)';
-                  }}
-                />
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '16px',
-                    left: '16px',
-                    background: '#FFFFFF',
-                    color: '#1C1B18',
-                    fontSize: '0.68rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '2px',
-                    border: '1px solid rgba(168, 127, 61, 0.25)',
-                  }}
-                >
-                  Clinical OTC Skincare
-                </span>
-              </div>
-
-              <div style={{ padding: '2rem' }}>
-                <div style={{ fontSize: '0.75rem', color: '#A87F3D', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                  Targeted Pigment Correction
-                </div>
-
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.75rem',
-                    color: '#1C1B18',
-                    fontWeight: '600',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  Kojivit Ultra Cream
-                </h3>
-
-                <p style={{ fontSize: '0.9rem', color: '#4A4740', lineHeight: '1.65', marginBottom: '1.25rem' }}>
-                  Advanced multi-action brightening formula combining Kojic Acid Dipalmitate, Arbutin, Glycolic Acid, and Mulberry Extract to fade stubborn melasma and sun damage.
-                </p>
-
-                <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1C1B18', fontFamily: 'var(--font-serif)', marginBottom: '1.5rem' }}>
-                  £45.00 <span style={{ fontSize: '0.8rem', fontWeight: '400', color: '#7A756C' }}>/ 30g Tube</span>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ padding: '0 2rem 2rem 2rem' }}>
-              <a
-                href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20enquire%20about%20purchasing%20Kojivit%20Ultra%20Cream."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline-bronze"
-                style={{
-                  width: '100%',
-                  padding: '0.85rem',
-                  fontSize: '0.825rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  textDecoration: 'none',
-                }}
-              >
-                <MessageSquare size={15} />
-                <span>Enquire Regarding Skincare</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Card 2: Tretinoin Prescription POM */}
-          <div
-            className="card-white-elevation"
-            style={{
-              borderRadius: 'var(--radius-sm)',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              background: '#FFFFFF',
-              border: '1px solid rgba(168, 127, 61, 0.35)',
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  height: '300px',
-                  width: '100%',
-                  backgroundColor: '#F3EFE9',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '2rem',
-                  position: 'relative',
-                }}
-              >
-                <img
-                  src="/assets/images/tretinoin_prescription.png"
-                  alt="Tretinoin Prescription Skincare"
-                  loading="lazy"
-                  className="ap-float ap-float--offset"
-                  style={{
-                    maxHeight: '100%',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 15px 25px rgba(28, 27, 24, 0.15))',
-                    transition: 'transform 0.4s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.0)';
-                  }}
-                />
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '16px',
-                    left: '16px',
-                    background: '#1C1B18',
-                    color: '#D4AF37',
-                    fontSize: '0.68rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '2px',
-                    border: '1px solid rgba(212, 175, 55, 0.4)',
-                  }}
-                >
-                  Prescription Medicine (POM)
-                </span>
-              </div>
-
-              <div style={{ padding: '2rem' }}>
-                <div style={{ fontSize: '0.75rem', color: '#A87F3D', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                  Medical Retinoid Therapy
-                </div>
-
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.75rem',
-                    color: '#1C1B18',
-                    fontWeight: '600',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  Tretinoin 0.025% & 0.1%
-                </h3>
-
-                <p style={{ fontSize: '0.9rem', color: '#4A4740', lineHeight: '1.65', marginBottom: '1rem' }}>
-                  Gold-standard pure retinoic acid. Accelerates epidermal turnover, repairs cellular photodamage, and stimulates dermal collagen. Requires clinical assessment before dispensation.
-                </p>
-
-                <div
-                  style={{
-                    background: 'rgba(168, 127, 61, 0.08)',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '0.75rem',
-                    color: '#4A4740',
-                    marginBottom: '1.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <ShieldAlert size={16} color="#A87F3D" style={{ flexShrink: 0 }} />
-                  <span>Physical in-clinic collection and payment at 76 Cleveland Street.</span>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ padding: '0 2rem 2rem 2rem' }}>
-              <button
-                onClick={() => onNavigate && onNavigate('prescription-skincare')}
-                className="btn-bronze"
-                style={{
-                  width: '100%',
-                  padding: '0.85rem',
-                  fontSize: '0.825rem',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                }}
-              >
-                <span>Prescription Consultation Portal</span>
-                <ArrowRight size={15} />
-              </button>
-            </div>
+                {SHOWCASE.map((product, i) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    position={i + 1}
+                    active={i === index}
+                    side={i - index}
+                    shown={reduce || (inView && i === index)}
+                    reduce={reduce}
+                    onActivate={() => setIndex(i)}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </motion.ul>
+            </Reveal>
           </div>
         </div>
 
+        <p className="ap-visually-hidden" aria-live="polite">
+          {`${SHOWCASE[index].name}, ${index + 1} of ${TOTAL}`}
+        </p>
+
+        <Reveal className="ap-container ap-skincare__controls" delay={0.2} amount={0.5}>
+          <div className="ap-arrows">
+            <ArrowButton dir="prev" label="Previous product" onClick={() => go(-1)} />
+            <ArrowButton dir="next" label="Next product" onClick={() => go(1)} />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

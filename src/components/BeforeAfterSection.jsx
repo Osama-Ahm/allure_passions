@@ -1,402 +1,374 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Phone, MessageCircle } from 'lucide-react';
-import { CLINIC_INFO } from '../data/treatmentData';
-import SplitWords from '../motion/SplitWords';
-import CountUp from '../motion/CountUp';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  AnimatePresence,
+  LayoutGroup,
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'motion/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SectionHeading from './ui/SectionHeading';
+import { Reveal } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT, SPRING_SNAPPY, VIEWPORT } from '../motion/presets';
+import './BeforeAfterSection.css';
 
-// Divider positions for the one-time "try me" sweep, and ms per leg.
-const DEMO_STOPS = [50, 30, 68, 50];
-const DEMO_LEG_MS = 950;
-const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+// One before/after case per filter chip; `position` frames each photo in the wide frame.
+// TODO before launch: none of these are Allure Passions UK patients. Skin is the site's old
+// placeholder pair; Tightening and Body are InMode's Morpheus8 gallery photos (inmodemd.com,
+// from other clinics), used uncredited while the design is signed off. Replace them with the
+// clinic's own consented patient photos, or credit them (with the distributor's permission)
+// and change the intro copy, which says these are treatments performed at the clinic.
+const CASES = [
+  {
+    id: 'skin',
+    label: 'Skin',
+    before: {
+      src: '/assets/images/before_face.jpg',
+      alt: 'Before: close-up of facial skin with freckling and uneven pigmentation across the nose and cheek',
+    },
+    after: {
+      src: '/assets/images/after_face.jpg',
+      alt: 'After: the same view of the face with a clearer, more even skin tone',
+    },
+  },
+  {
+    id: 'tightening',
+    label: 'Tightening',
+    position: '50% 58%',
+    before: {
+      src: '/assets/images/results/tightening-face-before.webp',
+      alt: 'Before: the lower face with deep lines around the mouth and softening along the jawline',
+    },
+    after: {
+      src: '/assets/images/results/tightening-face-after.webp',
+      alt: 'After: the same lower face looking firmer and smoother, with softer lines around the mouth',
+    },
+  },
+  {
+    id: 'body',
+    label: 'Body',
+    position: '50% 52%',
+    before: {
+      src: '/assets/images/results/body-abdomen-before.webp',
+      alt: 'Before: the skin around the navel with deep crepey folds and loose texture',
+    },
+    after: {
+      src: '/assets/images/results/body-abdomen-after.webp',
+      alt: 'After: the same area with visibly smoother, tighter skin around the navel',
+    },
+  },
+];
 
-export default function BeforeAfterSection() {
-  const [sliderPos, setSliderPos] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
-  const containerRef = useRef(null);
-  const hasInteracted = useRef(false);
+const SLIDER_MIN = 4;
+const SLIDER_MAX = 96;
+const clamp = (value) => Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, value));
 
-  // When the comparison first comes into view, sweep the divider once to show it can be dragged.
+// Follows the pointer closely but glides when the handle jumps (click, tap, keys).
+const HANDLE_SPRING = { stiffness: 560, damping: 48, mass: 0.55 };
+// A gentle left-right sway that shows the comparison can be dragged.
+const HINT_FRAMES = [50, 40, 60, 50];
+
+/**
+ * Draggable before/after comparison. Position lives in a motion value, so dragging never
+ * re-renders React; the before layer is clipped and the handle is translated on the GPU.
+ */
+function CompareSlider({ item, hint }) {
+  const reduce = useReducedMotion();
+  // The drag hint (and the slower handle pop after the frame's opening wipe) is for the first case only.
+  const hintPending = useRef(hint);
+  const [handleDelay] = useState(hint ? 0.95 : 0.3);
+  const frameRef = useRef(null);
+  const handleRef = useRef(null);
+  const ringRef = useRef(null);
+  const gesture = useRef(null);
+  const stopHint = useRef(() => {});
+  const [dragging, setDragging] = useState(false);
+
+  const target = useMotionValue(50);
+  const smooth = useSpring(target, HANDLE_SPRING);
+  const position = reduce ? target : smooth;
+  const clipPath = useTransform(position, (v) => `inset(0 ${100 - v}% 0 0)`);
+  const x = useTransform(position, (v) => `${v}%`);
+
+  useMotionValueEvent(target, 'change', (value) => {
+    const handle = handleRef.current;
+    if (!handle) return;
+    const rounded = Math.round(value);
+    handle.setAttribute('aria-valuenow', String(rounded));
+    handle.setAttribute('aria-valuetext', `${rounded}% before, ${100 - rounded}% after`);
+  });
+
+  // One-time idle hint the first time the comparison is properly in view.
+  const inView = useInView(frameRef, { once: true, amount: 0.6 });
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-    let frame = 0;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        const start = performance.now() + 700;
-        const tick = (now) => {
-          if (hasInteracted.current) return;
-          const elapsed = (now - start) / DEMO_LEG_MS;
-          const leg = Math.floor(elapsed);
-          if (elapsed >= 0 && leg >= DEMO_STOPS.length - 1) {
-            setSliderPos(DEMO_STOPS[DEMO_STOPS.length - 1]);
-            return;
-          }
-          if (elapsed >= 0) {
-            const from = DEMO_STOPS[leg];
-            const to = DEMO_STOPS[leg + 1];
-            setSliderPos(from + (to - from) * easeInOutCubic(elapsed - leg));
-          }
-          frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
-      },
-      { threshold: 0.6 }
-    );
-    observer.observe(container);
-
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
+    if (!inView || reduce || !hintPending.current) return undefined;
+    hintPending.current = false;
+    const running = [];
+    let started = false;
+    const timer = window.setTimeout(() => {
+      started = true;
+      running.push(animate(target, HINT_FRAMES, { duration: 2.8, ease: 'easeInOut', times: [0, 0.3, 0.72, 1] }));
+      if (ringRef.current) {
+        running.push(
+          animate(
+            ringRef.current,
+            { scale: [1, 1.9], opacity: [0.55, 0] },
+            { duration: 1.4, ease: 'easeOut', repeat: 1, repeatDelay: 0.2 },
+          ),
+        );
+      }
+    }, 1100);
+    const stop = () => {
+      window.clearTimeout(timer);
+      running.forEach((controls) => controls.stop());
     };
+    stopHint.current = stop;
+    return () => {
+      stop();
+      // Torn down before it began (e.g. a dev StrictMode re-run): let the next run play it.
+      if (!started) hintPending.current = true;
+    };
+  }, [inView, reduce, target]);
+
+  const valueFromClientX = useCallback((clientX) => {
+    const rect = frameRef.current.getBoundingClientRect();
+    return clamp(((clientX - rect.left) / rect.width) * 100);
   }, []);
 
-  const updatePosition = useCallback((clientX) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const offsetX = clientX - rect.left;
-    const percentage = (offsetX / rect.width) * 100;
-    setSliderPos(Math.min(Math.max(percentage, 5), 95));
-  }, []);
-
-  const handleMouseDown = () => {
-    hasInteracted.current = true;
-    setIsDragging(true);
-  };
-  const handleMouseUp = () => setIsDragging(false);
-
-  const handleMouseMove = (e) => {
-    if (!isDragging && e.buttons !== 1) return;
-    updatePosition(e.clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    hasInteracted.current = true;
-    if (e.touches && e.touches[0]) {
-      updatePosition(e.touches[0].clientX);
+  const onPointerDown = (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    stopHint.current();
+    gesture.current = { id: event.pointerId, startX: event.clientX, startY: event.clientY, active: false };
+    // Mouse and pen drag straight away; touch waits to see if the swipe is horizontal (so the page can still scroll).
+    if (event.pointerType !== 'touch') {
+      event.preventDefault();
+      gesture.current.active = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      target.set(valueFromClientX(event.clientX));
+      handleRef.current?.focus({ preventScroll: true });
+      setDragging(true);
     }
   };
 
-  const whatsappUrl = `https://wa.me/447342052249?text=${encodeURIComponent(
-    'Hello Allure Passions UK, I would like to consult regarding the Before & After facial rejuvenation protocol.'
-  )}`;
+  const onPointerMove = (event) => {
+    const g = gesture.current;
+    if (!g || g.id !== event.pointerId) return;
+    if (!g.active) {
+      const dx = Math.abs(event.clientX - g.startX);
+      const dy = Math.abs(event.clientY - g.startY);
+      if (dx < 6 || dx < dy) return;
+      g.active = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDragging(true);
+    }
+    target.set(valueFromClientX(event.clientX));
+  };
+
+  const endGesture = (event) => {
+    const g = gesture.current;
+    if (!g || g.id !== event.pointerId) return;
+    // A tap without a drag moves the divider to the tapped point.
+    if (!g.active && event.type === 'pointerup') target.set(valueFromClientX(event.clientX));
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    gesture.current = null;
+    setDragging(false);
+  };
+
+  const onKeyDown = (event) => {
+    const step = event.shiftKey ? 10 : 2;
+    const current = target.get();
+    const next = {
+      ArrowLeft: current - step,
+      ArrowDown: current - step,
+      ArrowRight: current + step,
+      ArrowUp: current + step,
+      PageDown: current - 10,
+      PageUp: current + 10,
+      Home: SLIDER_MIN,
+      End: SLIDER_MAX,
+    }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    stopHint.current();
+    target.set(clamp(next));
+  };
 
   return (
-    <section
-      style={{
-        backgroundColor: '#FAF7F2',
-        padding: '7rem 0',
-        borderBottom: '1px solid rgba(28, 27, 24, 0.08)',
-      }}
+    <div
+      ref={frameRef}
+      className={`ap-results__compare${dragging ? ' is-dragging' : ''}`}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endGesture}
+      onPointerCancel={endGesture}
     >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Verified Clinical Outcomes
-          </div>
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.3rem, 4.2vw, 3.4rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            <SplitWords>Real Results & Patient Transformations</SplitWords>
-          </h2>
-          <p
-            data-reveal
-            style={{
-              color: '#4A4740',
-              fontSize: '1.05rem',
-              maxWidth: '640px',
-              margin: '0 auto',
-            }}
-          >
-            Slide the interactive divider horizontally to reveal the before and after transformation.
-          </p>
-        </div>
+      <div className="ap-results__layer">
+        <img
+          className="ap-results__img"
+          src={item.after.src}
+          alt={item.after.alt}
+          style={item.position ? { objectPosition: item.position } : undefined}
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        />
+        <span className="ap-results__label ap-results__label--after" aria-hidden="true">
+          After
+        </span>
+      </div>
 
-        {/* Before & After Interactive Showcase Container */}
-        <div
-          data-reveal="frame"
-          style={{
-            maxWidth: '1000px',
-            margin: '0 auto',
-            background: '#FFFFFF',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid rgba(168, 127, 61, 0.25)',
-            boxShadow: '0 20px 45px rgba(28, 27, 24, 0.08)',
-            overflow: 'hidden',
-          }}
+      <motion.div className="ap-results__layer ap-results__layer--before" style={{ clipPath }}>
+        <img
+          className="ap-results__img"
+          src={item.before.src}
+          alt={item.before.alt}
+          style={item.position ? { objectPosition: item.position } : undefined}
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        />
+        <span className="ap-results__label ap-results__label--before" aria-hidden="true">
+          Before
+        </span>
+      </motion.div>
+
+      <motion.div className="ap-results__divider" style={{ x }}>
+        <span className="ap-results__rule" aria-hidden="true" />
+        <motion.div
+          className="ap-results__handle-pop"
+          initial={reduce ? false : { opacity: 0, scale: 0.4 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={VIEWPORT}
+          transition={{ ...SPRING_SNAPPY, delay: handleDelay }}
         >
-          {/* Comparison Viewport */}
           <div
-            ref={containerRef}
-            style={{
-              position: 'relative',
-              height: '520px',
-              width: '100%',
-              overflow: 'hidden',
-              cursor: 'ew-resize',
-              userSelect: 'none',
-              backgroundColor: '#ECE7DF',
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onTouchMove={handleTouchMove}
-            onClick={(e) => {
-              hasInteracted.current = true;
-              updatePosition(e.clientX);
-            }}
+            ref={handleRef}
+            className="ap-results__handle"
+            role="slider"
+            tabIndex={0}
+            aria-label="Before and after comparison"
+            aria-orientation="horizontal"
+            aria-valuemin={SLIDER_MIN}
+            aria-valuemax={SLIDER_MAX}
+            aria-valuenow={50}
+            aria-valuetext="50% before, 50% after"
+            onKeyDown={onKeyDown}
           >
-            {/* 1. Base Layer: AFTER Image (Visible on the Right) */}
-            <img
-              src="/assets/images/after_face.jpg"
-              alt="After treatment outcome"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 25%',
-                pointerEvents: 'none',
-              }}
-            />
-
-            {/* 2. Top Layer: BEFORE Image (Clipped Dynamically from the Right) */}
-            <img
-              src="/assets/images/before_face.jpg"
-              alt="Before treatment condition"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 25%',
-                clipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
-                WebkitClipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
-                pointerEvents: 'none',
-              }}
-            />
-
-            {/* Floating Badge: Before Treatment */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '20px',
-                left: '20px',
-                background: 'rgba(20, 19, 17, 0.85)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                color: '#FFFFFF',
-                fontSize: '0.72rem',
-                fontWeight: '600',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '0.45rem 1rem',
-                borderRadius: '2px',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                pointerEvents: 'none',
-                zIndex: 10,
-              }}
-            >
-              Before Treatment
-            </div>
-
-            {/* Floating Badge: After Treatment */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                background: 'var(--bronze-gradient)',
-                color: '#FFFFFF',
-                fontSize: '0.72rem',
-                fontWeight: '600',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '0.45rem 1rem',
-                borderRadius: '2px',
-                boxShadow: '0 4px 14px rgba(168, 127, 61, 0.45)',
-                pointerEvents: 'none',
-                zIndex: 10,
-              }}
-            >
-              After Clinical Protocol
-            </div>
-
-            {/* Interactive Vertical Divider Line & Gold Handle */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: `${sliderPos}%`,
-                width: '2px',
-                background: '#FFFFFF',
-                boxShadow: '0 0 12px rgba(0, 0, 0, 0.5)',
-                pointerEvents: 'none',
-                zIndex: 20,
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  background: 'var(--bronze-gradient)',
-                  border: '2px solid #FFFFFF',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.35)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontSize: '0.85rem',
-                  fontWeight: '700',
-                }}
-              >
-                ⟷
-              </div>
-            </div>
-
-            {/* Subtle Drag Instruction */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '16px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'rgba(20, 19, 17, 0.7)',
-                backdropFilter: 'blur(6px)',
-                color: '#ECE8E1',
-                fontSize: '0.7rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                padding: '0.3rem 0.8rem',
-                borderRadius: 'var(--radius-full)',
-                pointerEvents: 'none',
-                zIndex: 10,
-              }}
-            >
-              Drag Handle to Compare
-            </div>
+            <span ref={ringRef} className="ap-results__ring" aria-hidden="true" />
+            <span className="ap-results__handle-core" aria-hidden="true">
+              <ChevronLeft size={18} strokeWidth={2} />
+              <ChevronRight size={18} strokeWidth={2} />
+            </span>
           </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
 
-          {/* Clinical Details Bar (Direct Phone/WhatsApp - Zero Contact Forms) */}
-          <div
-            style={{
-              padding: '2.2rem 2.5rem',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: '2rem',
-              alignItems: 'center',
-              backgroundColor: '#FFFFFF',
-            }}
+/**
+ * Section 7 — Real Treatments. Real Patient Journeys.
+ * Filter chips (gliding gold pill), each showing its own draggable before/after frame.
+ */
+export default function BeforeAfterSection() {
+  const reduce = useReducedMotion();
+  const [caseId, setCaseId] = useState(CASES[0].id);
+  const [switched, setSwitched] = useState(false);
+  const current = CASES.find((entry) => entry.id === caseId);
+
+  const choose = (id) => {
+    if (id === caseId) return;
+    setCaseId(id);
+    setSwitched(true);
+  };
+  // Watch an unclipped wrapper: Chrome's IntersectionObserver honours the frame's own clip-path,
+  // so a frame that starts fully clipped would never register as in view.
+  const frameAnchorRef = useRef(null);
+  const frameInView = useInView(frameAnchorRef, VIEWPORT);
+
+  return (
+    <section id="results" className="ap-section ap-results" aria-labelledby="ap-results-title">
+      <div className="ap-container">
+        <SectionHeading
+          id="ap-results-title"
+          className="ap-results__heading"
+          align="center"
+          title="Real Treatments."
+          accent="Real Patient Journeys."
+          intro="Explore a selection of before-and-after results from treatments performed at Allure Passions UK Aesthetic Clinic."
+          note="Every patient is different, and results can vary depending on the individual, treatment and treatment plan."
+        />
+
+        <Reveal delay={0.3} className="ap-results__filters-wrap">
+          <LayoutGroup id="ap-results-filters">
+            <div className="ap-results__filters" role="group" aria-label="Filter results by category">
+              {CASES.map((entry) => {
+                const active = entry.id === caseId;
+                return (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    className={`ap-results__chip${active ? ' is-active' : ''}`}
+                    aria-pressed={active}
+                    aria-controls="ap-results-frame"
+                    onClick={() => choose(entry.id)}
+                  >
+                    {active ? (
+                      <motion.span
+                        layoutId="ap-results-pill"
+                        className="ap-results__pill"
+                        transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 36 }}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <span className="ap-results__chip-label">{entry.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </LayoutGroup>
+        </Reveal>
+
+        <div ref={frameAnchorRef} className="ap-results__frame-anchor">
+          <motion.div
+            id="ap-results-frame"
+            className="ap-results__frame"
+            role="group"
+            aria-label="Before and after results"
+            initial={reduce ? false : { clipPath: 'inset(0% 50% 0% 50% round 24px)' }}
+            animate={frameInView ? { clipPath: 'inset(0% 0% 0% 0% round 24px)' } : undefined}
+            transition={{ duration: 1.3, ease: EASE_INOUT }}
           >
-            <div>
-              <div style={{ fontSize: '0.75rem', color: '#A87F3D', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.25rem' }}>
-                Synergy Protocol
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', color: '#1C1B18', fontWeight: '600' }}>
-                PicoWay® Laser + Morpheus8™
-              </h3>
-              <p style={{ fontSize: '0.875rem', color: '#4A4740', marginTop: '0.35rem', lineHeight: '1.5' }}>
-                Pigment clearance & collagen contraction achieved over 3 tailored sessions.
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', gap: '2rem' }}>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#1C1B18', fontFamily: 'var(--font-serif)' }}>
-                  3 Sessions
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#7A756C' }}>Clinical Course</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#1C1B18', fontFamily: 'var(--font-serif)' }}>
-                  Zero
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#7A756C' }}>Social Downtime</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#A87F3D', fontFamily: 'var(--font-serif)' }}>
-                  <CountUp to={100} suffix="%" />
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#7A756C' }}>Patient Satisfaction</div>
-              </div>
-            </div>
-
-            {/* Direct Consultation Triggers (Strictly No Form Popups) */}
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-bronze"
-                style={{
-                  padding: '0.8rem 1.4rem',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  textDecoration: 'none',
-                }}
-              >
-                <MessageCircle size={15} />
-                <span>WhatsApp Clinic</span>
-              </a>
-
-              <a
-                href={`tel:${CLINIC_INFO.phone}`}
-                className="btn-outline-bronze"
-                style={{
-                  padding: '0.8rem 1.2rem',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  textDecoration: 'none',
-                }}
-              >
-                <Phone size={14} />
-                <span>Call Practice</span>
-              </a>
-            </div>
-          </div>
-
+            <motion.div
+              className="ap-results__zoom"
+              initial={reduce ? false : { scale: 1.12 }}
+              animate={frameInView ? { scale: 1 } : undefined}
+              transition={{ duration: 1.8, ease: EASE_OUT }}
+            >
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={current.id}
+                  className="ap-results__stage"
+                  initial={{ opacity: 0, scale: 1.035 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={reduce ? { duration: 0 } : { duration: 0.7, ease: EASE_OUT }}
+                >
+                  <CompareSlider item={current} hint={!switched} />
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
         </div>
 
+        <p className="ap-visually-hidden" aria-live="polite">
+          {`Showing ${current.label.toLowerCase()} result.`}
+        </p>
       </div>
     </section>
   );

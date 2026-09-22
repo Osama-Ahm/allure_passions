@@ -1,0 +1,443 @@
+/* Section 15 — Footer (rendered on every route) */
+
+.ap-footer {
+  --ap-footer-ground: #060505;
+  --ap-footer-line: rgba(255, 255, 255, 0.18);
+  --ap-footer-chip: #1f1d1b;
+  --ap-footer-icon: #c5a880;
+  --ap-mono-w: 175px; /* width of the AP glyphs themselves */
+  position: relative;
+  overflow: hidden;
+  background: var(--ap-footer-ground);
+  color: var(--ap-white);
+  font-family: var(--ap-font-sans);
+}
+
+.ap-footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 329fr) minmax(0, 961fr);
+  align-items: start;
+  padding-top: 5.35rem;
+  padding-bottom: 5.4rem;
+}
+
+/* ---- Monogram --------------------------------------------------------- */
+.ap-footer__brand {
+  padding-top: 0.2rem;
+}
+
+.ap-footer__drift {
+  width: max-content;
+  will-change: transform;
+}
+
+.ap-footer__mono-link {
+  display: block;
+  /* The PNG has a transparent margin: pull it back so the glyphs sit on the grid line. */
+  margin: calc(var(--ap-mono-w) * -0.0424);
+  border-radius: 4px;
+}
+
+.ap-footer__mono-frame {
+  display: block;
+  overflow: clip;
+  width: calc(var(--ap-mono-w) * 1.0848);
+  aspect-ratio: 614 / 740;
+}
+
+.ap-footer__mono {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.ap-footer__mono img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  transition: filter 0.6s var(--ap-ease-out);
+}
+
+/* A light glint that travels across the gold, clipped to the letterforms. */
+.ap-footer__sheen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: url('/assets/images/allure_logo.png') center / 100% 100% no-repeat;
+  mask: url('/assets/images/allure_logo.png') center / 100% 100% no-repeat;
+}
+
+.ap-footer__glint,
+.ap-footer__sheen::after {
+  position: absolute;
+  inset: -10% -40%;
+  background: linear-gradient(
+    102deg,
+    transparent 38%,
+    rgba(255, 246, 222, 0.08) 44%,
+    rgba(255, 248, 230, 0.7) 50%,
+    rgba(255, 246, 222, 0.08) 56%,
+    transparent 62%
+  );
+}
+
+.ap-footer__glint {
+  display: block;
+  transform: translateX(-110%);
+}
+
+.ap-footer__sheen::after {
+  content: '';
+  transform: translateX(-110%);
+}
+
+@media (hover: hover) {
+  .ap-footer__mono-link:hover .ap-footer__sheen::after {
+    transform: translateX(110%);
+    transition: transform 1.3s cubic-bezier(0.45, 0, 0.2, 1);
+  }
+
+  .ap-footer__mono-link:hover img {
+    filter: brightness(1.06) saturate(1.05);
+  }
+}
+
+.ap-footer__mono-link:focus-visible {
+  outline: 2px solid var(--ap-gold);
+  outline-offset: 6px;
+}
+
+/* ---- Link columns ----------------------------------------------------- */
+.ap-footer__nav {
+  display: grid;
+  grid-template-columns: minmax(0, 371fr) minmax(0, 371fr) minmax(0, 219fr);
+}
+
+.ap-footer__col {
+  min-width: 0;
+}
+
+.ap-footer__heading {
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem); /* 36px @1440 */
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: var(--ap-white);
+}
+
+.ap-footer__list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.3rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-footer__item {
+  font-size: 1rem;
+  font-weight: 300; /* white on near-black renders heavier than the Figma; Light matches it */
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.ap-footer__text,
+.ap-footer__link {
+  color: var(--ap-white);
+}
+
+.ap-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: color 0.45s var(--ap-ease-out);
+}
+
+/* Gold hairline that draws in from the left and retracts to the right. */
+.ap-footer__link-text {
+  position: relative;
+}
+
+.ap-footer__link-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.3em;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ap-gold), var(--ap-gold-soft));
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.55s var(--ap-ease-out);
+}
+
+.ap-footer__link-icon {
+  flex: none;
+  color: var(--ap-gold);
+  opacity: 0;
+  transform: translate(-4px, 3px);
+  transition:
+    opacity 0.4s var(--ap-ease-out),
+    transform 0.5s var(--ap-ease-out);
+}
+
+.ap-footer__link:hover,
+.ap-footer__link:focus-visible,
+.ap-footer__address:hover,
+.ap-footer__address:focus-visible {
+  color: #f3e7cb;
+}
+
+.ap-footer__link:hover .ap-footer__link-text::after,
+.ap-footer__link:focus-visible .ap-footer__link-text::after,
+.ap-footer__address:hover .ap-footer__link-text::after,
+.ap-footer__address:focus-visible .ap-footer__link-text::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.ap-footer__link:hover .ap-footer__link-icon,
+.ap-footer__link:focus-visible .ap-footer__link-icon {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.ap-footer__link:focus-visible,
+.ap-footer__address:focus-visible,
+.ap-footer__icon:focus-visible {
+  outline: 2px solid var(--ap-gold);
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+/* Instagram + mail chips under the Consultation links */
+.ap-footer__social {
+  display: flex;
+  gap: 0.95rem;
+  margin-top: 1.95rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-footer__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--ap-footer-chip);
+  color: var(--ap-footer-icon);
+  box-shadow: inset 0 0 0 1px rgba(221, 196, 140, 0);
+  transition:
+    background-color 0.45s var(--ap-ease-out),
+    color 0.45s var(--ap-ease-out),
+    box-shadow 0.45s var(--ap-ease-out);
+}
+
+.ap-footer__icon:hover {
+  background: var(--ap-gold);
+  color: var(--ap-ink);
+  box-shadow: 0 10px 24px -12px rgba(221, 196, 140, 0.7);
+}
+
+.ap-footer__icon:focus-visible {
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(221, 196, 140, 0.8);
+}
+
+/* ---- Bottom bar ------------------------------------------------------- */
+.ap-footer__bar {
+  position: relative;
+}
+
+.ap-footer__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ap-footer-line);
+  transform-origin: left center;
+}
+
+.ap-footer__bar-inner {
+  font-weight: 300; /* matches the Figma's light footer type on near-black */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  min-height: 5rem;
+  padding-block: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.ap-footer__address {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ap-white);
+  text-decoration: none;
+  transition: color 0.45s var(--ap-ease-out);
+}
+
+.ap-footer__pin {
+  flex: none;
+  color: var(--ap-footer-icon);
+}
+
+.ap-footer__legal {
+  color: var(--ap-white);
+}
+
+/* ---- Laptop ----------------------------------------------------------- */
+@media (max-width: 1199px) {
+  .ap-footer {
+    --ap-mono-w: clamp(118px, 12vw, 150px);
+  }
+
+  .ap-footer__top {
+    grid-template-columns: minmax(0, 0.62fr) minmax(0, 3fr);
+    column-gap: 2rem;
+    padding-top: 4.75rem;
+    padding-bottom: 4.75rem;
+  }
+
+  .ap-footer__nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+}
+
+/* ---- Tablet: monogram above, three columns below ---------------------- */
+@media (max-width: 899px) {
+  .ap-footer {
+    --ap-mono-w: 104px;
+  }
+
+  .ap-footer__top {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 3.25rem;
+    padding-top: 4rem;
+    padding-bottom: 3.75rem;
+  }
+
+  .ap-footer__brand {
+    padding-top: 0;
+  }
+
+  .ap-footer__nav {
+    column-gap: 1.75rem;
+  }
+
+  .ap-footer__list {
+    gap: 0.9rem;
+    margin-top: 1.1rem;
+  }
+
+  .ap-footer__item {
+    font-size: 0.9375rem;
+  }
+
+  .ap-footer__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .ap-footer__social {
+    margin-top: 1.5rem;
+  }
+}
+
+/* ---- Phone: stacked columns with hairlines between -------------------- */
+@media (max-width: 639px) {
+  .ap-footer {
+    --ap-mono-w: 88px;
+  }
+
+  .ap-footer__top {
+    row-gap: 2.5rem;
+    padding-top: 3.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .ap-footer__nav {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+  }
+
+  .ap-footer__col {
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--ap-footer-line);
+  }
+
+  .ap-footer__col:last-child {
+    padding-bottom: 0;
+  }
+
+  .ap-footer__list {
+    gap: 0;
+    margin-top: 0.6rem;
+  }
+
+  .ap-footer__item {
+    font-size: 1rem;
+  }
+
+  /* 44px touch rows */
+  .ap-footer__link,
+  .ap-footer__text {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .ap-footer__social {
+    margin-top: 0.75rem;
+  }
+
+  .ap-footer__bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding-block: 1.75rem 2rem;
+    font-size: 0.9375rem;
+  }
+
+  .ap-footer__address {
+    align-items: flex-start;
+    min-height: 2.75rem;
+  }
+
+  .ap-footer__pin {
+    margin-top: 0.1rem;
+  }
+
+  .ap-footer__legal {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.875rem;
+  }
+}
+
+/* index.css forces h2 sizes on small phones; keep the footer headings on their scale. */
+@media screen and (max-width: 480px) {
+  .ap-footer .ap-footer__heading {
+    font-size: 1.875rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-footer__sheen::after,
+  .ap-footer__link-text::after,
+  .ap-footer__link-icon {
+    transition: none !important;
+  }
+}

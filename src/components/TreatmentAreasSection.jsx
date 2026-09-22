@@ -1,669 +1,596 @@
-import React, { useState } from 'react';
-import { ArrowRight, Sparkles, MessageCircle } from 'lucide-react';
-import SplitWords from '../motion/SplitWords';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  AnimatePresence,
+  LayoutGroup,
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
+import TextReveal from '../motion/TextReveal';
+import { Reveal } from '../motion/Reveal';
+import { EASE_INOUT, EASE_OUT, SPRING_SNAPPY } from '../motion/presets';
+import Button from './ui/Button';
+import ArrowButton from './ui/ArrowButton';
+import { POPULAR_TREATMENTS } from '../data/treatmentData';
+import { SHOW_CONCERNS_EVENT, routeLinkHandler } from '../utils/navigation';
+import './TreatmentAreasSection.css';
 
-const TREATMENT_AREAS = [
+// Path A: start from the concern. Order follows the Figma (Redness, Ageing, Stubborn Fat first).
+const CONCERN_CARDS = [
   {
-    id: 'lips',
-    name: 'Lips & Perioral',
-    category: 'Face',
-    image: '/assets/images/area_lips.jpg',
-    imagePosition: 'center',
-    headline: 'Natural Volume & Perioral Smoothing',
-    treatments: 'ADVATx® Laser Lip Plump • Dermal Hydration',
-    description: 'Subtle perioral definition, fine line softening, and non-injectable laser lip plumping without migration.',
+    key: 'rosacea',
+    title: 'Redness & Rosacea',
+    area: 'Skin',
+    via: 'ADVATx',
+    image: '/assets/images/concern_rosacea.jpg',
+    position: '38% 50%',
+    alt: 'Gloved practitioner guiding a laser handpiece over a patient’s cheek',
     treatmentId: 'advatx',
   },
   {
-    id: 'cheeks',
-    name: 'Cheeks & Mid-Face',
-    category: 'Face',
-    image: '/assets/images/area_cheeks.jpg',
-    imagePosition: 'center',
-    headline: 'Malar Lifting & Structural Support',
-    treatments: 'Sofwave™ Ultrasound • Morpheus8™ RF',
-    description: 'Restores natural mid-face architecture, tightens nasolabial laxity, and stimulates deep collagen synthesis.',
+    key: 'ageing',
+    title: 'Ageing Skin',
+    area: 'Skin',
+    via: 'Morpheus8, Sofwave',
+    image: '/assets/images/concern_skin_laxity.jpg',
+    position: '74% 50%',
+    alt: 'Patient reclined while a practitioner treats her jawline with a handpiece',
     treatmentId: 'morpheus8',
   },
   {
-    id: 'eyes',
-    name: 'Eyes & Upper Face',
-    category: 'Face',
-    image: '/assets/images/area_eyes.jpg',
-    imagePosition: 'center',
-    headline: 'Non-Surgical Brow & Eye Rejuvenation',
-    treatments: 'Sofwave™ Brow Lift • PicoWay® Smooth',
-    description: 'Lifts hooded brows, softens crow’s feet, and clears dark periorbital hyperpigmentation safely.',
-    treatmentId: 'sofwave',
-  },
-  {
-    id: 'jawline',
-    name: 'Jawline & Neck',
-    category: 'Face',
-    image: '/assets/images/area_jawline.jpg',
-    imagePosition: 'center',
-    headline: 'Subdermal Definition & Platysma Tightening',
-    treatments: 'Morpheus8™ Deep Remodeling • Sofwave™',
-    description: 'Sculpts the lower third, contracts loose submental tissue, and sharpens mandibular angle definition.',
-    treatmentId: 'morpheus8',
-  },
-  {
-    id: 'body',
-    name: 'Body Contouring',
-    category: 'Body',
-    image: '/assets/images/area_body.jpg',
-    imagePosition: 'center',
-    headline: 'Dual Fat Elimination & Core Strengthening',
-    treatments: 'Emsculpt Neo® • Emerald™ Laser Lipo',
-    description: 'Non-invasive HIFEM magnetic muscle toning combined with radiofrequency fat apoptosis and cold laser detox.',
+    key: 'stubborn-fat',
+    title: 'Stubborn Fat',
+    area: 'Body',
+    via: 'Emsculpt Neo',
+    image: '/assets/images/concern_stubborn_fat.jpg',
+    position: '56% 50%',
+    alt: 'Patient lying on a treatment bed with a body-contouring applicator on her abdomen',
     treatmentId: 'emsculpt_neo',
   },
-];
-
-const CLINICAL_CONCERNS = [
   {
-    id: 'hyperpigmentation',
-    name: 'Hyperpigmentation & Melasma',
-    category: 'Pigmentation & Tone',
+    key: 'pigmentation',
+    title: 'Melasma & Pigmentation',
+    area: 'Skin',
+    via: 'PicoWay',
     image: '/assets/images/concern_hyperpigmentation.jpg',
-    headline: 'Picosecond Photo-Acoustic Pigment Shattering',
-    leadPlatform: 'PicoWay® Laser & Cosmelan® Depigmentation',
-    description: 'Shatters deep hormonal melasma, post-acne dark spots, and solar lentigines into microscopic dust without heat damage.',
-    targetId: 'picoway',
-    pricing: 'From £329',
+    position: '40% 50%',
+    alt: 'Patient in protective eyewear during a laser skin treatment',
+    treatmentId: 'picoway',
   },
   {
-    id: 'rosacea_vascular',
-    name: 'Rosacea & Facial Veins',
-    category: 'Vascular & Redness',
-    image: '/assets/images/concern_rosacea.jpg',
-    headline: 'Dual 589nm / 1319nm Vascular Photocoagulation',
-    leadPlatform: 'ADVATx® Solid-State Vascular Laser',
-    description: 'Eliminates broken capillaries, chronic flushing, and red inflammatory acne lesions with zero crusting or social downtime.',
-    targetId: 'advatx',
-    pricing: 'From £150',
-  },
-  {
-    id: 'skin_laxity',
-    name: 'Skin Laxity & Jowl Sagging',
-    category: 'Skin Tightening',
-    image: '/assets/images/concern_skin_laxity.jpg',
-    headline: 'Ultrasound SMAS Elevation & RF Collagen Contracture',
-    leadPlatform: 'Sofwave™ SUPERB™ & Morpheus8™ RF',
-    description: 'Contracts sagging cheek tissues, tightens submental double chins, and lifts the mandibular line non-surgically.',
-    targetId: 'sofwave',
-    pricing: 'From £795',
-  },
-  {
-    id: 'acne_scarring',
-    name: 'Acne Scarring & Texture',
-    category: 'Acne & Texture',
+    key: 'acne-scarring',
+    title: 'Acne Scarring',
+    area: 'Skin',
+    via: 'Morpheus8, PicoWay',
     image: '/assets/images/concern_acne_scarring.jpg',
-    headline: 'Subdermal Fractional Coagulation & Remodeling',
-    leadPlatform: 'Morpheus8™ Fractional RF Microneedling',
-    description: 'Restructures fibrotic scar tissue, smooths rolling and boxcar scars, and refines enlarged pores up to 4mm deep.',
-    targetId: 'morpheus8',
-    pricing: 'From £349',
+    position: '46% 50%',
+    alt: 'Microneedling handpiece held against a patient’s cheek',
+    treatmentId: 'morpheus8',
   },
   {
-    id: 'stubborn_fat',
-    name: 'Stubborn Fat & Muscle Tone',
-    category: 'Body Sculpting',
-    image: '/assets/images/concern_stubborn_fat.jpg',
-    headline: 'HIFEM+ Hypertrophy & Synchronous RF Apoptosis',
-    leadPlatform: 'Emsculpt Neo® & Emerald™ Green Laser Lipo',
-    description: 'Builds 25% more muscle while permanently eliminating 30% localized subcutaneous fat in 30-minute clinical sessions.',
-    targetId: 'emsculpt_neo',
-    pricing: 'From £449',
-  },
-  {
-    id: 'tattoo_removal',
-    name: 'Tattoo Ink Removal',
-    category: 'Pigmentation & Tone',
+    key: 'tattoo',
+    title: 'Tattoo Removal',
+    area: 'Laser',
+    via: 'PicoWay',
     image: '/assets/images/concern_tattoo_removal.jpg',
-    headline: 'Multi-Wavelength Picosecond Ink Clearance',
-    leadPlatform: 'PicoWay® Laser (1064nm, 532nm, 730nm)',
-    description: 'Clears black, red, green, and blue tattoo inks safely across all skin phototypes in fewer treatment appointments.',
-    targetId: 'picoway',
-    pricing: 'From £63',
+    position: '47% 50%',
+    alt: 'Laser handpiece treating a tattoo on a forearm',
+    treatmentId: 'picoway',
   },
   {
-    id: 'hooded_brows',
-    name: 'Hooded Brows & Crow’s Feet',
-    category: 'Skin Tightening',
-    image: '/assets/images/concern_hooded_brows.jpg',
-    headline: '1.5mm Acoustic Parallel Beam Brow Lifting',
-    leadPlatform: 'Sofwave™ SUPERB™ Ultrasound',
-    description: 'FDA-cleared to elevate hooded brow arches by up to 5mm and smooth delicate periorbital fine lines with SofCool™ protection.',
-    targetId: 'sofwave',
-    pricing: 'From £795',
-  },
-  {
-    id: 'lip_plumping',
-    name: 'Perioral Lines & Thin Lips',
-    category: 'Vascular & Redness',
+    key: 'lips',
+    title: 'Lip Enhancement',
+    area: 'Skin',
+    via: 'ADVATx',
     image: '/assets/images/concern_lip_plumping.jpg',
-    headline: 'Non-Injectable Thermal Collagen Stimulation',
-    leadPlatform: 'ADVATx® Laser Lip Plumping',
-    description: 'Stimulates autologous vermilion border collagen and hydrates dermal layers naturally without filler migration.',
-    targetId: 'advatx',
-    pricing: 'From £249',
+    position: '70% 50%',
+    alt: 'Practitioner treating a patient’s lips with a fine laser handpiece',
+    treatmentId: 'advatx',
   },
 ];
 
-const AREA_CATEGORIES = ['All', 'Face', 'Body', 'Skin', 'Laser'];
-const CONCERN_CATEGORIES = ['All', 'Pigmentation & Tone', 'Vascular & Redness', 'Skin Tightening', 'Acne & Texture', 'Body Sculpting'];
+// Path B: start from the treatment (the six technologies on the treatment pages).
+const TREATMENT_CARD_DETAILS = {
+  picoway: {
+    title: 'PicoWay',
+    area: 'Laser',
+    via: 'Pigmentation & Tattoos',
+    image: '/assets/images/site/treatment-picoway.webp',
+    position: '50% 50%',
+    alt: 'Patient in protective eyewear receiving a laser facial treatment',
+  },
+  advatx: {
+    title: 'ADVATx',
+    area: 'Skin',
+    via: 'Redness & Rosacea',
+    image: '/assets/images/site/treatment-advatx.webp',
+    position: '42% 50%',
+    alt: 'Gloved practitioner applying a laser handpiece to a patient’s cheek',
+  },
+  morpheus8: {
+    title: 'Morpheus8',
+    area: 'Skin',
+    via: 'Tightening & Texture',
+    image: '/assets/images/site/treatment-morpheus8.webp',
+    position: '40% 50%',
+    alt: 'Radiofrequency microneedling handpiece held to a patient’s cheek',
+  },
+  sofwave: {
+    title: 'Sofwave',
+    area: 'Skin',
+    via: 'Lifting & Tightening',
+    image: '/assets/images/site/treatment-sofwave.webp',
+    position: '72% 50%',
+    alt: 'Ultrasound handpiece placed along a reclined patient’s jawline',
+  },
+  emsculpt_neo: {
+    title: 'Emsculpt Neo',
+    area: 'Body',
+    via: 'Muscle & Contouring',
+    image: '/assets/images/site/treatment-emsculpt-neo.webp',
+    position: '52% 50%',
+    alt: 'Patient on a treatment bed wearing a body-contouring applicator',
+  },
+  emerald_laser: {
+    title: 'Emerald Laser',
+    area: 'Body',
+    via: 'Fat Reduction',
+    image: '/assets/images/site/treatment-emerald-laser.webp',
+    position: '66% 50%',
+    alt: 'Green low-level laser array above a patient lying in a dim treatment room',
+  },
+};
 
-export default function TreatmentAreasSection({ onNavigate }) {
-  const [browseMode, setBrowseMode] = useState('area'); // 'area' | 'concern'
-  const [activeAreaCat, setActiveAreaCat] = useState('All');
-  const [activeConcernCat, setActiveConcernCat] = useState('All');
+const TREATMENT_CARDS = POPULAR_TREATMENTS.filter((t) => TREATMENT_CARD_DETAILS[t.id]).map((t) => ({
+  key: t.id,
+  treatmentId: t.id,
+  ...TREATMENT_CARD_DETAILS[t.id],
+}));
 
-  const filteredAreas = activeAreaCat === 'All'
-    ? TREATMENT_AREAS
-    : TREATMENT_AREAS.filter(area => area.category === activeAreaCat || (activeAreaCat === 'Laser' && area.treatments.includes('Laser')));
+const PATHS = [
+  { id: 'concern', label: 'Path A: By Concern', cta: 'Explore All Concerns', items: CONCERN_CARDS, noun: 'concerns' },
+  { id: 'treatment', label: 'Path B: By Treatment', cta: 'Explore All Treatments', items: TREATMENT_CARDS, noun: 'treatments' },
+];
 
-  const filteredConcerns = activeConcernCat === 'All'
-    ? CLINICAL_CONCERNS
-    : CLINICAL_CONCERNS.filter(c => c.category === activeConcernCat);
+const CARD_RATIO = 406 / 300; // Figma card: 300 x 406
+const SLIDE = { type: 'spring', stiffness: 150, damping: 26, mass: 0.9 };
+
+// Whole cards on screen, gaps and card size for the stage width.
+function computeLayout(width) {
+  let k;
+  let g;
+  let w;
+  if (width >= 1200) {
+    k = 3;
+    g = 30;
+    w = 300;
+  } else if (width >= 900) {
+    k = 3;
+    g = 24;
+    w = Math.min(300, Math.floor((width - 2 * 112 - 2 * g) / 3));
+  } else if (width >= 600) {
+    k = 2;
+    g = 24;
+    w = Math.min(300, Math.floor((width - 2 * 100 - g) / 2));
+  } else {
+    k = 1;
+    g = 14;
+    w = Math.min(320, width - 2 * (38 + g));
+  }
+  const step = w + g;
+  const left0 = (width - (k * w + (k - 1) * g)) / 2;
+  return {
+    k,
+    w,
+    h: Math.round(w * CARD_RATIO),
+    step,
+    left0,
+    extra: Math.ceil(left0 / step) + 1,
+    frost: Math.max(0, Math.round(left0 - g / 2)),
+    over: k === 1 ? 16 : 24,
+  };
+}
+
+const wrap = (n, len) => ((n % len) + len) % len;
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 44, scale: 0.965 },
+  show: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 1.05, ease: EASE_OUT, delay: 0.05 + i * 0.08 },
+  }),
+  exit: (i = 0) => ({
+    opacity: 0,
+    y: -16,
+    scale: 0.985,
+    transition: { duration: 0.34, ease: EASE_INOUT, delay: i * 0.025 },
+  }),
+};
+
+function PathCard({ item, n, order, pos, layout, interactive, reduce, onPeek, onNavigate, suppressClick }) {
+  const x = useTransform(pos, (p) => layout.left0 + (n - p) * layout.step);
+
+  const handleClick = (event) => {
+    if (suppressClick.current) {
+      event.preventDefault();
+      return;
+    }
+    if (!interactive) {
+      event.preventDefault();
+      onPeek(n);
+      return;
+    }
+    routeLinkHandler(onNavigate, 'treatment-detail', item.treatmentId)(event);
+  };
 
   return (
-    <section
-      style={{
-        backgroundColor: '#FAF7F2',
-        padding: '6.5rem 0',
-        borderBottom: '1px solid rgba(28, 27, 24, 0.08)',
-      }}
+    <motion.a
+      className={`ap-paths__card${interactive ? '' : ' is-peek'}`}
+      href={`/treatments/${item.treatmentId}`}
+      data-n={n}
+      draggable={false}
+      tabIndex={interactive ? 0 : -1}
+      aria-hidden={interactive ? undefined : true}
+      style={{ x, width: layout.w, height: layout.h, top: layout.over }}
+      variants={reduce ? undefined : cardVariants}
+      custom={order}
+      onClick={handleClick}
     >
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
-        
-        {/* Section Header with Dual Toggle */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
-            Tailored Clinical Pathways
-          </div>
+      <span className="ap-paths__media">
+        <img
+          src={item.image}
+          alt={item.alt}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          style={{ objectPosition: item.position }}
+        />
+      </span>
+      <span className="ap-paths__shade" aria-hidden="true" />
+      <span className="ap-paths__caption">
+        <h3 className="ap-paths__card-title">{item.title}</h3>
+        <span className="ap-paths__card-meta">
+          <span className="ap-paths__card-area">{item.area}</span> · {item.via}
+        </span>
+      </span>
+      <span className="ap-paths__chip" aria-hidden="true">
+        <ArrowUpRight size={18} strokeWidth={1.6} />
+      </span>
+    </motion.a>
+  );
+}
 
-          <h2
-            data-reveal="words"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
-            <SplitWords>{browseMode === 'area' ? 'Explore By Treatment Area' : 'Explore By Aesthetic Concern'}</SplitWords>
-          </h2>
+/**
+ * Section 2 — "Start With What Matters to You". Two ways in (by concern / by treatment)
+ * over a looping card carousel whose outer cards sit under frosted glass, as in the Figma.
+ * The section rises over the end of the pinned hero video like a sheet.
+ */
+export default function TreatmentAreasSection({ onNavigate }) {
+  const reduce = useReducedMotion();
+  const stageRef = useRef(null);
+  const inView = useInView(stageRef, { once: true, amount: 0.3 });
 
-          <p
-            data-reveal
-            style={{
-              color: '#4A4740',
-              fontSize: '1.05rem',
-              maxWidth: '640px',
-              margin: '0 auto 2rem auto',
-              fontWeight: '300',
-            }}
-          >
-            {browseMode === 'area'
-              ? 'Targeted clinical protocols designed around your individual facial anatomy and aesthetic goals.'
-              : 'Identify your specific aesthetic indication and discover our physician-calibrated medical protocols.'}
-          </p>
+  const [pathId, setPathId] = useState('concern');
+  const path = PATHS.find((p) => p.id === pathId);
+  const items = path.items;
 
-          {/* Master Browsing Segment Toggle (Figma Exact) */}
-          <div
-            data-reveal
-            style={{
-              display: 'inline-flex',
-              background: '#FFFFFF',
-              padding: '0.35rem',
-              borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(168, 127, 61, 0.3)',
-              boxShadow: '0 4px 15px rgba(28, 27, 24, 0.05)',
-              marginBottom: '2.25rem',
-            }}
-          >
-            <button
-              onClick={() => setBrowseMode('area')}
-              style={{
-                padding: '0.6rem 1.6rem',
-                borderRadius: 'var(--radius-full)',
-                border: 'none',
-                background: browseMode === 'area' ? '#A87F3D' : 'transparent',
-                color: browseMode === 'area' ? '#FFFFFF' : '#1C1B18',
-                fontWeight: '600',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-              }}
-            >
-              Browse By Treatment Area
-            </button>
-            <button
-              onClick={() => setBrowseMode('concern')}
-              style={{
-                padding: '0.6rem 1.6rem',
-                borderRadius: 'var(--radius-full)',
-                border: 'none',
-                background: browseMode === 'concern' ? '#A87F3D' : 'transparent',
-                color: browseMode === 'concern' ? '#FFFFFF' : '#1C1B18',
-                fontWeight: '600',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-              }}
-            >
-              Browse By Concern
-            </button>
-          </div>
+  const [layout, setLayout] = useState(() =>
+    computeLayout(typeof document === 'undefined' ? 1440 : document.documentElement.clientWidth),
+  );
 
-          {/* Sub-Category Filter Pills */}
-          <div
-            data-reveal
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.65rem',
-              flexWrap: 'wrap',
-            }}
-          >
-            {browseMode === 'area' ? (
-              AREA_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveAreaCat(cat)}
-                  style={{
-                    padding: '0.45rem 1.35rem',
-                    borderRadius: 'var(--radius-full)',
-                    border: activeAreaCat === cat ? '1px solid #A87F3D' : '1px solid rgba(28, 27, 24, 0.14)',
-                    background: activeAreaCat === cat ? '#A87F3D' : '#FFFFFF',
-                    color: activeAreaCat === cat ? '#FFFFFF' : '#4A4740',
-                    fontSize: '0.825rem',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {cat}
-                </button>
-              ))
-            ) : (
-              CONCERN_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveConcernCat(cat)}
-                  style={{
-                    padding: '0.45rem 1.35rem',
-                    borderRadius: 'var(--radius-full)',
-                    border: activeConcernCat === cat ? '1px solid #A87F3D' : '1px solid rgba(28, 27, 24, 0.14)',
-                    background: activeConcernCat === cat ? '#A87F3D' : '#FFFFFF',
-                    color: activeConcernCat === cat ? '#FFFFFF' : '#4A4740',
-                    fontSize: '0.825rem',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {cat}
-                </button>
-              ))
-            )}
-          </div>
+  // One position (in cards) per path, so switching back keeps your place.
+  const posConcern = useMotionValue(0);
+  const posTreatment = useMotionValue(0);
+  const positions = { concern: posConcern, treatment: posTreatment };
+  const pos = positions[pathId];
+  const [indices, setIndices] = useState({ concern: 0, treatment: 0 });
+  const index = indices[pathId];
+  const targets = useRef({ concern: 0, treatment: 0 });
+
+  const suppressClick = useRef(false);
+  const panOrigin = useRef(0);
+  const wheel = useRef({ acc: 0, lock: 0 });
+  const pendingFocus = useRef(null);
+  const tabRefs = useRef({});
+
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return undefined;
+    const measure = () => setLayout(computeLayout(stage.clientWidth));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
+  const setIndex = useCallback(
+    (value) => setIndices((prev) => (prev[pathId] === value ? prev : { ...prev, [pathId]: value })),
+    [pathId],
+  );
+
+  const glideTo = useCallback(
+    (target, velocity = 0) => {
+      targets.current[pathId] = target;
+      setIndex(target);
+      if (reduce) {
+        pos.set(target);
+        return;
+      }
+      animate(pos, target, { ...SLIDE, velocity });
+    },
+    [pathId, pos, reduce, setIndex],
+  );
+
+  const go = useCallback((delta) => glideTo(targets.current[pathId] + delta), [glideTo, pathId]);
+
+  // Clicking a softened outer card brings it fully into view instead of navigating.
+  const bringIntoView = useCallback(
+    (n) => {
+      const first = targets.current[pathId];
+      if (n < first) go(n - first);
+      else go(n - (first + layout.k - 1));
+    },
+    [go, layout.k, pathId],
+  );
+
+  // Keyboard focus follows its slot after arrow-key navigation.
+  useEffect(() => {
+    if (pendingFocus.current == null || !stageRef.current) return;
+    const el = stageRef.current.querySelector(`[data-n="${index + pendingFocus.current}"]`);
+    pendingFocus.current = null;
+    el?.focus({ preventScroll: true });
+  }, [index]);
+
+  const onStageKeyDown = (event) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    const n = Number(document.activeElement?.dataset?.n);
+    if (Number.isFinite(n)) pendingFocus.current = n - index;
+    go(event.key === 'ArrowLeft' ? -1 : 1);
+  };
+
+  const onPanStart = () => {
+    pos.stop();
+    panOrigin.current = pos.get();
+    suppressClick.current = true;
+  };
+  const onPan = (_, info) => {
+    const p = panOrigin.current - info.offset.x / layout.step;
+    pos.set(p);
+    setIndex(Math.round(p));
+  };
+  const onPanEnd = (_, info) => {
+    const velocity = -info.velocity.x / layout.step;
+    const projected = pos.get() + velocity * 0.22;
+    const origin = Math.round(panOrigin.current);
+    const target = Math.max(origin - layout.k, Math.min(origin + layout.k, Math.round(projected)));
+    glideTo(target, velocity);
+    window.setTimeout(() => {
+      suppressClick.current = false;
+    }, 60);
+  };
+
+  // Two-finger horizontal trackpad swipes page the carousel.
+  const onWheel = (event) => {
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) * 1.2) return;
+    const now = performance.now();
+    if (now < wheel.current.lock) return;
+    wheel.current.acc += event.deltaX;
+    if (Math.abs(wheel.current.acc) > 48) {
+      go(Math.sign(wheel.current.acc));
+      wheel.current = { acc: 0, lock: now + 520 };
+    }
+  };
+
+  const choosePath = (id) => {
+    if (id === pathId) return;
+    setPathId(id);
+  };
+
+  // "Explore your concerns" links elsewhere on the page bring back the by-concern tab.
+  useEffect(() => {
+    const showConcerns = () => setPathId('concern');
+    window.addEventListener(SHOW_CONCERNS_EVENT, showConcerns);
+    return () => window.removeEventListener(SHOW_CONCERNS_EVENT, showConcerns);
+  }, []);
+
+  const onTabKeyDown = (event) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const i = PATHS.findIndex((p) => p.id === pathId);
+    let next = i;
+    if (event.key === 'ArrowLeft') next = (i - 1 + PATHS.length) % PATHS.length;
+    if (event.key === 'ArrowRight') next = (i + 1) % PATHS.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = PATHS.length - 1;
+    const id = PATHS[next].id;
+    choosePath(id);
+    tabRefs.current[id]?.focus();
+  };
+
+  const slots = [];
+  for (let n = index - layout.extra; n <= index + layout.k - 1 + layout.extra; n += 1) slots.push(n);
+
+  const visible = Array.from({ length: Math.min(layout.k, items.length) }, (_, i) => items[wrap(index + i, items.length)]);
+  const firstShown = wrap(index, items.length) + 1;
+  const live = `${visible.map((v) => v.title).join(', ')}. Showing ${firstShown} of ${items.length} ${path.noun}.`;
+  const counter = String(firstShown).padStart(2, '0');
+  const total = String(items.length).padStart(2, '0');
+
+  const stageHeight = layout.h + layout.over * 2;
+  const trackState = reduce || inView ? 'show' : 'hidden';
+
+  return (
+    <section id="concerns" className="ap-paths" aria-labelledby="ap-paths-title">
+      <div className="ap-container ap-paths__head">
+        <div className="ap-paths__intro">
+          <TextReveal as="h2" id="ap-paths-title" className="ap-h2 ap-paths__title">
+            Start With What <em className="ap-accent">Matters to You</em>
+          </TextReveal>
+          <Reveal as="p" delay={0.14} className="ap-paths__lead">
+            Some patients already know which treatment they are looking for. Others simply know what they would like
+            to improve.
+          </Reveal>
+          <Reveal as="p" delay={0.22} className="ap-paths__lead ap-paths__lead--strong">
+            Explore Allure Passions in the way that feels right for you.
+          </Reveal>
         </div>
 
-        {/* CONTENT VIEW 1: BROWSE BY TREATMENT AREA */}
-        {browseMode === 'area' && (
-          <div>
-            <div
-              data-reveal-children
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
-                gap: '1.5rem',
-                marginBottom: '3.5rem',
-              }}
-            >
-              {filteredAreas.map((area) => (
-                <div
-                  key={area.id}
-                  className="ap-hover-zoom"
-                  onClick={() => onNavigate('treatment-detail', area.treatmentId || 'morpheus8')}
-                  style={{
-                    background: '#FFFFFF',
-                    borderRadius: 'var(--radius-sm)',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(168, 127, 61, 0.22)',
-                    boxShadow: '0 4px 15px rgba(28, 27, 24, 0.04)',
-                    transition: 'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-6px)';
-                    e.currentTarget.style.boxShadow = '0 16px 36px rgba(168, 127, 61, 0.16)';
-                    e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.45)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(28, 27, 24, 0.04)';
-                    e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.22)';
-                  }}
-                >
-                  <div>
-                    {/* Area Image Container */}
-                    <div
-                      style={{
-                        position: 'relative',
-                        height: '240px',
-                        overflow: 'hidden',
-                        background: '#EAE6DF',
-                      }}
-                    >
-                      <img
-                        src={area.image}
-                        alt={area.name}
-                        loading="lazy"
-                        decoding="async"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          objectPosition: area.imagePosition || 'center',
-                          transition: 'transform 0.5s ease',
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '12px',
-                          left: '12px',
-                          background: 'rgba(20, 19, 17, 0.75)',
-                          backdropFilter: 'blur(8px)',
-                          color: '#FAF7F2',
-                          fontSize: '0.65rem',
-                          fontWeight: '600',
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: 'var(--radius-full)',
-                          border: '1px solid rgba(212, 175, 55, 0.3)',
-                        }}
-                      >
-                        {area.category}
-                      </div>
-                    </div>
-
-                    {/* Area Card Content */}
-                    <div style={{ padding: '1.5rem 1.5rem 1rem 1.5rem' }}>
-                      <h3
-                        style={{
-                          fontFamily: 'var(--font-serif)',
-                          fontSize: '1.4rem',
-                          color: '#1C1B18',
-                          fontWeight: '600',
-                          marginBottom: '0.4rem',
-                          lineHeight: 1.25,
-                        }}
-                      >
-                        {area.name}
-                      </h3>
-
-                      <div
-                        style={{
-                          fontSize: '0.78rem',
-                          color: '#A87F3D',
-                          fontWeight: '600',
-                          letterSpacing: '0.04em',
-                          marginBottom: '0.75rem',
-                          lineHeight: 1.4,
-                        }}
-                      >
-                        {area.treatments}
-                      </div>
-
-                      <p
-                        style={{
-                          fontSize: '0.85rem',
-                          color: '#5A554E',
-                          lineHeight: '1.6',
-                          fontWeight: '300',
-                        }}
-                      >
-                        {area.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card Footer Link */}
-                  <div
-                    style={{
-                      padding: '0.9rem 1.5rem 1.25rem 1.5rem',
-                      borderTop: '1px solid rgba(28, 27, 24, 0.06)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      color: '#A87F3D',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
+        <Reveal delay={0.3} className="ap-paths__switch-wrap">
+          <LayoutGroup id="ap-paths-switch">
+            <div className="ap-paths__switch" role="tablist" aria-label="Explore by" onKeyDown={onTabKeyDown}>
+              {PATHS.map((p) => {
+                const active = p.id === pathId;
+                return (
+                  <button
+                    key={p.id}
+                    ref={(el) => {
+                      tabRefs.current[p.id] = el;
                     }}
+                    type="button"
+                    role="tab"
+                    id={`ap-paths-tab-${p.id}`}
+                    aria-selected={active}
+                    aria-controls="ap-paths-panel"
+                    tabIndex={active ? 0 : -1}
+                    className={`ap-paths__tab${active ? ' is-active' : ''}`}
+                    onClick={() => choosePath(p.id)}
                   >
-                    <span>View Clinical Protocol</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-              ))}
+                    {active ? (
+                      <motion.span
+                        layoutId="ap-paths-pill"
+                        className="ap-paths__pill"
+                        transition={reduce ? { duration: 0 } : SPRING_SNAPPY}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <span className="ap-paths__tab-label">{p.label}</span>
+                  </button>
+                );
+              })}
             </div>
+          </LayoutGroup>
+        </Reveal>
+      </div>
 
-            {/* Bottom Button */}
-            <div data-reveal style={{ textAlign: 'center' }}>
-              <button
-                onClick={() => onNavigate('treatments')}
-                className="btn-outline-bronze"
-                style={{ padding: '0.85rem 2.2rem', fontSize: '0.85rem' }}
-              >
-                Explore All Treatments
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* CONTENT VIEW 2: BROWSE BY AESTHETIC CONCERN */}
-        {browseMode === 'concern' && (
-          <div>
-            <div
-              data-reveal-children
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-                gap: '1.75rem',
-                marginBottom: '3.5rem',
-              }}
+      <div
+        id="ap-paths-panel"
+        role="tabpanel"
+        aria-labelledby={`ap-paths-tab-${pathId}`}
+        className="ap-paths__panel"
+      >
+        <motion.div
+          ref={stageRef}
+          className="ap-paths__stage"
+          data-overflow-ok
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={path.id === 'concern' ? 'Concerns' : 'Treatments'}
+          style={{ height: stageHeight, '--ap-paths-frost': `${layout.frost}px` }}
+          onPanStart={onPanStart}
+          onPan={onPan}
+          onPanEnd={onPanEnd}
+          onWheel={onWheel}
+          onKeyDown={onStageKeyDown}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={pathId}
+              className="ap-paths__track"
+              initial={reduce ? false : 'hidden'}
+              animate={trackState}
+              exit={reduce ? undefined : 'exit'}
             >
-              {filteredConcerns.map((concern) => (
-                <div
-                  key={concern.id}
-                  onClick={() => onNavigate('treatment-detail', concern.targetId)}
-                  style={{
-                    background: '#FFFFFF',
-                    borderRadius: 'var(--radius-sm)',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(168, 127, 61, 0.22)',
-                    boxShadow: '0 4px 15px rgba(28, 27, 24, 0.04)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                    transition: 'all 0.35s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-6px)';
-                    e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.5)';
-                    e.currentTarget.style.boxShadow = '0 16px 36px rgba(168, 127, 61, 0.15)';
-                    const img = e.currentTarget.querySelector('.concern-card-img');
-                    if (img) img.style.transform = 'scale(1.06)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(168, 127, 61, 0.22)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(28, 27, 24, 0.04)';
-                    const img = e.currentTarget.querySelector('.concern-card-img');
-                    if (img) img.style.transform = 'scale(1)';
-                  }}
-                >
-                  <div>
-                    {/* Concern Image Container */}
-                    <div
-                      style={{
-                        position: 'relative',
-                        height: '210px',
-                        overflow: 'hidden',
-                        background: '#141312',
-                      }}
-                    >
-                      <img
-                        src={concern.image}
-                        alt={concern.name}
-                        className="concern-card-img"
-                        loading="lazy"
-                        decoding="async"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          objectPosition: 'center',
-                          transition: 'transform 0.5s ease',
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(20,19,18,0.7) 100%)',
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '12px',
-                          left: '12px',
-                          background: 'rgba(20, 19, 18, 0.85)',
-                          backdropFilter: 'blur(8px)',
-                          color: '#D4AF37',
-                          fontSize: '0.68rem',
-                          fontWeight: '600',
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: 'var(--radius-full)',
-                          border: '1px solid rgba(212, 175, 55, 0.35)',
-                        }}
-                      >
-                        {concern.category}
-                      </div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: '12px',
-                          right: '12px',
-                          background: '#FFFFFF',
-                          color: '#1C1B18',
-                          fontSize: '0.78rem',
-                          fontWeight: '700',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: 'var(--radius-sm)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
-                        }}
-                      >
-                        {concern.pricing}
-                      </div>
-                    </div>
+              {slots.map((n) => {
+                const item = items[wrap(n, items.length)];
+                return (
+                  <PathCard
+                    key={n}
+                    n={n}
+                    order={Math.max(0, n - index + layout.extra - 1)}
+                    item={item}
+                    pos={pos}
+                    layout={layout}
+                    interactive={n >= index && n < index + layout.k}
+                    reduce={reduce}
+                    onPeek={bringIntoView}
+                    onNavigate={onNavigate}
+                    suppressClick={suppressClick}
+                  />
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
 
-                    {/* Concern Body Content */}
-                    <div style={{ padding: '1.75rem 1.5rem 1rem 1.5rem' }}>
-                      <h3
-                        style={{
-                          fontFamily: 'var(--font-serif)',
-                          fontSize: '1.35rem',
-                          color: '#1C1B18',
-                          fontWeight: '600',
-                          marginBottom: '0.4rem',
-                          lineHeight: 1.25,
-                        }}
-                      >
-                        {concern.name}
-                      </h3>
+          <span className="ap-paths__frost ap-paths__frost--start" aria-hidden="true" />
+          <span className="ap-paths__frost ap-paths__frost--end" aria-hidden="true" />
 
-                      <div
-                        style={{
-                          fontSize: '0.78rem',
-                          color: '#A87F3D',
-                          fontWeight: '600',
-                          marginBottom: '0.75rem',
-                        }}
-                      >
-                        {concern.leadPlatform}
-                      </div>
-
-                      <p
-                        style={{
-                          fontSize: '0.85rem',
-                          color: '#5A554E',
-                          lineHeight: '1.65',
-                          fontWeight: '300',
-                        }}
-                      >
-                        {concern.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                      padding: '0.85rem 1.5rem 1.25rem 1.5rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      color: '#A87F3D',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
-                    }}
-                  >
-                    <span>Explore Protocol & Pricing</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom Button */}
-            <div data-reveal style={{ textAlign: 'center' }}>
-              <button
-                onClick={() => onNavigate('treatments')}
-                className="btn-outline-bronze"
-                style={{ padding: '0.85rem 2.2rem', fontSize: '0.85rem' }}
-              >
-                View Full Treatment Directory
-              </button>
-            </div>
+          <div className="ap-paths__side-arrows">
+            <ArrowButton
+              glass
+              dir="prev"
+              className="ap-paths__arrow ap-paths__arrow--prev"
+              label={`Previous ${path.noun}`}
+              aria-controls="ap-paths-panel"
+              onClick={() => go(-1)}
+            />
+            <ArrowButton
+              glass
+              dir="next"
+              className="ap-paths__arrow ap-paths__arrow--next"
+              label={`Next ${path.noun}`}
+              aria-controls="ap-paths-panel"
+              onClick={() => go(1)}
+            />
           </div>
-        )}
 
+          <p className="ap-visually-hidden" aria-live="polite" aria-atomic="true">
+            {live}
+          </p>
+        </motion.div>
+
+        <div className="ap-container ap-paths__controls">
+          <ArrowButton dir="prev" className="ap-paths__ctrl" label={`Previous ${path.noun}`} onClick={() => go(-1)} />
+          <p className="ap-paths__count" aria-hidden="true">
+            <span className="ap-paths__count-now">{counter}</span>
+            <span className="ap-paths__count-bar">
+              <motion.span
+                className="ap-paths__count-fill"
+                animate={{ scaleX: firstShown / items.length }}
+                transition={reduce ? { duration: 0 } : { duration: 0.6, ease: EASE_OUT }}
+              />
+            </span>
+            <span className="ap-paths__count-total">{total}</span>
+          </p>
+          <ArrowButton dir="next" className="ap-paths__ctrl" label={`Next ${path.noun}`} onClick={() => go(1)} />
+        </div>
+
+        <Reveal delay={0.2} className="ap-paths__cta">
+          <Button
+            href="/treatments"
+            onClick={routeLinkHandler(onNavigate, 'treatments')}
+            className="ap-paths__cta-btn"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={path.cta}
+                className="ap-paths__cta-label"
+                initial={reduce ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.28, ease: EASE_OUT }}
+              >
+                {path.cta}
+              </motion.span>
+            </AnimatePresence>
+          </Button>
+        </Reveal>
       </div>
     </section>
   );
