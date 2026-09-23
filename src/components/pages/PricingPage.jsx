@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useSyncExternalStore } from 'react';
 import { FULL_PRICELIST, CLINIC_INFO } from '../../data/treatmentData';
 import { ArrowLeft, Sparkles, Phone, MessageCircle, ShieldCheck, Search, X, Check } from 'lucide-react';
+import ResponsiveImg from '../ui/ResponsiveImg';
 import './PricingPage.css';
 
 const SIGNATURE_PACKAGES = [
@@ -364,8 +365,9 @@ export default function PricingPage({ onNavigate }) {
                         {/* Relevant Category Image Thumbnail */}
                         {group.image && (
                           <div className="ap-pricing__category-thumb">
-                            <img
+                            <ResponsiveImg
                               src={group.image}
+                              sizes="100px"
                               alt={cleanCategoryName}
                               loading="lazy"
                               decoding="async"

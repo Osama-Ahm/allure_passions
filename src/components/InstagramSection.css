@@ -138,6 +138,12 @@
   transition: transform 1.1s var(--ap-ease-out);
 }
 
+/* The film tiles' loop sits over its poster picture */
+.ap-social__media video {
+  position: absolute;
+  inset: 0;
+}
+
 .ap-social__tile:hover .ap-social__media img,
 .ap-social__tile:hover .ap-social__media video {
   transform: scale(1.05);
@@ -261,12 +267,12 @@
   left: auto;
   height: auto;
   margin-left: 0;
-  padding-inline: var(--ap-gutter);
+  padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 .ap-social--static .ap-social__tile {
   scroll-snap-align: start;
-  scroll-margin-inline: var(--ap-gutter);
+  scroll-margin-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 /* ---- Phones: centre the film tile in the row ---- */
@@ -288,5 +294,19 @@
   .ap-social__tile:hover .ap-social__media img,
   .ap-social__tile:hover .ap-social__media video {
     transform: none;
+  }
+  .ap-social__tile:hover .ap-social__veil,
+  .ap-social__tile:hover .ap-social__glyph,
+  .ap-social__tile:hover .ap-social__caption {
+    opacity: 0;
+  }
+}
+
+/* Touch: the gold @handle link takes taps across 44px (invisible layer, same look) */
+@media (pointer: coarse) {
+  .ap-social__handle::before {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2)) 0;
   }
 }

@@ -371,6 +371,14 @@
   }
 }
 
+@media (max-width: 1279.98px) {
+  .ap-concerns__note,
+  .ap-concerns__text,
+  .ap-concerns__cta-text {
+    max-width: 38em;
+  }
+}
+
 @media (max-width: 999.98px) {
   .ap-concerns__head {
     grid-template-columns: minmax(0, 1fr);

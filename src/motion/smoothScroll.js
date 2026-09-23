@@ -60,10 +60,31 @@ export function scrollToY(top, { immediate = false } = {}) {
   }
 }
 
+// Below the desktop layout, homepage sections skip rendering until they near the screen
+// (content-visibility in index.css), so a section drawn during a long glide can move the
+// target after the glide has set off. Once it lands, finish the trip if it fell short.
+const PARTIAL_RENDER = '(max-width: 1279.98px)';
+
+function settleOn(el, offset, tries = 3) {
+  if (!lenis || tries <= 0 || !window.matchMedia(PARTIAL_RENDER).matches) return;
+  const miss = el.getBoundingClientRect().top + offset;
+  const atLimit = miss > 0 && window.scrollY >= lenis.limit - 1;
+  if (Math.abs(miss) < 3 || atLimit) return;
+  lenis.scrollTo(el, { offset, duration: 0.6, force: true, onComplete: () => settleOn(el, offset, tries - 1) });
+}
+
 /** Scroll an element (or selector) into view under the fixed header. */
 export function scrollToTarget(target, { offset = -24 } = {}) {
   const el = typeof target === 'string' ? document.querySelector(target) : target;
   if (!el) return;
-  if (lenis) lenis.scrollTo(el, { offset, duration: 1.3, force: true });
-  else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (lenis) {
+    lenis.scrollTo(el, { offset, duration: 1.3, force: true, onComplete: () => settleOn(el, offset) });
+  } else {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.matchMedia(PARTIAL_RENDER).matches) {
+      window.addEventListener('scrollend', () => el.scrollIntoView({ behavior: 'instant', block: 'start' }), {
+        once: true,
+      });
+    }
+  }
 }

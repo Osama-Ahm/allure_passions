@@ -14,7 +14,7 @@
   width: 100%;
   max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
   margin-inline: auto;
-  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+  padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 .ap-dir__back {
@@ -564,6 +564,16 @@
   }
   .ap-dir__consult-link {
     justify-content: center;
+  }
+}
+
+/* Touch: 44px targets for the back button, filter tabs and card links */
+@media (pointer: coarse) {
+  .ap-dir__back,
+  .ap-dir__tab-btn,
+  .ap-dir__btn-link,
+  .ap-dir__consult-link {
+    min-height: 2.75rem;
   }
 }
 

@@ -59,7 +59,8 @@ export default function HeroSection({ onNavigate }) {
   const mediaScale = useTransform(soft, [0, 1], [1, 1.06]);
   const shade = useTransform(soft, [0.7, 1], [0, 0.45]);
 
-  const show = open ? 'show' : 'hidden';
+  // Reduced motion: the copy is simply there (it would otherwise wait for the curtain, then rise in).
+  const show = open || reduce ? 'show' : 'hidden';
 
   return (
     <section

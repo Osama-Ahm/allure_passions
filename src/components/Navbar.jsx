@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react';
 import { CalendarClock, ShoppingBag } from 'lucide-react';
 import useCurtainOpen from '../motion/useCurtainOpen';
@@ -7,10 +7,12 @@ import { EASE_OUT } from '../motion/presets';
 import { BOOK_CONSULTATION_URL } from '../data/links';
 import { CLINIC_INFO } from '../data/treatmentData';
 import NavMenu from './nav/NavMenu';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { preloadPreview, previewKeyFor } from './nav/menuData';
 import './Navbar.css';
 
 const LOGO_SRC = '/assets/images/allure_logo.png';
+const LOGO_SIZES = '(max-width: 600px) 48px, 68px'; // the monogram's width at the top of the page
 const HIDE_AFTER = 140; // px scrolled before the header may tuck away
 const HIDE_TRAVEL = 18; // continuous downward travel that hides it
 const SHOW_TRAVEL = 10; // upward travel that brings it back
@@ -113,7 +115,9 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
 
   const openMenu = () => {
     preloadPreview(previewKeyFor(currentRoute, treatmentId));
-    setMenuOpen(true);
+    // Mounting the whole menu blocked a phone's main thread for ~0.5 s in one go; as a transition
+    // React renders it in slices, so the tap gets its next frame straight away (INP).
+    startTransition(() => setMenuOpen(true));
   };
 
   const closeMenu = useCallback(({ instant = false } = {}) => {
@@ -264,8 +268,8 @@ export default function Navbar({ currentRoute = 'home', onNavigate }) {
                 aria-current={isHome ? 'page' : undefined}
                 {...linkProps('home')}
               >
-                <img className="ap-nav__logo-img ap-nav__logo-img--light" src={LOGO_SRC} alt="" />
-                <img className="ap-nav__logo-img ap-nav__logo-img--gold" src={LOGO_SRC} alt="" />
+                <ResponsiveImg className="ap-nav__logo-img ap-nav__logo-img--light" src={LOGO_SRC} sizes={LOGO_SIZES} alt="" />
+                <ResponsiveImg className="ap-nav__logo-img ap-nav__logo-img--gold" src={LOGO_SRC} sizes={LOGO_SIZES} alt="" />
               </a>
             </motion.div>
           </div>

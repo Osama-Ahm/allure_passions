@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   AnimatePresence,
   LayoutGroup,
@@ -15,6 +15,8 @@ import { Reveal } from '../motion/Reveal';
 import { EASE_INOUT, EASE_OUT, SPRING_SNAPPY } from '../motion/presets';
 import Button from './ui/Button';
 import ArrowButton from './ui/ArrowButton';
+import ResponsiveImg from './ui/ResponsiveImg';
+import { coverWidth } from '../utils/responsiveImages';
 import { POPULAR_TREATMENTS } from '../data/treatmentData';
 import { SHOW_CONCERNS_EVENT, routeLinkHandler } from '../utils/navigation';
 import './TreatmentAreasSection.css';
@@ -294,8 +296,9 @@ function PathCard({ item, n, order, pos, layout, interactive, reduce, onPeek, on
       onClick={handleClick}
     >
       <span className="ap-paths__media">
-        <img
+        <ResponsiveImg
           src={item.image}
+          sizes={`${coverWidth(item.image, layout.w, layout.h)}px`}
           alt={item.alt}
           loading="lazy"
           decoding="async"
@@ -452,7 +455,8 @@ export default function TreatmentAreasSection({ onNavigate }) {
 
   const choosePath = (id) => {
     if (id === pathId) return;
-    setPathId(id);
+    // Swapping in the other deck is heavy on a phone; as a transition the tap paints first (INP)
+    startTransition(() => setPathId(id));
   };
 
   // "Explore your concerns" links elsewhere on the page bring back the by-concern tab.

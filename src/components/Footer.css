@@ -273,7 +273,7 @@
   justify-content: space-between;
   gap: 0.75rem 2rem;
   min-height: 5rem;
-  padding-block: 1.5rem;
+  padding-block: 1.5rem calc(1.5rem + var(--ap-safe-bottom));
   font-size: 1rem;
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -407,7 +407,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.9rem;
-    padding-block: 1.75rem 2rem;
+    padding-block: 1.75rem calc(2rem + var(--ap-safe-bottom));
     font-size: 0.9375rem;
   }
 
@@ -430,6 +430,34 @@
 @media screen and (max-width: 480px) {
   .ap-footer__heading {
     font-size: 1.875rem;
+  }
+}
+
+/* Touch tablets: the phone's 44px link rows (phones already have them, see above) */
+@media (pointer: coarse) and (min-width: 640px) {
+  .ap-footer__list {
+    gap: 0;
+    margin-top: 0.5rem;
+  }
+  .ap-footer__link,
+  .ap-footer__text,
+  .ap-footer__address {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .ap-footer__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
+/* Below the desktop layout the sheen is masked by the small copy of the monogram
+   (the 135 KB original would otherwise download just for the mask). */
+@media (max-width: 1279.98px) {
+  .ap-footer__sheen {
+    -webkit-mask-image: url('/assets/images/responsive/allure_logo-320.webp');
+    mask-image: url('/assets/images/responsive/allure_logo-320.webp');
   }
 }
 

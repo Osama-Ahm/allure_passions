@@ -325,6 +325,15 @@
   }
 }
 
+/* Touch: the 42px filter chips take taps across 44px (invisible layer, same look) */
+@media (pointer: coarse) {
+  .ap-results__chip::after {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2)) 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ap-results__chip,
   .ap-results__handle-core {

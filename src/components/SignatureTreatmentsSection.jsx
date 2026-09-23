@@ -9,6 +9,7 @@ import {
 } from 'motion/react';
 import SectionHeading from './ui/SectionHeading';
 import Button from './ui/Button';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { Reveal } from '../motion/Reveal';
 import { DURATION, EASE_OUT, SPRING_SOFT, VIEWPORT } from '../motion/presets';
 import { routeLinkHandler } from '../utils/navigation';
@@ -166,8 +167,10 @@ function TreatmentCard({ treatment, delay, rail, onNavigate, reduce }) {
       >
         <a className="ap-treatments__media" href={href} onClick={go} tabIndex={-1} aria-hidden="true">
           <span className="ap-treatments__zoom">
-            <motion.img
+            <ResponsiveImg
+              as={motion.img}
               src={treatment.image}
+              sizes="(max-width: 639px) 84vw, (max-width: 999px) 46vw, 30vw"
               alt={treatment.alt}
               loading="lazy"
               decoding="async"

@@ -78,7 +78,7 @@
   align-items: end;
   gap: 2.5rem;
   height: 100%;
-  padding-bottom: clamp(3.25rem, 8.4vh, 4.75rem);
+  padding-bottom: calc(clamp(3.25rem, 8.4vh, 4.75rem) + var(--ap-safe-bottom));
 }
 
 .ap-hero__copy {
@@ -195,8 +195,8 @@
 /* Scroll cue (right gutter) and tour progress */
 .ap-hero__cue {
   position: absolute;
-  right: clamp(1rem, 2.2vw, 2rem);
-  bottom: 2.25rem;
+  right: calc(clamp(1rem, 2.2vw, 2rem) + var(--ap-safe-right));
+  bottom: calc(2.25rem + var(--ap-safe-bottom));
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -293,7 +293,7 @@
     --ap-hero-scrub: 170vh;
   }
   .ap-hero__layout {
-    padding-bottom: 5.25rem; /* clears the centred scroll cue */
+    padding-bottom: calc(5.25rem + var(--ap-safe-bottom)); /* clears the centred scroll cue */
   }
   .ap-hero__actions {
     flex-direction: column;
@@ -305,7 +305,7 @@
   }
   .ap-hero__cue {
     right: 50%;
-    bottom: 1.25rem;
+    bottom: calc(1.25rem + var(--ap-safe-bottom));
     transform: translateX(50%);
   }
   .ap-hero__cue-label {
@@ -328,7 +328,7 @@
     font-size: min(11vw, 7.4svh);
   }
   .ap-hero__layout {
-    padding-bottom: 1.75rem;
+    padding-bottom: calc(1.75rem + var(--ap-safe-bottom));
   }
   .ap-hero__lead {
     font-size: 0.9375rem;
@@ -349,7 +349,7 @@
    row and the stack tightens so everything sits on screen under the compact header. */
 @media (max-height: 540px) and (min-aspect-ratio: 1/1) {
   .ap-hero__layout {
-    padding-bottom: 1.5rem;
+    padding-bottom: calc(1.5rem + var(--ap-safe-bottom));
   }
   .ap-hero__lead {
     max-width: 40rem;

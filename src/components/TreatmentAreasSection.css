@@ -327,11 +327,11 @@
 }
 
 .ap-paths__arrow--prev {
-  left: clamp(0.75rem, 2.1vw, 1.875rem);
+  left: calc(clamp(0.75rem, 2.1vw, 1.875rem) + var(--ap-safe-left));
 }
 
 .ap-paths__arrow--next {
-  right: clamp(0.75rem, 2.1vw, 1.875rem);
+  right: calc(clamp(0.75rem, 2.1vw, 1.875rem) + var(--ap-safe-right));
 }
 
 /* Phone controls (hidden until the one-card layout) */
@@ -456,7 +456,7 @@
   }
   .ap-paths__cta {
     margin-top: 1.75rem;
-    padding-inline: var(--ap-gutter);
+    padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
   }
   .ap-paths__cta-btn {
     width: 100%;
@@ -498,6 +498,22 @@
     bottom: auto;
     width: 2.25rem;
     height: 2.25rem;
+  }
+}
+
+/* Below the desktop layout, the lead keeps a readable measure */
+@media (max-width: 1279.98px) {
+  .ap-paths__lead {
+    max-width: 38em;
+  }
+}
+
+/* Touch: the 40-43px path tabs take taps across 44px (invisible layer, same look) */
+@media (pointer: coarse) {
+  .ap-paths__tab::after {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2)) 0;
   }
 }
 

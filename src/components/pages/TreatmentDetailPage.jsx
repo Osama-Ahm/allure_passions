@@ -2,6 +2,7 @@ import React from 'react';
 import { POPULAR_TREATMENTS, FULL_PRICELIST, CLINIC_INFO } from '../../data/treatmentData';
 import { ArrowLeft, Clock, ShieldCheck, CheckCircle2, MessageSquare, Check, Phone } from 'lucide-react';
 import EmsculptNeoPage from './EmsculptNeoPage';
+import ResponsiveImg from '../ui/ResponsiveImg';
 import './TreatmentDetailPage.css';
 
 const TREATMENT_PRICING_MAP = {
@@ -294,8 +295,9 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
           </div>
 
           <div className="ap-detail__visual">
-            <img
+            <ResponsiveImg
               src={treatment.image}
+              sizes="(max-width: 960px) calc(100vw - 2.5rem), 45vw"
               alt={treatment.name}
               loading="lazy"
               decoding="async"
@@ -528,8 +530,9 @@ export default function TreatmentDetailPage({ treatmentId, onNavigate }) {
                 }}
               >
                 <div className="ap-detail__other-media">
-                  <img
+                  <ResponsiveImg
                     src={other.image}
+                    sizes="(max-width: 560px) calc(100vw - 2.5rem), (max-width: 1080px) 46vw, 23vw"
                     alt={other.name}
                     loading="lazy"
                     decoding="async"

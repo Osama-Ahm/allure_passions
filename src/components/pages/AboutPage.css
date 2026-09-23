@@ -14,7 +14,7 @@
   width: 100%;
   max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
   margin-inline: auto;
-  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+  padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 .ap-about__back {
@@ -367,6 +367,22 @@
   }
   .ap-about__subtitle {
     font-size: 1.7rem;
+  }
+}
+
+/* Below the desktop layout, long paragraphs keep a readable measure */
+@media (max-width: 1279.98px) {
+  .ap-about__prose,
+  .ap-about__prose-secondary,
+  .ap-about__trust-lead {
+    max-width: 40em;
+  }
+}
+
+/* Touch: a 44px back button */
+@media (pointer: coarse) {
+  .ap-about__back {
+    min-height: 2.75rem;
   }
 }
 

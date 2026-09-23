@@ -4,7 +4,17 @@ import TextReveal from '../motion/TextReveal';
 import { Reveal } from '../motion/Reveal';
 import { EASE_INOUT, EASE_OUT, VIEWPORT } from '../motion/presets';
 import { INSTAGRAM_URL } from '../data/links';
+import ResponsiveImg from './ui/ResponsiveImg';
+import { coverWidth } from '../utils/responsiveImages';
 import './InstagramSection.css';
+
+// Rendered width of a tile's picture below 1280px (tiles are 200px on phones, else
+// 6.5rem + 16.5vw; a tall tile is 1.3375x as high), for the mobile copies' `sizes`.
+function tileSizes(src, tall) {
+  const phone = coverWidth(src, 200, tall ? 268 : 200);
+  const scale = coverWidth(src, 100, tall ? 133.75 : 100) / 100;
+  return `(max-width: 605px) ${phone}px, calc((6.5rem + 16.5vw) * ${scale})`;
+}
 
 // Figma rhythm: squares with a taller tile every few steps (the row bleeds off both edges).
 // Order is tall · square · tall · square · square · tall(video) · square · tall(video) · square · square.
@@ -113,9 +123,23 @@ function InstagramGlyph({ size = 22 }) {
   );
 }
 
-/** Muted loop that only plays while it is on screen. */
+/**
+ * Muted loop that only loads and plays while it is on screen. Its poster is a lazy picture
+ * underneath (a video's `poster` would download on page load, far above this row); the video
+ * sits over it and stays transparent until it has a frame to show.
+ */
 function TileVideo({ tile, reduce }) {
   const ref = useRef(null);
+  const poster = (alt) => (
+    <ResponsiveImg
+      src={tile.poster}
+      sizes={tileSizes(tile.poster, tile.tall)}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      style={{ objectPosition: tile.position }}
+    />
+  );
 
   useEffect(() => {
     const video = ref.current;
@@ -138,28 +162,26 @@ function TileVideo({ tile, reduce }) {
     };
   }, [reduce]);
 
-  if (reduce) {
-    return (
-      <img src={tile.poster} alt={tile.alt} loading="lazy" decoding="async" style={{ objectPosition: tile.position }} />
-    );
-  }
+  if (reduce) return poster(tile.alt);
 
   return (
-    <video
-      ref={ref}
-      poster={tile.poster}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      disablePictureInPicture
-      disableRemotePlayback
-      aria-label={tile.alt}
-      style={{ objectPosition: tile.position }}
-    >
-      <source src={`${tile.video}.webm`} type="video/webm" />
-      <source src={`${tile.video}.mp4`} type="video/mp4" />
-    </video>
+    <>
+      {poster('')}
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload="none"
+        disablePictureInPicture
+        disableRemotePlayback
+        aria-label={tile.alt}
+        style={{ objectPosition: tile.position }}
+      >
+        <source src={`${tile.video}.webm`} type="video/webm" />
+        <source src={`${tile.video}.mp4`} type="video/mp4" />
+      </video>
+    </>
   );
 }
 
@@ -183,8 +205,9 @@ function Tile({ tile, index, reduce }) {
         {tile.video ? (
           <TileVideo tile={tile} reduce={reduce} />
         ) : (
-          <img
+          <ResponsiveImg
             src={tile.src}
+            sizes={tileSizes(tile.src, tile.tall)}
             alt={tile.alt}
             loading="lazy"
             decoding="async"

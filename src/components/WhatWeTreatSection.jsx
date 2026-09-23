@@ -6,6 +6,7 @@ import { Reveal } from '../motion/Reveal';
 import { EASE_OUT, VIEWPORT } from '../motion/presets';
 import { scrollToTarget } from '../motion/smoothScroll';
 import Button from './ui/Button';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { BOOK_CONSULTATION_URL } from '../data/links';
 import { CONCERNS_LIST, POPULAR_TREATMENTS } from '../data/treatmentData';
 import { routeLinkHandler, showConcernsPath } from '../utils/navigation';
@@ -160,7 +161,7 @@ export default function WhatWeTreatSection({ onNavigate }) {
     <section ref={sectionRef} className="ap-concerns" aria-labelledby="ap-concerns-title">
       <div className="ap-concerns__bg" aria-hidden="true">
         <motion.div className="ap-concerns__photo" style={reduce ? undefined : { y: bgY }}>
-          <img src={BACKGROUND} alt="" loading="lazy" decoding="async" />
+          <ResponsiveImg src={BACKGROUND} sizes="100vw" alt="" loading="lazy" decoding="async" />
         </motion.div>
         <div className="ap-concerns__tint" />
         <div className="ap-concerns__shade" />

@@ -9,13 +9,14 @@
   color: var(--text-main, #1C1B18);
   font-family: var(--font-sans, 'Poppins', sans-serif);
   min-height: 85vh;
+  min-height: 85svh;
 }
 
 .ap-rx__container {
   width: 100%;
   max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
   margin-inline: auto;
-  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+  padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 .ap-rx__back {
@@ -258,6 +259,35 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
+}
+
+/* Product preview: the pack beside its details (stacked on narrow phones, below) */
+.ap-rx__product-preview {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  background: #F8F6F2;
+  border: 1px solid #EBE5DB;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.ap-rx__product-thumb {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #E5E0D8;
+}
+
+.ap-rx__product-copy {
+  min-width: 0;
 }
 
 .ap-rx__field-label {
@@ -683,7 +713,17 @@
   }
 }
 
-@media (max-width: 360px) {
+/* Narrow phones: the product's details sit under the pack instead of in a sliver beside it */
+@media (max-width: 480px) {
+  .ap-rx__product-preview {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+/* The three steps share a row only where "Clinical Consultation" fits its third */
+@media (max-width: 440px) {
   .ap-rx__stepper {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.4rem;
@@ -692,6 +732,24 @@
 
   .ap-rx__stepper-step {
     justify-content: flex-start;
+  }
+}
+
+/* Below the desktop layout, the introduction and the product note keep a readable measure */
+@media (max-width: 1279.98px) {
+  .ap-rx__lead,
+  .ap-rx__product-copy p {
+    max-width: 40em;
+  }
+}
+
+/* Touch: 44px targets for the back link and the step buttons */
+@media (pointer: coarse) {
+  .ap-rx__back,
+  .ap-rx__nav-actions .btn-bronze,
+  .ap-rx__nav-actions .btn-outline-bronze,
+  .ap-rx__section-group > div > .btn-outline-bronze {
+    min-height: 2.75rem;
   }
 }
 

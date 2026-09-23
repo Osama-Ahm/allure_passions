@@ -5,6 +5,7 @@ import { Reveal } from '../motion/Reveal';
 import { EASE_OUT, VIEWPORT } from '../motion/presets';
 import { scrollToTarget } from '../motion/smoothScroll';
 import Button from './ui/Button';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { BOOK_CONSULTATION_URL } from '../data/links';
 import { showConcernsPath } from '../utils/navigation';
 import './PreFooterCtaSection.css';
@@ -52,7 +53,7 @@ export default function PreFooterCtaSection() {
         transition={{ duration: 1.6, ease: EASE_OUT }}
       >
         <motion.div className="ap-cta__media-inner" style={reduce ? undefined : { y: photoY, scale: photoScale }}>
-          <img
+          <ResponsiveImg
             className="ap-cta__photo"
             src={PHOTO.src}
             alt={PHOTO.alt}
@@ -60,7 +61,8 @@ export default function PreFooterCtaSection() {
             height="768"
             loading="lazy"
             decoding="async"
-            sizes="(max-width: 899px) 100vw, 58vw"
+            imgSizes="(max-width: 899px) 100vw, 58vw"
+            sizes="(max-width: 599px) 130vw, (max-width: 899px) 100vw, 1200px"
             style={{ objectPosition: PHOTO.position }}
           />
         </motion.div>

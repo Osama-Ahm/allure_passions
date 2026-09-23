@@ -157,7 +157,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FAF7F2', color: '#1C1B18', display: 'flex', flexDirection: 'column' }}>
+    <div className="ap-app" style={{ background: '#FAF7F2', color: '#1C1B18', display: 'flex', flexDirection: 'column' }}>
       <PageCurtain phase={curtainPhase} />
 
       {/* Fixed header over the hero: Menu, AP monogram, shortcuts */}

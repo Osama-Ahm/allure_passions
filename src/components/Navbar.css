@@ -53,7 +53,8 @@
   width: 100%;
   max-width: calc(var(--ap-container) + var(--ap-gutter) * 2);
   margin-inline: auto;
-  padding: var(--nav-pad-top) var(--ap-gutter) var(--nav-pad-bottom);
+  padding: calc(var(--nav-pad-top) + var(--ap-safe-top)) var(--ap-gutter-right) var(--nav-pad-bottom)
+    var(--ap-gutter-left);
   transition: padding 0.55s var(--ap-ease-out);
 }
 
@@ -318,7 +319,8 @@
   width: 100%;
   max-width: calc(var(--ap-container) + var(--ap-gutter) * 2);
   margin-inline: auto;
-  padding: calc(8rem + 2vh) var(--ap-gutter) 2.25rem;
+  padding: calc(8rem + 2vh + var(--ap-safe-top)) var(--ap-gutter-right) calc(2.25rem + var(--ap-safe-bottom))
+    var(--ap-gutter-left);
 }
 
 .ap-nav__menu-main {
@@ -617,7 +619,7 @@
     display: none;
   }
   .ap-nav__menu-inner {
-    padding-top: 6.5rem;
+    padding-top: calc(6.5rem + var(--ap-safe-top));
   }
   .ap-nav__item {
     grid-template-columns: 1.9rem minmax(0, 1fr);
@@ -637,6 +639,21 @@
   }
 }
 
+/* Touch: the 38-40px chips and the compact monogram keep their look but take taps across a
+   44px square (an invisible layer that never grows the element's own box). */
+@media (pointer: coarse) {
+  .ap-nav__trigger {
+    position: relative;
+  }
+  .ap-nav__trigger::after,
+  .ap-nav__icon::after,
+  .ap-nav__logo::after {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2));
+  }
+}
+
 /* Short screens (phones on their side, small windows): a compact header and a tighter
    menu so the page and the menu links keep most of the height. */
 @media (max-height: 560px) {
@@ -648,8 +665,8 @@
     --nav-pad-bottom: 8px;
   }
   .ap-nav__menu-inner {
-    padding-top: 4.75rem;
-    padding-bottom: 1.5rem;
+    padding-top: calc(4.75rem + var(--ap-safe-top));
+    padding-bottom: calc(1.5rem + var(--ap-safe-bottom));
   }
   .ap-nav__link {
     font-size: clamp(1.75rem, 9svh, 3rem);

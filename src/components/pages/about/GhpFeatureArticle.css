@@ -167,6 +167,15 @@
   border-radius: 2px;
 }
 
+/* Touch: the 38px text link takes taps across 44px (invisible layer, same look) */
+@media (pointer: coarse) {
+  .ap-ghp__pdf::before {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2)) 0;
+  }
+}
+
 /* ---- Article body ------------------------------------------------------------ */
 
 .ap-ghp__body {
@@ -234,6 +243,12 @@
   }
 }
 
+@media (max-width: 1279.98px) {
+  .ap-ghp__standfirst {
+    max-width: 38em;
+  }
+}
+
 @media (max-width: 900px) {
   .ap-ghp__layout {
     grid-template-columns: minmax(0, 1fr);
@@ -241,7 +256,5 @@
   .ap-ghp__aside {
     position: static;
   }
-  .ap-ghp__body {
-    max-width: none;
-  }
+  /* the body keeps its 42rem measure in the single column (full width ran ~95 characters a line) */
 }

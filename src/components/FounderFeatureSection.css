@@ -237,6 +237,15 @@
   border-radius: 2px;
 }
 
+/* Touch: the 38px text link takes taps across 44px (invisible layer, same look) */
+@media (pointer: coarse) {
+  .ap-feature__pdf::before {
+    content: '';
+    position: absolute;
+    inset: min(0px, calc((100% - 2.75rem) / 2)) 0;
+  }
+}
+
 /* ---- Responsive ------------------------------------------------------------ */
 
 @media (max-width: 960px) {

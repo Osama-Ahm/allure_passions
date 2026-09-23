@@ -21,7 +21,12 @@
   padding-block: clamp(4.5rem, 3rem + 4vw, 7rem);
   /* Start on the same line as every other section's centred column (on wide screens the
      page gutter alone would leave this copy hugging the left edge). */
-  padding-inline: max(1.25rem, calc(var(--ap-gutter) - 0.3125rem), calc((100vw - var(--ap-container)) / 2 - 0.3125rem))
+  padding-inline: max(
+      1.25rem,
+      calc(var(--ap-gutter) - 0.3125rem),
+      calc((100vw - var(--ap-container)) / 2 - 0.3125rem),
+      calc(var(--ap-safe-left) + 0.75rem)
+    )
     clamp(1.5rem, 4.4vw, 4.375rem);
   background: #f9f9f9;
 }
@@ -129,6 +134,8 @@
   }
   .ap-welcome__copy {
     padding-block: clamp(4rem, 3rem + 4vw, 5.5rem);
+    /* single column: the copy now reaches the right edge too */
+    padding-right: max(clamp(1.5rem, 4.4vw, 4.375rem), calc(var(--ap-safe-right) + 0.75rem));
   }
   .ap-welcome__inner {
     max-width: 38rem;

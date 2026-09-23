@@ -40,6 +40,7 @@
   justify-content: center;
   gap: 1.1rem;
   padding: clamp(2.5rem, 1.5rem + 3vw, 4.5rem) clamp(1.25rem, 0.4rem + 3.6vw, 4.5rem);
+  padding-right: max(clamp(1.25rem, 0.4rem + 3.6vw, 4.5rem), calc(var(--ap-safe-right) + 0.75rem));
   text-align: center;
 }
 
@@ -766,6 +767,10 @@
     grid-template-columns: 1fr;
     min-height: 0;
   }
+  /* single column: the invitation now reaches the left edge too */
+  .ap-neo__hero-copy {
+    padding-left: max(clamp(1.25rem, 0.4rem + 3.6vw, 4.5rem), calc(var(--ap-safe-left) + 0.75rem));
+  }
   .ap-neo__hero-media {
     min-height: 0;
     aspect-ratio: 4 / 3;
@@ -811,6 +816,28 @@
   }
   .ap-neo__facts {
     gap: 0.5rem 1.5rem;
+  }
+}
+
+/* Below the desktop layout, the small print keeps a readable measure */
+@media (max-width: 1279.98px) {
+  .ap-neo__footnote,
+  .ap-neo__form-note {
+    max-width: 44em;
+  }
+}
+
+/* Touch: 44px targets for the text links */
+@media (pointer: coarse) {
+  .ap-neo__back,
+  .ap-neo__price-links a,
+  .ap-neo__visit > a {
+    min-height: 2.75rem;
+  }
+  /* one-line rows centre in their taller box (the address keeps its icon on the first line) */
+  .ap-neo__visit > a[href^='tel:'],
+  .ap-neo__visit > a[href^='mailto:'] {
+    align-items: center;
   }
 }
 

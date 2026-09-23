@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useInView, useMotionValue, useReducedMotion } from 'motion/react';
 import { ShieldAlert } from 'lucide-react';
 import SectionHeading from './ui/SectionHeading';
 import ArrowButton from './ui/ArrowButton';
 import Button from './ui/Button';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { Reveal } from '../motion/Reveal';
 import { EASE_INOUT, EASE_OUT } from '../motion/presets';
 import { routeLinkHandler } from '../utils/navigation';
@@ -84,10 +85,11 @@ function ProductCard({ product, position, active, side, shown, reduce, onActivat
       onFocus={active ? undefined : onActivate}
     >
       <div className="ap-skincare__media">
-        <img
+        <ResponsiveImg
           src={product.image}
           srcSet={product.srcSet}
-          sizes="(min-width: 861px) 640px, 92vw"
+          imgSizes="(min-width: 861px) 640px, 92vw"
+          sizes="(max-width: 600px) 88vw, (max-width: 860px) 83vw, 512px"
           alt={product.alt}
           loading="lazy"
           decoding="async"
@@ -191,7 +193,11 @@ export default function SkincareShowcaseSection({ onNavigate }) {
     return () => controls.stop();
   }, [index, step, reduce, x]);
 
-  const go = useCallback((delta) => setIndex((current) => (current + delta + TOTAL) % TOTAL), []);
+  // Re-rendering every card is heavy on a phone; as a transition the tap paints first (INP)
+  const go = useCallback(
+    (delta) => startTransition(() => setIndex((current) => (current + delta + TOTAL) % TOTAL)),
+    [],
+  );
 
   const onKeyDown = (event) => {
     if (event.key === 'ArrowRight') {
@@ -259,7 +265,7 @@ export default function SkincareShowcaseSection({ onNavigate }) {
                     side={i - index}
                     shown={reduce || (inView && i === index)}
                     reduce={reduce}
-                    onActivate={() => setIndex(i)}
+                    onActivate={() => startTransition(() => setIndex(i))}
                     onNavigate={onNavigate}
                   />
                 ))}

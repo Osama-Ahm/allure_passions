@@ -29,8 +29,8 @@
   --ap-glass: rgba(255, 255, 255, 0.16);
   --ap-glass-border: rgba(255, 255, 255, 0.42);
 
-  /* Type */
-  --ap-font-display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  /* Type (the display serif is followed by its metric-matched stand-in, see @font-face below) */
+  --ap-font-display: 'Instrument Serif', 'Instrument Serif Fallback', 'Cormorant Garamond', Georgia, serif;
   --ap-font-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
   --ap-font-accent: 'Cormorant Garamond', Georgia, serif;
 
@@ -48,6 +48,15 @@
   --ap-container: 1290px;
   --ap-gutter: clamp(1.25rem, 0.4rem + 3.6vw, 4.6875rem);
   --ap-section-y: clamp(4.5rem, 3rem + 5vw, 8.5rem);
+
+  /* Safe areas (notch, rounded corners, home indicator) with viewport-fit=cover. env() is 0
+     on desktops and most phones held upright, where these equal the plain gutter. */
+  --ap-safe-top: env(safe-area-inset-top, 0px);
+  --ap-safe-right: env(safe-area-inset-right, 0px);
+  --ap-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ap-safe-left: env(safe-area-inset-left, 0px);
+  --ap-gutter-left: max(var(--ap-gutter), calc(var(--ap-safe-left) + 0.75rem));
+  --ap-gutter-right: max(var(--ap-gutter), calc(var(--ap-safe-right) + 0.75rem));
 
   /* Shape & depth */
   --ap-radius-xs: 6px; /* buttons */
@@ -70,6 +79,21 @@
   /* Legacy variables (inner pages) now point at the Figma type pairing */
   --font-serif: var(--ap-font-display);
   --font-sans: var(--ap-font-sans);
+}
+
+/* Metric-matched stand-in for the display serif (font-display: swap): Times New Roman scaled to
+   Instrument Serif's width and line metrics, so headings keep their line breaks when the web font
+   arrives. Limited to the Latin range the font covers, so a character it lacks still falls
+   through to the same system font as before. Poppins has no stand-in on purpose: the same trick
+   for it (Arial) cost 0.4-0.7 s of main-thread time per page load on a throttled phone in Chrome. */
+@font-face {
+  font-family: 'Instrument Serif Fallback';
+  src: local('Times New Roman');
+  size-adjust: 84.55%;
+  ascent-override: 117.09%;
+  descent-override: 36.66%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+2013-2014, U+2018-201A, U+201C-201E, U+2022, U+2026, U+20AC, U+2122;
 }
 
 /* index.css sets body { overflow-x: hidden }, which makes <body> a scroll container and
@@ -101,7 +125,7 @@ html.lenis {
   width: 100%;
   max-width: calc(var(--ap-container) + var(--ap-gutter) * 2);
   margin-inline: auto;
-  padding-inline: var(--ap-gutter);
+  padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
 }
 
 .ap-section {
@@ -222,6 +246,17 @@ html.lenis {
 }
 .ap-heading--dark .ap-heading__note {
   color: var(--ap-gold-text);
+}
+
+/* Below the desktop layout, heading intros keep a comfortable measure (~75 characters a line)
+   instead of their desktop widths, which run past 90-100 characters on tablets */
+@media (max-width: 1279.98px) {
+  .ap-heading.ap-heading--center .ap-heading__intro,
+  .ap-heading.ap-heading--center .ap-heading__note,
+  .ap-heading.ap-heading--left .ap-heading__intro,
+  .ap-heading.ap-heading--left .ap-heading__note {
+    max-width: 38em;
+  }
 }
 
 /* --------------------------------------------------------------------------

@@ -332,8 +332,8 @@
   }
 
   .ap-reviews__viewport {
-    margin-inline: calc(var(--ap-gutter) * -1);
-    padding-inline: var(--ap-gutter);
+    margin-inline: calc(var(--ap-gutter-left) * -1) calc(var(--ap-gutter-right) * -1);
+    padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
     -webkit-mask-image: none;
     mask-image: none;
   }

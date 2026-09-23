@@ -3,6 +3,8 @@ import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/rea
 import SectionHeading from './ui/SectionHeading';
 import ArrowButton from './ui/ArrowButton';
 import Button from './ui/Button';
+import ResponsiveImg from './ui/ResponsiveImg';
+import { coverWidth, preloadResponsive } from '../utils/responsiveImages';
 import { Reveal } from '../motion/Reveal';
 import { EASE_INOUT, EASE_OUT } from '../motion/presets';
 import { POPULAR_TREATMENTS } from '../data/treatmentData';
@@ -74,6 +76,11 @@ const TECHNOLOGIES = [
 
 const TOTAL = TECHNOLOGIES.length;
 const FOOTNOTE = '*Subject to preliminary physical assessment and suitability criteria during clinical intake.';
+
+// Rendered width of a photo below 1280px: full card width in a 5:4.4 (phones) or 4:3 frame,
+// then a ~544px-tall column beside the copy (see BodyContouringSection.css).
+const photoSizes = (src) =>
+  `(max-width: 600px) ${coverWidth(src, 100, 88)}vw, (max-width: 860px) ${coverWidth(src, 100, 75)}vw, ${coverWidth(src, 360, 544)}px`;
 const pad = (n) => String(n).padStart(2, '0');
 
 // Photo: the incoming frame wipes across the outgoing one, which drifts away underneath.
@@ -182,11 +189,7 @@ export default function BodyContouringSection({ onNavigate }) {
   // Warm the cache so every wipe reveals a decoded photo.
   useEffect(() => {
     if (!inView) return;
-    TECHNOLOGIES.forEach(({ image }) => {
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = image;
-    });
+    TECHNOLOGIES.forEach(({ image }) => preloadResponsive(image, photoSizes(image)));
   }, [inView]);
 
   const onKeyDown = (event) => {
@@ -255,9 +258,11 @@ export default function BodyContouringSection({ onNavigate }) {
                     animate="center"
                     exit="exit"
                   >
-                    <motion.img
+                    <ResponsiveImg
+                      as={motion.img}
                       className="ap-tech__photo"
                       src={tech.image}
+                      sizes={photoSizes(tech.image)}
                       alt={tech.alt}
                       loading="lazy"
                       decoding="async"

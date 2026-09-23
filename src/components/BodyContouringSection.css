@@ -448,3 +448,26 @@
     height: 68svh;
   }
 }
+
+/* Touch: each progress tick takes taps across 44px (the bars keep their size, only their spacing
+   grows; the counter can sit closer, as each bar is centred in its 44px). Where the row can't hold
+   them beside the counter (under ~370px) they drop beneath it, and only a screen too narrow for
+   6 x 44px shrinks them. */
+@media (pointer: coarse) {
+  .ap-tech__controls {
+    flex-wrap: wrap;
+    column-gap: 0.5rem;
+    row-gap: 0;
+  }
+  .ap-tech__ticks {
+    gap: 0;
+    min-width: 0;
+  }
+  .ap-tech__ticks > li {
+    min-width: 0;
+  }
+  .ap-tech__tick-btn {
+    width: 2.75rem;
+    max-width: 100%;
+  }
+}

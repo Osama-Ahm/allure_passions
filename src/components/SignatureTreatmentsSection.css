@@ -192,12 +192,12 @@
   .ap-treatments__grid {
     display: flex;
     gap: 0.875rem;
-    margin-inline: calc(var(--ap-gutter) * -1);
-    padding: 0.5rem var(--ap-gutter) 1.75rem;
+    margin-inline: calc(var(--ap-gutter-left) * -1) calc(var(--ap-gutter-right) * -1);
+    padding: 0.5rem var(--ap-gutter-right) 1.75rem var(--ap-gutter-left);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--ap-gutter);
+    scroll-padding-inline: var(--ap-gutter-left) var(--ap-gutter-right);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }

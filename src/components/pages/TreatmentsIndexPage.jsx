@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { POPULAR_TREATMENTS } from '../../data/treatmentData';
 import { ArrowLeft, ArrowRight, Phone, MessageCircle } from 'lucide-react';
+import ResponsiveImg from '../ui/ResponsiveImg';
 import './TreatmentsIndexPage.css';
+
+// Card width below 1280px: one column to 720px, two to 1080px, then three
+const CARD_SIZES = '(max-width: 720px) calc(100vw - 2.5rem), (max-width: 1080px) 46vw, 30vw';
 
 const TREATMENT_AREAS_DIRECTORY = [
   {
@@ -178,8 +182,9 @@ export default function TreatmentsIndexPage({ onNavigate }) {
                   <div>
                     {/* Area Image */}
                     <div className="ap-dir__card-media">
-                      <img
+                      <ResponsiveImg
                         src={area.image}
+                        sizes={CARD_SIZES}
                         alt={area.name}
                         loading="lazy"
                         decoding="async"
@@ -260,8 +265,9 @@ export default function TreatmentsIndexPage({ onNavigate }) {
                 <article key={tr.id} className="ap-dir__card">
                   <div>
                     <div className="ap-dir__card-media">
-                      <img
+                      <ResponsiveImg
                         src={tr.image}
+                        sizes={CARD_SIZES}
                         alt={tr.name}
                         loading="lazy"
                         decoding="async"

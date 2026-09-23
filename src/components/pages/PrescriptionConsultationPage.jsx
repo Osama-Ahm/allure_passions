@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PRODUCTS } from '../../data/treatmentData';
 import { ArrowLeft, Lock, ShieldAlert, ShoppingBag, MessageCircle, Phone, Mail } from 'lucide-react';
+import ResponsiveImg from '../ui/ResponsiveImg';
 import './PrescriptionConsultationPage.css';
 
 const INDICATIONS = [
@@ -127,15 +128,16 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
             {/* Step 1 */}
             {step === 1 && (
               <div className="ap-rx__section-group">
-                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '1.25rem', background: '#F8F6F2', border: '1px solid #EBE5DB', borderRadius: '12px', padding: '1rem' }}>
-                  <div style={{ width: '120px', height: '120px', flexShrink: 0, background: '#FFFFFF', borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E5E0D8' }}>
-                    <img
+                <div className="ap-rx__product-preview">
+                  <div className="ap-rx__product-thumb">
+                    <ResponsiveImg
                       src={formData.strength === '0.1%' ? '/assets/images/tretiheal_01.png' : '/assets/images/tretiheal-0025-pack.webp'}
+                      sizes="120px"
                       alt={`Tretiheal Tretinoin Cream USP ${formData.strength} (20g)`}
                       style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
                     />
                   </div>
-                  <div>
+                  <div className="ap-rx__product-copy">
                     <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#A87F3D' }}>
                       Clinical Prescription Product
                     </span>
@@ -324,8 +326,9 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
           <div className="ap-rx__card">
             <div className="ap-rx__showcase">
               <div className="ap-rx__media-box">
-                <img
+                <ResponsiveImg
                   src={kojivitProd.image}
+                  sizes="220px"
                   alt={kojivitProd.name}
                   loading="lazy"
                   decoding="async"

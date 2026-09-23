@@ -350,6 +350,19 @@ textarea::placeholder {
   font-weight: 300 !important;
 }
 
+/* iOS Safari zooms the whole page into any focused field set below 16px, so touch screens
+   get 16px text in fields (pointer devices keep the 0.925rem above). */
+@media (hover: none) and (pointer: coarse) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: max(1rem, 16px) !important;
+  }
+}
+
 select {
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -601,6 +614,12 @@ img, video, iframe {
   height: auto;
 }
 
+/* <ResponsiveImg> wraps some images in <picture> for their mobile copies; the wrapper
+   generates no box, so the <img> lays out exactly as it would on its own. */
+picture {
+  display: contents;
+}
+
 /* Icons sitting beside text in a flex row keep their size when the text wraps */
 svg {
   flex-shrink: 0;
@@ -719,12 +738,32 @@ svg {
   }
 }
 
+/* App shell (App.jsx): at least one screen tall, measured with the mobile browser bars
+   showing so it never overshoots */
+.ap-app {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
 /* Unified page stage for dedicated interior routes */
 .ap-page-stage {
-  padding-top: var(--ap-nav-offset);
+  padding-top: calc(var(--ap-nav-offset) + var(--ap-safe-top));
   min-height: 100vh;
+  min-height: 100svh; /* the height with mobile browser bars showing, so it never overshoots */
   background-color: var(--bg-main);
   color: var(--text-main);
+}
+
+/* Phones and tablets: homepage sections below the first screen skip layout and paint until
+   they come near the viewport, which roughly halves the first render of this long page on a
+   mid-range phone. `auto` keeps each section's real height once it has been drawn, and
+   scrollToTarget (motion/smoothScroll.js) re-aims anchor jumps that land before that. */
+@media (max-width: 1279.98px) {
+  main > section:not(.ap-hero):not(#concerns),
+  .ap-footer {
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 1000px;
+  }
 }
 
 /* Touch-scrollable pill rail for horizontal categories */

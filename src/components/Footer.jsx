@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowUpRight, Mail, MapPin } from 'lucide-react';
 import InstagramIcon from './ui/InstagramIcon';
+import ResponsiveImg from './ui/ResponsiveImg';
 import { CLINIC_INFO } from '../data/treatmentData';
 import { BOOK_CONSULTATION_URL, EMAIL_URL, INSTAGRAM_URL, PHONE_URL, whatsappLink } from '../data/links';
 import { EASE_OUT, SPRING_SNAPPY, VIEWPORT } from '../motion/presets';
@@ -167,7 +168,15 @@ export default function Footer({ onNavigate }) {
                   animate={reduce || !monoInView ? undefined : { y: '0%' }}
                   transition={{ duration: 1.35, ease: EASE_OUT }}
                 >
-                  <img src={LOGO.src} alt="" width={LOGO.width} height={LOGO.height} loading="lazy" decoding="async" />
+                  <ResponsiveImg
+                    src={LOGO.src}
+                    sizes="(max-width: 639px) 96px, (max-width: 899px) 113px, (max-width: 1199px) 163px, 190px"
+                    alt=""
+                    width={LOGO.width}
+                    height={LOGO.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="ap-footer__sheen" aria-hidden="true">
                     {reduce ? null : (
                       <motion.span

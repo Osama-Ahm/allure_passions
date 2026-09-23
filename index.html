@@ -6,25 +6,42 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
     <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#121110" />
+    <!-- Hero: preload the clinic-tour poster the homepage will show, so its first frame paints before
+         the app bundle. Same choice as pickScrubSource (src/components/hero/useScrubVideo.js): the 1920
+         poster above 1400 device pixels across, else 1280. Runs before the stylesheets so it never waits. -->
+    <script>
+      (function () {
+        if (/^\/(about|treatments|pricing|prescription-skincare|skincare)(\/|$)/.test(location.pathname)) return;
+        var c = navigator.connection;
+        var constrained = c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''));
+        var large = !constrained && window.innerWidth * Math.min(window.devicePixelRatio || 1, 2) > 1400;
+        var link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = '/assets/videos/clinic_tour_poster-' + (large ? '1920' : '1280') + '.webp';
+        link.setAttribute('fetchpriority', 'high');
+        document.head.appendChild(link);
+      })();
+    </script>
     <title>Allure Passions UK | Award-Winning Advanced Aesthetic Clinic Fitzrovia</title>
     <meta name="description" content="Allure Passions UK Aesthetic Clinic - Winner of Best Advanced Skin & Body Aesthetics Clinic 2026 London. JCCP Registered Practice. 76 Cleveland Street, Fitzrovia." />
     <!-- Figma type pairing: Instrument Serif (display), Poppins (body/UI), Cormorant Garamond (accent caps) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Inter only sets the loader's "Fitzrovia · London" line: subset to those letters (~2 KB instead of ~47 KB) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&text=FITZROVIALNDfitzrovialnd%C2%B7%20&display=swap" rel="stylesheet">
     <!-- Blackletter for the Daily Mail wordmarks in "As Featured In"; subset to just those letters -->
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&text=DailyM&display=swap" rel="stylesheet">
-    <!-- Hero: first frame of the clinic tour paints before the app bundle -->
-    <link rel="preload" as="image" href="/assets/videos/clinic_tour_poster-1920.webp" media="(min-width: 1401px), (min-width: 701px) and (min-resolution: 2dppx)" fetchpriority="high">
-    <link rel="preload" as="image" href="/assets/videos/clinic_tour_poster-1280.webp" media="(max-width: 700.98px), (max-width: 1400.98px) and (max-resolution: 1.99dppx)" fetchpriority="high">
 
     <!-- Intro loader: inlined so it paints before the app bundle arrives (lifted by src/motion/intro.js) -->
     <style>
       #ap-loader { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; background: #121110; color: #F7F3EC; }
       #ap-loader::after { content: ""; position: absolute; top: 100%; left: -10%; right: -10%; height: 14vh; background: #121110; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
       .ap-loader__inner { display: grid; justify-items: center; padding: 0 1.5rem; }
+      .ap-loader__inner picture { display: contents; }
       .ap-loader__logo { height: clamp(40px, 8vw, 64px); width: auto; margin-bottom: 1.15rem; opacity: 0; animation: apLoaderFade 1s ease 0.3s forwards; }
       .ap-loader__mark { display: flex; overflow: hidden; padding: 0.12em 0 0.14em 0.26em; font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(1.05rem, 4.4vw, 2.9rem); font-weight: 500; line-height: 1.1; letter-spacing: 0.26em; white-space: nowrap; }
       .ap-loader__mark span { display: inline-block; white-space: pre; transform: translate3d(0, 115%, 0); }
@@ -83,7 +100,12 @@
   <body>
     <div id="ap-loader" aria-hidden="true">
       <div class="ap-loader__inner">
-        <img class="ap-loader__logo" src="/assets/images/allure_logo.png" alt="" />
+        <!-- Phones and tablets get a small copy of the 135 KB logo (it downloads alongside the app bundle) -->
+        <picture>
+          <source media="(max-width: 1279.98px)" type="image/avif" srcset="/assets/images/responsive/allure_logo-160.avif 160w, /assets/images/responsive/allure_logo-320.avif 320w" sizes="54px">
+          <source media="(max-width: 1279.98px)" type="image/webp" srcset="/assets/images/responsive/allure_logo-160.webp 160w, /assets/images/responsive/allure_logo-320.webp 320w" sizes="54px">
+          <img class="ap-loader__logo" src="/assets/images/allure_logo.png" alt="" />
+        </picture>
         <div class="ap-loader__mark"><span style="--i:0">A</span><span style="--i:1">L</span><span style="--i:2">L</span><span style="--i:3">U</span><span style="--i:4">R</span><span style="--i:5">E</span><span style="--i:6"> </span><span style="--i:7">P</span><span style="--i:8">A</span><span style="--i:9">S</span><span style="--i:10">S</span><span style="--i:11">I</span><span style="--i:12">O</span><span style="--i:13">N</span><span style="--i:14">S</span><span style="--i:15"> </span><span style="--i:16">U</span><span style="--i:17">K</span></div>
         <div class="ap-loader__rule"><span></span></div>
         <div class="ap-loader__sub">Fitzrovia &middot; London</div>
