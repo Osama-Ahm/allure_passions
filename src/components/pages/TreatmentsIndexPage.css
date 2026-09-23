@@ -1,0 +1,593 @@
+/* ==========================================================================
+   Treatments Directory Page — Allure Passions UK (Dedicated Route /treatments)
+   Responsive styling across all screen sizes and aspect ratios.
+   ========================================================================== */
+
+.ap-dir {
+  padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(4rem, 2.5rem + 4vw, 6.5rem);
+  background: var(--bg-main, #FAF7F2);
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, 'Poppins', sans-serif);
+}
+
+.ap-dir__container {
+  width: 100%;
+  max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
+  margin-inline: auto;
+  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+}
+
+.ap-dir__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 1.2rem + 1.5vw, 2.75rem);
+  padding: 0.55rem 1.35rem;
+  border: 1px solid rgba(168, 127, 61, 0.35);
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, inherit);
+  font-size: 0.825rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-dir__back:hover,
+.ap-dir__back:focus-visible {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+  background: rgba(168, 127, 61, 0.06);
+}
+
+/* ---- Page Header ---- */
+.ap-dir__header {
+  max-width: 58rem;
+  margin-bottom: clamp(2.25rem, 1.5rem + 2vw, 3.5rem);
+}
+
+.ap-dir__eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.ap-dir__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(2.4rem, 1.5rem + 3.6vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--text-main, #1C1B18);
+  text-wrap: balance;
+}
+
+.ap-dir__lead {
+  margin: 0;
+  max-width: 50rem;
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-body, #4A4740);
+}
+
+/* ---- Responsive Filter Navigation Tabs ---- */
+.ap-dir__tabs-wrap {
+  position: relative;
+  margin-bottom: clamp(2.5rem, 2rem + 2vw, 4.5rem);
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(168, 127, 61, 0.2);
+}
+
+.ap-dir__tabs-rail {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+
+.ap-dir__tabs-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.ap-dir__tab-btn {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  padding: 0.65rem 1.6rem;
+  border-radius: var(--radius-full, 9999px);
+  font-family: var(--font-sans, inherit);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s var(--ease-editorial, ease);
+  border: 1px solid rgba(28, 27, 24, 0.12);
+  background: #FFFFFF;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-dir__tab-btn:hover {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-dir__tab-btn.is-active {
+  border-color: var(--bronze-primary, #A87F3D);
+  background: var(--bronze-primary, #A87F3D);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(168, 127, 61, 0.25);
+}
+
+/* ---- Section Common Styling ---- */
+.ap-dir__section {
+  margin-bottom: clamp(3.5rem, 2.5rem + 3.5vw, 5.5rem);
+}
+
+.ap-dir__section-head {
+  margin-bottom: clamp(1.75rem, 1.2rem + 1.5vw, 2.75rem);
+}
+
+.ap-dir__section-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.ap-dir__section-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-dir__section-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-muted, #7A756C);
+}
+
+/* ---- Responsive Grid Layouts ---- */
+.ap-dir__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+}
+
+/* ---- Directory Cards ---- */
+.ap-dir__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border: 1px solid rgba(168, 127, 61, 0.25);
+  border-radius: var(--radius-sm, 8px);
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(28, 27, 24, 0.04);
+  transition: transform 0.3s var(--ease-editorial, ease), box-shadow 0.3s var(--ease-editorial, ease), border-color 0.3s var(--ease-editorial, ease);
+}
+
+.ap-dir__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 127, 61, 0.45);
+  box-shadow: 0 16px 36px -12px rgba(28, 27, 24, 0.1);
+}
+
+.ap-dir__card-media {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 30vw, 240px);
+  overflow: hidden;
+  background-color: #EDE7DE;
+}
+
+.ap-dir__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-editorial, ease);
+}
+
+.ap-dir__card:hover .ap-dir__card-img {
+  transform: scale(1.04);
+}
+
+.ap-dir__card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(20, 19, 17, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.ap-dir__card-body {
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  flex: 1;
+}
+
+.ap-dir__card-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-dir__card-sub {
+  margin-bottom: 0.95rem;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-dir__card-text {
+  margin: 0 0 1.25rem;
+  font-size: 0.885rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-body, #4A4740);
+}
+
+.ap-dir__indications {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.ap-dir__indication-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: var(--text-muted, #7A756C);
+}
+
+.ap-dir__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--bronze-primary, #A87F3D);
+  flex-shrink: 0;
+}
+
+/* Card Action Footers */
+.ap-dir__card-foot {
+  padding: 1.25rem clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-top: 1px solid rgba(28, 27, 24, 0.08);
+  background: #FAF7F2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+.ap-dir__btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid rgba(168, 127, 61, 0.4);
+  border-radius: var(--radius-xs, 6px);
+  background: transparent;
+  color: var(--text-main, #1C1B18);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-dir__btn-link:hover,
+.ap-dir__btn-link:focus-visible {
+  background: rgba(168, 127, 61, 0.08);
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-dir__consult-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--bronze-primary, #A87F3D);
+  font-size: 0.825rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ap-dir__consult-link:hover {
+  color: var(--bronze-hover, #8C6527);
+}
+
+.ap-dir__price-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.ap-dir__price-label {
+  font-size: 0.7rem;
+  color: var(--text-muted, #7A756C);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ap-dir__price-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main, #1C1B18);
+}
+
+/* ---- Signature Package Cards ---- */
+.ap-dir__pkg-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid rgba(168, 127, 61, 0.32);
+  padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  box-shadow: 0 4px 18px rgba(28, 27, 24, 0.04);
+}
+
+.ap-dir__pkg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ap-dir__pkg-cat {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 600;
+}
+
+.ap-dir__pkg-price {
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-dir__pkg-title {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-dir__pkg-sessions {
+  font-size: 0.85rem;
+  color: #B58A32;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+}
+
+.ap-dir__pkg-desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.885rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-body, #4A4740);
+}
+
+.ap-dir__pkg-target {
+  font-size: 0.825rem;
+  color: var(--text-muted, #7A756C);
+  border-top: 1px solid rgba(28, 27, 24, 0.08);
+  padding-top: 0.85rem;
+}
+
+.ap-dir__pkg-action {
+  margin-top: 1.75rem;
+}
+
+.ap-dir__pkg-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.875rem;
+  padding: 0 1.25rem;
+  border-radius: var(--radius-xs, 6px);
+  background: var(--text-main, #1C1B18);
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-dir__pkg-btn:hover,
+.ap-dir__pkg-btn:focus-visible {
+  background: #36322C;
+  color: var(--ap-gold-soft, #E6D2A4);
+}
+
+/* ---- Bottom Direct Consultation Banner ---- */
+.ap-dir__banner {
+  background: #141312;
+  color: #FFFFFF;
+  border: 1px solid rgba(168, 127, 61, 0.35);
+  border-radius: var(--radius-sm, 8px);
+  padding: clamp(2rem, 1.5rem + 2vw, 3.25rem) clamp(1.5rem, 1.2rem + 2vw, 2.75rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ap-dir__banner-copy {
+  max-width: 38rem;
+}
+
+.ap-dir__banner-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.ap-dir__banner-title {
+  margin: 0;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem);
+  font-weight: 400;
+  color: #FFFFFF;
+}
+
+.ap-dir__banner-desc {
+  margin: 0.5rem 0 0;
+  color: #ECE8E1;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.ap-dir__banner-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ap-dir__banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.8rem;
+  border-radius: var(--radius-xs, 6px);
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-dir__banner-btn--gold {
+  background: var(--bronze-gradient, #A87F3D);
+  color: #FFFFFF;
+}
+
+.ap-dir__banner-btn--gold:hover {
+  filter: brightness(1.1);
+}
+
+.ap-dir__banner-btn--outline {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  background: transparent;
+}
+
+.ap-dir__banner-btn--outline:hover {
+  border-color: #D4AF37;
+  color: #D4AF37;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 1080px) {
+  .ap-dir__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .ap-dir__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ap-dir__banner-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .ap-dir__banner-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .ap-dir__card-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+  .ap-dir__btn-link {
+    width: 100%;
+    justify-content: center;
+  }
+  .ap-dir__consult-link {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 540px) and (max-width: 960px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-dir {
+    padding-block: 1.5rem 3rem;
+  }
+  .ap-dir__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .ap-dir__card-media {
+    height: 160px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-dir__card,
+  .ap-dir__card-img,
+  .ap-dir__tab-btn,
+  .ap-dir__back {
+    transition: none !important;
+  }
+  .ap-dir__card:hover {
+    transform: none !important;
+  }
+}

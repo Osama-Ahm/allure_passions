@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   motion,
   useAnimationFrame,
@@ -11,14 +11,15 @@ import TextReveal from '../motion/TextReveal';
 import { Reveal } from '../motion/Reveal';
 import './PressBarSection.css';
 
-// Publications listed on the live site. Each wordmark gets its own typographic treatment.
+// Publications the clinic has been featured in (client-supplied list, 2026-09-23).
+// Each wordmark gets its own typographic treatment; `lines` stacks a masthead over its section name.
 const PRESS_LOGOS = [
-  { name: 'VOGUE', variant: 'vogue' },
-  { name: 'TATLER', variant: 'tatler' },
-  { name: "HARPER'S BAZAAR", variant: 'bazaar' },
-  { name: 'GQ', variant: 'gq' },
-  { name: 'ELLE', variant: 'elle' },
-  { name: 'GHP GLOBAL', variant: 'ghp' },
+  { name: 'HELLO!', variant: 'hello' },
+  { name: 'The Times', variant: 'times', display: 'THE TIMES' },
+  { name: 'The Sun', variant: 'sun', lines: ['The', 'Sun'] },
+  { name: 'Daily Mail Femail', variant: 'femail', lines: ['Daily Mail', 'femail'] },
+  { name: "Women's Health", variant: 'womens-health', display: 'Women’sHealth' },
+  { name: 'Daily Mail', variant: 'daily-mail' },
 ];
 
 const SPEED = 38; // px per second at full speed
@@ -26,7 +27,22 @@ const SPEED = 38; // px per second at full speed
 function Wordmark({ press, hidden }) {
   return (
     <li className={`ap-press__item ap-press__item--${press.variant}`} aria-hidden={hidden || undefined}>
-      <span className="ap-press__mark">{press.name}</span>
+      {press.lines || press.display ? (
+        <>
+          <span className="ap-press__mark" aria-hidden="true">
+            {press.lines
+              ? press.lines.map((line) => (
+                  <span key={line} className="ap-press__line">
+                    {line}
+                  </span>
+                ))
+              : press.display}
+          </span>
+          <span className="ap-visually-hidden">{press.name}</span>
+        </>
+      ) : (
+        <span className="ap-press__mark">{press.name}</span>
+      )}
     </li>
   );
 }
@@ -43,18 +59,27 @@ export default function PressBarSection() {
   const x = useMotionValue(0);
   const speed = useSpring(1, { stiffness: 45, damping: 18, mass: 1 });
   const inView = useInView(marqueeRef, { margin: '120px 0px' });
+  // Copies of the list in each group: a group must be at least as wide as the ribbon,
+  // or ultra-wide screens would see the track run out before it loops.
+  const [copies, setCopies] = useState(2);
 
   useEffect(() => {
     const group = groupRef.current;
-    if (!group || reduce) return undefined;
+    const marquee = marqueeRef.current;
+    if (!group || !marquee || reduce) return undefined;
     const measure = () => {
       groupWidth.current = group.offsetWidth;
+      const listWidth = group.offsetWidth / copies;
+      if (!listWidth) return;
+      const needed = Math.max(2, Math.ceil(marquee.clientWidth / listWidth) + 1);
+      if (needed !== copies) setCopies(needed);
     };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(group);
+    observer.observe(marquee);
     return () => observer.disconnect();
-  }, [reduce]);
+  }, [reduce, copies]);
 
   useAnimationFrame((_, delta) => {
     const width = groupWidth.current;
@@ -100,19 +125,19 @@ export default function PressBarSection() {
             onBlur={resume}
           >
             <motion.div className="ap-press__track" style={{ x }}>
-              {/* Each group holds the list twice so one group is always wider than the screen. */}
+              {/* Each group repeats the list until it is wider than the ribbon (see `copies`). */}
               <ul ref={groupRef} className="ap-press__group">
                 {PRESS_LOGOS.map((press) => (
                   <Wordmark key={press.name} press={press} />
                 ))}
-                {PRESS_LOGOS.map((press) => (
-                  <Wordmark key={`${press.name}-b`} press={press} hidden />
-                ))}
+                {Array.from({ length: copies - 1 }, (_, copy) =>
+                  PRESS_LOGOS.map((press) => <Wordmark key={`${press.name}-a${copy}`} press={press} hidden />),
+                )}
               </ul>
               <ul className="ap-press__group" aria-hidden="true">
-                {[...PRESS_LOGOS, ...PRESS_LOGOS].map((press, index) => (
-                  <Wordmark key={`${press.name}-c${index}`} press={press} hidden />
-                ))}
+                {Array.from({ length: copies }, (_, copy) =>
+                  PRESS_LOGOS.map((press) => <Wordmark key={`${press.name}-b${copy}`} press={press} hidden />),
+                )}
               </ul>
             </motion.div>
           </div>

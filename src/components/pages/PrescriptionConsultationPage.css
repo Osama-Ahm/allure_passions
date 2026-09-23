@@ -1,0 +1,717 @@
+/* ==========================================================================
+   Prescription Consultation Page — Allure Passions UK (/prescription-skincare)
+   Responsive styling across all screen sizes and aspect ratios.
+   ========================================================================== */
+
+.ap-rx {
+  padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(4rem, 2.5rem + 4vw, 6.5rem);
+  background: var(--bg-main, #FAF7F2);
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, 'Poppins', sans-serif);
+  min-height: 85vh;
+}
+
+.ap-rx__container {
+  width: 100%;
+  max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
+  margin-inline: auto;
+  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+}
+
+.ap-rx__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 1.2rem + 1.5vw, 2.75rem);
+  padding: 0.55rem 1.35rem;
+  border: 1px solid rgba(168, 127, 61, 0.35);
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, inherit);
+  font-size: 0.825rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-rx__back:hover,
+.ap-rx__back:focus-visible {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+  background: rgba(168, 127, 61, 0.06);
+}
+
+/* ---- Header ---- */
+.ap-rx__header {
+  max-width: 56rem;
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+}
+
+.ap-rx__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(168, 127, 61, 0.09);
+  border: 1px solid rgba(168, 127, 61, 0.32);
+  margin-bottom: 1rem;
+}
+
+.ap-rx__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(2.4rem, 1.6rem + 3.2vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-main, #1C1B18);
+  text-wrap: balance;
+}
+
+.ap-rx__lead {
+  margin: 0;
+  max-width: 50rem;
+  font-size: clamp(1.025rem, 0.925rem + 0.3vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-body, #4A4740);
+}
+
+/* ---- Compliance Notice (POM Callout) ---- */
+.ap-rx__notice {
+  background: #FFFFFF;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-left: 4px solid #EF4444;
+  border-radius: var(--radius-md, 8px);
+  padding: clamp(1.15rem, 1rem + 1vw, 1.5rem) clamp(1.25rem, 1rem + 1.2vw, 1.85rem);
+  margin-bottom: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  box-shadow: 0 4px 18px rgba(28, 27, 24, 0.03);
+}
+
+.ap-rx__notice-icon {
+  color: #EF4444;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ap-rx__notice-title {
+  font-weight: 600;
+  color: var(--text-main, #1C1B18);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.ap-rx__notice-text {
+  font-size: 0.875rem;
+  color: var(--text-body, #4A4740);
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+/* ---- Product Selection Tabs ---- */
+.ap-rx__product-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 1.25rem;
+  margin-bottom: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+}
+
+.ap-rx__product-tab {
+  padding: clamp(1.2rem, 1rem + 1vw, 1.5rem);
+  background: #F4EFE6;
+  border: 1px solid rgba(28, 27, 24, 0.1);
+  border-radius: var(--radius-md, 8px);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.ap-rx__product-tab:hover {
+  border-color: rgba(168, 127, 61, 0.4);
+}
+
+.ap-rx__product-tab.is-active {
+  background: #FFFFFF;
+  border: 2px solid var(--bronze-primary, #A87F3D);
+  box-shadow: 0 8px 24px rgba(168, 127, 61, 0.12);
+}
+
+.ap-rx__product-tab-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full, 9999px);
+  display: inline-block;
+}
+
+.ap-rx__product-tab-tag--pom {
+  background: rgba(168, 127, 61, 0.12);
+  color: var(--bronze-primary, #A87F3D);
+  border: 1px solid rgba(168, 127, 61, 0.3);
+}
+
+.ap-rx__product-tab-tag--otc {
+  background: rgba(28, 27, 24, 0.06);
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-rx__product-tab-name {
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main, #1C1B18);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ap-rx__product-tab-desc {
+  font-size: 0.825rem;
+  color: var(--text-muted, #7A756C);
+  margin: 0;
+}
+
+/* ---- Main Consultation Card ---- */
+.ap-rx__card {
+  background: #FFFFFF;
+  border: 1px solid rgba(168, 127, 61, 0.3);
+  border-radius: var(--radius-lg, 12px);
+  padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+  box-shadow: 0 8px 25px rgba(28, 27, 24, 0.04);
+}
+
+.ap-rx__card-head {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(28, 27, 24, 0.08);
+  padding-bottom: 1.25rem;
+}
+
+.ap-rx__card-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.4rem, 1.2rem + 1vw, 1.85rem);
+  color: var(--text-main, #1C1B18);
+  font-weight: 500;
+}
+
+.ap-rx__card-sub {
+  margin: 0;
+  font-size: 0.885rem;
+  color: var(--text-muted, #7A756C);
+  font-weight: 300;
+}
+
+/* ---- Stepper Header ---- */
+.ap-rx__stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: clamp(1.5rem, 1rem + 1.2vw, 2.25rem);
+  padding: 0.85rem 1.35rem;
+  border: 1px solid rgba(168, 127, 61, 0.18);
+  border-radius: var(--radius-sm, 6px);
+  background: #F4EFE6;
+}
+
+.ap-rx__stepper-step {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted, #7A756C);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ap-rx__stepper-step.is-active {
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 700;
+}
+
+.ap-rx__stepper-step.is-complete {
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-rx__stepper-arrow {
+  color: var(--text-muted, #7A756C);
+  user-select: none;
+}
+
+/* ---- Step 1: Retinoid Strength & Indications ---- */
+.ap-rx__section-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.ap-rx__field-label {
+  display: block;
+  color: var(--text-main, #1C1B18);
+  font-size: 0.925rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+}
+
+.ap-rx__strength-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+}
+
+.ap-rx__strength-btn {
+  background: #FAF7F2;
+  border: 1px solid rgba(28, 27, 24, 0.12);
+  color: var(--text-main, #1C1B18);
+  padding: 1.25rem;
+  border-radius: var(--radius-sm, 6px);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ap-rx__strength-btn:hover {
+  border-color: rgba(168, 127, 61, 0.4);
+}
+
+.ap-rx__strength-btn.is-selected {
+  background: rgba(168, 127, 61, 0.12);
+  border: 2px solid var(--bronze-primary, #A87F3D);
+}
+
+.ap-rx__strength-val {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--bronze-primary, #A87F3D);
+  margin-bottom: 0.35rem;
+}
+
+.ap-rx__strength-hint {
+  font-size: 0.825rem;
+  color: var(--text-body, #4A4740);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.ap-rx__indication-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 0.75rem;
+}
+
+.ap-rx__indication-btn {
+  background: #FAF7F2;
+  border: 1px solid rgba(28, 27, 24, 0.12);
+  color: var(--text-main, #1C1B18);
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ap-rx__indication-btn:hover {
+  border-color: rgba(168, 127, 61, 0.4);
+}
+
+.ap-rx__indication-btn.is-selected {
+  background: rgba(168, 127, 61, 0.14);
+  border: 2px solid var(--bronze-primary, #A87F3D);
+  color: #7A5B27;
+  font-weight: 600;
+}
+
+/* Step Navigation Actions */
+.ap-rx__nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ap-rx__nav-actions--between {
+  justify-content: space-between;
+}
+
+/* ---- Step 2: Medical Safety ---- */
+.ap-rx__contraindication-box {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-sm, 6px);
+  padding: 1rem 1.25rem;
+  color: var(--text-main, #1C1B18);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.ap-rx__binary-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ap-rx__binary-btn {
+  padding: 0.75rem 2.25rem;
+  border-radius: var(--radius-sm, 6px);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: #FAF7F2;
+  border: 1px solid rgba(28, 27, 24, 0.12);
+  color: var(--text-main, #1C1B18);
+  transition: all 0.2s ease;
+}
+
+.ap-rx__binary-btn:hover {
+  border-color: rgba(168, 127, 61, 0.4);
+}
+
+.ap-rx__binary-btn.is-selected-safe {
+  background: rgba(168, 127, 61, 0.15);
+  border: 2px solid var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-rx__binary-btn.is-selected-warn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 2px solid #EF4444;
+  color: #EF4444;
+}
+
+/* ---- Step 3: Clinical Suitability Summary & Review ---- */
+.ap-rx__summary-box {
+  background: #FAF7F2;
+  border: 1px solid rgba(168, 127, 61, 0.3);
+  border-radius: var(--radius-md, 8px);
+  padding: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+}
+
+.ap-rx__summary-eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.ap-rx__summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1.25rem;
+}
+
+.ap-rx__summary-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #7A756C);
+}
+
+.ap-rx__summary-value {
+  font-weight: 600;
+  color: var(--text-main, #1C1B18);
+  font-size: 1.05rem;
+  margin-top: 0.25rem;
+}
+
+.ap-rx__summary-value--cleared {
+  color: #16A34A;
+}
+
+.ap-rx__summary-value--alert {
+  color: #DC2626;
+}
+
+.ap-rx__compliance-notice {
+  background: rgba(168, 127, 61, 0.06);
+  border: 1px solid rgba(168, 127, 61, 0.25);
+  border-radius: var(--radius-md, 8px);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.ap-rx__compliance-text {
+  font-size: 0.875rem;
+  color: var(--text-body, #4A4740);
+  line-height: 1.6;
+}
+
+/* Contact Channels */
+.ap-rx__contact-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main, #1C1B18);
+  margin-bottom: 1rem;
+}
+
+.ap-rx__contact-channels {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ap-rx__contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.75rem;
+  border-radius: var(--radius-xs, 6px);
+  font-size: 0.825rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-rx__contact-btn--whatsapp {
+  background: var(--bronze-gradient, #A87F3D);
+  color: #FFFFFF;
+}
+
+.ap-rx__contact-btn--whatsapp:hover {
+  filter: brightness(1.08);
+}
+
+.ap-rx__contact-btn--phone {
+  background: #FFFFFF;
+  border: 1px solid rgba(168, 127, 61, 0.45);
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-rx__contact-btn--phone:hover {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-rx__contact-btn--email {
+  background: #FAF7F2;
+  border: 1px solid rgba(28, 27, 24, 0.15);
+  color: var(--text-body, #4A4740);
+}
+
+.ap-rx__contact-btn--email:hover {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--text-main, #1C1B18);
+}
+
+/* ---- Tab 2: Kojivit Ultra Showcase ---- */
+.ap-rx__showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  gap: clamp(1.5rem, 2vw, 3rem);
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.ap-rx__media-box {
+  text-align: center;
+  padding: 1.5rem;
+  background: #FAF7F2;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid rgba(168, 127, 61, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ap-rx__media-img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.ap-rx__showcase-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  background: rgba(28, 27, 24, 0.06);
+  color: var(--text-main, #1C1B18);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full, 9999px);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.ap-rx__showcase-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+  color: var(--text-main, #1C1B18);
+  font-weight: 500;
+}
+
+.ap-rx__showcase-price {
+  font-size: 1.35rem;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.ap-rx__showcase-desc {
+  color: var(--text-body, #4A4740);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+  font-weight: 300;
+}
+
+.ap-rx__showcase-ingredients {
+  font-size: 0.85rem;
+  color: var(--text-muted, #7A756C);
+  margin-bottom: 1.5rem;
+}
+
+.ap-rx__showcase-badge {
+  background: rgba(168, 127, 61, 0.08);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid rgba(168, 127, 61, 0.2);
+  font-size: 0.85rem;
+  color: var(--bronze-primary, #A87F3D);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ap-rx__reservation-box {
+  border-top: 1px solid rgba(28, 27, 24, 0.08);
+  padding-top: 2rem;
+}
+
+.ap-rx__reservation-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-rx__reservation-text {
+  color: var(--text-muted, #7A756C);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .ap-rx__showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ap-rx__media-box {
+    max-width: 280px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .ap-rx__notice {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .ap-rx__stepper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    padding: 0.8rem 0.9rem;
+    text-align: center;
+  }
+
+  .ap-rx__stepper-step {
+    font-size: 0.78rem;
+    line-height: 1.3;
+    justify-content: center;
+  }
+
+  .ap-rx__stepper-arrow {
+    display: none;
+  }
+
+  .ap-rx__nav-actions,
+  .ap-rx__contact-channels {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ap-rx__contact-btn,
+  .ap-rx__nav-actions .btn-bronze,
+  .ap-rx__nav-actions .btn-outline-bronze {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ap-rx__binary-group {
+    width: 100%;
+  }
+
+  .ap-rx__binary-btn {
+    flex: 1;
+    text-align: center;
+    padding-inline: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .ap-rx__stepper {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    text-align: left;
+  }
+
+  .ap-rx__stepper-step {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 540px) and (max-width: 960px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-rx {
+    padding-block: 1.5rem 3rem;
+  }
+
+  .ap-rx__showcase {
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-rx__product-tab,
+  .ap-rx__strength-btn,
+  .ap-rx__indication-btn,
+  .ap-rx__binary-btn,
+  .ap-rx__contact-btn,
+  .ap-rx__back {
+    transition: none !important;
+  }
+}

@@ -103,9 +103,10 @@
     width: auto;
     max-width: 100%;
   }
+  /* Each button keeps its label on one line: they share a row when both fit, else stack */
   .ap-cta__btn {
     min-width: 0;
-    flex: 1 1 13rem;
+    flex: 1 1 auto;
   }
 }
 
@@ -118,7 +119,7 @@
   .ap-cta__media {
     position: relative;
     inset: auto;
-    height: clamp(17rem, 58vw, 27rem);
+    height: min(clamp(17rem, 58vw, 27rem), 70svh);
     -webkit-mask-image: linear-gradient(180deg, #000 55%, rgba(0, 0, 0, 0.6) 76%, transparent 100%);
     mask-image: linear-gradient(180deg, #000 55%, rgba(0, 0, 0, 0.6) 76%, transparent 100%);
   }
@@ -144,10 +145,9 @@
   }
 }
 
-/* index.css forces h2 sizes on small phones; keep the Figma display size here. */
+/* Phones: a touch smaller so the question sits on three balanced lines */
 @media screen and (max-width: 480px) {
-  .ap-cta .ap-cta__title {
-    font-size: clamp(2.2rem, 1.6rem + 3vw, 2.5rem) !important;
-    line-height: 1.08 !important;
+  .ap-cta__title {
+    font-size: clamp(2.1rem, 1.6rem + 3vw, 2.5rem);
   }
 }

@@ -4,16 +4,19 @@
   /* Scroll distance over which the 8-second tour plays (about 11px of scroll per frame). */
   --ap-hero-scrub: 230vh;
   position: relative;
+  height: calc(100vh + var(--ap-hero-scrub)); /* fallback for browsers without svh */
   height: calc(100svh + var(--ap-hero-scrub));
   background: #17120d;
   font-family: var(--ap-font-sans);
 }
 
+/* No min-height: a stage taller than the screen would pin the buttons below the fold
+   (landscape phones). The copy scales with the screen height instead (see the title). */
 .ap-hero__stage {
   position: sticky;
   top: 0;
+  height: 100vh;
   height: 100svh;
-  min-height: 34rem;
   overflow: hidden;
   isolation: isolate;
 }
@@ -84,14 +87,18 @@
 }
 
 .ap-hero__title {
-  margin: 0 0 1.35rem;
+  margin: 0 0 clamp(0.6rem, 2.4vh, 1.35rem);
+  margin: 0 0 clamp(0.6rem, 2.4svh, 1.35rem);
   font-family: var(--ap-font-display);
-  font-size: var(--ap-fs-hero);
+  /* Figma size, held back by the width on phones and by the height on short screens */
+  font-size: min(var(--ap-fs-hero), 11vw, 11vh);
+  font-size: min(var(--ap-fs-hero), 11vw, 11svh);
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: -0.028em;
   color: var(--ap-white);
   text-shadow: 0 2px 30px rgba(10, 6, 3, 0.25);
+  text-wrap: balance; /* no lone "You." when the italic line wraps on phones */
 }
 
 .ap-hero__line {
@@ -105,7 +112,8 @@
 
 .ap-hero__lead {
   max-width: 44rem;
-  margin: 0 0 2.5rem;
+  margin: 0 0 clamp(1rem, 5.5vh - 0.5rem, 2.5rem);
+  margin: 0 0 clamp(1rem, 5.5svh - 0.5rem, 2.5rem);
   font-size: clamp(1rem, 0.92rem + 0.3vw, 1.125rem);
   font-weight: 400;
   line-height: 1.5;
@@ -285,13 +293,7 @@
     --ap-hero-scrub: 170vh;
   }
   .ap-hero__layout {
-    padding-bottom: 5.25rem;
-  }
-  .ap-hero__title {
-    margin-bottom: 1rem;
-  }
-  .ap-hero__lead {
-    margin-bottom: 1.75rem;
+    padding-bottom: 5.25rem; /* clears the centred scroll cue */
   }
   .ap-hero__actions {
     flex-direction: column;
@@ -307,6 +309,65 @@
     transform: translateX(50%);
   }
   .ap-hero__cue-label {
+    display: none;
+  }
+  /* The copy spans the width and climbs higher here, so shade the lower frame evenly
+     (the desktop scrim only darkens the bottom-left corner). */
+  .ap-hero__scrim {
+    background:
+      linear-gradient(180deg, rgba(20, 14, 9, 0.5) 0%, rgba(20, 14, 9, 0.12) 16%, rgba(20, 14, 9, 0) 26%),
+      linear-gradient(0deg, rgba(20, 14, 9, 0.8) 0%, rgba(20, 14, 9, 0.58) 40%, rgba(20, 14, 9, 0.3) 65%, rgba(20, 14, 9, 0) 88%);
+  }
+}
+
+/* Shorter phones (iPhone SE and the like, with the browser bars showing): drop the cue
+   and tighten the stack so the headline clears the header and both buttons stay on screen. */
+@media (max-width: 600px) and (max-height: 700px) and (max-aspect-ratio: 1/1) {
+  .ap-hero__title {
+    font-size: min(11vw, 7.4vh);
+    font-size: min(11vw, 7.4svh);
+  }
+  .ap-hero__layout {
+    padding-bottom: 1.75rem;
+  }
+  .ap-hero__lead {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .ap-hero__actions {
+    gap: 0.625rem;
+  }
+  .ap-hero__actions .ap-btn {
+    min-height: 3.125rem;
+  }
+  .ap-hero__cue {
+    display: none;
+  }
+}
+
+/* Short landscape screens (phones on their side, small laptop windows): buttons share a
+   row and the stack tightens so everything sits on screen under the compact header. */
+@media (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-hero__layout {
+    padding-bottom: 1.5rem;
+  }
+  .ap-hero__lead {
+    max-width: 40rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .ap-hero__actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+  }
+  .ap-hero__actions .ap-btn {
+    flex: 0 1 auto;
+    width: auto;
+    min-width: min(15.5rem, calc(50% - 0.375rem));
+    min-height: 2.875rem;
+  }
+  .ap-hero__cue {
     display: none;
   }
 }

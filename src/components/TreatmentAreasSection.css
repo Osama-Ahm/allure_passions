@@ -141,6 +141,7 @@
   display: block;
   overflow: hidden;
   isolation: isolate;
+  container-type: inline-size;
   border-radius: var(--ap-radius-md);
   background: #1d1915;
   color: var(--ap-white);
@@ -411,6 +412,32 @@
   }
 }
 
+/* Below 768px the arrows leave the card row and sit underneath with the counter
+   (keep in sync with computeLayout in TreatmentAreasSection.jsx). */
+@media (max-width: 767px) {
+  .ap-paths__side-arrows {
+    display: none;
+  }
+  .ap-paths__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .ap-paths__ctrl {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .ap-paths__controls {
+    justify-content: center;
+    gap: 1.75rem;
+  }
+}
+
 @media (max-width: 599px) {
   .ap-paths {
     border-radius: 22px 22px 0 0;
@@ -427,20 +454,6 @@
     font-size: 0.75rem;
     letter-spacing: 0.02em;
   }
-  .ap-paths__side-arrows {
-    display: none;
-  }
-  .ap-paths__controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-  .ap-paths__ctrl {
-    width: 3rem;
-    height: 3rem;
-  }
   .ap-paths__cta {
     margin-top: 1.75rem;
     padding-inline: var(--ap-gutter);
@@ -451,6 +464,40 @@
   }
   .ap-paths__caption {
     right: 4.25rem;
+  }
+}
+
+/* Narrow phones: "PATH A: / BY CONCERN" folds onto two centred lines inside its tab */
+@media (max-width: 379px) {
+  .ap-paths__switch {
+    height: auto;
+    min-height: 3.25rem;
+  }
+  .ap-paths__tab {
+    padding: 0.45rem 0.35rem;
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
+  }
+  .ap-paths__tab-label {
+    text-wrap: balance;
+  }
+}
+
+/* Narrow cards (the smallest phones): the arrow chip moves up to the top corner so a long
+   title ("Melasma & Pigmentation") keeps the card's full width. */
+@container (max-width: 240px) {
+  .ap-paths__caption {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1.1rem;
+  }
+  .ap-paths__chip {
+    top: 0.85rem;
+    right: 0.85rem;
+    bottom: auto;
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }
 

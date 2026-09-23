@@ -26,11 +26,11 @@ const TILES = [
   },
   {
     tall: true,
-    src: '/assets/images/area_body.jpg',
-    alt: 'A client resting on a treatment bed beside an Emsculpt NEO body-contouring device',
+    src: '/assets/images/site/emsculpt-neo.webp',
+    alt: 'An Emsculpt NEO applicator strapped across a client’s abdomen as she lies on a treatment bed',
     label: 'Technology',
     caption: 'Emsculpt NEO body contouring',
-    position: '50% 50%',
+    position: '62% 50%',
   },
   {
     src: '/assets/images/area_cheeks.jpg',

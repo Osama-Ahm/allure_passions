@@ -69,9 +69,9 @@ const TREATMENTS = [
     description:
       'Emsculpt Neo combines radiofrequency energy with muscle stimulation technology to support body contouring and improved muscle definition simultaneously.',
     cta: 'Explore Emsculpt Neo',
-    image: `${IMAGE_ROOT}/EmsculptNeo.jpg`,
-    position: '62% 50%',
-    alt: 'Emsculpt Neo applicator strapped in place on a client lying on a treatment bed',
+    image: '/assets/images/site/emsculpt-neo.webp',
+    position: '62% 45%',
+    alt: 'An Emsculpt NEO applicator strapped across a client’s abdomen as she lies on a treatment bed',
   },
   {
     id: 'emerald_laser',
@@ -80,9 +80,9 @@ const TREATMENTS = [
     description:
       'Emerald Green Laser uses low-level laser technology as part of a non-invasive approach to body contouring, circumference reduction and holistic lymphatic wellness.',
     cta: 'Explore Emerald Green Laser',
-    image: `${IMAGE_ROOT}/Emeraldlaser.webp`,
-    position: '45% 50%',
-    alt: 'Green laser lines projected across a client’s body beneath the Emerald laser heads',
+    image: '/assets/images/site/emerald-laser.webp',
+    position: '45% 55%',
+    alt: 'A client in orange safety glasses lies beneath the Emerald laser’s curved arms as green laser lines cross her abdomen',
   },
 ];
 

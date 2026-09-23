@@ -1,0 +1,390 @@
+/* ==========================================================================
+   About Page — Allure Passions UK (Dedicated Route /about)
+   Responsive styling across all screen sizes and aspect ratios.
+   ========================================================================== */
+
+.ap-about {
+  padding-block: clamp(2rem, 1.5rem + 3vw, 4rem) clamp(4rem, 2.5rem + 4vw, 6.5rem);
+  background: var(--bg-main, #FAF7F2);
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, 'Poppins', sans-serif);
+}
+
+.ap-about__container {
+  width: 100%;
+  max-width: calc(var(--ap-container, 1290px) + var(--ap-gutter, 2rem) * 2);
+  margin-inline: auto;
+  padding-inline: var(--ap-gutter, clamp(1.25rem, 4vw, 2.5rem));
+}
+
+.ap-about__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 1.2rem + 1.5vw, 2.75rem);
+  padding: 0.55rem 1.35rem;
+  border: 1px solid rgba(168, 127, 61, 0.35);
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--text-main, #1C1B18);
+  font-family: var(--font-sans, inherit);
+  font-size: 0.825rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-editorial, ease);
+}
+
+.ap-about__back:hover,
+.ap-about__back:focus-visible {
+  border-color: var(--bronze-primary, #A87F3D);
+  color: var(--bronze-primary, #A87F3D);
+  background: rgba(168, 127, 61, 0.06);
+}
+
+/* ---- Page Header ---- */
+.ap-about__header {
+  max-width: 56rem;
+  margin-bottom: clamp(2.5rem, 1.8rem + 2.5vw, 4.25rem);
+}
+
+.ap-about__badge-award {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.15rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(168, 127, 61, 0.12);
+  border: 1px solid rgba(168, 127, 61, 0.32);
+  color: var(--bronze-primary, #A87F3D);
+  font-size: 0.785rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ap-about__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(2.4rem, 1.5rem + 3.6vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--text-main, #1C1B18);
+  text-wrap: balance;
+}
+
+.ap-about__lead {
+  margin: 0;
+  max-width: 48rem;
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-body, #4A4740);
+}
+
+/* ---- Hero / Story Section ---- */
+.ap-about__story {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 1.5rem + 3.5vw, 4.5rem);
+  align-items: center;
+  margin-bottom: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+}
+
+.ap-about__story-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ap-about__location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.65rem;
+  color: var(--bronze-primary, #A87F3D);
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ap-about__subtitle {
+  margin: 0 0 1.35rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.85rem, 1.3rem + 2vw, 2.85rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-about__prose {
+  margin: 0 0 1.25rem;
+  font-size: clamp(0.95rem, 0.9rem + 0.18vw, 1.05rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-body, #4A4740);
+}
+
+.ap-about__prose-secondary {
+  margin: 0 0 2rem;
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text-muted, #7A756C);
+}
+
+.ap-about__check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.ap-about__check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--bronze-primary, #A87F3D);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.ap-about__cta-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ap-about__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3.125rem;
+  padding: 0 2rem;
+  border-radius: var(--radius-xs, 6px);
+  background: var(--text-main, #1C1B18);
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-editorial, ease);
+}
+
+.ap-about__cta-btn:hover,
+.ap-about__cta-btn:focus-visible {
+  background: #36322C;
+  color: var(--ap-gold-soft, #E6D2A4);
+}
+
+/* ---- Photo & Safe Docked Badge ---- */
+.ap-about__visual {
+  position: relative;
+  min-width: 0;
+}
+
+.ap-about__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3.4;
+  overflow: hidden;
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid rgba(168, 127, 61, 0.3);
+  box-shadow: 0 16px 40px -16px rgba(28, 27, 24, 0.18);
+  background: #EAE6DF;
+}
+
+.ap-about__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.ap-about__card-badge {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  max-width: 280px;
+  padding: 1.15rem 1.4rem;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid rgba(168, 127, 61, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(28, 27, 24, 0.12);
+  pointer-events: none;
+}
+
+.ap-about__badge-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-about__badge-text {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-main, #1C1B18);
+}
+
+/* ---- Trust / Credentials Grid ---- */
+.ap-about__trust {
+  margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+  padding-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+  border-top: 1px solid rgba(28, 27, 24, 0.08);
+}
+
+.ap-about__trust-head {
+  max-width: 44rem;
+  margin: 0 auto clamp(2.5rem, 1.8rem + 2vw, 3.5rem);
+  text-align: center;
+}
+
+.ap-about__trust-title {
+  margin: 0.5rem 0 0.5rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  font-weight: 400;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-about__trust-lead {
+  margin: 0;
+  font-size: 0.975rem;
+  line-height: 1.6;
+  color: var(--text-muted, #7A756C);
+}
+
+.ap-about__trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1.5rem;
+}
+
+.ap-about__cred-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg-surface, #FFFFFF);
+  border: 1px solid rgba(168, 127, 61, 0.22);
+  box-shadow: 0 4px 16px rgba(28, 27, 24, 0.03);
+  transition: transform 0.3s var(--ease-editorial, ease), box-shadow 0.3s var(--ease-editorial, ease), border-color 0.3s var(--ease-editorial, ease);
+}
+
+.ap-about__cred-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(168, 127, 61, 0.4);
+  box-shadow: 0 14px 30px -12px rgba(28, 27, 24, 0.09);
+}
+
+.ap-about__cred-badge {
+  align-self: flex-start;
+  margin-bottom: 0.9rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(168, 127, 61, 0.1);
+  border: 1px solid rgba(168, 127, 61, 0.25);
+  color: var(--bronze-primary, #A87F3D);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ap-about__cred-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-main, #1C1B18);
+}
+
+.ap-about__cred-subtitle {
+  margin-bottom: 0.85rem;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--bronze-primary, #A87F3D);
+}
+
+.ap-about__cred-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-muted, #7A756C);
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .ap-about__story {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .ap-about__check-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .ap-about__cta-btn {
+    width: 100%;
+  }
+
+  .ap-about__card-badge {
+    position: static;
+    max-width: 100%;
+    margin-top: 1rem;
+    border-radius: var(--radius-sm, 6px);
+  }
+}
+
+@media (max-width: 380px) {
+  .ap-about__back {
+    width: 100%;
+    justify-content: center;
+  }
+  .ap-about__title {
+    font-size: 2.1rem;
+  }
+  .ap-about__subtitle {
+    font-size: 1.7rem;
+  }
+}
+
+@media (min-width: 540px) and (max-width: 960px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-about__story {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+    gap: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-about__cred-card,
+  .ap-about__back,
+  .ap-about__cta-btn {
+    transition: none !important;
+  }
+  .ap-about__cred-card:hover {
+    transform: none !important;
+  }
+}

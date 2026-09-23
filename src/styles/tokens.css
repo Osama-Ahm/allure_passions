@@ -237,8 +237,9 @@ html.lenis {
   align-items: center;
   justify-content: center;
   gap: 0.6em;
+  max-width: 100%;
   min-height: 3.4375rem; /* 55px */
-  padding: 0 1.875rem;
+  padding: 0.7em var(--btn-pad-x, 1.875rem);
   overflow: hidden;
   border: 1px solid var(--btn-border);
   border-radius: var(--ap-radius-xs);
@@ -247,9 +248,13 @@ html.lenis {
   font-family: var(--ap-font-sans);
   font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.125rem);
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.2;
   letter-spacing: 0.02em;
-  white-space: nowrap;
+  /* A label longer than the button (narrow cards, small phones) folds onto a second,
+     balanced line inside the button instead of being clipped. */
+  white-space: normal;
+  text-align: center;
+  text-wrap: balance;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -326,10 +331,18 @@ html.lenis {
 
 .ap-btn__icon {
   display: inline-flex;
+  flex: none;
   transition: transform var(--ap-dur) var(--ap-ease-out);
 }
 .ap-btn:hover .ap-btn__icon {
   transform: translateX(3px);
+}
+
+/* Phones: slimmer side padding keeps longer labels ("Explore Emerald Green Laser") on one line */
+@media (max-width: 599px) {
+  .ap-btn {
+    --btn-pad-x: 1.25rem;
+  }
 }
 
 /* Gold square carousel arrows (Figma 64x62) */

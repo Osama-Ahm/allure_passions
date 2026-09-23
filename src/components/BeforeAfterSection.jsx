@@ -17,10 +17,12 @@ import { Reveal } from '../motion/Reveal';
 import { EASE_INOUT, EASE_OUT, SPRING_SNAPPY, VIEWPORT } from '../motion/presets';
 import './BeforeAfterSection.css';
 
-// One before/after case per filter chip; `position` frames each photo in the wide frame.
+// One before/after case per filter chip; `position` frames each photo in the wide frame and
+// `note` is an optional caption shown under the frame while that case is open.
 // TODO before launch: none of these are Allure Passions UK patients. Skin is the site's old
 // placeholder pair; Tightening and Body are InMode's Morpheus8 gallery photos (inmodemd.com,
-// from other clinics), used uncredited while the design is signed off. Replace them with the
+// from other clinics), used uncredited while the design is signed off; Contouring is a
+// client-supplied illustrative image (also on the Emsculpt NEO page). Replace them with the
 // clinic's own consented patient photos, or credit them (with the distributor's permission)
 // and change the intro copy, which says these are treatments performed at the clinic.
 const CASES = [
@@ -62,6 +64,21 @@ const CASES = [
       alt: 'After: the same area with visibly smoother, tighter skin around the navel',
     },
   },
+  {
+    id: 'contouring',
+    label: 'Contouring',
+    // Portrait photos: frame the waist and navel in the wide frame
+    position: '50% 70%',
+    note: 'Emsculpt NEO body contouring. Illustrative image; individual results vary.',
+    before: {
+      src: '/assets/images/results/emsculpt-abdomen-before.webp',
+      alt: 'Before: a woman’s midriff in black underwear, with a softer, fuller abdomen',
+    },
+    after: {
+      src: '/assets/images/results/emsculpt-abdomen-after.webp',
+      alt: 'After: the same midriff with a flatter, more toned and defined abdomen',
+    },
+  },
 ];
 
 const SLIDER_MIN = 4;
@@ -76,8 +93,9 @@ const HINT_FRAMES = [50, 40, 60, 50];
 /**
  * Draggable before/after comparison. Position lives in a motion value, so dragging never
  * re-renders React; the before layer is clipped and the handle is translated on the GPU.
+ * Also used on the Emsculpt NEO page; it fills whatever frame it is placed in.
  */
-function CompareSlider({ item, hint }) {
+export function CompareSlider({ item, hint }) {
   const reduce = useReducedMotion();
   // The drag hint (and the slower handle pop after the frame's opening wipe) is for the first case only.
   const hintPending = useRef(hint);
@@ -365,6 +383,9 @@ export default function BeforeAfterSection() {
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Always rendered (empty for most cases) so switching chips never shifts the page */}
+        <p className="ap-results__case-note">{current.note || ''}</p>
 
         <p className="ap-visually-hidden" aria-live="polite">
           {`Showing ${current.label.toLowerCase()} result.`}

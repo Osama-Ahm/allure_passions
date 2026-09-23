@@ -32,11 +32,22 @@
 /* --------------------------------------------------------------------------
    Carousel
    -------------------------------------------------------------------------- */
+/* The side padding holds the arrows beside the card; the card itself stays 1069px at most. */
 .ap-tech__carousel {
-  max-width: 66.8125rem; /* 1069px card */
+  --tech-arrow-w: 4rem;
+  --tech-arrow-h: 3.875rem;
+  --tech-arrow-gap: 1.5rem;
+  --tech-side: calc(var(--tech-arrow-w) + var(--tech-arrow-gap));
+  max-width: calc(66.8125rem + 2 * var(--tech-side)); /* 1069px card */
   margin-inline: auto;
+  padding-inline: var(--tech-side);
   border-radius: 20px;
   outline: none;
+}
+
+.ap-tech__stage {
+  position: relative;
+  container-type: inline-size; /* lets the phone arrows find the photo's centre (cqi) */
 }
 
 .ap-tech__carousel:focus-visible {
@@ -70,7 +81,7 @@
 .ap-tech__media {
   position: relative;
   isolation: isolate;
-  min-height: 37.875rem; /* 606px */
+  min-height: min(37.875rem, 82svh); /* 606px, but never taller than a short window */
   overflow: hidden;
   border-radius: 12px;
   background: #1b1916;
@@ -182,6 +193,7 @@
 
 .ap-tech__list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   margin: 1.25rem 0 0;
   padding: 0;
@@ -203,6 +215,12 @@
   color: var(--ap-gold);
 }
 
+/* A long single word hyphenates on the narrowest cards instead of spilling out */
+.ap-tech__item span {
+  min-width: 0;
+  hyphens: auto;
+}
+
 .ap-tech__foot {
   margin-top: 1.95rem;
   padding-top: 1.5rem;
@@ -218,14 +236,37 @@
 }
 
 /* --------------------------------------------------------------------------
-   Controls: quiet counter · gold arrows · progress ticks
+   Arrows: either side of the card
+   -------------------------------------------------------------------------- */
+.ap-tech__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  transform: translateY(-50%);
+}
+
+.ap-tech__nav--prev {
+  left: calc(-1 * var(--tech-side));
+}
+
+.ap-tech__nav--next {
+  right: calc(-1 * var(--tech-side));
+}
+
+.ap-tech__nav .ap-arrow {
+  width: var(--tech-arrow-w);
+  height: var(--tech-arrow-h);
+}
+
+/* --------------------------------------------------------------------------
+   Controls: quiet counter · progress ticks
    -------------------------------------------------------------------------- */
 .ap-tech__controls {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1.5rem;
-  margin-top: 3.125rem;
+  margin-top: 2.5rem;
 }
 
 .ap-tech__count {
@@ -257,13 +298,8 @@
   color: rgba(255, 255, 255, 0.28);
 }
 
-.ap-tech__arrows {
-  justify-self: center;
-}
-
 .ap-tech__ticks {
   display: flex;
-  justify-self: end;
   gap: 0.25rem;
   margin: 0;
   padding: 0;
@@ -312,17 +348,49 @@
    Responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1180px) {
+  .ap-tech__carousel {
+    --tech-arrow-w: 3.25rem;
+    --tech-arrow-h: 3.25rem;
+    --tech-arrow-gap: 1rem;
+  }
   .ap-tech__card {
     grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
     column-gap: clamp(1.75rem, 3vw, 3.125rem);
     padding-right: clamp(1.75rem, 3vw, 2.8rem);
   }
   .ap-tech__media {
-    min-height: 34rem;
+    min-height: min(34rem, 82svh);
   }
 }
 
 @media (max-width: 860px) {
+  /* Stacked card fills the width: the arrows sit over the photo's left and right edges */
+  .ap-tech__carousel {
+    --tech-arrow-w: 3rem;
+    --tech-arrow-h: 3rem;
+    --tech-side: 0px;
+    --tech-photo-mid: calc((100cqi - 20px) * 0.375); /* half of the 4:3 photo (card border + 9px padding = 20px) */
+  }
+  .ap-tech__nav {
+    top: calc(10px + var(--tech-photo-mid));
+  }
+  .ap-tech__nav--prev {
+    left: calc(10px + 0.6rem);
+  }
+  .ap-tech__nav--next {
+    right: calc(10px + 0.6rem);
+  }
+  .ap-tech__nav .ap-arrow {
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    color: var(--ap-white);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .ap-tech__nav .ap-arrow:hover {
+    background: rgba(255, 255, 255, 0.42);
+    box-shadow: none;
+  }
   .ap-tech__card {
     grid-template-columns: minmax(0, 1fr);
     padding: 9px;
@@ -340,6 +408,9 @@
 }
 
 @media (max-width: 600px) {
+  .ap-tech__carousel {
+    --tech-photo-mid: calc((100cqi - 20px) * 0.44); /* half of the 5:4.4 photo */
+  }
   .ap-tech__media {
     aspect-ratio: 5 / 4.4;
   }
@@ -356,15 +427,24 @@
     font-size: 0.875rem;
   }
   .ap-tech__controls {
-    grid-template-columns: 1fr auto;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
-  .ap-tech__arrows {
-    justify-self: end;
-    gap: 0.75rem;
+  .ap-tech__tick-btn {
+    width: 1.6rem;
   }
-  .ap-tech__ticks {
-    display: none;
+  .ap-tech__tick-bar {
+    width: 1rem;
+  }
+}
+
+/* Phones on their side: the stacked photo stays well inside the screen height */
+@media (max-width: 860px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-tech__carousel {
+    --tech-photo-mid: 34svh;
+  }
+  .ap-tech__media {
+    aspect-ratio: auto;
+    height: 68svh;
   }
 }

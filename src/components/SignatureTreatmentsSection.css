@@ -154,6 +154,16 @@
   margin-top: auto;
 }
 
+/* Narrower cards (small laptops 3-up, tablets 2-up, the phone rail): a slightly smaller label
+   keeps the longest one ("Explore Emerald Green Laser") on a single line, so every button in a
+   row stays the same height. */
+@media (max-width: 1180px) {
+  .ap-treatments__cta {
+    --btn-pad-x: 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Footer link + phone rail progress
    -------------------------------------------------------------------------- */
@@ -225,15 +235,10 @@
   }
 }
 
-/* index.css caps h2/h3 sizes on small phones with !important */
+/* Phones: the card titles stay generous in the one-card rail */
 @media screen and (max-width: 480px) {
-  .ap-treatments .ap-heading__title {
-    font-size: var(--ap-fs-h2) !important;
-    line-height: 1.04 !important;
-  }
-
   .ap-treatments__title {
-    font-size: 1.875rem !important;
+    font-size: 1.875rem;
   }
 }
 

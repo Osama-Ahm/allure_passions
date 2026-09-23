@@ -31,16 +31,16 @@ const TECHNOLOGIES = [
     description:
       'Emsculpt Neo combines radiofrequency technology with high-intensity muscle stimulation to provide an advanced approach to body contouring.',
     supports: ['Body contouring', 'Muscle tone', 'Muscle definition'],
-    image: '/assets/images/site/treatment-emsculpt-neo.webp',
-    position: '44% 50%',
-    alt: 'A patient resting on a treatment bed with a body-contouring applicator around the abdomen while a practitioner checks the device screen',
+    image: '/assets/images/site/emsculpt-neo.webp',
+    position: '60% 45%',
+    alt: 'An Emsculpt NEO applicator strapped across a client’s abdomen as she lies on a treatment bed',
   },
   fromData('emerald_laser', {
     label: 'Emerald Laser',
     supports: ['Stubborn fat deposits', 'Body contouring', 'Body slimming'],
-    image: '/assets/images/site/treatment-emerald-laser.webp',
-    position: '40% 50%',
-    alt: 'A patient lying beneath the green beams of a low-level laser device in a softly lit treatment room',
+    image: '/assets/images/site/emerald-laser.webp',
+    position: '45% 55%',
+    alt: 'A client in orange safety glasses lies beneath the Emerald laser’s curved arms as green laser lines cross her abdomen',
   }),
   fromData('morpheus8', {
     label: 'Morpheus8',
@@ -162,7 +162,8 @@ function TechCopy({ tech, dir = 1, still = false, reduce = false, onNavigate }) 
 /**
  * Section 12 — Discover Our Signature Technologies.
  * One white card that steps through the six technologies: the photo wipes across in the
- * direction of travel while the copy re-staggers. Arrows, swipe/drag and ←/→ keys all work.
+ * direction of travel while the copy re-staggers. Arrows (either side of the card, or over the
+ * photo on phones), swipe/drag and ←/→ keys all work.
  */
 export default function BodyContouringSection({ onNavigate }) {
   const reduce = useReducedMotion();
@@ -297,6 +298,14 @@ export default function BodyContouringSection({ onNavigate }) {
                 </div>
               </div>
             </motion.div>
+
+            {/* Beside the card, vertically centred, so they stay in view with the card */}
+            <div className="ap-tech__nav ap-tech__nav--prev">
+              <ArrowButton dir="prev" label="Previous technology" onClick={() => go(-1)} />
+            </div>
+            <div className="ap-tech__nav ap-tech__nav--next">
+              <ArrowButton dir="next" label="Next technology" onClick={() => go(1)} />
+            </div>
           </Reveal>
 
           <Reveal className="ap-tech__controls" delay={0.2} amount={0.5}>
@@ -318,11 +327,6 @@ export default function BodyContouringSection({ onNavigate }) {
               <span className="ap-tech__count-sep">/</span>
               <span>{pad(TOTAL)}</span>
             </p>
-
-            <div className="ap-arrows ap-tech__arrows">
-              <ArrowButton dir="prev" label="Previous technology" onClick={() => go(-1)} />
-              <ArrowButton dir="next" label="Next technology" onClick={() => go(1)} />
-            </div>
 
             <ol className="ap-tech__ticks">
               {TECHNOLOGIES.map((item, i) => (

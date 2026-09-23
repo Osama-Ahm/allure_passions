@@ -6,8 +6,13 @@ const TREATMENT_IMAGES = {
   advatx: '/assets/images/site/treatment-advatx.webp',
   morpheus8: '/assets/images/site/treatment-morpheus8.webp',
   sofwave: '/assets/images/site/treatment-sofwave.webp',
-  emsculpt_neo: '/assets/images/site/treatment-emsculpt-neo.webp',
-  emerald_laser: '/assets/images/site/treatment-emerald-laser.webp',
+  emsculpt_neo: '/assets/images/site/emsculpt-neo.webp',
+  emerald_laser: '/assets/images/site/emerald-laser.webp',
+  cosmelan: '/assets/images/site/treatment-cosmelan.jpg',
+  hydrafacial: '/assets/images/site/treatment-hydrafacial.jpg',
+  biorepeel: '/assets/images/area_cheeks.jpg',
+  microneedling_exosomes: '/assets/images/prefooter_serum.jpg',
+  tattoo_removal: '/assets/images/concern_tattoo_removal.jpg',
 };
 
 export const TREATMENT_LINKS = POPULAR_TREATMENTS.map((treatment) => ({

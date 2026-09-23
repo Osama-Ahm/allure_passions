@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { POPULAR_TREATMENTS } from '../../data/treatmentData';
 import { ArrowLeft, ArrowRight, Phone, MessageCircle } from 'lucide-react';
+import './TreatmentsIndexPage.css';
 
 const TREATMENT_AREAS_DIRECTORY = [
   {
@@ -47,7 +48,7 @@ const TREATMENT_AREAS_DIRECTORY = [
     id: 'body',
     name: 'Body Contouring',
     category: 'Body',
-    image: '/assets/images/area_body.jpg',
+    image: '/assets/images/site/emsculpt-neo.webp',
     leadTechnology: 'Emsculpt Neo® & Emerald™ Green Laser Lipo',
     indications: ['Abdomen & core sculpting', 'Gluteal lifting & firming', 'Subcutaneous fat reduction', 'Circumferential inch loss'],
     protocol: 'High-Intensity Focused Electromagnetic (HIFEM+) energy triggers 24,000 supramaximal contractions while synchronised RF induces fat apoptosis.',
@@ -58,9 +59,9 @@ const TREATMENT_AREAS_DIRECTORY = [
 const SIGNATURE_PACKAGES = [
   {
     name: 'Allure Contour Synergy',
-    category: 'Body Sculpting',
+    category: 'Body Sculpting Packages',
     sessions: '6 Sessions Emsculpt Neo®',
-    price: '£2,400',
+    price: 'Course: £2,499 | Single: £449',
     description: 'Targeted course delivering maximum core hypertrophy and visceral/subcutaneous adipose clearance.',
     target: 'Abdomen, Glutes, Arms or Calves',
   },
@@ -68,15 +69,31 @@ const SIGNATURE_PACKAGES = [
     name: 'Allure Contour Luxe',
     category: 'Dual Technology Body Protocol',
     sessions: '6 Emsculpt Neo® + 6 Emerald™ Cold Laser',
-    price: '£3,600',
+    price: 'Course: £4,489 | Single: £639',
     description: 'Synergistic course pairing deep magnetic muscle contraction with cold laser cellular lipid emulsification and lymphatic detox.',
     target: 'Comprehensive Midsection & Flanks',
   },
   {
+    name: 'Allure Contour Advanced',
+    category: 'Triple Modality Body Protocol',
+    sessions: '6 Neo® + 6 Emerald™ + 6 Mesotherapy',
+    price: 'Course: £4,499 | Single: £899',
+    description: 'Comprehensive 360° protocol combining HIFEM+ muscle definition, 532nm cold green laser, and targeted mesotherapy boosters.',
+    target: 'Complete Abdominal & Flank Tightening',
+  },
+  {
+    name: 'Emerald Laser Body Slim',
+    category: 'Cold Green Laser Slimming',
+    sessions: '10 Sessions Emerald™ Cold Laser',
+    price: 'Course: £2,000 | Single: £250',
+    description: 'FDA-cleared 532nm low-level green laser protocol for overall body circumference loss and cellular detoxification.',
+    target: 'Full Body Circumference Reduction',
+  },
+  {
     name: 'Cosmelan® Depigmentation Protocol',
     category: 'Medical Pigment Clearance',
-    sessions: 'In-Clinic Mask + 6-Month Active Homecare',
-    price: '£850',
+    sessions: 'In-Clinic Mask + Full Homecare System',
+    price: 'Single Protocol: £2,099',
     description: 'World-leading intensive depigmentation protocol treating stubborn hormonal melasma, chloasma, and deep solar lentigines.',
     target: 'Full Face Pigment Eradication',
   },
@@ -90,183 +107,106 @@ export default function TreatmentsIndexPage({ onNavigate }) {
   )}`;
 
   return (
-    <div style={{ padding: '3.5rem 0 6rem 0', background: '#FAF7F2', minHeight: '85vh', color: '#1C1B18' }}>
-      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
+    <div className="ap-dir">
+      <div className="ap-dir__container">
         
         {/* Back Link */}
         <button
           onClick={() => onNavigate('home')}
-          className="btn-outline-bronze"
-          style={{ marginBottom: '2.5rem', padding: '0.5rem 1.25rem', fontSize: '0.8rem' }}
+          className="ap-dir__back"
+          type="button"
         >
-          <ArrowLeft size={14} /> Back to Homepage
+          <ArrowLeft size={14} aria-hidden="true" />
+          <span>Back to Homepage</span>
         </button>
 
         {/* Page Header */}
-        <div style={{ maxWidth: '900px', marginBottom: '3.5rem' }}>
-          <div
-            data-reveal
-            style={{
-              fontSize: '0.8rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: '#A87F3D',
-              fontWeight: '600',
-              marginBottom: '0.75rem',
-            }}
-          >
+        <header className="ap-dir__header">
+          <div className="ap-dir__eyebrow">
             Clinical Portfolio • 76 Cleveland Street, Fitzrovia
           </div>
 
-          <h1
-            data-reveal
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)',
-              color: '#1C1B18',
-              fontWeight: '400',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
-            }}
-          >
+          <h1 className="ap-dir__title">
             Comprehensive Treatment Directory
           </h1>
 
-          <p data-reveal style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75' }}>
+          <p className="ap-dir__lead">
             Explore every clinical service delivered at Allure Passions UK. Filter by anatomical treatment area, explore our flagship medical platforms, or discover curated multi-modality synergy programs.
           </p>
-        </div>
+        </header>
 
-        {/* Navigation Filter Tabs */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.75rem',
-            flexWrap: 'wrap',
-            marginBottom: '3.5rem',
-            borderBottom: '1px solid rgba(168, 127, 61, 0.2)',
-            paddingBottom: '1.25rem',
-          }}
-        >
-          {[
-            { id: 'all', label: 'All Services & Portfolio' },
-            { id: 'areas', label: 'Explore By Treatment Area' },
-            { id: 'technologies', label: 'Flagship Medical Technologies' },
-            { id: 'packages', label: 'Signature Synergy Courses' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                padding: '0.6rem 1.6rem',
-                borderRadius: 'var(--radius-full)',
-                border: activeTab === tab.id ? '1px solid #A87F3D' : '1px solid rgba(28, 27, 24, 0.12)',
-                background: activeTab === tab.id ? '#A87F3D' : '#FFFFFF',
-                color: activeTab === tab.id ? '#FFFFFF' : '#1C1B18',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* Navigation Filter Tabs Rail */}
+        <nav className="ap-dir__tabs-wrap" aria-label="Treatment categories filter">
+          <div className="ap-dir__tabs-rail">
+            {[
+              { id: 'all', label: 'All Services & Portfolio' },
+              { id: 'areas', label: 'Explore By Treatment Area' },
+              { id: 'technologies', label: 'Flagship Medical Technologies' },
+              { id: 'packages', label: 'Signature Synergy Courses' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                type="button"
+                className={`ap-dir__tab-btn${activeTab === tab.id ? ' is-active' : ''}`}
+                aria-pressed={activeTab === tab.id}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </nav>
 
-        {/* Section A: Treatment Areas from Homepage */}
+        {/* Section A: Treatment Areas */}
         {(activeTab === 'all' || activeTab === 'areas') && (
-          <div style={{ marginBottom: '5rem' }}>
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#A87F3D', fontWeight: '600' }}>
+          <section className="ap-dir__section" aria-label="Treatment areas">
+            <div className="ap-dir__section-head">
+              <div className="ap-dir__section-tag">
                 Anatomical Protocols
               </div>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2.2rem', color: '#1C1B18', fontWeight: '500' }}>
+              <h2 className="ap-dir__section-title">
                 Browse by Treatment Area
               </h2>
-              <p style={{ color: '#7A756C', fontSize: '0.95rem', marginTop: '0.25rem' }}>
+              <p className="ap-dir__section-desc">
                 Specific non-invasive clinical solutions tailored to each facial zone and body region.
               </p>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: '2rem',
-              }}
-            >
+            <div className="ap-dir__grid">
               {TREATMENT_AREAS_DIRECTORY.map((area) => (
-                <div
-                  key={area.id}
-                  className="card-white-elevation"
-                  style={{
-                    borderRadius: 'var(--radius-sm)',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    background: '#FFFFFF',
-                  }}
-                >
+                <article key={area.id} className="ap-dir__card">
                   <div>
                     {/* Area Image */}
-                    <div style={{ height: '240px', width: '100%', position: 'relative', overflow: 'hidden', backgroundColor: '#EDE7DE' }}>
+                    <div className="ap-dir__card-media">
                       <img
                         src={area.image}
                         alt={area.name}
                         loading="lazy"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.5s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.04)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.0)';
-                        }}
+                        decoding="async"
+                        className="ap-dir__card-img"
                       />
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '12px',
-                          left: '12px',
-                          background: 'rgba(20, 19, 17, 0.8)',
-                          backdropFilter: 'blur(6px)',
-                          color: '#FFFFFF',
-                          fontSize: '0.68rem',
-                          fontWeight: '600',
-                          letterSpacing: '0.1em',
-                          textTransform: 'uppercase',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: '2px',
-                          border: '1px solid rgba(212, 175, 55, 0.3)',
-                        }}
-                      >
+                      <span className="ap-dir__card-badge">
                         {area.category} Focus
                       </span>
                     </div>
 
-                    <div style={{ padding: '1.75rem' }}>
-                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: '#1C1B18', fontWeight: '600', marginBottom: '0.35rem' }}>
+                    <div className="ap-dir__card-body">
+                      <h3 className="ap-dir__card-title">
                         {area.name}
                       </h3>
 
-                      <div style={{ fontSize: '0.8rem', color: '#A87F3D', fontWeight: '600', marginBottom: '1rem' }}>
+                      <div className="ap-dir__card-sub">
                         Lead System: {area.leadTechnology}
                       </div>
 
-                      <p style={{ fontSize: '0.875rem', color: '#4A4740', lineHeight: '1.6', marginBottom: '1.25rem' }}>
+                      <p className="ap-dir__card-text">
                         {area.protocol}
                       </p>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1.25rem' }}>
+                      <div className="ap-dir__indications">
                         {area.indications.map((ind, idx) => (
-                          <div key={idx} style={{ fontSize: '0.8rem', color: '#7A756C', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A87F3D' }} />
+                          <div key={idx} className="ap-dir__indication-item">
+                            <span className="ap-dir__dot" aria-hidden="true" />
                             <span>{ind}</span>
                           </div>
                         ))}
@@ -274,332 +214,194 @@ export default function TreatmentsIndexPage({ onNavigate }) {
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      padding: '1.25rem 1.75rem',
-                      borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                      background: '#FAF7F2',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
+                  <div className="ap-dir__card-foot">
                     <button
                       onClick={() => onNavigate('treatment-detail', area.linkedTechId)}
-                      className="btn-outline-bronze"
-                      style={{ padding: '0.55rem 1.15rem', fontSize: '0.785rem' }}
+                      className="ap-dir__btn-link"
+                      type="button"
                     >
-                      View Protocol Details <ArrowRight size={13} />
+                      <span>View Protocol Details</span>
+                      <ArrowRight size={13} aria-hidden="true" />
                     </button>
 
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        color: '#A87F3D',
-                        fontSize: '0.785rem',
-                        fontWeight: '600',
-                        textDecoration: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                      }}
+                      className="ap-dir__consult-link"
                     >
-                      <MessageCircle size={14} /> Consult
+                      <MessageCircle size={14} aria-hidden="true" />
+                      <span>Consult</span>
                     </a>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Section B: 6 Flagship Technologies */}
         {(activeTab === 'all' || activeTab === 'technologies') && (
-          <div style={{ marginBottom: '5rem' }}>
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#A87F3D', fontWeight: '600' }}>
+          <section className="ap-dir__section" aria-label="Flagship medical technologies">
+            <div className="ap-dir__section-head">
+              <div className="ap-dir__section-tag">
                 Energy-Based Platforms
               </div>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2.2rem', color: '#1C1B18', fontWeight: '500' }}>
+              <h2 className="ap-dir__section-title">
                 Flagship Medical Technologies
               </h2>
-              <p style={{ color: '#7A756C', fontSize: '0.95rem', marginTop: '0.25rem' }}>
+              <p className="ap-dir__section-desc">
                 Tier-one FDA-cleared aesthetic systems operated by certified Level 6 practitioners.
               </p>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: '2rem',
-              }}
-            >
+            <div className="ap-dir__grid">
               {POPULAR_TREATMENTS.map((tr) => (
-                <div
-                  key={tr.id}
-                  className="card-white-elevation"
-                  style={{
-                    borderRadius: 'var(--radius-sm)',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    background: '#FFFFFF',
-                  }}
-                >
+                <article key={tr.id} className="ap-dir__card">
                   <div>
-                    <div style={{ height: '230px', position: 'relative', overflow: 'hidden', backgroundColor: '#EAE5DC' }}>
+                    <div className="ap-dir__card-media">
                       <img
                         src={tr.image}
                         alt={tr.name}
                         loading="lazy"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.5s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.04)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.0)';
-                        }}
+                        decoding="async"
+                        className="ap-dir__card-img"
                       />
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '1rem',
-                          left: '1rem',
-                          background: 'rgba(255, 255, 255, 0.95)',
-                          border: '1px solid rgba(168, 127, 61, 0.3)',
-                          color: '#A87F3D',
-                          fontSize: '0.72rem',
-                          fontWeight: '600',
-                          padding: '0.3rem 0.75rem',
-                          borderRadius: '20px',
-                        }}
-                      >
+                      <span className="ap-dir__card-badge">
                         {tr.category}
                       </span>
                     </div>
 
-                    <div style={{ padding: '1.75rem' }}>
-                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.55rem', color: '#1C1B18', fontWeight: '600', marginBottom: '0.25rem' }}>
+                    <div className="ap-dir__card-body">
+                      <h3 className="ap-dir__card-title">
                         {tr.name}
                       </h3>
-                      <div style={{ fontSize: '0.825rem', color: '#A87F3D', fontWeight: '600', marginBottom: '0.85rem' }}>
+                      <div className="ap-dir__card-sub">
                         {tr.tagline}
                       </div>
-                      <p style={{ color: '#4A4740', fontSize: '0.875rem', lineHeight: '1.65', marginBottom: '1.25rem' }}>
+                      <p className="ap-dir__card-text">
                         {tr.shortDesc}
                       </p>
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      padding: '1.25rem 1.75rem',
-                      borderTop: '1px solid rgba(28, 27, 24, 0.08)',
-                      background: '#FAF7F2',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '0.72rem', color: '#7A756C', textTransform: 'uppercase' }}>Session From</div>
-                      <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1C1B18' }}>{tr.pricing.split('|')[0]}</div>
+                  <div className="ap-dir__card-foot">
+                    <div className="ap-dir__price-block">
+                      <span className="ap-dir__price-label">Session From</span>
+                      <span className="ap-dir__price-val">{tr.pricing.split('|')[0]}</span>
                     </div>
 
                     <button
                       onClick={() => onNavigate('treatment-detail', tr.id)}
-                      className="btn-outline-bronze"
-                      style={{ padding: '0.55rem 1.15rem', fontSize: '0.8rem' }}
+                      className="ap-dir__btn-link"
+                      type="button"
                     >
-                      Protocol Sheet <ArrowRight size={13} />
+                      <span>Protocol Sheet</span>
+                      <ArrowRight size={13} aria-hidden="true" />
                     </button>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Section C: Curated Synergy Packages */}
         {(activeTab === 'all' || activeTab === 'packages') && (
-          <div style={{ marginBottom: '5rem' }}>
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#A87F3D', fontWeight: '600' }}>
+          <section className="ap-dir__section" aria-label="Signature synergy courses">
+            <div className="ap-dir__section-head">
+              <div className="ap-dir__section-tag">
                 Multi-Modality Protocols
               </div>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2.2rem', color: '#1C1B18', fontWeight: '500' }}>
+              <h2 className="ap-dir__section-title">
                 Signature Packages & Synergy Courses
               </h2>
-              <p style={{ color: '#7A756C', fontSize: '0.95rem', marginTop: '0.25rem' }}>
+              <p className="ap-dir__section-desc">
                 Scientifically sequenced treatment courses combining multiple complementary technologies.
               </p>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: '2rem',
-              }}
-            >
+            <div className="ap-dir__grid">
               {SIGNATURE_PACKAGES.map((pkg, idx) => (
-                <div
-                  key={idx}
-                  className="card-white-elevation"
-                  style={{
-                    background: '#FFFFFF',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1px solid rgba(168, 127, 61, 0.28)',
-                    padding: '2.2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                  }}
-                >
+                <article key={idx} className="ap-dir__pkg-card">
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                      <span style={{ fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A87F3D', fontWeight: '600' }}>
+                    <div className="ap-dir__pkg-head">
+                      <span className="ap-dir__pkg-cat">
                         {pkg.category}
                       </span>
-                      <span style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1C1B18', fontFamily: 'var(--font-serif)' }}>
+                      <span className="ap-dir__pkg-price">
                         {pkg.price}
                       </span>
                     </div>
 
-                    <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.55rem', color: '#1C1B18', fontWeight: '600', marginBottom: '0.5rem' }}>
+                    <h3 className="ap-dir__pkg-title">
                       {pkg.name}
                     </h3>
 
-                    <div style={{ fontSize: '0.85rem', color: '#D4AF37', fontWeight: '600', marginBottom: '0.75rem' }}>
+                    <div className="ap-dir__pkg-sessions">
                       {pkg.sessions}
                     </div>
 
-                    <p style={{ fontSize: '0.875rem', color: '#4A4740', lineHeight: '1.65', marginBottom: '1.25rem' }}>
+                    <p className="ap-dir__pkg-desc">
                       {pkg.description}
                     </p>
 
-                    <div style={{ fontSize: '0.785rem', color: '#7A756C', borderTop: '1px solid rgba(28, 27, 24, 0.08)', paddingTop: '0.75rem' }}>
+                    <div className="ap-dir__pkg-target">
                       Focus: <strong>{pkg.target}</strong>
                     </div>
                   </div>
 
-                  <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
+                  <div className="ap-dir__pkg-action">
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-bronze"
-                      style={{
-                        flex: 1,
-                        padding: '0.75rem',
-                        fontSize: '0.8rem',
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        textDecoration: 'none',
-                        textAlign: 'center',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.4rem',
-                      }}
+                      className="ap-dir__pkg-btn"
                     >
-                      <MessageCircle size={14} /> WhatsApp Clinic
+                      <MessageCircle size={14} aria-hidden="true" />
+                      <span>WhatsApp Clinic</span>
                     </a>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Bottom Practice Communication Banner (Strictly Direct Channels) */}
-        <div
-          style={{
-            background: '#141312',
-            color: '#FFFFFF',
-            border: '1px solid rgba(168, 127, 61, 0.35)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '3rem 2.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '2rem',
-            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-          }}
-        >
-          <div>
-            <div style={{ fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37', fontWeight: '600', marginBottom: '0.4rem' }}>
+        {/* Bottom Practice Communication Banner */}
+        <aside className="ap-dir__banner" aria-label="Direct clinic communication">
+          <div className="ap-dir__banner-copy">
+            <div className="ap-dir__banner-tag">
               76 Cleveland Street • Fitzrovia Practice
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: '#FFFFFF' }}>
+            <h3 className="ap-dir__banner-title">
               Require Direct Advice on Your Treatment Pathway?
             </h3>
-            <p style={{ color: '#ECE8E1', fontSize: '0.95rem', marginTop: '0.4rem', fontWeight: '300', maxWidth: '600px' }}>
+            <p className="ap-dir__banner-desc">
               Speak directly with our clinical practitioners via WhatsApp or direct telephone consultation.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="ap-dir__banner-actions">
             <a
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-bronze"
-              style={{
-                padding: '0.9rem 1.8rem',
-                fontSize: '0.825rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
+              className="ap-dir__banner-btn ap-dir__banner-btn--gold"
             >
-              <MessageCircle size={16} />
+              <MessageCircle size={16} aria-hidden="true" />
               <span>WhatsApp Consultation</span>
             </a>
 
             <a
               href="tel:+447342052249"
-              style={{
-                padding: '0.9rem 1.8rem',
-                fontSize: '0.825rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                borderRadius: 'var(--radius-sm)',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#D4AF37';
-                e.currentTarget.style.color = '#D4AF37';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                e.currentTarget.style.color = '#FFFFFF';
-              }}
+              className="ap-dir__banner-btn ap-dir__banner-btn--outline"
             >
-              <Phone size={15} />
+              <Phone size={15} aria-hidden="true" />
               <span>Call +44 7342 052249</span>
             </a>
           </div>
-        </div>
+        </aside>
 
       </div>
     </div>

@@ -27,8 +27,8 @@ const CONCERN_CARDS = [
     area: 'Skin',
     via: 'ADVATx',
     image: '/assets/images/concern_rosacea.jpg',
-    position: '38% 50%',
-    alt: 'Gloved practitioner guiding a laser handpiece over a patient’s cheek',
+    position: '50% 50%',
+    alt: 'Close-up of facial erythema, visible broken capillaries, and redness on cheeks',
     treatmentId: 'advatx',
   },
   {
@@ -37,8 +37,8 @@ const CONCERN_CARDS = [
     area: 'Skin',
     via: 'Morpheus8, Sofwave',
     image: '/assets/images/concern_skin_laxity.jpg',
-    position: '74% 50%',
-    alt: 'Patient reclined while a practitioner treats her jawline with a handpiece',
+    position: '50% 30%',
+    alt: 'Portrait of mature skin showing fine lines, crow’s feet, and natural skin laxity',
     treatmentId: 'morpheus8',
   },
   {
@@ -47,8 +47,8 @@ const CONCERN_CARDS = [
     area: 'Body',
     via: 'Emsculpt Neo',
     image: '/assets/images/concern_stubborn_fat.jpg',
-    position: '56% 50%',
-    alt: 'Patient lying on a treatment bed with a body-contouring applicator on her abdomen',
+    position: '50% 50%',
+    alt: 'Aesthetic photography of midsection highlighting localized abdominal fullness',
     treatmentId: 'emsculpt_neo',
   },
   {
@@ -57,8 +57,8 @@ const CONCERN_CARDS = [
     area: 'Skin',
     via: 'PicoWay',
     image: '/assets/images/concern_hyperpigmentation.jpg',
-    position: '40% 50%',
-    alt: 'Patient in protective eyewear during a laser skin treatment',
+    position: '50% 50%',
+    alt: 'Macro dermatological portrait showing sun damage spots, uneven tone, and melasma patches',
     treatmentId: 'picoway',
   },
   {
@@ -67,8 +67,8 @@ const CONCERN_CARDS = [
     area: 'Skin',
     via: 'Morpheus8, PicoWay',
     image: '/assets/images/concern_acne_scarring.jpg',
-    position: '46% 50%',
-    alt: 'Microneedling handpiece held against a patient’s cheek',
+    position: '50% 50%',
+    alt: 'Close-up photography of cheek skin showing atrophic acne scars and textured surface',
     treatmentId: 'morpheus8',
   },
   {
@@ -77,9 +77,9 @@ const CONCERN_CARDS = [
     area: 'Laser',
     via: 'PicoWay',
     image: '/assets/images/concern_tattoo_removal.jpg',
-    position: '47% 50%',
-    alt: 'Laser handpiece treating a tattoo on a forearm',
-    treatmentId: 'picoway',
+    position: '50% 50%',
+    alt: 'Detailed view of decorative dark ink tattoo on forearm skin for aesthetic removal',
+    treatmentId: 'tattoo_removal',
   },
   {
     key: 'lips',
@@ -87,13 +87,13 @@ const CONCERN_CARDS = [
     area: 'Skin',
     via: 'ADVATx',
     image: '/assets/images/concern_lip_plumping.jpg',
-    position: '70% 50%',
-    alt: 'Practitioner treating a patient’s lips with a fine laser handpiece',
+    position: '50% 50%',
+    alt: 'Macro beauty close-up of natural lips with vertical fine lines and subtle volume',
     treatmentId: 'advatx',
   },
 ];
 
-// Path B: start from the treatment (the six technologies on the treatment pages).
+// Path B: start from the treatment (every treatment page, in POPULAR_TREATMENTS order).
 const TREATMENT_CARD_DETAILS = {
   picoway: {
     title: 'PicoWay',
@@ -131,17 +131,57 @@ const TREATMENT_CARD_DETAILS = {
     title: 'Emsculpt Neo',
     area: 'Body',
     via: 'Muscle & Contouring',
-    image: '/assets/images/site/treatment-emsculpt-neo.webp',
-    position: '52% 50%',
-    alt: 'Patient on a treatment bed wearing a body-contouring applicator',
+    image: '/assets/images/site/emsculpt-neo.webp',
+    position: '62% 45%',
+    alt: 'Emsculpt NEO applicator strapped across a client’s abdomen',
   },
   emerald_laser: {
     title: 'Emerald Laser',
     area: 'Body',
     via: 'Fat Reduction',
-    image: '/assets/images/site/treatment-emerald-laser.webp',
-    position: '66% 50%',
-    alt: 'Green low-level laser array above a patient lying in a dim treatment room',
+    image: '/assets/images/site/emerald-laser.webp',
+    position: '45% 55%',
+    alt: 'Emerald laser arms above a client, with green laser lines across her abdomen',
+  },
+  cosmelan: {
+    title: 'Cosmelan',
+    area: 'Skin',
+    via: 'Melasma & Pigment',
+    image: '/assets/images/site/treatment-cosmelan.jpg',
+    position: '50% 50%',
+    alt: 'Clinical practitioner applying professional Cosmelan depigmentation mask to patient',
+  },
+  hydrafacial: {
+    title: 'HydraFacial',
+    area: 'Skin',
+    via: 'Hydration & Radiance',
+    image: '/assets/images/site/treatment-hydrafacial.jpg',
+    position: '50% 50%',
+    alt: 'Clinical aesthetician performing HydraFacial vortex-fusion suction treatment',
+  },
+  biorepeel: {
+    title: 'BioRePeel',
+    area: 'Skin',
+    via: 'Peel & Renewal',
+    image: '/assets/images/area_cheeks.jpg',
+    position: '50% 45%',
+    alt: 'A gloved practitioner treating a client’s cheek',
+  },
+  microneedling_exosomes: {
+    title: 'Microneedling',
+    area: 'Skin',
+    via: 'Exosome Renewal',
+    image: '/assets/images/prefooter_serum.jpg',
+    position: '32% 50%',
+    alt: 'A serum dropper held above a client’s cheek in soft light',
+  },
+  tattoo_removal: {
+    title: 'Tattoo Removal',
+    area: 'Laser',
+    via: 'PicoWay Laser',
+    image: '/assets/images/concern_tattoo_removal.jpg',
+    position: '50% 50%',
+    alt: 'Detailed view of a dark ink tattoo on forearm skin',
   },
 };
 
@@ -159,28 +199,39 @@ const PATHS = [
 const CARD_RATIO = 406 / 300; // Figma card: 300 x 406
 const SLIDE = { type: 'spring', stiffness: 150, damping: 26, mass: 0.9 };
 
-// Whole cards on screen, gaps and card size for the stage width.
-function computeLayout(width) {
+// Whole cards on screen, gaps and card size for the stage width. `screenHeight` (the small
+// viewport height, so it doesn't change as mobile browser bars slide) keeps a card shorter
+// than the screen on phones held sideways.
+function computeLayout(width, screenHeight = Infinity) {
   let k;
   let g;
   let w;
   if (width >= 1200) {
     k = 3;
-    g = 30;
-    w = 300;
+    // The Figma card (300px) up to ~1680px; wider screens grow it gently so the row keeps its presence.
+    w = Math.min(380, Math.max(300, Math.round(300 + (width - 1680) * 0.1)));
+    g = w > 300 ? 36 : 30;
   } else if (width >= 900) {
     k = 3;
     g = 24;
     w = Math.min(300, Math.floor((width - 2 * 112 - 2 * g) / 3));
-  } else if (width >= 600) {
+  } else if (width >= 768) {
     k = 2;
     g = 24;
     w = Math.min(300, Math.floor((width - 2 * 100 - g) / 2));
+  } else if (width >= 600) {
+    // Small tablets and big phones on their side: the arrows move below the cards (CSS),
+    // so the two cards can use the width the side arrows would have taken.
+    k = 2;
+    g = 18;
+    w = Math.min(300, Math.floor((width - 2 * (40 + g) - g) / 2));
   } else {
     k = 1;
     g = 14;
     w = Math.min(320, width - 2 * (38 + g));
   }
+  const maxHeight = Math.max(240, Math.round(screenHeight * 0.74));
+  if (w * CARD_RATIO > maxHeight) w = Math.floor(maxHeight / CARD_RATIO);
   const step = w + g;
   const left0 = (width - (k * w + (k - 1) * g)) / 2;
   return {
@@ -281,7 +332,9 @@ export default function TreatmentAreasSection({ onNavigate }) {
   const items = path.items;
 
   const [layout, setLayout] = useState(() =>
-    computeLayout(typeof document === 'undefined' ? 1440 : document.documentElement.clientWidth),
+    typeof document === 'undefined'
+      ? computeLayout(1440)
+      : computeLayout(document.documentElement.clientWidth, window.innerHeight),
   );
 
   // One position (in cards) per path, so switching back keeps your place.
@@ -302,11 +355,20 @@ export default function TreatmentAreasSection({ onNavigate }) {
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return undefined;
-    const measure = () => setLayout(computeLayout(stage.clientWidth));
+    // A 100svh probe reads the small viewport height, which holds still while mobile browser bars slide.
+    const probe = document.createElement('div');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+    document.body.appendChild(probe);
+    const measure = () => setLayout(computeLayout(stage.clientWidth, probe.offsetHeight || window.innerHeight));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(stage);
-    return () => observer.disconnect();
+    observer.observe(probe);
+    return () => {
+      observer.disconnect();
+      probe.remove();
+    };
   }, []);
 
   const setIndex = useCallback(

@@ -402,10 +402,9 @@
     max-width: none;
   }
 
-  /* index.css forces small-screen h3 sizes with !important */
   .ap-expertise__title {
     max-width: none;
-    font-size: 1.625rem !important;
+    font-size: 1.625rem;
     line-height: 1.12;
     text-wrap: pretty;
   }
@@ -417,8 +416,8 @@
   }
 
   .ap-expertise__guidance-title {
-    font-size: 2.125rem !important;
-    line-height: 1.06 !important;
+    font-size: 2.125rem;
+    line-height: 1.06;
   }
   .ap-expertise__guidance-text {
     margin-top: 0.85rem;

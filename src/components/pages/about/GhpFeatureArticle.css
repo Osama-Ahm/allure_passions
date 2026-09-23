@@ -226,6 +226,14 @@
   color: var(--ap-text-muted);
 }
 
+/* The aside (photo, pillars, PDF link) is ~730px tall: it only pins where the whole of it fits
+   under the header, otherwise its lower half would stay below the fold while the article scrolls. */
+@media (max-height: 860px) {
+  .ap-ghp__aside {
+    position: static;
+  }
+}
+
 @media (max-width: 900px) {
   .ap-ghp__layout {
     grid-template-columns: minmax(0, 1fr);

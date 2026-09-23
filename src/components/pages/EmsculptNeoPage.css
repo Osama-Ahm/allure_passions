@@ -1,0 +1,827 @@
+/* ==========================================================================
+   Emsculpt NEO page (/treatments/emsculpt_neo)
+   Structure follows the client's reference page; styling uses the site tokens.
+   ========================================================================== */
+
+.ap-neo {
+  font-family: var(--ap-font-sans);
+  color: var(--ap-text);
+  background: var(--ap-white);
+}
+
+/* ---- Section bands ---- */
+.ap-neo__band {
+  padding-block: clamp(4rem, 2.6rem + 4.2vw, 7rem);
+  background: var(--ap-white);
+}
+.ap-neo__band--paper {
+  background: var(--ap-cream-2);
+}
+.ap-neo__band--cream {
+  background: var(--ap-cream);
+}
+
+/* ---- 1. Hero ---- */
+.ap-neo__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: min(46rem, calc(100svh - var(--ap-nav-offset)));
+  background: var(--ap-white);
+}
+
+.ap-neo__hero-media {
+  min-height: 22rem;
+}
+
+.ap-neo__hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: clamp(2.5rem, 1.5rem + 3vw, 4.5rem) clamp(1.25rem, 0.4rem + 3.6vw, 4.5rem);
+  text-align: center;
+}
+
+.ap-neo__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
+  color: var(--ap-text-muted);
+  font-size: var(--ap-fs-small);
+  text-decoration: none;
+  transition: color var(--ap-dur-fast) var(--ap-ease-out);
+}
+.ap-neo__back:hover,
+.ap-neo__back:focus-visible {
+  color: var(--ap-gold-ink);
+}
+
+.ap-neo__wordmark {
+  margin: 0;
+  font-family: var(--ap-font-sans);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ap-gold-ink);
+}
+.ap-neo__wordmark span {
+  font-weight: 500;
+  font-size: 0.62em;
+  letter-spacing: 0.24em;
+  vertical-align: 0.28em;
+}
+.ap-neo__wordmark strong {
+  font-weight: 600;
+}
+
+.ap-neo__hero-title {
+  max-width: 20ch;
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(2.4rem, 1.2rem + 3.2vw, 4.1rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: var(--ap-tracking-display);
+  color: var(--ap-ink);
+  text-wrap: balance;
+}
+
+.ap-neo__nowrap {
+  white-space: nowrap;
+}
+
+.ap-neo__hero-lead {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--ap-text);
+}
+.ap-neo__hero-lead strong {
+  font-weight: 600;
+}
+
+.ap-neo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+.ap-neo__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 2.25rem;
+  margin: 0.9rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ap-line-light);
+}
+.ap-neo__facts div {
+  display: grid;
+  gap: 0.2rem;
+}
+.ap-neo__facts dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-text-muted);
+}
+.ap-neo__facts dd {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: 1.45rem;
+  line-height: 1.1;
+  color: var(--ap-ink);
+}
+
+/* ---- 2 & 3. Split rows (copy + film) ---- */
+.ap-neo__split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(2rem, 1rem + 4vw, 5rem);
+}
+.ap-neo__split--flip {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+
+.ap-neo__checks {
+  display: grid;
+  gap: 1.05rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ap-neo__checks li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  font-size: var(--ap-fs-lead);
+  line-height: 1.55;
+}
+.ap-neo__check {
+  flex: none;
+  margin-top: 0.3em;
+  color: var(--ap-gold-deep);
+  stroke-width: 2.4;
+}
+
+/* Film facade: poster + play button until pressed, then the YouTube player */
+.ap-neo__film {
+  margin: 0;
+}
+.ap-neo__film-caption {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.9rem;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.1rem, 0.95rem + 0.5vw, 1.35rem);
+  line-height: 1.2;
+  color: var(--ap-ink);
+}
+.ap-neo__film-kicker {
+  font-family: var(--ap-font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+.ap-neo__video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-night);
+  box-shadow: var(--ap-shadow-lift);
+}
+.ap-neo__video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.ap-neo__video-btn {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ap-white);
+  text-align: left;
+  cursor: pointer;
+}
+.ap-neo__video-btn img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--poster-zoom, 1));
+  transition: transform var(--ap-dur-slow) var(--ap-ease-out);
+}
+.ap-neo__video-btn:hover img {
+  transform: scale(calc(var(--poster-zoom, 1) * 1.04));
+}
+.ap-neo__video-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  padding-left: 0.25rem;
+  border-radius: 50%;
+  background: var(--ap-gold);
+  color: var(--ap-ink);
+  box-shadow: var(--ap-shadow-gold);
+  transform: translate(-50%, -50%);
+  transition:
+    transform var(--ap-dur) var(--ap-ease-out),
+    background var(--ap-dur-fast) var(--ap-ease-out);
+}
+.ap-neo__video-btn:hover .ap-neo__video-icon,
+.ap-neo__video-btn:focus-visible .ap-neo__video-icon {
+  background: var(--ap-gold-soft);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.ap-neo__video-btn:focus-visible {
+  outline: 2px solid var(--ap-gold-deep);
+  outline-offset: -4px;
+}
+
+/* Stats */
+.ap-neo__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.9rem;
+}
+.ap-neo__stat {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--ap-line-light);
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-cream-2);
+}
+.ap-neo__stat-num {
+  font-family: var(--ap-font-display);
+  font-size: clamp(2.6rem, 1.9rem + 2vw, 3.6rem);
+  line-height: 1;
+  color: var(--ap-gold-ink);
+}
+.ap-neo__stat-label {
+  font-size: var(--ap-fs-small);
+  line-height: 1.45;
+}
+
+.ap-neo__footnote {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ap-text-muted);
+}
+.ap-neo__footnote--center {
+  margin-top: 1.75rem;
+  text-align: center;
+}
+
+/* ---- 4. Body areas ---- */
+.ap-neo__areas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 62rem;
+  margin-inline: auto;
+  gap: clamp(0.85rem, 0.5rem + 1vw, 1.4rem);
+  margin-top: clamp(2.25rem, 1.6rem + 2vw, 3.5rem);
+}
+.ap-neo__area-card {
+  padding: clamp(1.4rem, 1rem + 1vw, 2rem);
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-white);
+  box-shadow: var(--ap-shadow-card);
+}
+.ap-neo__area-group {
+  margin: 0 0 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--ap-line-light);
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--ap-ink);
+}
+.ap-neo__area-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ap-neo__area-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: var(--ap-fs-body);
+}
+.ap-neo__area-num {
+  flex: none;
+  min-width: 1.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ap-gold-ink);
+}
+
+/* ---- 5. Applicators ---- */
+.ap-neo__applicators {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 54rem;
+  margin-inline: auto;
+  gap: clamp(1rem, 0.6rem + 1.2vw, 1.75rem);
+  margin-top: clamp(2.25rem, 1.6rem + 2vw, 3.5rem);
+}
+.ap-neo__applicator {
+  text-align: center;
+}
+.ap-neo__applicator-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1.25rem;
+  border-radius: var(--ap-radius-md);
+  background:
+    radial-gradient(120% 90% at 50% 35%, rgba(255, 255, 255, 0.9), transparent 70%),
+    var(--ap-cream);
+}
+.ap-neo__glyph {
+  width: 68%;
+  height: auto;
+  fill: none;
+  stroke: var(--ap-gold-deep);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.ap-neo__glyph rect:not(.ap-neo__glyph-strap):not(.ap-neo__glyph-coil),
+.ap-neo__glyph path:not(.ap-neo__glyph-coil) {
+  fill: var(--ap-white);
+}
+.ap-neo__glyph-strap {
+  fill: rgba(201, 173, 108, 0.16);
+  stroke-width: 1.5;
+}
+.ap-neo__glyph-coil {
+  stroke-dasharray: 5 6;
+  stroke-width: 1.75;
+}
+.ap-neo__applicator-name {
+  margin: 0 0 0.45rem;
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ap-ink);
+}
+.ap-neo__applicator-text {
+  max-width: 24rem;
+  margin: 0 auto;
+  font-size: var(--ap-fs-body);
+  line-height: 1.6;
+}
+
+/* ---- 6. Before & after (slider) + what to expect ---- */
+.ap-neo__results {
+  display: grid;
+  grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 1rem + 3.5vw, 4.5rem);
+  max-width: 68rem;
+  margin: clamp(2.25rem, 1.6rem + 2vw, 3.5rem) auto 0;
+}
+
+.ap-neo__compare {
+  margin: 0;
+}
+/* Portrait frame at the photos' own ratio (750 x 927), so nothing is cropped */
+.ap-neo__compare-frame {
+  position: relative;
+  aspect-ratio: 750 / 927;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 20px;
+  background: #e4e2dd;
+  box-shadow: 0 1px 2px rgba(40, 30, 12, 0.06), 0 40px 70px -48px rgba(40, 30, 12, 0.55);
+}
+.ap-neo__compare-zoom {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+/* The homepage labels are sized for a wide frame; scale them to this narrower one */
+.ap-neo__compare-frame .ap-results__label {
+  bottom: clamp(0.9rem, 0.6rem + 1vw, 1.5rem);
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.3rem);
+}
+.ap-neo__compare-frame .ap-results__label--before {
+  left: clamp(1rem, 0.7rem + 1vw, 1.6rem);
+}
+.ap-neo__compare-frame .ap-results__label--after {
+  right: clamp(1rem, 0.7rem + 1vw, 1.6rem);
+}
+.ap-neo__compare-note {
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ap-text-muted);
+}
+
+.ap-neo__expect-title {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-h3);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: var(--ap-tracking-display);
+  color: var(--ap-ink);
+}
+.ap-neo__expect {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ap-neo__expect-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1.1rem;
+  padding: clamp(1.1rem, 0.8rem + 0.9vw, 1.6rem);
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-white);
+  box-shadow: var(--ap-shadow-card);
+}
+.ap-neo__expect-num {
+  min-width: 2.2ch;
+  font-family: var(--ap-font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--ap-gold);
+}
+.ap-neo__expect-when {
+  margin: 0.1rem 0 0.4rem;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.35rem, 1.15rem + 0.5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ap-ink);
+}
+.ap-neo__expect-card p {
+  margin: 0;
+  font-size: var(--ap-fs-body);
+  line-height: 1.6;
+}
+
+/* ---- 7. Pricing ---- */
+.ap-neo__prices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(1rem, 0.6rem + 1.2vw, 1.75rem);
+  margin-top: clamp(2.25rem, 1.6rem + 2vw, 3.5rem);
+}
+.ap-neo__price {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  border: 1px solid var(--ap-line-light);
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-white);
+}
+.ap-neo__price--featured {
+  border-color: transparent;
+  background: var(--ap-charcoal);
+  color: var(--ap-white);
+  box-shadow: var(--ap-shadow-lift);
+}
+.ap-neo__price-what {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-gold-ink);
+}
+.ap-neo__price--featured .ap-neo__price-what {
+  color: var(--ap-gold-text);
+}
+.ap-neo__price-name {
+  margin: 0 0 0.6rem;
+  font-family: var(--ap-font-display);
+  font-size: var(--ap-fs-card);
+  font-weight: 400;
+  line-height: 1.05;
+  color: inherit;
+}
+.ap-neo__price-detail {
+  margin: 0 0 1.5rem;
+  font-size: var(--ap-fs-body);
+  line-height: 1.6;
+}
+.ap-neo__price--featured .ap-neo__price-detail {
+  color: rgba(255, 255, 255, 0.86);
+}
+.ap-neo__price-tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: auto 0 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ap-line-light);
+}
+.ap-neo__price--featured .ap-neo__price-tiers {
+  border-top-color: var(--ap-line-dark);
+}
+.ap-neo__price-tiers div {
+  display: grid;
+  gap: 0.25rem;
+}
+.ap-neo__price-tiers dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ap-text-muted);
+}
+.ap-neo__price--featured .ap-neo__price-tiers dt {
+  color: rgba(255, 255, 255, 0.66);
+}
+.ap-neo__price-tiers dd {
+  margin: 0;
+  font-family: var(--ap-font-display);
+  font-size: clamp(1.9rem, 1.5rem + 1vw, 2.4rem);
+  line-height: 1;
+}
+.ap-neo__price--featured .ap-btn--gold {
+  box-shadow: none;
+}
+
+.ap-neo__price-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 2.5rem;
+  margin-top: 2rem;
+}
+.ap-neo__price-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ap-ink);
+  font-size: var(--ap-fs-body);
+  text-decoration: underline;
+  text-decoration-color: var(--ap-gold-deep);
+  text-underline-offset: 0.3em;
+}
+.ap-neo__price-links a:hover,
+.ap-neo__price-links a:focus-visible {
+  color: var(--ap-gold-ink);
+}
+
+/* ---- 8. CTA ---- */
+.ap-neo__cta {
+  padding-block: clamp(4.5rem, 3rem + 4.5vw, 7.5rem);
+  background:
+    radial-gradient(70% 120% at 50% 0%, rgba(221, 196, 140, 0.14), transparent 70%),
+    var(--ap-charcoal);
+  color: var(--ap-white);
+}
+.ap-neo__cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  text-align: center;
+}
+.ap-neo__cta-title {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--ap-white);
+}
+.ap-neo__cta-lead {
+  max-width: 38rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+.ap-neo__actions--center {
+  margin-top: 0.8rem;
+}
+
+/* ---- 10. Contact ---- */
+.ap-neo__contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(1.25rem, 0.6rem + 2vw, 2.5rem);
+}
+.ap-neo__contact-panel {
+  padding: clamp(1.5rem, 1rem + 2vw, 3rem);
+  border-radius: var(--ap-radius-lg);
+  background: var(--ap-white);
+  box-shadow: var(--ap-shadow-card);
+}
+.ap-neo__contact-side {
+  display: grid;
+  grid-template-rows: minmax(18rem, 1fr) auto;
+  gap: 1rem;
+}
+.ap-neo__contact-media {
+  min-height: 18rem;
+}
+
+.ap-neo__form {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 1.75rem;
+}
+.ap-neo__form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ap-neo__form-row legend {
+  margin-bottom: 0.45rem;
+  padding: 0;
+}
+.ap-neo__label {
+  font-size: var(--ap-fs-small);
+  font-weight: 500;
+  color: var(--ap-ink);
+}
+.ap-neo__field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.ap-neo__field-label {
+  font-size: 0.78rem;
+  color: var(--ap-text-muted);
+}
+.ap-neo__req {
+  font-weight: 400;
+  color: var(--ap-text-muted);
+}
+.ap-neo__field input,
+.ap-neo__field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid rgba(11, 10, 9, 0.16);
+  border-radius: var(--ap-radius-xs);
+  background: var(--ap-cream-2);
+  color: var(--ap-ink);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition:
+    border-color var(--ap-dur-fast) var(--ap-ease-out),
+    background var(--ap-dur-fast) var(--ap-ease-out);
+}
+.ap-neo__field textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+.ap-neo__field input:focus,
+.ap-neo__field textarea:focus {
+  outline: none;
+  border-color: var(--ap-gold-deep);
+  background: var(--ap-white);
+  box-shadow: 0 0 0 3px rgba(221, 196, 140, 0.35);
+}
+.ap-neo__form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+}
+.ap-neo__form-actions .ap-btn {
+  --btn-pad-x: 1.25rem;
+  flex: 1 1 12rem;
+}
+.ap-neo__form-note {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ap-text-muted);
+}
+
+.ap-neo__visit {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--ap-radius-md);
+  background: var(--ap-charcoal);
+  color: var(--ap-white);
+  font-size: var(--ap-fs-small);
+  font-style: normal;
+  line-height: 1.5;
+}
+.ap-neo__visit > a,
+.ap-neo__visit > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.ap-neo__visit svg {
+  flex: none;
+  margin-top: 0.15em;
+  color: var(--ap-gold);
+}
+.ap-neo__visit a:hover,
+.ap-neo__visit a:focus-visible {
+  color: var(--ap-gold-text);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .ap-neo__hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .ap-neo__hero-media {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .ap-neo__split,
+  .ap-neo__split--flip {
+    grid-template-columns: 1fr;
+  }
+  /* Keep "copy, then film" order on phones for both rows */
+  .ap-neo__split--flip .ap-neo__split-media {
+    order: 2;
+  }
+  .ap-neo__results {
+    grid-template-columns: 1fr;
+    max-width: 34rem;
+  }
+  .ap-neo__areas,
+  .ap-neo__applicators,
+  .ap-neo__prices {
+    grid-template-columns: 1fr;
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  .ap-neo__contact {
+    grid-template-columns: 1fr;
+  }
+  .ap-neo__contact-side {
+    grid-template-rows: auto auto;
+  }
+  .ap-neo__contact-media {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 520px) {
+  .ap-neo__stats,
+  .ap-neo__form-row {
+    grid-template-columns: 1fr;
+  }
+  .ap-neo__actions .ap-btn {
+    width: 100%;
+  }
+  .ap-neo__facts {
+    gap: 0.5rem 1.5rem;
+  }
+}
+
+/* Short landscape phones: keep the hero photo and the comparison inside the screen height */
+@media (max-width: 900px) and (max-height: 540px) and (orientation: landscape) {
+  .ap-neo__hero-media {
+    aspect-ratio: auto;
+    height: 70svh;
+  }
+  .ap-neo__compare-frame {
+    width: min(100%, calc(78svh * 750 / 927));
+    margin-inline: auto;
+  }
+}

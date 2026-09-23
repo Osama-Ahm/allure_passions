@@ -271,8 +271,16 @@
   --nav-glass-border: rgba(255, 255, 255, 0.14);
   --nav-fg: #f5efe3;
 }
+/* A dark fade behind the header so menu links scrolled up on small screens pass under it
+   cleanly (it fades in once the dropping menu has reached the top). */
 .ap-nav--open .ap-nav__bg {
-  opacity: 0;
+  opacity: 1;
+  border-bottom-color: transparent;
+  background: linear-gradient(180deg, rgba(12, 11, 9, 0.97) 0%, rgba(12, 11, 9, 0.92) 72%, rgba(12, 11, 9, 0) 100%);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: opacity 0.4s var(--ap-ease-out) 0.35s;
 }
 
 /* --------------------------------------------------------------------------
@@ -579,6 +587,13 @@
   }
 }
 
+/* Tall tablets: the links sit in the middle of the space instead of clustering at the top */
+@media (max-width: 1023px) and (min-height: 820px) {
+  .ap-nav__menu-main {
+    align-content: center;
+  }
+}
+
 @media (max-width: 600px) {
   .ap-nav {
     --nav-logo-w: 48px;
@@ -619,5 +634,31 @@
 @media (hover: none) {
   .ap-nav__tip {
     display: none;
+  }
+}
+
+/* Short screens (phones on their side, small windows): a compact header and a tighter
+   menu so the page and the menu links keep most of the height. */
+@media (max-height: 560px) {
+  .ap-nav,
+  .ap-nav--solid {
+    --nav-logo-w: 36px;
+    --nav-logo-h: 43px;
+    --nav-pad-top: 10px;
+    --nav-pad-bottom: 8px;
+  }
+  .ap-nav__menu-inner {
+    padding-top: 4.75rem;
+    padding-bottom: 1.5rem;
+  }
+  .ap-nav__link {
+    font-size: clamp(1.75rem, 9svh, 3rem);
+  }
+  .ap-nav__sub {
+    margin: 0.35rem 0 0.6rem;
+  }
+  .ap-nav__foot {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
   }
 }

@@ -391,6 +391,11 @@
 }
 
 @media (max-width: 639.98px) {
+  /* The italic half wraps onto its own line here, so no nudge (it would read as an indent) */
+  .ap-concerns__accent {
+    margin-left: 0;
+  }
+
   .ap-concerns__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
@@ -429,19 +434,6 @@
   .ap-concerns__link {
     align-self: stretch;
     align-items: center;
-  }
-}
-
-/* index.css caps h2/h3 sizes on small phones with !important */
-@media screen and (max-width: 480px) {
-  .ap-concerns__title,
-  .ap-concerns__cta-title {
-    font-size: var(--ap-fs-h2) !important;
-    line-height: 1.04 !important;
-  }
-
-  .ap-concerns__card-title {
-    font-size: 1.75rem !important;
   }
 }
 

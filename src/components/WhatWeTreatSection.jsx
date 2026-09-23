@@ -34,7 +34,7 @@ const CATEGORIES = [
       { label: 'Wrinkles', concern: 'wrinkles' },
       { label: 'Skin laxity', concern: 'skin_laxity' },
       { label: 'Signs of ageing', concern: 'signs_ageing' },
-      { label: 'Texture' },
+      { label: 'Texture', concern: 'texture' },
       { label: 'Striae', concern: 'striae' },
     ],
   },
@@ -45,7 +45,7 @@ const CATEGORIES = [
       { label: 'Body contouring', concern: 'body_contouring' },
       { label: 'Muscle tone', concern: 'muscle_tone' },
       { label: 'Muscle definition', concern: 'muscle_tone' },
-      { label: 'Skin tightening' },
+      { label: 'Skin tightening', concern: 'body_tightening' },
     ],
   },
   {
@@ -67,6 +67,11 @@ const SHORT_NAMES = {
   sofwave: 'Sofwave',
   emsculpt_neo: 'Emsculpt Neo',
   emerald_laser: 'Emerald Green Laser Lipo',
+  cosmelan: 'Cosmelan',
+  hydrafacial: 'HydraFacial',
+  biorepeel: 'BioRePeel',
+  microneedling_exosomes: 'Microneedling + Exosomes',
+  tattoo_removal: 'PicoWay Tattoo Removal',
 };
 const TREATMENT_NAMES = Object.fromEntries(
   POPULAR_TREATMENTS.map((t) => [t.id, SHORT_NAMES[t.id] || t.name.replace(/[®™]/g, '')]),

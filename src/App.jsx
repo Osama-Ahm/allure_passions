@@ -220,7 +220,7 @@ export default function App() {
 
         {/* Dedicated Legitimate Inner Page: /about */}
         {currentRoute === 'about' && (
-          <div style={{ paddingTop: '5.5rem' }}>
+          <div className="ap-page-stage">
             <AboutPage
               onNavigate={handleNavigate}
             />
@@ -229,7 +229,7 @@ export default function App() {
 
         {/* Dedicated Legitimate Inner Page: /treatments */}
         {currentRoute === 'treatments' && (
-          <div style={{ paddingTop: '5.5rem' }}>
+          <div className="ap-page-stage">
             <TreatmentsIndexPage
               onNavigate={handleNavigate}
             />
@@ -238,7 +238,7 @@ export default function App() {
 
         {/* Dedicated Legitimate Inner Page: /treatments/:id */}
         {currentRoute === 'treatment-detail' && (
-          <div style={{ paddingTop: '5.5rem' }}>
+          <div className="ap-page-stage">
             <TreatmentDetailPage
               treatmentId={selectedTreatmentId}
               onNavigate={handleNavigate}
@@ -248,7 +248,7 @@ export default function App() {
 
         {/* Dedicated Legitimate Inner Page: /pricing */}
         {currentRoute === 'pricing' && (
-          <div style={{ paddingTop: '5.5rem' }}>
+          <div className="ap-page-stage">
             <PricingPage
               onNavigate={handleNavigate}
             />
@@ -257,7 +257,7 @@ export default function App() {
 
         {/* Dedicated Legitimate Inner Page: /prescription-skincare */}
         {currentRoute === 'prescription-skincare' && (
-          <div style={{ paddingTop: '5.5rem' }}>
+          <div className="ap-page-stage">
             <PrescriptionConsultationPage
               onNavigate={handleNavigate}
             />

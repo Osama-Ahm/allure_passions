@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { PRODUCTS } from '../../data/treatmentData';
 import { ArrowLeft, Lock, ShieldAlert, ShoppingBag, MessageCircle, Phone, Mail } from 'lucide-react';
+import './PrescriptionConsultationPage.css';
+
+const INDICATIONS = [
+  'Hyperpigmentation & Melasma',
+  'Severe / Persistent Acne',
+  'Fine Lines & Photo-Ageing',
+  'Texture & Epidermal Turnover',
+];
 
 export default function PrescriptionConsultationPage({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('tretinoin');
@@ -18,434 +26,354 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
   const kojivitProd = PRODUCTS.find(p => p.id === 'kojivit_ultra') || PRODUCTS[0];
 
   return (
-    <div style={{ padding: '4rem 0 6rem 0', background: '#FAF7F2', minHeight: '85vh', color: '#1C1B18' }}>
-      <div className="container">
+    <div className="ap-rx">
+      <div className="ap-rx__container">
         
         {/* Back Link */}
         <button
           onClick={() => onNavigate('home')}
-          className="btn-outline-bronze"
-          style={{ marginBottom: '2.5rem', padding: '0.5rem 1.25rem', fontSize: '0.8rem' }}
+          className="ap-rx__back"
         >
           <ArrowLeft size={14} /> Back to Homepage
         </button>
 
         {/* Page Header */}
-        <div style={{ maxWidth: '850px', marginBottom: '3rem' }}>
-          <div className="badge-bronze" style={{ marginBottom: '1rem' }}>
-            <Lock size={14} /> Clinical Skincare & Prescription Hub
+        <header className="ap-rx__header">
+          <div className="ap-rx__badge">
+            <Lock size={13} />
+            <span>Clinical Skincare &amp; Prescription Hub</span>
           </div>
 
-          <h1 className="heading-xl" style={{ color: '#1C1B18', marginBottom: '1rem' }}>
-            Prescription & Medical <span className="text-bronze-gradient">Skincare</span>
+          <h1 className="ap-rx__title">
+            Prescription &amp; Medical <span className="text-bronze-gradient">Skincare</span>
           </h1>
 
-          <p style={{ fontSize: '1.15rem', color: '#4A4740', fontWeight: '300', lineHeight: '1.75' }}>
+          <p className="ap-rx__lead">
             Consultation-led clinical skincare. In accordance with UK clinical legislation, active retinoic acid treatments require prior medical assessment by our Level 6 practitioner prior to collection.
           </p>
-        </div>
+        </header>
 
         {/* Legal Regulatory Callout Banner */}
-        <div style={{
-          background: '#FFFFFF',
-          border: '1px solid rgba(239, 68, 68, 0.35)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1.25rem 1.75rem',
-          marginBottom: '3rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1.25rem',
-          boxShadow: '0 4px 15px rgba(28, 27, 24, 0.03)'
-        }}>
-          <ShieldAlert size={28} color="#EF4444" style={{ flexShrink: 0 }} />
+        <div className="ap-rx__notice">
+          <ShieldAlert size={28} className="ap-rx__notice-icon" />
           <div>
-            <div style={{ fontWeight: '600', color: '#1C1B18', fontSize: '0.95rem' }}>
+            <div className="ap-rx__notice-title">
               UK Medical Compliance Notice: Prescription Tretinoin (POM)
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#4A4740', marginTop: '0.2rem', fontWeight: '300', lineHeight: '1.6' }}>
+            <div className="ap-rx__notice-text">
               Tretinoin is a Prescription-Only Medicine (POM). In accordance with UK clinical guidelines, <strong>direct online checkout is strictly prohibited</strong>. Complete the medical consultation questionnaire below for practitioner evaluation. <strong>All payments and product collections are completed physically in-clinic at 76 Cleveland Street, Fitzrovia, London W1T 6NB.</strong>
             </div>
           </div>
         </div>
 
         {/* Product Selection Tabs */}
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+        <div className="ap-rx__product-tabs">
           <button
+            type="button"
             onClick={() => setActiveTab('tretinoin')}
-            style={{
-              flex: '1 1 300px',
-              padding: '1.35rem',
-              background: activeTab === 'tretinoin' ? '#FFFFFF' : '#F4EFE6',
-              border: activeTab === 'tretinoin' ? '2px solid #A87F3D' : '1px solid rgba(28,27,24,0.08)',
-              borderRadius: 'var(--radius-md)',
-              textAlign: 'left',
-              cursor: 'pointer',
-              boxShadow: activeTab === 'tretinoin' ? '0 6px 20px rgba(168, 127, 61, 0.1)' : 'none',
-              transition: 'all 0.2s'
-            }}
+            className={`ap-rx__product-tab ${activeTab === 'tretinoin' ? 'is-active' : ''}`}
           >
-            <span className="badge-bronze" style={{ fontSize: '0.7rem', marginBottom: '0.4rem' }}>Prescription Only</span>
-            <div style={{ fontWeight: '600', color: '#1C1B18', fontSize: '1.15rem', fontFamily: 'var(--font-serif)' }}>
-              Tretinoin 0.025% & 0.1% Cream
-            </div>
-            <div style={{ fontSize: '0.825rem', color: '#7A756C', marginTop: '0.25rem' }}>
+            <span className="ap-rx__product-tab-tag ap-rx__product-tab-tag--pom">Prescription Only</span>
+            <h3 className="ap-rx__product-tab-name">
+              Tretinoin 0.025% &amp; 0.1% Cream
+            </h3>
+            <p className="ap-rx__product-tab-desc">
               Mandatory Clinical Consultation Protocol ({tretinoinProd.price})
-            </div>
+            </p>
           </button>
 
           <button
+            type="button"
             onClick={() => setActiveTab('kojivit')}
-            style={{
-              flex: '1 1 300px',
-              padding: '1.35rem',
-              background: activeTab === 'kojivit' ? '#FFFFFF' : '#F4EFE6',
-              border: activeTab === 'kojivit' ? '2px solid #A87F3D' : '1px solid rgba(28,27,24,0.08)',
-              borderRadius: 'var(--radius-md)',
-              textAlign: 'left',
-              cursor: 'pointer',
-              boxShadow: activeTab === 'kojivit' ? '0 6px 20px rgba(168, 127, 61, 0.1)' : 'none',
-              transition: 'all 0.2s'
-            }}
+            className={`ap-rx__product-tab ${activeTab === 'kojivit' ? 'is-active' : ''}`}
           >
-            <span style={{ fontSize: '0.7rem', background: 'rgba(28,27,24,0.06)', color: '#1C1B18', padding: '0.2rem 0.6rem', borderRadius: '10px', display: 'inline-block', marginBottom: '0.4rem', fontWeight: '500' }}>
-              Non-Prescription (OTC)
-            </span>
-            <div style={{ fontWeight: '600', color: '#1C1B18', fontSize: '1.15rem', fontFamily: 'var(--font-serif)' }}>
+            <span className="ap-rx__product-tab-tag ap-rx__product-tab-tag--otc">Non-Prescription (OTC)</span>
+            <h3 className="ap-rx__product-tab-name">
               Kojivit Ultra Brightening Cream
-            </div>
-            <div style={{ fontSize: '0.825rem', color: '#7A756C', marginTop: '0.25rem' }}>
+            </h3>
+            <p className="ap-rx__product-tab-desc">
               Reserve Online / In-Clinic Collection ({kojivitProd.price})
-            </div>
+            </p>
           </button>
         </div>
 
         {/* Tab 1: Tretinoin Clinical Suitability & Prescription Review */}
         {activeTab === 'tretinoin' && (
-          <div style={{ background: '#FFFFFF', border: '1px solid rgba(168, 127, 61, 0.3)', borderRadius: 'var(--radius-lg)', padding: '2.5rem', boxShadow: '0 8px 24px rgba(28,27,24,0.04)' }}>
-            <div style={{ marginBottom: '2rem', borderBottom: '1px solid rgba(28,27,24,0.08)', paddingBottom: '1rem' }}>
-              <h2 className="heading-md" style={{ color: '#1C1B18', fontSize: '1.6rem' }}>
+          <div className="ap-rx__card">
+            <div className="ap-rx__card-head">
+              <h2 className="ap-rx__card-title">
                 Tretinoin Clinical Suitability Evaluation
               </h2>
-              <p style={{ color: '#7A756C', fontSize: '0.9rem', marginTop: '0.25rem', fontWeight: '300' }}>
+              <p className="ap-rx__card-sub">
                 Step {step} of 3 — Clinical pre-screening prior to private practitioner consultation.
               </p>
             </div>
 
-                {/* Stepper Header with Crisp Contrast */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: '#F4EFE6',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: 'var(--radius-sm)',
-                  marginBottom: '2rem',
-                  border: '1px solid rgba(28,27,24,0.06)'
-                }}>
-                  <div style={{ color: step >= 1 ? '#A87F3D' : '#7A756C', fontWeight: step === 1 ? '700' : '500', fontSize: '0.85rem' }}>
-                    1. Strength & Focus
+            {/* Stepper Header */}
+            <div className="ap-rx__stepper">
+              <div className={`ap-rx__stepper-step ${step === 1 ? 'is-active' : (step > 1 ? 'is-complete' : '')}`}>
+                1. Strength &amp; Focus
+              </div>
+              <span className="ap-rx__stepper-arrow" aria-hidden="true">→</span>
+              <div className={`ap-rx__stepper-step ${step === 2 ? 'is-active' : (step > 2 ? 'is-complete' : '')}`}>
+                2. Medical Safety
+              </div>
+              <span className="ap-rx__stepper-arrow" aria-hidden="true">→</span>
+              <div className={`ap-rx__stepper-step ${step === 3 ? 'is-active' : ''}`}>
+                3. Clinical Consultation
+              </div>
+            </div>
+
+            {/* Step 1 */}
+            {step === 1 && (
+              <div className="ap-rx__section-group">
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '1.25rem', background: '#F8F6F2', border: '1px solid #EBE5DB', borderRadius: '12px', padding: '1rem' }}>
+                  <div style={{ width: '120px', height: '120px', flexShrink: 0, background: '#FFFFFF', borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E5E0D8' }}>
+                    <img
+                      src={formData.strength === '0.1%' ? '/assets/images/tretiheal_01.png' : '/assets/images/tretiheal-0025-pack.webp'}
+                      alt={`Tretiheal Tretinoin Cream USP ${formData.strength} (20g)`}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
+                    />
                   </div>
-                  <span style={{ color: '#7A756C' }}>→</span>
-                  <div style={{ color: step >= 2 ? '#A87F3D' : '#7A756C', fontWeight: step === 2 ? '700' : '500', fontSize: '0.85rem' }}>
-                    2. Medical Safety
-                  </div>
-                  <span style={{ color: '#7A756C' }}>→</span>
-                  <div style={{ color: step >= 3 ? '#A87F3D' : '#7A756C', fontWeight: step === 3 ? '700' : '500', fontSize: '0.85rem' }}>
-                    3. Clinical Consultation
+                  <div>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#A87F3D' }}>
+                      Clinical Prescription Product
+                    </span>
+                    <h3 style={{ fontFamily: 'Cinzel, serif', fontSize: '1.1rem', margin: '0.2rem 0', color: '#1C1B18' }}>
+                      Tretiheal Tretinoin Cream USP {formData.strength} (20g)
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: '#6A655C', margin: 0 }}>
+                      Manufactured by Healing Pharma. Clinical-grade retinoic acid therapy dispensed exclusively following patient suitability assessment.
+                    </p>
                   </div>
                 </div>
 
-                {/* Step 1 */}
-                {step === 1 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div>
-                      <label style={{ display: 'block', color: '#1C1B18', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                        Required Retinoid Strength:
-                      </label>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
-                        {['0.025%', '0.1%'].map(str => (
-                          <button
-                            key={str}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, strength: str })}
-                            style={{
-                              background: formData.strength === str ? 'rgba(168, 127, 61, 0.12)' : '#FAF7F2',
-                              border: formData.strength === str ? '2px solid #A87F3D' : '1px solid rgba(28,27,24,0.1)',
-                              color: '#1C1B18',
-                              padding: '1.25rem',
-                              borderRadius: '6px',
-                              textAlign: 'left',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#A87F3D' }}>Tretinoin {str}</div>
-                            <div style={{ fontSize: '0.825rem', color: '#7A756C', marginTop: '0.35rem', fontWeight: '300', lineHeight: '1.5' }}>
-                              {str === '0.025%' ? 'Starter Strength / Sensitive Skin / Initial Fine Lines' : 'Experienced Retinoid User / Melasma & Cellular Renewal'}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label style={{ display: 'block', color: '#1C1B18', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                        Primary Skin Indication:
-                      </label>
-                      <select
-                        value={formData.primaryConcern}
-                        onChange={e => setFormData({ ...formData, primaryConcern: e.target.value })}
+                <div>
+                  <label className="ap-rx__field-label">
+                    Required Retinoid Strength:
+                  </label>
+                  <div className="ap-rx__strength-grid">
+                    {['0.025%', '0.1%'].map(str => (
+                      <button
+                        key={str}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, strength: str })}
+                        className={`ap-rx__strength-btn ${formData.strength === str ? 'is-selected' : ''}`}
                       >
-                        <option value="Hyperpigmentation & Melasma">Hyperpigmentation & Melasma</option>
-                        <option value="Severe / Persistent Acne">Severe / Persistent Acne</option>
-                        <option value="Fine Lines & Photo-Ageing">Fine Lines & Photo-Ageing</option>
-                        <option value="Texture & Epidermal Turnover">Texture & Epidermal Turnover</option>
-                      </select>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                      <button type="button" onClick={() => setStep(2)} className="btn-bronze">
-                        Next: Medical Safety Questions →
+                        <div className="ap-rx__strength-val">Tretinoin {str}</div>
+                        <div className="ap-rx__strength-hint">
+                          {str === '0.025%' ? 'Starter Strength / Sensitive Skin / Initial Fine Lines' : 'Experienced Retinoid User / Melasma & Cellular Renewal'}
+                        </div>
                       </button>
-                    </div>
+                    ))}
                   </div>
-                )}
+                </div>
 
-                {/* Step 2 */}
-                {step === 2 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div style={{ background: 'rgba(239, 68, 68, 0.06)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '6px', padding: '1rem', color: '#1C1B18', fontSize: '0.875rem' }}>
-                      <strong style={{ color: '#EF4444' }}>Safety Requirement:</strong> Tretinoin is strictly contraindicated during pregnancy or breastfeeding.
-                    </div>
+                <div>
+                  <div id="rx-indication-label" className="ap-rx__field-label">
+                    Primary Skin Indication:
+                  </div>
+                  <div
+                    role="group"
+                    aria-labelledby="rx-indication-label"
+                    className="ap-rx__indication-grid"
+                  >
+                    {INDICATIONS.map(indication => {
+                      const selected = formData.primaryConcern === indication;
+                      return (
+                        <button
+                          key={indication}
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() => setFormData({ ...formData, primaryConcern: indication })}
+                          className={`ap-rx__indication-btn ${selected ? 'is-selected' : ''}`}
+                        >
+                          {indication}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
+                <div className="ap-rx__nav-actions">
+                  <button type="button" onClick={() => setStep(2)} className="btn-bronze">
+                    Next: Medical Safety Questions →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2 */}
+            {step === 2 && (
+              <div className="ap-rx__section-group">
+                <div className="ap-rx__contraindication-box">
+                  <strong style={{ color: '#EF4444' }}>Safety Requirement:</strong> Tretinoin is strictly contraindicated during pregnancy or breastfeeding.
+                </div>
+
+                <div>
+                  <label className="ap-rx__field-label">
+                    Are you currently pregnant, planning pregnancy, or breastfeeding?
+                  </label>
+                  <div className="ap-rx__binary-group">
+                    {['No', 'Yes'].map(opt => {
+                      const isSelected = formData.pregnantOrNursing === opt;
+                      const modifier = opt === 'Yes' ? 'is-selected-warn' : 'is-selected-safe';
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, pregnantOrNursing: opt })}
+                          className={`ap-rx__binary-btn ${isSelected ? modifier : ''}`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="ap-rx__nav-actions ap-rx__nav-actions--between">
+                  <button type="button" onClick={() => setStep(1)} className="btn-outline-bronze">
+                    ← Back
+                  </button>
+                  <button type="button" onClick={() => setStep(3)} className="btn-bronze">
+                    Next: Clinical Review →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Direct Clinical Review & Consultation */}
+            {step === 3 && (
+              <div className="ap-rx__section-group">
+                <div className="ap-rx__summary-box">
+                  <div className="ap-rx__summary-eyebrow">
+                    Clinical Suitability Summary
+                  </div>
+                  <div className="ap-rx__summary-grid">
                     <div>
-                      <label style={{ display: 'block', color: '#1C1B18', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                        Are you currently pregnant, planning pregnancy, or breastfeeding?
-                      </label>
-                      <div style={{ display: 'flex', gap: '1rem' }}>
-                        {['No', 'Yes'].map(opt => (
-                          <button
-                            key={opt}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, pregnantOrNursing: opt })}
-                            style={{
-                              background: formData.pregnantOrNursing === opt ? (opt === 'Yes' ? 'rgba(239,68,68,0.15)' : 'rgba(168,127,61,0.15)') : '#FAF7F2',
-                              border: formData.pregnantOrNursing === opt ? (opt === 'Yes' ? '2px solid #EF4444' : '2px solid #A87F3D') : '1px solid rgba(28,27,24,0.1)',
-                              color: '#1C1B18',
-                              padding: '0.65rem 2rem',
-                              borderRadius: '6px',
-                              fontWeight: '600',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            {opt}
-                          </button>
-                        ))}
-                      </div>
+                      <div className="ap-rx__summary-label">Selected Medication</div>
+                      <div className="ap-rx__summary-value">Tretinoin Cream {formData.strength}</div>
                     </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                      <button type="button" onClick={() => setStep(1)} className="btn-outline-bronze">
-                        ← Back
-                      </button>
-                      <button type="button" onClick={() => setStep(3)} className="btn-bronze">
-                        Next: Clinical Review →
-                      </button>
+                    <div>
+                      <div className="ap-rx__summary-label">Target Indication</div>
+                      <div className="ap-rx__summary-value">{formData.primaryConcern}</div>
+                    </div>
+                    <div>
+                      <div className="ap-rx__summary-label">Safety Contraindication Check</div>
+                      <div className={`ap-rx__summary-value ${formData.pregnantOrNursing === 'No' ? 'ap-rx__summary-value--cleared' : 'ap-rx__summary-value--alert'}`}>
+                        {formData.pregnantOrNursing === 'No' ? 'Cleared (Contraindications Absent)' : 'Contraindicated'}
+                      </div>
                     </div>
                   </div>
-                )}
+                </div>
 
-                {/* Step 3: Direct Clinical Review & Consultation */}
-                {step === 3 && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div style={{
-                      background: '#FAF7F2',
-                      border: '1px solid rgba(168, 127, 61, 0.3)',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '1.75rem',
-                    }}>
-                      <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#A87F3D', fontWeight: '700', marginBottom: '0.5rem' }}>
-                        Clinical Suitability Summary
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginTop: '1rem' }}>
-                        <div>
-                          <div style={{ fontSize: '0.8rem', color: '#7A756C' }}>Selected Medication</div>
-                          <div style={{ fontWeight: '700', color: '#1C1B18', fontSize: '1.05rem', marginTop: '0.2rem' }}>Tretinoin Cream {formData.strength}</div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.8rem', color: '#7A756C' }}>Target Indication</div>
-                          <div style={{ fontWeight: '600', color: '#1C1B18', fontSize: '1.05rem', marginTop: '0.2rem' }}>{formData.primaryConcern}</div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.8rem', color: '#7A756C' }}>Safety Contraindication Check</div>
-                          <div style={{ fontWeight: '600', color: formData.pregnantOrNursing === 'No' ? '#16A34A' : '#DC2626', fontSize: '1.05rem', marginTop: '0.2rem' }}>
-                            {formData.pregnantOrNursing === 'No' ? 'Cleared (Contraindications Absent)' : 'Contraindicated'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{
-                      background: 'rgba(168, 127, 61, 0.06)',
-                      border: '1px solid rgba(168, 127, 61, 0.25)',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '1.5rem',
-                      display: 'flex',
-                      gap: '1rem',
-                      alignItems: 'flex-start',
-                    }}>
-                      <ShieldAlert size={22} color="#A87F3D" style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <div style={{ fontSize: '0.875rem', color: '#4A4740', lineHeight: '1.6' }}>
-                        <strong>UK POM Regulatory Notice:</strong> Tretinoin is a Prescription-Only Medicine. In full compliance with UK medical regulations, we strictly operate a clinical consultation process with <strong>physical in-clinic collection and payment conducted at 76 Cleveland Street, Fitzrovia, London W1T 6NB</strong> following practitioner review.
-                      </div>
-                    </div>
-
-                    {/* Direct Consultation Channels */}
-                    <div style={{ marginTop: '0.5rem' }}>
-                      <div style={{ fontSize: '0.95rem', fontWeight: '600', color: '#1C1B18', marginBottom: '1rem' }}>
-                        Contact Our Clinical Team Directly To Confirm Prescription:
-                      </div>
-                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                        <a
-                          href={`https://wa.me/447342052249?text=${encodeURIComponent(`Hello Allure Passions UK, I have completed the online suitability check for Tretinoin ${formData.strength} (Indication: ${formData.primaryConcern}) and would like to arrange a clinical prescription consultation.`)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-bronze"
-                          style={{
-                            padding: '0.9rem 2rem',
-                            fontSize: '0.85rem',
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
-                            textDecoration: 'none',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                          }}
-                        >
-                          <MessageCircle size={16} />
-                          <span>WhatsApp Clinical Team</span>
-                        </a>
-
-                        <a
-                          href="tel:+447342052249"
-                          style={{
-                            padding: '0.9rem 1.8rem',
-                            fontSize: '0.85rem',
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
-                            textDecoration: 'none',
-                            color: '#1C1B18',
-                            background: '#FFFFFF',
-                            border: '1px solid rgba(168, 127, 61, 0.4)',
-                            borderRadius: 'var(--radius-sm)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            fontWeight: '600',
-                          }}
-                        >
-                          <Phone size={16} color="#A87F3D" />
-                          <span>Call +44 7342 052249</span>
-                        </a>
-
-                        <a
-                          href={`mailto:info@allurepassionsuk.com?subject=${encodeURIComponent(`Prescription Tretinoin ${formData.strength} Clinical Consultation`)}&body=${encodeURIComponent(`Hello Allure Passions UK,\n\nI would like to arrange a clinical consultation for Tretinoin ${formData.strength}.\nPrimary Concern: ${formData.primaryConcern}\nContraindications Cleared: ${formData.pregnantOrNursing === 'No' ? 'Yes' : 'No'}\n\nPlease advise your next available consultation appointment in Fitzrovia.`)}`}
-                          style={{
-                            padding: '0.9rem 1.8rem',
-                            fontSize: '0.85rem',
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
-                            textDecoration: 'none',
-                            color: '#4A4740',
-                            background: '#FAF7F2',
-                            border: '1px solid rgba(28, 27, 24, 0.15)',
-                            borderRadius: 'var(--radius-sm)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            fontWeight: '500',
-                          }}
-                        >
-                          <Mail size={16} color="#7A756C" />
-                          <span>Email Medical Team</span>
-                        </a>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1.5rem' }}>
-                      <button type="button" onClick={() => setStep(2)} className="btn-outline-bronze">
-                        ← Back to Safety Questions
-                      </button>
-                    </div>
+                <div className="ap-rx__compliance-notice">
+                  <ShieldAlert size={22} color="#A87F3D" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div className="ap-rx__compliance-text">
+                    <strong>UK POM Regulatory Notice:</strong> Tretinoin is a Prescription-Only Medicine. In full compliance with UK medical regulations, we strictly operate a clinical consultation process with <strong>physical in-clinic collection and payment conducted at 76 Cleveland Street, Fitzrovia, London W1T 6NB</strong> following practitioner review.
                   </div>
-                )}
+                </div>
+
+                {/* Direct Consultation Channels */}
+                <div>
+                  <div className="ap-rx__contact-title">
+                    Contact Our Clinical Team Directly To Confirm Prescription:
+                  </div>
+                  <div className="ap-rx__contact-channels">
+                    <a
+                      href={`https://wa.me/447342052249?text=${encodeURIComponent(`Hello Allure Passions UK, I have completed the online suitability check for Tretinoin ${formData.strength} (Indication: ${formData.primaryConcern}) and would like to arrange a clinical prescription consultation.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ap-rx__contact-btn ap-rx__contact-btn--whatsapp"
+                    >
+                      <MessageCircle size={16} />
+                      <span>WhatsApp Clinical Team</span>
+                    </a>
+
+                    <a
+                      href="tel:+447342052249"
+                      className="ap-rx__contact-btn ap-rx__contact-btn--phone"
+                    >
+                      <Phone size={16} color="#A87F3D" />
+                      <span>Call +44 7342 052249</span>
+                    </a>
+
+                    <a
+                      href={`mailto:info@allurepassionsuk.com?subject=${encodeURIComponent(`Prescription Tretinoin ${formData.strength} Clinical Consultation`)}&body=${encodeURIComponent(`Hello Allure Passions UK,\n\nI would like to arrange a clinical consultation for Tretinoin ${formData.strength}.\nPrimary Concern: ${formData.primaryConcern}\nContraindications Cleared: ${formData.pregnantOrNursing === 'No' ? 'Yes' : 'No'}\n\nPlease advise your next available consultation appointment in Fitzrovia.`)}`}
+                      className="ap-rx__contact-btn ap-rx__contact-btn--email"
+                    >
+                      <Mail size={16} color="#7A756C" />
+                      <span>Email Medical Team</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+                  <button type="button" onClick={() => setStep(2)} className="btn-outline-bronze">
+                    ← Back to Safety Questions
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* Tab 2: Kojivit Product Details & Order Request */}
         {activeTab === 'kojivit' && (
-          <div style={{ background: '#FFFFFF', border: '1px solid rgba(168, 127, 61, 0.3)', borderRadius: 'var(--radius-lg)', padding: '2.5rem', boxShadow: '0 8px 24px rgba(28,27,24,0.04)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', alignItems: 'center', marginBottom: '2.5rem' }}>
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: '#FAF7F2', borderRadius: 'var(--radius-md)' }}>
+          <div className="ap-rx__card">
+            <div className="ap-rx__showcase">
+              <div className="ap-rx__media-box">
                 <img
                   src={kojivitProd.image}
                   alt={kojivitProd.name}
                   loading="lazy"
                   decoding="async"
-                  style={{ width: '220px', height: '220px', objectFit: 'contain' }}
+                  className="ap-rx__media-img"
                 />
               </div>
 
               <div>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(28,27,24,0.06)', color: '#1C1B18', padding: '0.2rem 0.6rem', borderRadius: '10px', fontWeight: '600' }}>
+                <span className="ap-rx__showcase-tag">
                   Non-Prescription Advanced Skincare
                 </span>
-                <h2 className="heading-lg" style={{ color: '#1C1B18', marginTop: '0.4rem', marginBottom: '0.2rem' }}>
+                <h2 className="ap-rx__showcase-title">
                   {kojivitProd.name}
                 </h2>
-                <div style={{ fontSize: '1.25rem', color: '#A87F3D', fontWeight: '700', marginBottom: '1rem' }}>
+                <div className="ap-rx__showcase-price">
                   {kojivitProd.price}
                 </div>
 
-                <p style={{ color: '#4A4740', fontSize: '0.95rem', lineHeight: '1.65', marginBottom: '1.25rem', fontWeight: '300' }}>
+                <p className="ap-rx__showcase-desc">
                   {kojivitProd.description}
                 </p>
 
-                <div style={{ fontSize: '0.85rem', color: '#7A756C', marginBottom: '1.5rem' }}>
+                <div className="ap-rx__showcase-ingredients">
                   <strong>Key Ingredients:</strong> {kojivitProd.ingredients}
                 </div>
 
-                <div style={{ background: 'rgba(168, 127, 61, 0.08)', padding: '1rem', borderRadius: '6px', border: '1px solid rgba(168, 127, 61, 0.2)', fontSize: '0.85rem', color: '#A87F3D', fontWeight: '500' }}>
-                  <ShoppingBag size={14} style={{ display: 'inline', marginRight: '6px' }} />
-                  Reserve online for clinic collection. Payment is made physically at 76 Cleveland Street, Fitzrovia upon collection.
+                <div className="ap-rx__showcase-badge">
+                  <ShoppingBag size={15} style={{ flexShrink: 0 }} />
+                  <span>Reserve online for clinic collection. Payment is made physically at 76 Cleveland Street, Fitzrovia upon collection.</span>
                 </div>
               </div>
             </div>
 
             {/* Direct Clinic Reservation */}
-            <div style={{ borderTop: '1px solid rgba(28,27,24,0.08)', paddingTop: '2rem' }}>
-              <h3 className="heading-md" style={{ color: '#1C1B18', marginBottom: '0.5rem', fontSize: '1.35rem' }}>
+            <div className="ap-rx__reservation-box">
+              <h3 className="ap-rx__reservation-title">
                 Reserve Kojivit Ultra for Clinic Collection
               </h3>
-              <p style={{ color: '#7A756C', fontSize: '0.9rem', marginBottom: '1.5rem', fontWeight: '300' }}>
-                Kojivit Ultra Cream (£45.00 / 30g) is available for direct reservation with physical collection and payment at 76 Cleveland Street, Fitzrovia, London W1T 6NB.
+              <p className="ap-rx__reservation-text">
+                Kojivit Ultra Gel (£45.00 / 30g) is available for direct reservation with physical collection and payment at 76 Cleveland Street, Fitzrovia, London W1T 6NB.
               </p>
 
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="ap-rx__contact-channels">
                 <a
-                  href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%2076%20Cleveland%20Street."
+                  href="https://wa.me/447342052249?text=Hello%20Allure%20Passions%20UK,%20I%20would%20like%20to%20reserve%20a%20tube%20of%20Kojivit%20Ultra%20Gel%20(30g)%20for%20in-clinic%20collection%20at%2076%20Cleveland%20Street."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-bronze"
-                  style={{
-                    padding: '0.9rem 2rem',
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
+                  className="ap-rx__contact-btn ap-rx__contact-btn--whatsapp"
                 >
                   <MessageCircle size={16} />
                   <span>Reserve via WhatsApp</span>
@@ -453,21 +381,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
 
                 <a
                   href="tel:+447342052249"
-                  style={{
-                    padding: '0.9rem 1.8rem',
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    textDecoration: 'none',
-                    color: '#1C1B18',
-                    background: '#FFFFFF',
-                    border: '1px solid rgba(168, 127, 61, 0.4)',
-                    borderRadius: 'var(--radius-sm)',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontWeight: '600',
-                  }}
+                  className="ap-rx__contact-btn ap-rx__contact-btn--phone"
                 >
                   <Phone size={16} color="#A87F3D" />
                   <span>Call Dispensary (+44 7342 052249)</span>
@@ -475,21 +389,7 @@ export default function PrescriptionConsultationPage({ onNavigate }) {
 
                 <a
                   href="mailto:info@allurepassionsuk.com?subject=Kojivit%20Ultra%20Cream%20Reservation&body=Hello%20Allure%20Passions%20UK,%0A%0AI%20would%20like%20to%20reserve%20a%20jar%20of%20Kojivit%20Ultra%20Cream%20for%20in-clinic%20collection%20at%2076%20Cleveland%20Street.%0A%0AThank%20you."
-                  style={{
-                    padding: '0.9rem 1.8rem',
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    textDecoration: 'none',
-                    color: '#4A4740',
-                    background: '#FAF7F2',
-                    border: '1px solid rgba(28, 27, 24, 0.15)',
-                    borderRadius: 'var(--radius-sm)',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontWeight: '500',
-                  }}
+                  className="ap-rx__contact-btn ap-rx__contact-btn--email"
                 >
                   <Mail size={16} color="#7A756C" />
                   <span>Email Dispensary</span>

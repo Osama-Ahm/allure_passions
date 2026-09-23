@@ -79,7 +79,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 3.25rem;
+  min-height: 3.25rem;
   padding-inline: calc(var(--ap-press-gap) / 2);
   white-space: nowrap;
   user-select: none;
@@ -100,53 +100,88 @@
   transform: translateY(-2px);
 }
 
-/* Wordmark treatments: a mix of fashion-magazine serif, didone caps and clean sans */
-.ap-press__item--vogue .ap-press__mark {
+/* Wordmark treatments: typographic nods to each masthead, kept monochrome on the charcoal band */
+.ap-press__line {
+  display: block;
+}
+
+/* HELLO!: heavy, tight, slightly condensed caps */
+.ap-press__item--hello .ap-press__mark {
+  font-family: var(--ap-font-sans);
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  transform: scaleX(0.86);
+}
+.ap-press__item--hello:hover .ap-press__mark {
+  transform: translateY(-2px) scaleX(0.86);
+}
+
+/* The Times: spaced didone caps */
+.ap-press__item--times .ap-press__mark {
+  font-family: var(--ap-font-accent);
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin-right: -0.14em;
+}
+
+/* The Sun: italic heavy sans in a boxed masthead */
+.ap-press__item--sun .ap-press__mark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3em 0.6em 0.38em;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  font-family: var(--ap-font-sans);
+  font-style: italic;
+  font-weight: 600;
+}
+.ap-press__item--sun .ap-press__line:first-child {
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.ap-press__item--sun .ap-press__line:last-child {
+  margin-top: 0.05em;
+  font-size: 1.7rem;
+  letter-spacing: -0.03em;
+}
+
+/* Daily Mail: blackletter masthead (UnifrakturMaguntia, subset to these letters in index.html) */
+.ap-press__item--daily-mail .ap-press__mark,
+.ap-press__item--femail .ap-press__line:first-child {
+  font-family: 'UnifrakturMaguntia', var(--ap-font-accent);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.ap-press__item--daily-mail .ap-press__mark {
+  font-size: 2.15rem;
+}
+
+/* Daily Mail femail: small masthead above the section's lowercase serif name */
+.ap-press__item--femail .ap-press__mark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ap-press__item--femail .ap-press__line:first-child {
+  font-size: 1.05rem;
+}
+.ap-press__item--femail .ap-press__line:last-child {
+  margin-top: 0.08em;
+  font-family: var(--ap-font-accent);
+  font-size: 1.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Women’sHealth: tall, tightly set serif run together */
+.ap-press__item--womens-health .ap-press__mark {
   font-family: var(--ap-font-display);
   font-size: 2.35rem;
-  letter-spacing: 0.16em;
-  margin-right: -0.16em;
-}
-
-.ap-press__item--tatler .ap-press__mark {
-  font-family: var(--ap-font-accent);
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: 0.32em;
-  margin-right: -0.32em;
-}
-
-.ap-press__item--bazaar .ap-press__mark {
-  font-family: var(--ap-font-display);
-  font-size: 1.7rem;
-  letter-spacing: 0.1em;
-  margin-right: -0.1em;
-}
-
-.ap-press__item--gq .ap-press__mark {
-  font-family: var(--ap-font-sans);
-  font-size: 2.15rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.ap-press__item--elle .ap-press__mark {
-  font-family: var(--ap-font-accent);
-  font-size: 2.3rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  margin-right: -0.24em;
-}
-
-.ap-press__item--ghp .ap-press__mark {
-  font-family: var(--ap-font-sans);
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.34em;
-  margin-right: -0.34em;
-  padding: 0.7em 0.9em 0.7em 1.24em;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 2px;
+  letter-spacing: -0.03em;
 }
 
 /* Reduced motion: a still, centred row that wraps */
@@ -162,36 +197,31 @@
     --ap-press-gap: 2.5rem;
   }
   .ap-press__item {
-    height: 2.75rem;
+    min-height: 2.75rem;
   }
-  .ap-press__item--vogue .ap-press__mark {
-    font-size: 1.9rem;
+  .ap-press__item--hello .ap-press__mark {
+    font-size: 1.85rem;
   }
-  .ap-press__item--tatler .ap-press__mark {
-    font-size: 1.45rem;
+  .ap-press__item--times .ap-press__mark {
+    font-size: 1.5rem;
   }
-  .ap-press__item--bazaar .ap-press__mark {
+  .ap-press__item--sun .ap-press__line:last-child {
     font-size: 1.4rem;
   }
-  .ap-press__item--gq .ap-press__mark {
+  .ap-press__item--daily-mail .ap-press__mark {
     font-size: 1.8rem;
   }
-  .ap-press__item--elle .ap-press__mark {
-    font-size: 1.9rem;
+  .ap-press__item--femail .ap-press__line:first-child {
+    font-size: 0.9rem;
   }
-  .ap-press__item--ghp .ap-press__mark {
-    font-size: 0.85rem;
+  .ap-press__item--femail .ap-press__line:last-child {
+    font-size: 1.6rem;
+  }
+  .ap-press__item--womens-health .ap-press__mark {
+    font-size: 1.95rem;
   }
   .ap-press__marquee {
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
     mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
-  }
-}
-
-/* Global phone rule caps every h2; keep this title in proportion with the band. */
-@media screen and (max-width: 480px) {
-  .ap-press .ap-press__title {
-    font-size: clamp(2rem, 1.2rem + 3.6vw, 2.4rem) !important;
-    line-height: 1.1 !important;
   }
 }

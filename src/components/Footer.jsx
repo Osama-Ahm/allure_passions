@@ -26,6 +26,7 @@ const COLUMNS = [
     title: 'Quick Links',
     links: [
       { label: 'Treatments', route: 'treatments', href: '/treatments' },
+      { label: 'Treatment Prices', route: 'pricing', href: '/pricing' },
       { label: 'Concerns', anchor: ['#concerns', '#what-we-treat'], href: '/#concerns' },
       { label: 'About Allure Passions', route: 'about', href: '/about' },
       { label: 'Clinical Results', anchor: ['#results'], href: '/#results' },

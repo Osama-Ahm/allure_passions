@@ -19,7 +19,10 @@
   overflow: hidden;
   isolation: isolate;
   padding-block: clamp(4.5rem, 3rem + 4vw, 7rem);
-  padding-inline: max(1.25rem, calc(var(--ap-gutter) - 0.3125rem)) clamp(1.5rem, 4.4vw, 4.375rem);
+  /* Start on the same line as every other section's centred column (on wide screens the
+     page gutter alone would leave this copy hugging the left edge). */
+  padding-inline: max(1.25rem, calc(var(--ap-gutter) - 0.3125rem), calc((100vw - var(--ap-container)) / 2 - 0.3125rem))
+    clamp(1.5rem, 4.4vw, 4.375rem);
   background: #f9f9f9;
 }
 
@@ -148,5 +151,13 @@
   }
   .ap-welcome__cta .ap-btn {
     width: 100%;
+  }
+}
+
+/* Phones on their side: the stacked photo stays shorter than the screen */
+@media (max-width: 860px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-welcome__portrait {
+    aspect-ratio: auto;
+    height: 80svh;
   }
 }

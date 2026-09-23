@@ -426,11 +426,10 @@
   }
 }
 
-/* index.css forces h2 sizes on small phones; keep the footer headings on their scale. */
+/* Phones: the stacked column headings read a little larger */
 @media screen and (max-width: 480px) {
-  .ap-footer .ap-footer__heading {
-    font-size: 1.875rem !important;
-    line-height: 1.1 !important;
+  .ap-footer__heading {
+    font-size: 1.875rem;
   }
 }
 

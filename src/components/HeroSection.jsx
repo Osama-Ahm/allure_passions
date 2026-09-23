@@ -52,7 +52,9 @@ export default function HeroSection({ onNavigate }) {
   const copyBlur = useTransform(soft, [0.62, 0.86], ['blur(0px)', 'blur(6px)']);
   const marksY = useTransform(soft, [0, 0.8], [0, -40]);
   const marksOpacity = useTransform(soft, [0, 0.55, 0.8], [1, 1, 0]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  // The range runs to 1 on purpose: this can play as a scroll-linked browser animation, and
+  // a range that stopped at 0.05 would ease the cue back in over the rest of the hero.
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.05, 1], [1, 0, 0]);
   const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const mediaScale = useTransform(soft, [0, 1], [1, 1.06]);
   const shade = useTransform(soft, [0.7, 1], [0, 0.45]);

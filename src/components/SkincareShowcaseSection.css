@@ -85,7 +85,7 @@
 /* Product photo */
 .ap-skincare__media {
   position: relative;
-  min-height: 37.8125rem; /* 605px */
+  min-height: min(37.8125rem, 82svh); /* 605px, but never taller than a short window */
   overflow: hidden;
   border-radius: 12px;
   background: #ece6d6;
@@ -169,6 +169,7 @@
 
 .ap-skincare__list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   margin: 1.25rem 0 0;
   padding: 0;
@@ -188,6 +189,12 @@
 .ap-skincare__tick {
   flex: none;
   color: var(--ap-gold);
+}
+
+/* A long single word ("Hyperpigmentation") hyphenates on the narrowest cards instead of spilling out */
+.ap-skincare__item span {
+  min-width: 0;
+  hyphens: auto;
 }
 
 .ap-skincare__cta {
@@ -242,7 +249,7 @@
     padding-right: clamp(1.75rem, 3vw, 2.8rem);
   }
   .ap-skincare__media {
-    min-height: 32rem;
+    min-height: min(32rem, 82svh);
   }
 }
 
@@ -280,5 +287,13 @@
   }
   .ap-skincare__controls {
     margin-top: 2rem;
+  }
+}
+
+/* Phones on their side: the stacked product photo stays well inside the screen height */
+@media (max-width: 860px) and (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-skincare__media {
+    aspect-ratio: auto;
+    height: 68svh;
   }
 }

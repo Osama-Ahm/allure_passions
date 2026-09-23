@@ -271,6 +271,16 @@
     0 10px 26px -8px rgba(20, 14, 6, 0.55);
 }
 
+/* Per-case caption under the frame (e.g. "Illustrative image"); keeps one line of space */
+.ap-results__case-note {
+  min-height: 1.5em;
+  margin: 0.9rem auto 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ap-text-muted);
+}
+
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
@@ -290,6 +300,28 @@
   .ap-results__chip {
     min-width: 0;
     padding: 0 1rem;
+  }
+}
+
+/* Narrow phones: the four chips no longer fit on one line, so they share a 2 x 2 grid */
+@media (max-width: 459px) {
+  .ap-results__filters-wrap {
+    display: block;
+  }
+  .ap-results__filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ap-results__chip {
+    padding: 0 0.4rem;
+  }
+}
+
+/* Short landscape screens: the whole comparison fits on screen at once */
+@media (max-height: 540px) and (min-aspect-ratio: 1/1) {
+  .ap-results__frame {
+    aspect-ratio: auto;
+    height: 78svh;
   }
 }
 
